@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ACC-R-061 &middot; Lucernex Atlas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="../atlas.css">
+</head><body>
+<header><b>Lucernex Atlas</b>
+<nav><a href="../index.html">Overview</a><a href="../atlas.html">Interactive app</a>
+<a href="../entities/index.html">Record types</a><a href="../rules/index.html">Rules</a>
+<a href="../questions.html">Open questions</a></nav></header>
+<main><p class="crumb"><a href="../index.html">Atlas</a> &rsaquo; <a href="index.html">Rules</a> &rsaquo; ACC-R-061</p><h1 class="mono">ACC-R-061</h1><p class="sub">Lease Accounting &amp; Payments &middot; What an ASC 842 review request may be raised against</p><span class="tag obs">Observed</span><p class="lead">Portfolio and RE Contract only; Equipment Contract excluded.</p><p>- Trigger: creating an `ASC 842 Schedule Review/Approval` request. - Condition: the form type declares attachability as a Boolean per entity kind. For this form type, only `Portfolio` = Yes and `RE Contract` = Yes; `Capital Program`, `Prototype`, `Location`, `Parcel`, `Site`, `Project`, `Facility`, `Capital Project` and `Equipment Contract` are all `No`. - Confidence: Observed. - Rebuild note: ⚠ `Equipment Contract` is `No`. Equipment leases generate ASC 842 schedules (`Asset` carries the full classification field set, and `Contract.GenerateFASBSchedule` exists on equipment contracts) but cannot be routed through this review workflow. Either equipment schedules bypass the approval gate entirely, or they are reviewed at the portfolio level. This is a real process gap and is now the top open question below.</p><p style="font-size:11.5px;color:var(--faint);margin-top:18px">Source: modules/accounting/rules.md</p></main></body></html>

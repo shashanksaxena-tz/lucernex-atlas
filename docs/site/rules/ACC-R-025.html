@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ACC-R-025 &middot; Lucernex Atlas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="../atlas.css">
+</head><body>
+<header><b>Lucernex Atlas</b>
+<nav><a href="../index.html">Overview</a><a href="../atlas.html">Interactive app</a>
+<a href="../entities/index.html">Record types</a><a href="../rules/index.html">Rules</a>
+<a href="../questions.html">Open questions</a></nav></header>
+<main><p class="crumb"><a href="../index.html">Atlas</a> &rsaquo; <a href="index.html">Rules</a> &rsaquo; ACC-R-025</p><h1 class="mono">ACC-R-025</h1><p class="sub">Lease Accounting &amp; Payments &middot; Cash-flow routing by expense type</p><span class="tag der">Derived</span><p class="lead">Each cash flow lands on the schedule its expense type designates for the standard being generated.</p><p>- Trigger: schedule generation. - Inputs: `ExpenseSchedule` rows → `ExpenseSetup.CodeExpenseTypeID` → `CodeExpenseType.CodeSLScheduleID` / `.CodeASC842ScheduleID` / `.CodeIFRS16ScheduleID`. - Computation: each period cash flow is routed to the schedule type its expense type designates for the standard being generated. - Output: `SLPeriod.PeriodCashAmount` populated on the correct `SLSummary`. - Confidence: Derived from the three FK columns on `CodeExpenseType` plus the vendor statement *&quot;Expense Types are used to associate records with lease accounting schedules, AP export numbers, expense accrual accounts, percentage rent accrual accounts, and real estate tax accounts.&quot;* - Live state ↑ upgraded: in this tenant the routing has exactly one possible destination. `ASC 842 Schedule Type Code` (`TableType` 2162) holds one row, `842 Rent`; `Straight Line Schedule Type Code` (2161) and `IFRS 16 Schedule Type Code` (2163) are both empty. So `CodeExpenseType.CodeSLScheduleID` and `.CodeIFRS16ScheduleID` have no valid target and must be null everywhere, and every cash flow resolves to `842 Rent`. Observed, 2026-09-10, `docs/data-model/code-table-registry.md`.</p><p style="font-size:11.5px;color:var(--faint);margin-top:18px">Source: modules/accounting/rules.md</p></main></body></html>

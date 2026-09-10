@@ -1,0 +1,716 @@
+<title>Lucernex Atlas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+
+<style>
+:root{
+  --bg:#E7EAEE; --grid:#D6DBE2; --surface:#F8F9FB; --surface2:#EEF1F5;
+  --ink:#12161C; --ink2:#3D4650; --muted:#6B7480; --faint:#9AA3AF;
+  --line:#C4CBD4; --line2:#DDE2E8;
+  --accent:#0E6E7E; --accent-ink:#FFFFFF; --accent-soft:#D3E7EA;
+  --ok:#2F6B45; --warn:#8A5A12; --info:#2B5590; --bad:#8C2F2F;
+  --shadow:0 1px 2px rgba(16,22,30,.10),0 8px 24px rgba(16,22,30,.10);
+  --r:3px;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0D1116; --grid:#171D25; --surface:#141A21; --surface2:#1B222B;
+  --ink:#E6EAEF; --ink2:#BAC3CD; --muted:#8B95A2; --faint:#67727F;
+  --line:#2A323C; --line2:#212932;
+  --accent:#48BFD2; --accent-ink:#06222A; --accent-soft:#16323A;
+  --ok:#6FBF8C; --warn:#D6A34A; --info:#7FA9E0; --bad:#E08B8B;
+  --shadow:0 1px 2px rgba(0,0,0,.5),0 10px 30px rgba(0,0,0,.45);
+}}
+:root[data-theme="dark"]{
+  --bg:#0D1116; --grid:#171D25; --surface:#141A21; --surface2:#1B222B;
+  --ink:#E6EAEF; --ink2:#BAC3CD; --muted:#8B95A2; --faint:#67727F;
+  --line:#2A323C; --line2:#212932;
+  --accent:#48BFD2; --accent-ink:#06222A; --accent-soft:#16323A;
+  --ok:#6FBF8C; --warn:#D6A34A; --info:#7FA9E0; --bad:#E08B8B;
+  --shadow:0 1px 2px rgba(0,0,0,.5),0 10px 30px rgba(0,0,0,.45);
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:"IBM Plex Sans",ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  font-size:14px;line-height:1.55;-webkit-font-smoothing:antialiased;overflow:hidden}
+.mono{font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;font-variant-numeric:tabular-nums}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+#app{display:grid;grid-template-rows:auto 1fr;height:100dvh}
+
+/* ------------------------------------------------------------------ header */
+header{display:flex;align-items:center;gap:16px;flex-wrap:wrap;padding:9px 14px;
+  background:var(--surface);border-bottom:1px solid var(--line);z-index:30}
+.brand{display:flex;align-items:baseline;gap:9px;min-width:0;cursor:pointer}
+.brand h1{font-size:15px;font-weight:600;margin:0;letter-spacing:-.01em;white-space:nowrap}
+.brand .sub{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+.tools{margin-left:auto;display:flex;align-items:center;gap:7px}
+.search{position:relative}
+.search input{font:inherit;font-size:13px;width:270px;padding:6px 10px;background:var(--bg);
+  color:var(--ink);border:1px solid var(--line);border-radius:var(--r);outline:none}
+.search input:focus{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft)}
+#sugg{position:absolute;top:calc(100% + 4px);left:0;right:0;background:var(--surface);
+  border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);
+  max-height:60vh;overflow:auto;z-index:60;display:none}
+#sugg.on{display:block}
+#sugg .s{padding:6px 10px;cursor:pointer;display:flex;gap:8px;align-items:baseline;border-bottom:1px solid var(--line2)}
+#sugg .s:last-child{border-bottom:0}
+#sugg .s:hover,#sugg .s.k{background:var(--accent-soft)}
+#sugg .s b{font-weight:500;font-size:12.5px}
+#sugg .s span{font-size:10px;color:var(--muted);margin-left:auto;white-space:nowrap}
+button.btn{font:inherit;font-size:12px;padding:6px 10px;cursor:pointer;background:var(--bg);
+  color:var(--ink2);border:1px solid var(--line);border-radius:var(--r)}
+button.btn:hover{border-color:var(--accent);color:var(--ink)}
+button.btn.on{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+
+/* -------------------------------------------------------------------- body */
+#body{display:grid;grid-template-columns:186px 1fr;min-height:0}
+nav{background:var(--surface);border-right:1px solid var(--line);overflow-y:auto;padding:10px 0}
+nav h4{margin:14px 14px 5px;font-size:9.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--faint);font-weight:600}
+nav a{display:flex;justify-content:space-between;gap:8px;padding:5px 14px;color:var(--ink2);font-size:13px}
+nav a:hover{background:var(--surface2);text-decoration:none;color:var(--ink)}
+nav a.on{background:var(--accent-soft);color:var(--ink);box-shadow:inset 2px 0 0 var(--accent)}
+nav a i{font-style:normal;font-size:10.5px;color:var(--faint)}
+nav a.sm{font-size:12px;padding-left:20px}
+
+main{overflow-y:auto;position:relative;min-width:0}
+.wrap{max-width:980px;padding:24px 30px 80px}
+.wrap.wide{max-width:1300px}
+
+h2.pt{margin:0 0 3px;font-size:26px;font-weight:600;letter-spacing:-.02em;text-wrap:balance}
+h2.pt.mono{font-size:23px}
+.psub{color:var(--muted);font-size:13px;margin:0 0 18px}
+.crumb{font-size:11px;color:var(--muted);margin:0 0 10px}
+.crumb i{font-style:normal;color:var(--faint);padding:0 4px}
+h3.sec{margin:26px 0 10px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);
+  font-weight:600;border-bottom:1px solid var(--line2);padding-bottom:6px}
+p.lead{font-size:15px;color:var(--ink2);max-width:66ch;margin:0 0 16px}
+p{max-width:70ch;color:var(--ink2)}
+
+.tag{display:inline-block;font-size:9.5px;letter-spacing:.07em;text-transform:uppercase;padding:2px 6px;
+  border-radius:2px;border:1px solid var(--line);color:var(--muted);margin:0 4px 4px 0}
+.tag.obs{color:var(--ok);border-color:currentColor}
+.tag.der{color:var(--info);border-color:currentColor}
+.tag.inf{color:var(--warn);border-color:currentColor}
+.tag.acc{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(112px,1fr));gap:1px;
+  background:var(--line2);border:1px solid var(--line2);border-radius:var(--r);overflow:hidden;margin:0 0 22px}
+.stats .s{background:var(--surface);padding:11px 13px}
+.stats .s b{display:block;font-size:21px;font-weight:600;letter-spacing:-.02em}
+.stats .s span{display:block;font-size:9.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin-top:1px}
+
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(268px,1fr));gap:11px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:13px 15px;
+  display:block;color:inherit}
+.card:hover{border-color:var(--accent);text-decoration:none}
+.card.oos{border-style:dashed;opacity:.72}
+.card h4{margin:0 0 5px;font-size:14px;font-weight:600;display:flex;align-items:center;gap:7px}
+.card .hue{width:3px;height:14px;border-radius:2px;flex:none}
+.card p{margin:0 0 9px;font-size:12.5px;color:var(--muted);max-width:none;
+  display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.card .row{display:flex;gap:12px;font-size:10.5px;color:var(--faint)}
+.card .row b{color:var(--ink2);font-weight:500}
+
+table.t{width:100%;border-collapse:collapse;font-size:12.5px;margin:0 0 6px}
+table.t th,table.t td{padding:6px 9px;text-align:left;border-bottom:1px solid var(--line2);vertical-align:top}
+table.t th{position:sticky;top:0;background:var(--surface2);color:var(--muted);font-weight:600;
+  font-size:9.5px;letter-spacing:.07em;text-transform:uppercase;z-index:2}
+table.t td.num,table.t th.num{text-align:right;font-family:"IBM Plex Mono",monospace}
+table.t tr:hover td{background:var(--surface)}
+.scroll{max-height:460px;overflow:auto;border:1px solid var(--line2);border-radius:var(--r)}
+.scroll.tall{max-height:none}
+
+.kv{display:grid;grid-template-columns:auto 1fr;gap:5px 16px;font-size:13px;margin:0 0 18px}
+.kv dt{color:var(--muted);white-space:nowrap}
+.kv dd{margin:0}
+
+.find{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--accent);
+  border-radius:var(--r);padding:11px 14px;margin:0 0 9px}
+.find h5{margin:0 0 4px;font-size:13.5px;font-weight:600}
+.find p{margin:0;font-size:12.5px;color:var(--ink2);max-width:none}
+
+.rule{border:1px solid var(--line);border-radius:var(--r);background:var(--surface);margin:0 0 7px;overflow:hidden}
+.rule summary{padding:9px 12px;cursor:pointer;display:flex;gap:10px;align-items:baseline;font-size:13px;list-style:none}
+.rule summary::-webkit-details-marker{display:none}
+.rule summary b{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--accent);flex:none}
+.rule summary span{color:var(--ink2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rule summary em{font-style:normal;margin-left:auto;flex:none}
+.rule .rb{padding:2px 12px 12px 12px;border-top:1px solid var(--line2);font-size:12.5px;color:var(--ink2)}
+.rule .rb p{max-width:none;margin:9px 0 0}
+
+.q{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:10px 13px;margin:0 0 7px;font-size:13px}
+.q .m{font-size:10.5px;color:var(--faint);margin-top:5px}
+
+.filters{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 14px;align-items:center}
+.filters input{font:inherit;font-size:13px;padding:5px 9px;background:var(--surface);color:var(--ink);
+  border:1px solid var(--line);border-radius:var(--r);min-width:210px}
+.chipf{font-size:11.5px;padding:4px 9px;border:1px solid var(--line);border-radius:11px;background:var(--surface);
+  color:var(--ink2);cursor:pointer}
+.chipf.on{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.count{font-size:11.5px;color:var(--muted);margin-left:auto}
+
+/* --------------------------------------------------------------------- map */
+#mapview{position:absolute;inset:0;display:none}
+#mapview.on{display:block}
+#stage{position:absolute;inset:0;cursor:grab;background:
+  linear-gradient(var(--grid) 1px,transparent 1px) 0 0/28px 28px,
+  linear-gradient(90deg,var(--grid) 1px,transparent 1px) 0 0/28px 28px,var(--bg)}
+#stage.drag{cursor:grabbing}
+#stage svg{display:block;width:100%;height:100%}
+.link{fill:none;stroke:var(--line);stroke-width:1.25}
+.node{cursor:pointer}
+.node rect.bx{fill:var(--surface);stroke:var(--line);stroke-width:1;rx:3}
+.node:hover rect.bx{stroke:var(--accent)}
+.node.sel rect.bx{stroke:var(--accent);stroke-width:2}
+.node rect.hue{rx:2}
+.node text{font-size:12.5px;fill:var(--ink);dominant-baseline:middle;pointer-events:none}
+.node text.n{font-size:10.5px;fill:var(--muted);font-family:"IBM Plex Mono",monospace}
+.node .toggle{fill:var(--surface2);stroke:var(--line)}
+.node .tsign{fill:var(--ink2);font-size:11px;text-anchor:middle;font-family:"IBM Plex Mono",monospace}
+.node.rule rect.bx{fill:var(--accent-soft)}
+.node.walkthrough rect.bx{stroke:var(--accent);stroke-width:1.75}
+.node.oos rect.bx{stroke-dasharray:3 2;fill:var(--surface2)}
+.node.oos text{fill:var(--muted)}
+#maptools{position:absolute;top:10px;left:10px;z-index:12;display:flex;gap:6px;background:var(--surface);
+  border:1px solid var(--line);border-radius:var(--r);padding:5px;box-shadow:var(--shadow)}
+#maphud{position:absolute;right:10px;bottom:10px;z-index:12;background:var(--surface);border:1px solid var(--line);
+  border-radius:var(--r);padding:5px 9px;font-size:10.5px;color:var(--muted);box-shadow:var(--shadow)}
+#mapdet{position:absolute;top:10px;right:10px;width:330px;max-height:calc(100% - 20px);overflow:auto;
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);
+  padding:13px 15px;z-index:12;display:none}
+#mapdet.on{display:block}
+#mapdet h4{margin:0 0 6px;font-size:15px;font-weight:600}
+#mapdet p{font-size:12.5px;margin:0 0 10px;max-width:none}
+
+/* ------------------------------------------------------------------- notes */
+#noteswrap{position:fixed;right:0;top:47px;bottom:0;width:min(370px,90vw);background:var(--surface);
+  border-left:1px solid var(--line);box-shadow:var(--shadow);z-index:40;display:flex;flex-direction:column;
+  transform:translateX(101%);transition:transform .2s ease}
+#noteswrap.on{transform:none}
+@media (prefers-reduced-motion:reduce){#noteswrap{transition:none}}
+#noteswrap .nh{padding:12px 15px;border-bottom:1px solid var(--line2)}
+#noteswrap .nh h4{margin:0;font-size:14px;font-weight:600;display:flex;align-items:center;gap:8px}
+#noteswrap .nh .ctx{font-size:11px;color:var(--muted);margin-top:3px;word-break:break-word}
+#noteswrap .nl{flex:1;overflow-y:auto;padding:10px 15px}
+#noteswrap .nf{border-top:1px solid var(--line2);padding:10px 15px;background:var(--surface2)}
+#noteswrap textarea{width:100%;font:inherit;font-size:13px;padding:7px 9px;border:1px solid var(--line);
+  border-radius:var(--r);background:var(--surface);color:var(--ink);resize:vertical;min-height:62px}
+#noteswrap .who{width:100%;font:inherit;font-size:12.5px;padding:5px 9px;margin-top:6px;
+  border:1px solid var(--line);border-radius:var(--r);background:var(--surface);color:var(--ink)}
+.note{border:1px solid var(--line2);border-radius:var(--r);padding:9px 11px;margin:0 0 8px;background:var(--bg)}
+.note .nb{font-size:13px;white-space:pre-wrap;word-break:break-word}
+.note .nm{font-size:10.5px;color:var(--faint);margin-top:6px;display:flex;gap:8px;align-items:center}
+.note .nm button{margin-left:auto;border:0;background:none;color:var(--faint);cursor:pointer;font-size:11px;padding:0}
+.note .nm button:hover{color:var(--bad)}
+.empty{color:var(--muted);font-size:12.5px;padding:14px 0}
+#notebtn .dot{display:inline-block;min-width:15px;padding:0 4px;height:15px;line-height:15px;text-align:center;
+  border-radius:8px;background:var(--accent);color:var(--accent-ink);font-size:10px;margin-left:5px}
+
+@media (max-width:900px){
+  #body{grid-template-columns:1fr}
+  nav{display:none}
+  .search input{width:170px}
+  .wrap{padding:18px 16px 70px}
+}
+</style>
+
+<div id="app">
+<header>
+  <div class="brand" onclick="go('/')"><h1>Lucernex Atlas</h1><span class="sub" id="cap"></span></div>
+  <div class="tools">
+    <div class="search">
+      <input id="q" type="search" placeholder="Search 223 records, 7,421 fields, 384 rules&hellip;" aria-label="Search everything" autocomplete="off">
+      <div id="sugg"></div>
+    </div>
+    <button class="btn" id="notebtn">Notes<span class="dot" id="ndot" hidden>0</span></button>
+    <button class="btn" id="theme" aria-label="Toggle colour theme">&#9680;</button>
+  </div>
+</header>
+
+<div id="body">
+  <nav id="nav"></nav>
+  <main>
+    <div class="wrap" id="view"></div>
+    <div id="mapview">
+      <div id="stage"><svg id="svg"><g id="cam"><g id="links"></g><g id="nodes"></g></g></svg></div>
+      <div id="maptools">
+        <button class="btn" data-d="1">L1</button><button class="btn" data-d="2">L2</button>
+        <button class="btn" data-d="3">L3</button><button class="btn" data-d="4">L4</button>
+        <button class="btn" id="mfit">Fit</button><button class="btn" id="mreset">Reset</button>
+      </div>
+      <div id="maphud">depth <b class="mono" id="hd">0</b> &middot; nodes <b class="mono" id="hn">0</b> &middot; <b class="mono" id="hz">100%</b></div>
+      <div id="mapdet"></div>
+    </div>
+  </main>
+</div>
+</div>
+
+<aside id="noteswrap" aria-label="Notes on this page">
+  <div class="nh">
+    <h4>Notes <button class="btn" style="margin-left:auto;padding:2px 7px" id="nclose">&times;</button></h4>
+    <div class="ctx" id="nctx"></div>
+  </div>
+  <div class="nl" id="nlist"></div>
+  <div class="nf">
+    <textarea id="ntext" placeholder="Leave a note on this page&hellip;"></textarea>
+    <input class="who" id="nwho" placeholder="Your name" autocomplete="name">
+    <button class="btn on" id="nadd" style="margin-top:6px;width:100%">Post note</button>
+    <div id="nstat" style="font-size:11px;color:var(--muted);margin-top:6px"></div>
+  </div>
+</aside>
+
+<script id="appdata" type="application/json">__DATA__</script>
+
+<script>
+"use strict";
+const DATA = JSON.parse(document.getElementById('appdata').textContent);
+const D = DATA.map, RULES = DATA.rules, QS = DATA.questions;
+
+const fmt = n => (n===undefined||n===null) ? '' : n.toLocaleString('en-US');
+const esc = s => String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const objOf = n => D.objects[n];
+const modOf = id => D.modules.find(m=>m.id===id);
+
+const HUES=["#4E7CA1","#7A6BA8","#3F8A78","#A8743F","#8A5470","#5B7F45","#9A5B4C","#4C6E9E",
+            "#7E7A46","#6A5D95","#3E8395","#8C6A3F","#5D8A5C","#96566A","#6E7683"];
+const hueOf={}; D.modules.forEach((m,i)=>hueOf[m.id]=HUES[i%HUES.length]);
+
+const edgesFrom={}, edgesTo={};
+D.edges.forEach(e=>{(edgesFrom[e[0]]=edgesFrom[e[0]]||[]).push(e);
+  if(e[3])(edgesTo[e[3]]=edgesTo[e[3]]||[]).push(e);});
+
+const CONF={observed:['obs','Observed'],derived:['der','Derived'],inferred:['inf','Inferred']};
+const ctag=c=>{const x=CONF[c]||CONF.derived;return `<span class="tag ${x[0]}">${x[1]}</span>`};
+
+/* ------------------------------------------------------- findings per module */
+const NOTES=__NOTES__;
+
+/* =========================================================== notes (shared) */
+let DB=null, notesByPage={}, unsub=null, curKey='/';
+const who = ()=> (localStorage.getItem('lx-who')||'').trim();
+
+(async()=>{
+  try{ DB = await claude.use('db'); }catch(e){ DB=null; }
+  if(!DB){ document.getElementById('nstat').textContent =
+    'Notes need the published version of this page. Everything else works offline.'; return; }
+  subscribeNotes();
+})();
+
+function noteKey(){ return curKey.replace(/[^A-Za-z0-9_.~:@+\-]/g,'_').slice(0,180) || 'root'; }
+
+function subscribeNotes(){
+  if(!DB) return;
+  if(unsub){ try{unsub()}catch(e){} unsub=null; }
+  try{
+    unsub = DB.collection('notes').orderBy('at','desc').limit(500).onSnapshot(snap=>{
+      notesByPage={};
+      snap.docs.forEach(d=>{const v=d.data()||{}; const k=v.page||'root';
+        (notesByPage[k]=notesByPage[k]||[]).push({id:d.id,...v});});
+      renderNotes();
+    }, err=>{ document.getElementById('nstat').textContent='Notes unavailable ('+err.code+').'; });
+  }catch(e){ document.getElementById('nstat').textContent='Notes unavailable.'; }
+}
+
+function renderNotes(){
+  const k=noteKey(), list=(notesByPage[k]||[]);
+  const total=Object.values(notesByPage).reduce((a,b)=>a+b.length,0);
+  const dot=document.getElementById('ndot');
+  dot.hidden = total===0; dot.textContent = list.length ? list.length : total;
+  document.getElementById('nctx').textContent = curKey;
+  document.getElementById('nlist').innerHTML = list.length
+    ? list.map(n=>`<div class="note"><div class="nb">${esc(n.text)}</div>
+        <div class="nm"><span>${esc(n.who||'anonymous')}</span><span>${esc(n.when||'')}</span>
+        <button data-del="${esc(n.id)}">delete</button></div></div>`).join('')
+    : `<div class="empty">No notes on this page yet. Notes are shared with everyone who can open this page.</div>`;
+  document.getElementById('nlist').querySelectorAll('[data-del]').forEach(b=>{
+    b.onclick=async()=>{ try{ await DB.collection('notes').doc(b.dataset.del).delete(); }catch(e){} };
+  });
+}
+
+document.getElementById('nadd').onclick=async()=>{
+  const t=document.getElementById('ntext'), w=document.getElementById('nwho');
+  const text=t.value.trim(); if(!text) return;
+  if(w.value.trim()) localStorage.setItem('lx-who', w.value.trim());
+  if(!DB){ document.getElementById('nstat').textContent='Not connected \u2014 note not saved.'; return; }
+  const st=document.getElementById('nstat'); st.textContent='Saving\u2026';
+  try{
+    await DB.collection('notes').add({
+      page:noteKey(), label:curKey, text:text.slice(0,4000),
+      who:(w.value.trim()||'anonymous').slice(0,80),
+      when:new Date().toISOString().slice(0,16).replace('T',' '),
+      at:Date.now()
+    });
+    t.value=''; st.textContent='Saved.'; setTimeout(()=>st.textContent='',1600);
+  }catch(e){ st.textContent='Could not save: '+(e.code||'error'); }
+};
+document.getElementById('notebtn').onclick=()=>document.getElementById('noteswrap').classList.toggle('on');
+document.getElementById('nclose').onclick=()=>document.getElementById('noteswrap').classList.remove('on');
+
+/* ================================================================== routing */
+function go(path){ location.hash = '#'+path; }
+window.go = go;
+
+function route(){
+  const h = location.hash.replace(/^#/,'') || '/';
+  curKey = h;
+  const p = h.split('/').filter(Boolean).map(decodeURIComponent);
+  const mapOn = p[0]==='map';
+  document.getElementById('mapview').classList.toggle('on', mapOn);
+  document.getElementById('view').style.display = mapOn ? 'none' : '';
+  if(mapOn){ ensureMap(); } else {
+    const v=document.getElementById('view');
+    v.scrollTop=0;
+    if(!p.length) v.innerHTML = viewHome();
+    else if(p[0]==='m') v.innerHTML = viewModule(p[1]);
+    else if(p[0]==='e') v.innerHTML = viewEntity(p[1]);
+    else if(p[0]==='f') v.innerHTML = viewField(p[1],p[2]);
+    else if(p[0]==='rules') v.innerHTML = viewRules();
+    else if(p[0]==='r') v.innerHTML = viewRule(p[1]);
+    else if(p[0]==='questions') v.innerHTML = viewQuestions();
+    else if(p[0]==='entities') v.innerHTML = viewEntities();
+    else if(p[0]==='notes') v.innerHTML = viewAllNotes();
+    else v.innerHTML = `<h2 class="pt">Not found</h2><p class="lead">No page at <code>${esc(h)}</code>.</p>`;
+    main.scrollTop=0;
+    wireView();
+  }
+  buildNav();
+  renderNotes();
+}
+window.addEventListener('hashchange',route);
+
+/* ==================================================================== views */
+function viewHome(){
+  const m=D.meta;
+  const inScope=D.modules.filter(x=>x.scope), out=D.modules.filter(x=>!x.scope);
+  return `
+  <h2 class="pt">The system, as it actually runs</h2>
+  <p class="psub">${esc(m.vendor)} &middot; ${esc(m.tenant)} &middot; build ${esc(m.build)} &middot; captured ${esc(m.captured)}</p>
+  <p class="lead">Everything here was read out of the live application and its own schema tools. Every
+  claim carries an evidence label &mdash; <b>Observed</b> means somebody saw it, <b>Inferred</b> means
+  nobody has yet. Open any record type and keep following its foreign keys; the graph is cyclic, so
+  there is no bottom.</p>
+  <div class="stats">
+    ${[['Modules',m.modules],['Record types',m.objects],['Fields',fmt(m.fields)],
+       ['Foreign keys',m.edges],['Rules',fmt(RULES.total)],['Open questions',fmt(QS.total)],
+       ['Data Fields',fmt(m.datafields)],['API types',m.gqlTypes]]
+      .map(([l,v])=>`<div class="s"><b class="mono">${v}</b><span>${l}</span></div>`).join('')}
+  </div>
+
+  <h3 class="sec">What was learned</h3>
+  ${[['A Form is an Issue Type','Lucernex never built a form builder. It built one ticket record, made its subtype a code-table value, gave each subtype its own fields and one layout per workflow step. Every request-shaped feature in the product is the same table &mdash; so a rebuild modelling each request type as its own aggregate needs one workflow engine per type.'],
+     ['Conditional display is a small, flat rule engine','[Show | Show and Require | Hide] this field when [all | any] of these rules match. Operators depend on the type of the driver field. Drivers reach across foreign keys into related records, so a Contract field can be hidden because of a value on its Location.'],
+     ['Contract lifecycle is customer-editable data','The nine lifecycle states live in a tenant-authored drop-down, not in platform schema. Anyone with drop-down rights can add a tenth. Whether the rebuild keeps that flexibility is a real decision.'],
+     ['Every non-key column is TEXT','6,882 of 7,069 physical columns, currency and percentage included. There is no numeric typing to inherit &mdash; the rebuild imposes its own or repeats the bug.'],
+     ['Schedules are approved, not published','ASC 842 output passes through review, ASG approval and client approval. The accounting engine needs a state machine, not just a calculator.']]
+     .map(([h,p])=>`<div class="find"><h5>${h}</h5><p>${p}</p></div>`).join('')}
+
+  <h3 class="sec">Modules</h3>
+  <div class="cards">${inScope.map(modCard).join('')}</div>
+  <h3 class="sec">Excluded by decision</h3>
+  <div class="cards">${out.map(modCard).join('')}</div>`;
+}
+
+function modCard(m){
+  return `<a class="card ${m.scope?'':'oos'}" href="#/m/${encodeURIComponent(m.id)}">
+    <h4><span class="hue" style="background:${hueOf[m.id]}"></span>${esc(m.title)}</h4>
+    <p>${esc(m.what)}</p>
+    <div class="row"><span><b>${m.oc}</b> records</span><span><b>${fmt(m.fc)}</b> fields</span>
+    <span><b>${m.ei}</b> in</span><span><b>${m.eo}</b> out</span></div></a>`;
+}
+
+function viewModule(id){
+  const m=modOf(id); if(!m) return `<h2 class="pt">Unknown module</h2>`;
+  const findings=NOTES[id]||[];
+  const rules=RULES.rules.filter(r=>r.module===id||r.moduleTitle===m.title);
+  const cur=D.curated&&D.curated[id];
+  return `
+  <p class="crumb"><a href="#/">Atlas</a><i>&rsaquo;</i>${esc(m.title)}</p>
+  <h2 class="pt">${esc(m.title)}</h2>
+  <p class="psub">${m.scope?'In scope for the rebuild':'Out of scope by decision &mdash; kept so the graph stays whole'}</p>
+  <p class="lead">${esc(m.what)}</p>
+  <div class="stats">
+    ${[['Record types',m.oc],['Fields',fmt(m.fc)],['Keys in',m.ei],['Keys out',m.eo],
+       ['Rules',rules.length],['Depends on',(m.dep||[]).length]]
+     .map(([l,v])=>`<div class="s"><b class="mono">${v}</b><span>${l}</span></div>`).join('')}
+  </div>
+  ${cur?`<p><a class="btn" style="display:inline-block" href="#/map?m=${encodeURIComponent(id)}">Open the hand-written walkthrough in the map &rarr;</a></p>`:''}
+  ${findings.length?`<h3 class="sec">What was found here</h3>
+    ${findings.map(([t,c,d])=>`<div class="find"><h5>${esc(t)} ${ctag(c)}</h5><p>${esc(d)}</p></div>`).join('')}`:''}
+  ${(m.dep||[]).length?`<h3 class="sec">Depends on</h3><div class="cards">
+    ${m.dep.map(d=>modOf(d)).filter(Boolean).map(modCard).join('')}</div>`:''}
+  <h3 class="sec">Record types &middot; ${m.oc}</h3>
+  <div class="scroll"><table class="t"><thead><tr><th>Record type</th><th>Postgres table</th>
+    <th class="num">Fields</th><th class="num">Referenced by</th></tr></thead><tbody>
+    ${m.objects.map(n=>{const o=objOf(n);if(!o)return '';
+      return `<tr><td><a href="#/e/${encodeURIComponent(n)}" class="mono">${esc(n)}</a></td>
+      <td class="mono" style="color:var(--muted)">${esc(o.t||'&mdash;')}</td>
+      <td class="num">${fmt(o.n)}</td><td class="num">${fmt((edgesTo[n]||[]).length)}</td></tr>`}).join('')}
+  </tbody></table></div>
+  ${rules.length?`<h3 class="sec">Rules &middot; ${rules.length}</h3>${rules.slice(0,400).map(ruleRow).join('')}`:''}`;
+}
+
+function viewEntities(){
+  const rows=Object.keys(D.objects).sort((a,b)=>D.objects[b].n-D.objects[a].n);
+  return `<h2 class="pt">All record types</h2>
+  <p class="psub">${rows.length} of them, largest first</p>
+  <div class="filters"><input id="ef" placeholder="Filter by name or table&hellip;"><span class="count" id="ec"></span></div>
+  <div class="scroll tall"><table class="t"><thead><tr><th>Record type</th><th>Module</th>
+  <th>Postgres table</th><th class="num">Fields</th><th class="num">Ref by</th></tr></thead><tbody id="etb">
+  ${rows.map(n=>{const o=objOf(n),m=modOf(o.m);
+    return `<tr data-k="${esc((n+' '+(o.t||'')).toLowerCase())}"><td><a class="mono" href="#/e/${encodeURIComponent(n)}">${esc(n)}</a></td>
+    <td style="font-size:11.5px"><a href="#/m/${encodeURIComponent(o.m)}">${esc(m?m.title:o.m)}</a></td>
+    <td class="mono" style="color:var(--muted)">${esc(o.t||'&mdash;')}</td>
+    <td class="num">${fmt(o.n)}</td><td class="num">${fmt((edgesTo[n]||[]).length)}</td></tr>`}).join('')}
+  </tbody></table></div>`;
+}
+
+function viewEntity(name){
+  const o=objOf(name); if(!o) return `<h2 class="pt">Unknown record type</h2>`;
+  const m=modOf(o.m);
+  const ins=edgesTo[name]||[], outs=(edgesFrom[name]||[]).filter(e=>e[3]);
+  const byS={}; ins.forEach(e=>{(byS[e[0]]=byS[e[0]]||[]).push(e[1])});
+  return `
+  <p class="crumb"><a href="#/">Atlas</a><i>&rsaquo;</i><a href="#/m/${encodeURIComponent(o.m)}">${esc(m?m.title:o.m)}</a><i>&rsaquo;</i>${esc(name)}</p>
+  <h2 class="pt mono">${esc(name)}</h2>
+  <p class="psub">${fmt(o.n)} fields${o.tc>1?` &middot; split across ${o.tc} physical tables`:''}</p>
+  <dl class="kv">
+    <dt>Postgres table</dt><dd class="mono">${esc(o.t||'none exported')}</dd>
+    <dt>Module</dt><dd><a href="#/m/${encodeURIComponent(o.m)}">${esc(m?m.title:o.m)}</a></dd>
+    <dt>Referenced by</dt><dd>${fmt(ins.length)} foreign keys from ${fmt(Object.keys(byS).length)} record types</dd>
+    <dt>Points at</dt><dd>${fmt(outs.length)} other records</dd>
+  </dl>
+  ${o.tc>1?`<div class="find"><h5>Column-split table ${ctag('observed')}</h5><p>This record's columns are spread
+    across ${o.tc} physical tables. That is a platform working around a column-count ceiling, and it is a
+    rebuild consideration: the logical record and the physical rows are not one to one.</p></div>`:''}
+  <h3 class="sec">Fields by group</h3>
+  ${o.g.map(([g,fields])=>`
+    <details class="rule" ${g.indexOf('Relationships')===0?'open':''}>
+      <summary><b>${fields.length}</b><span>${esc(g)}</span><em class="tag">${fields.length===1?'field':'fields'}</em></summary>
+      <div class="rb">
+        <p style="margin-top:4px;color:var(--muted)">${esc(D.groupBlurb[g]||'')}</p>
+        <div class="scroll"><table class="t"><thead><tr><th>Field</th><th>Declared type</th><th>Points at</th></tr></thead><tbody>
+        ${fields.map(([fn,ft,fam])=>{
+          let tgt='';
+          if(fam==='fk'){const e=(edgesFrom[name]||[]).find(x=>x[1]===fn);
+            tgt = e&&e[3]&&objOf(e[3]) ? `<a class="mono" href="#/e/${encodeURIComponent(e[3])}">${esc(e[3])}</a>`
+                : `<span style="color:var(--faint)">unresolved</span>`;}
+          else if(fam==='dropdown'){const mm=/\\(([^)]+)\\)/.exec(ft); tgt=`<span style="color:var(--muted)">${esc(mm?mm[1]:'code table')}</span>`;}
+          return `<tr><td><a class="mono" href="#/f/${encodeURIComponent(name)}/${encodeURIComponent(fn)}">${esc(fn)}</a></td>
+            <td style="color:var(--muted)">${esc(ft)}</td><td>${tgt}</td></tr>`}).join('')}
+        </tbody></table></div>
+      </div></details>`).join('')}
+  ${Object.keys(byS).length?`<h3 class="sec">What points here &middot; ${fmt(ins.length)} keys</h3>
+    <div class="scroll"><table class="t"><thead><tr><th>Record type</th><th>Via column</th></tr></thead><tbody>
+    ${Object.entries(byS).sort((a,b)=>b[1].length-a[1].length).map(([s,cols])=>
+      `<tr><td><a class="mono" href="#/e/${encodeURIComponent(s)}">${esc(s)}</a></td>
+       <td class="mono" style="font-size:11.5px;color:var(--muted)">${cols.map(esc).join(', ')}</td></tr>`).join('')}
+    </tbody></table></div>`:''}`;
+}
+
+function viewField(ent,fld){
+  const o=objOf(ent); if(!o) return `<h2 class="pt">Unknown record type</h2>`;
+  let rec=null,grp='';
+  o.g.forEach(([g,fs])=>fs.forEach(f=>{if(f[0]===fld){rec=f;grp=g}}));
+  if(!rec) return `<h2 class="pt">Unknown field</h2>`;
+  const [fn,ft,fam]=rec;
+  const e=(edgesFrom[ent]||[]).find(x=>x[1]===fn);
+  const cm=/\(([^)]+)\)/.exec(ft);
+  return `
+  <p class="crumb"><a href="#/">Atlas</a><i>&rsaquo;</i><a href="#/m/${encodeURIComponent(o.m)}">${esc((modOf(o.m)||{}).title||o.m)}</a>
+    <i>&rsaquo;</i><a href="#/e/${encodeURIComponent(ent)}">${esc(ent)}</a><i>&rsaquo;</i>${esc(fn)}</p>
+  <h2 class="pt mono">${esc(fn)}</h2>
+  <p class="psub">${esc(grp)}</p>
+  <dl class="kv">
+    <dt>On record type</dt><dd><a class="mono" href="#/e/${encodeURIComponent(ent)}">${esc(ent)}</a></dd>
+    <dt>Declared type</dt><dd class="mono">${esc(ft)}</dd>
+    <dt>Family</dt><dd>${fam==='fk'?'Foreign key':fam==='dropdown'?'Coded value':fam==='soft'?'Soft reference':'Scalar'}</dd>
+    ${e?`<dt>Points at</dt><dd>${e[3]&&objOf(e[3])?`<a class="mono" href="#/e/${encodeURIComponent(e[3])}">${esc(e[3])}</a>`:'<span style="color:var(--faint)">unresolved</span>'}</dd>
+    <dt>Match confidence</dt><dd>${esc(e[5]||'&mdash;')}</dd>`:''}
+    ${fam==='dropdown'&&cm?`<dt>Code table</dt><dd>${esc(cm[1])}</dd>`:''}
+  </dl>
+  <p>${fam==='fk'
+    ? 'A foreign key. Lucernex names the type after the table it points at, so this relationship is declared in the schema rather than implied by the column name.'
+    : fam==='dropdown'
+    ? 'A value chosen from a master code table that an administrator controls, not a developer. Every field like this is a place the business can change behaviour without a release.'
+    : fam==='soft'
+    ? 'A soft reference. It names another record without a typed key behind it &mdash; a generic handle resolving to whichever table the row belongs to. These are the joins a rebuild has to make explicit.'
+    : esc(D.typeNote[ft]||'A declared field type.')}</p>
+  ${ft==='Currency'||ft==='Percentage'?`<div class="find"><h5>Stored as TEXT ${ctag('observed')}</h5>
+    <p>In the physical database this column is <code>TEXT</code>, like 6,882 of the 7,069 columns exported.
+    The rebuild must impose <code>BigDecimal</code> typing of its own &mdash; there is nothing to inherit.</p></div>`:''}`;
+}
+
+function ruleRow(r){
+  return `<details class="rule" id="rule-${esc(r.id)}">
+    <summary><b>${esc(r.id)}</b><span>${esc(r.section||r.text.slice(0,110))}</span>${ctag(r.conf)}</summary>
+    <div class="rb">${r.detail?`<p>${esc(r.detail)}</p>`:''}
+      ${r.cells&&r.cells.length?`<div class="scroll" style="margin-top:9px"><table class="t"><tbody>
+        ${r.cells.map(c=>`<tr><td>${esc(c)}</td></tr>`).join('')}</tbody></table></div>`:''}
+      <p style="font-size:11px;color:var(--faint)">${esc(r.doc)}</p></div></details>`;
+}
+
+function viewRules(){
+  const mods=[...new Set(RULES.rules.map(r=>r.module))];
+  return `<h2 class="pt">Rules</h2>
+  <p class="psub">${fmt(RULES.total)} numbered rules, extracted from the module documents</p>
+  <p class="lead">Each is stated so a rule engine could consume it. The confidence label is the one the
+  source document gave it &mdash; an <b>Inferred</b> rule is a hypothesis somebody still has to confirm.</p>
+  <div class="filters">
+    <input id="rf" placeholder="Filter rules&hellip;">
+    ${mods.map(m=>`<button class="chipf" data-m="${esc(m)}">${esc(m)}</button>`).join('')}
+    ${['observed','derived','inferred'].map(c=>`<button class="chipf" data-c="${c}">${c}</button>`).join('')}
+    <span class="count" id="rc"></span>
+  </div>
+  <div id="rlist">${RULES.rules.map(r=>`<div data-m="${esc(r.module)}" data-c="${esc(r.conf)}"
+    data-k="${esc((r.id+' '+r.section+' '+r.text+' '+(r.detail||'')).toLowerCase())}">${ruleRow(r)}</div>`).join('')}</div>`;
+}
+
+function viewRule(id){
+  const r=RULES.rules.find(x=>x.id===id); if(!r) return `<h2 class="pt">Unknown rule</h2>`;
+  return `<p class="crumb"><a href="#/">Atlas</a><i>&rsaquo;</i><a href="#/rules">Rules</a><i>&rsaquo;</i>${esc(r.id)}</p>
+  <h2 class="pt mono">${esc(r.id)}</h2><p class="psub">${esc(r.moduleTitle)} &middot; ${esc(r.section)}</p>
+  ${ctag(r.conf)}
+  ${r.detail?`<p class="lead">${esc(r.detail)}</p>`:''}
+  ${r.cells&&r.cells.length?`<div class="scroll"><table class="t"><tbody>
+    ${r.cells.map(c=>`<tr><td>${esc(c)}</td></tr>`).join('')}</tbody></table></div>`:`<p>${esc(r.text)}</p>`}
+  <p style="font-size:11.5px;color:var(--faint);margin-top:16px">Source: ${esc(r.doc)}</p>`;
+}
+
+function viewQuestions(){
+  const areas=Object.keys(QS.byArea).sort((a,b)=>QS.byArea[b]-QS.byArea[a]);
+  return `<h2 class="pt">Open questions</h2>
+  <p class="psub">${fmt(QS.total)} things nobody has confirmed yet</p>
+  <p class="lead">Every one of these is a thing somebody has to go and find out. They are the corpus's
+  most actionable output, and they were scattered across forty documents until now.</p>
+  <div class="filters"><input id="qf" placeholder="Filter questions&hellip;">
+    ${areas.map(a=>`<button class="chipf" data-a="${esc(a)}">${esc(a)} <b>${QS.byArea[a]}</b></button>`).join('')}
+    <span class="count" id="qc"></span></div>
+  <div id="qlist">${QS.questions.map(q=>`<div class="q" data-a="${esc(q.area)}"
+    data-k="${esc((q.q+' '+q.doc).toLowerCase())}">${esc(q.q)}
+    <div class="m">${esc(q.area)} &middot; ${esc(q.doc)}</div></div>`).join('')}</div>`;
+}
+
+function viewAllNotes(){
+  const all=[]; Object.entries(notesByPage).forEach(([k,v])=>v.forEach(n=>all.push(n)));
+  all.sort((a,b)=>(b.at||0)-(a.at||0));
+  return `<h2 class="pt">All notes</h2>
+  <p class="psub">${all.length} note${all.length===1?'':'s'} across the atlas</p>
+  ${DB?'':`<p class="lead">Notes need the published version of this page.</p>`}
+  ${all.length?all.map(n=>`<div class="q"><div style="white-space:pre-wrap">${esc(n.text)}</div>
+    <div class="m">${esc(n.who||'anonymous')} &middot; ${esc(n.when||'')} &middot;
+    <a href="#${esc(n.label||'/')}">${esc(n.label||'/')}</a></div></div>`).join('')
+   :`<p class="empty">Nothing yet. Open any page and use the Notes button.</p>`}`;
+}
+
+/* --------------------------------------------------------- view wiring */
+function wireView(){
+  const ef=document.getElementById('ef');
+  if(ef){ const rows=[...document.querySelectorAll('#etb tr')];
+    const f=()=>{const s=ef.value.toLowerCase();let n=0;
+      rows.forEach(r=>{const on=!s||r.dataset.k.includes(s);r.style.display=on?'':'none';if(on)n++});
+      document.getElementById('ec').textContent=n+' of '+rows.length;};
+    ef.oninput=f; f(); }
+
+  const rf=document.getElementById('rf');
+  if(rf){ const rows=[...document.querySelectorAll('#rlist > div')];
+    const mods=new Set(), confs=new Set();
+    const f=()=>{const s=rf.value.toLowerCase();let n=0;
+      rows.forEach(r=>{
+        const on=(!s||r.dataset.k.includes(s))
+              && (!mods.size||mods.has(r.dataset.m))
+              && (!confs.size||confs.has(r.dataset.c));
+        r.style.display=on?'':'none'; if(on)n++;});
+      document.getElementById('rc').textContent=n+' of '+rows.length;};
+    rf.oninput=f;
+    document.querySelectorAll('.chipf[data-m]').forEach(b=>b.onclick=()=>{
+      b.classList.toggle('on'); b.classList.contains('on')?mods.add(b.dataset.m):mods.delete(b.dataset.m); f();});
+    document.querySelectorAll('.chipf[data-c]').forEach(b=>b.onclick=()=>{
+      b.classList.toggle('on'); b.classList.contains('on')?confs.add(b.dataset.c):confs.delete(b.dataset.c); f();});
+    f(); }
+
+  const qf=document.getElementById('qf');
+  if(qf){ const rows=[...document.querySelectorAll('#qlist > div')]; const areas=new Set();
+    const f=()=>{const s=qf.value.toLowerCase();let n=0;
+      rows.forEach(r=>{const on=(!s||r.dataset.k.includes(s))&&(!areas.size||areas.has(r.dataset.a));
+        r.style.display=on?'':'none';if(on)n++});
+      document.getElementById('qc').textContent=n+' of '+rows.length;};
+    qf.oninput=f;
+    document.querySelectorAll('.chipf[data-a]').forEach(b=>b.onclick=()=>{
+      b.classList.toggle('on'); b.classList.contains('on')?areas.add(b.dataset.a):areas.delete(b.dataset.a); f();});
+    f(); }
+}
+
+/* ------------------------------------------------------------------- nav */
+function buildNav(){
+  const h=location.hash.replace(/^#/,'')||'/';
+  const item=(p,l,c)=>`<a href="#${p}" class="${h===p||(p!=='/'&&h.startsWith(p))?'on':''}">${l}${c!==undefined?`<i>${c}</i>`:''}</a>`;
+  document.getElementById('nav').innerHTML=`
+    <h4>Atlas</h4>
+    ${item('/','Overview')}
+    ${item('/map','Mind map')}
+    ${item('/entities','Record types',D.meta.objects)}
+    ${item('/rules','Rules',fmt(RULES.total))}
+    ${item('/questions','Open questions',fmt(QS.total))}
+    ${item('/notes','Notes')}
+    <h4>Modules</h4>
+    ${D.modules.filter(m=>m.scope).map(m=>`<a class="sm ${h==='/m/'+m.id?'on':''}" href="#/m/${encodeURIComponent(m.id)}">${esc(m.title)}<i>${m.oc}</i></a>`).join('')}
+    <h4>Excluded</h4>
+    ${D.modules.filter(m=>!m.scope).map(m=>`<a class="sm" href="#/m/${encodeURIComponent(m.id)}">${esc(m.title)}<i>${m.oc}</i></a>`).join('')}`;
+}
+
+/* ---------------------------------------------------------------- search */
+const qEl=document.getElementById('q'), suggEl=document.getElementById('sugg');
+let sIdx=-1,sItems=[];
+qEl.addEventListener('input',()=>{
+  const s=qEl.value.trim().toLowerCase();
+  if(s.length<2){suggEl.classList.remove('on');return}
+  const out=[];
+  D.modules.forEach(m=>{if(m.title.toLowerCase().includes(s))out.push(['/m/'+m.id,m.title,'module'])});
+  for(const n in D.objects){ if(out.length>60)break;
+    if(n.toLowerCase().includes(s))out.push(['/e/'+n,n,'record type &middot; '+D.objects[n].n+' fields']); }
+  RULES.rules.forEach(r=>{if(out.length<80&&(r.id.toLowerCase().includes(s)||(r.section||'').toLowerCase().includes(s)))
+    out.push(['/r/'+r.id,r.id+' &mdash; '+(r.section||''),'rule'])});
+  for(const n in D.objects){ if(out.length>110)break;
+    D.objects[n].g.forEach(([g,fs])=>fs.forEach(f=>{
+      if(out.length<110&&f[0].toLowerCase().includes(s)) out.push(['/f/'+n+'/'+f[0],n+'.'+f[0],'field &middot; '+f[1]]);}));}
+  sItems=out.slice(0,60); sIdx=-1;
+  suggEl.innerHTML=sItems.length?sItems.map(([p,l,k],i)=>
+    `<div class="s" data-p="${esc(p)}"><b>${l}</b><span>${k}</span></div>`).join('')
+    :`<div class="s"><b>No match</b></div>`;
+  suggEl.classList.add('on');
+  suggEl.querySelectorAll('.s[data-p]').forEach(el=>el.onclick=()=>{
+    go(el.dataset.p); qEl.value=''; suggEl.classList.remove('on');});
+});
+qEl.addEventListener('keydown',e=>{
+  if(!suggEl.classList.contains('on'))return;
+  const els=[...suggEl.querySelectorAll('.s[data-p]')];
+  if(e.key==='ArrowDown'||e.key==='ArrowUp'){e.preventDefault();
+    sIdx=Math.max(0,Math.min(els.length-1,sIdx+(e.key==='ArrowDown'?1:-1)));
+    els.forEach((el,i)=>el.classList.toggle('k',i===sIdx)); els[sIdx]&&els[sIdx].scrollIntoView({block:'nearest'});}
+  if(e.key==='Enter'&&sIdx>=0){e.preventDefault();go(els[sIdx].dataset.p);qEl.value='';suggEl.classList.remove('on');}
+  if(e.key==='Escape'){suggEl.classList.remove('on');}
+});
+document.addEventListener('click',e=>{if(!e.target.closest('.search'))suggEl.classList.remove('on')});
+document.addEventListener('keydown',e=>{
+  if(e.key==='/'&&document.activeElement!==qEl&&!/INPUT|TEXTAREA/.test(document.activeElement.tagName)){
+    e.preventDefault();qEl.focus();}});
+
+/* ================================================================== the map */
+__MAPJS__
+
+/* ------------------------------------------------------------------- chrome */
+document.getElementById('cap').textContent=`${D.meta.vendor} \u00B7 ${D.meta.tenant} \u00B7 ${D.meta.captured}`;
+document.getElementById('theme').onclick=()=>{
+  const cur=document.documentElement.getAttribute('data-theme');
+  const dark=matchMedia('(prefers-color-scheme:dark)').matches;
+  const now=cur?cur:(dark?'dark':'light');
+  document.documentElement.setAttribute('data-theme',now==='dark'?'light':'dark');};
+document.getElementById('nwho').value=who();
+const main=document.querySelector('main');
+route();
+</script>

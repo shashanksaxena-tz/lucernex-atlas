@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CON-R-019 &middot; Lucernex Atlas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="../atlas.css">
+</head><body>
+<header><b>Lucernex Atlas</b>
+<nav><a href="../index.html">Overview</a><a href="../atlas.html">Interactive app</a>
+<a href="../entities/index.html">Record types</a><a href="../rules/index.html">Rules</a>
+<a href="../questions.html">Open questions</a></nav></header>
+<main><p class="crumb"><a href="../index.html">Atlas</a> &rsaquo; <a href="index.html">Rules</a> &rsaquo; CON-R-019</p><h1 class="mono">CON-R-019</h1><p class="sub">Contracts &amp; Leases &middot; 2. Contract identity and hierarchy</p><span class="tag obs">Observed</span><p class="lead">Determining payable vs receivable: direction is carried on ExpenseSetup.IsReceivable and PaymentTransaction.IsReceivable, not on the contract, so one contract can be both.</p><div class="wrapt"><table><tbody><tr><td>Determining payable vs receivable</td></tr><tr><td>`ExpenseSetup.IsReceivable`, `PaymentTransaction.IsReceivable`</td></tr><tr><td>Direction is carried per-clause and per-transaction, not on the contract. One contract may be both</td></tr><tr><td>Money direction</td></tr><tr><td>Observed</td></tr></tbody></table></div><p style="font-size:11.5px;color:var(--faint);margin-top:18px">Source: modules/contracts/rules.md</p></main></body></html>

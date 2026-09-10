@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ACC-R-058 &middot; Lucernex Atlas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="../atlas.css">
+</head><body>
+<header><b>Lucernex Atlas</b>
+<nav><a href="../index.html">Overview</a><a href="../atlas.html">Interactive app</a>
+<a href="../entities/index.html">Record types</a><a href="../rules/index.html">Rules</a>
+<a href="../questions.html">Open questions</a></nav></header>
+<main><p class="crumb"><a href="../index.html">Atlas</a> &rsaquo; <a href="index.html">Rules</a> &rsaquo; ACC-R-058</p><h1 class="mono">ACC-R-058</h1><p class="sub">Lease Accounting &amp; Payments &middot; Fiscal / calendar year-end matching</p><span class="tag obs">Observed</span><p class="lead">The switch exists and is named; what matching does is inferred, not documented.</p><p>- Trigger: schedule generation and the fiscal-year rollups. - Inputs: `Program.SLMatchYearEnds` (`Boolean`), `Program.FiscalYearEnd` (`Date` — month and day). - Condition: *&quot;This field determines if the program allows for matching of fiscal/calendar year rent.&quot;* - Confidence: Observed that the switch exists and what it is named; ⚠ Inferred as to what &quot;matching&quot; does. It is the only setting that could reconcile `SLSummary`&#x27;s two parallel rollup families (`Contract`&#x27;s `*FiscalYear*` block against its `*CalendarYear*` block). Confirm before building.</p><p style="font-size:11.5px;color:var(--faint);margin-top:18px">Source: modules/accounting/rules.md</p></main></body></html>

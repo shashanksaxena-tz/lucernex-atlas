@@ -1,0 +1,690 @@
+uid=6_0 RootWebArea "LxRetail" url="https://train-americanfreight.lucernex.com/en/dashboard/DashboardDispatchOld.jsp?dashboardName=admin"
+  uid=8_0 ignored
+    uid=8_1 application "~~Main Content#~"
+      uid=6_3 region "Top Menu"
+        uid=8_2 generic
+          uid=8_3 generic
+            uid=8_4 ignored
+              uid=8_5 ignored
+                uid=8_6 ignored
+                  uid=8_7 generic
+                    uid=8_8 generic
+                  uid=8_9 ignored
+                    uid=6_12 form
+                      uid=8_10 LayoutTable
+                        uid=8_11 ignored
+                          uid=8_12 LayoutTableRow
+                            uid=8_13 LayoutTableCell "Search Advanced Search"
+                              uid=8_14 generic
+                                uid=6_18 textbox "Search"
+                                  uid=8_15 ignored
+                                  uid=8_16 generic
+                                uid=6_21 image "Advanced Search" description="Advanced Search" url="https://train-americanfreight.lucernex.com/all/img/accruent/searchicon.png"
+                  uid=8_17 generic
+                    uid=8_18 generic
+                      uid=8_19 toolbar orientation="horizontal"
+                        uid=6_25 button haspopup="menu"
+                          uid=8_20 image
+                            uid=8_21 ignored
+                        uid=6_28 button "1"
+                          uid=8_22 image
+                            uid=8_23 ignored
+                          uid=8_24 generic
+                            uid=8_25 generic
+                              uid=8_26 StaticText "1"
+                                uid=8_27 InlineTextBox "1"
+                        uid=6_35 button haspopup="menu"
+                          uid=8_28 image
+                            uid=8_29 ignored
+                        uid=6_38 button
+                          uid=8_30 image
+                            uid=8_31 ignored
+                        uid=6_41 button
+                          uid=8_32 image
+                            uid=8_33 ignored
+                        uid=6_44 button
+                          uid=8_34 image
+                            uid=8_35 ignored
+                        uid=6_47 button
+                          uid=8_36 image
+                            uid=8_37 ignored
+                        uid=6_50 button haspopup="menu"
+                          uid=8_38 image
+                            uid=8_39 ignored
+                        uid=6_53 button
+                          uid=8_40 image
+                            uid=8_41 ignored
+                        uid=6_56 button
+                          uid=8_42 image
+                            uid=8_43 ignored
+            uid=8_44 generic
+            uid=8_45 generic
+              uid=8_46 image
+            uid=8_47 generic
+              uid=8_48 image
+          uid=6_64 form
+          uid=6_65 form
+      uid=6_66 region "Main Panel"
+        uid=8_49 generic
+          uid=8_50 generic
+            uid=6_69 StaticText "(ASG)American Freight"
+              uid=8_27 InlineTextBox "(ASG)American Freight"
+          uid=8_51 generic
+            uid=8_52 image
+            uid=8_53 generic
+              uid=6_73 link "printable Printable View" url="https://train-americanfreight.lucernex.com/en/dashboard/DashboardDispatchOld.jsp?dashboardName=admin#"
+                uid=6_74 image "printable" url="https://train-americanfreight.lucernex.com/en/img/preview.gif"
+                uid=6_75 StaticText "Printable View"
+                  uid=8_27 InlineTextBox "Printable View"
+            uid=8_54 ignored
+              uid=8_55 ignored
+                uid=8_56 ignored
+                  uid=8_57 generic
+                    uid=6_80 StaticText "System Administrator Dashboard"
+                      uid=8_27 InlineTextBox "System Administrator Dashboard"
+                uid=8_58 ignored
+                  uid=8_59 ignored
+                    uid=8_60 separator orientation="horizontal"
+            uid=6_84 form
+              uid=8_61 ignored
+                uid=8_62 ignored
+                  uid=8_63 ignored
+                    uid=8_64 generic
+                      uid=8_65 ignored
+                        uid=8_66 ignored
+                          uid=8_67 ignored
+                            uid=8_68 generic
+                              uid=6_93 StaticText "Company Administration"
+                                uid=8_27 InlineTextBox "Company Administration"
+                            uid=8_69 generic
+                              uid=6_95 StaticText " "
+                                uid=8_27 InlineTextBox " "
+                      uid=8_70 LayoutTable
+                        uid=8_71 ignored
+                          uid=8_72 LayoutTableRow
+                            uid=8_73 LayoutTableCell "Manage Company Manage Schedule Templates Manage Milestone Timeline Manage Binder Templates Manage Forms Manage Custom Lists Manage Parts and Inventory Manage Work Flows Manage Page Layouts Manage Data Fields Manage Dashboard Reports Import Data Import Best Practice Templates Export Configuration Job Log Manage Top Menu Manage Firm Dictionary Cost Management Manage Bid Package Templates Manage Budget Templates Manage Budget Views Manage Budget Types Manage Budget Summary Page Manage Budget Index Variables Manage Exchange Rates Manage Discount Rates Manage CPI Data Manage Defined Fields Manage Firm Drop Downs     Client Drop Downs "
+                              uid=6_100 link "Manage Company" url="https://train-americanfreight.lucernex.com/en/admin/FirmEdit.jsp?FirmID=3158"
+                                uid=6_101 StaticText "Manage Company"
+                                  uid=8_27 InlineTextBox "Manage Company"
+                              uid=6_102 LineBreak "
+"
+                                uid=8_27 InlineTextBox "
+"
+                              uid=6_103 link "Manage Schedule Templates" url="https://train-americanfreight.lucernex.com/en/admin/TaskTemplateEdit.jsp?includeType=Manage&BOType=TaskTemplate"
+                                uid=6_104 StaticText "Manage Schedule Templates"
+                                  uid=8_27 InlineTextBox "Manage Schedule Templates"
+                              uid=6_105 LineBreak "
+"
+                                uid=8_27 InlineTextBox "
+"
+                              uid=6_106 link "Manage Milestone Timeline" url="https://train-americanfreight.lucernex.com/en/admin/ProcessTimelineEdit.jsp"
+                                uid=6_107 StaticText "Manage Milestone Timeline"
+                                  uid=8_27 InlineTextBox "Manage Milestone Timeline"
+                              uid=6_108 LineBreak "
+"
+                                uid=8_27 InlineTextBox "
+"
+                              uid=6_109 link "Manage Binder Templates" url="https://train-americanfreight.lucernex.com/en/CommitteeDocuments/BinderTemplateEdit.jsp"
+                                uid=6_110 StaticText "Manage Binder Templates"
+                                  uid=8_27 InlineTextBox "Manage Binder Templates"
+                              uid=6_111 LineBreak "
+"
+                                uid=8_27 InlineTextBox "
+"
+                              uid=6_112 link "Manage Forms" url="https://train-americanfreight.lucernex.com/en/admin/FirmCodeEdit.jsp?&includeType=Manage&TableType=2035&tableName=Manage%20Forms"
+                                uid=6_113 StaticText "Manage Forms"
+                                  uid=8_27 InlineTextBox "Manage Forms"
+                              uid=6_114 LineBreak "
+"
+                                uid=8_27 InlineTextBox "
+"
+                              uid=6_115 link "Manage Custom Lists" url="https://train-americanfreight.lucernex.com/en/admin/CustomListEdit.jsp"
+                                uid=6_116 StaticText "Manage Custom Lists"
+                                  uid=8_27 InlineTextBox "Manage Custom Lists"
+                              uid=6_117 LineBreak "
+"
+                                uid=8_27 InlineTextBox "
+"
+                              uid=6_118 link "Manage Parts and Inventory" url="https://train-americanfreight.lucernex.com/en/lease/PartEdit.jsp"
+                                uid=6_119 StaticText "Manage Parts and Inventory"
+                                  uid=8_27 InlineTextBox "Manage Parts and Inventory"
+                              uid=6_120 LineBreak "
+"
+                                uid=8_27 InlineTextBox "
+"
+                              uid=6_121 link "Manage Work Flows" url="https://train-americanfreight.lucernex.com/en/workflow/WorkFlowTemplateEdit.jsp"
+                                uid=6_122 StaticText "Manage Work Flows"
+                                  uid=8_27 InlineTextBox "Manage Work Flows"
+                              uid=6_123 LineBreak "
+"
+                                uid=8_27 InlineTextBox "
+"
+                              uid=6_124 link "Manage Page Layouts" url="https://train-americanfreight.lucernex.com/en/pagebuilder/SummaryEntityPageLayoutEdit.jsp"
+                                uid=6_125 StaticText "Manage Page Layouts"
+                                  uid=8_27 InlineTextBox "Manage Page Layouts"
+                              uid=6_126 LineBreak "
+"
+                                uid=8_27 InlineTextBox "
+"
+                              uid=6_127 link "Manage Data Fields" url="https://train-americanfreight.lucernex.com/en/pagebuilder/ReportGroupAvailableFieldEdit.jsp"
+                                uid=6_128 StaticText "Manage Data Fields"
+                                  uid=8_27 InlineTextBox "Manage Data Fields"
+                              uid=6_129 LineBreak "
+"
+                                uid=8_27 InlineTextBox "
+"
+                              uid=6_130 link "Manage Dashboard Reports" url="https://train-americanfreight.lucernex.com/en/reports/ManageDashboardModules.jsp"
+                                uid=6_131 StaticText "Manage Dashboard Reports"
+                                  uid=8_27 InlineTextBox "Manage Dashboard Reports"
+                              uid=6_132 LineBreak "
+"
+                                uid=8_27 InlineTextBox "
+"
+                              uid=6_133 link "Import Data" url="https://train-americanfreight.lucernex.com/en/admin/Messenger.jsp"
+                                uid=6_134 StaticText "Import Data"
+                                  uid=8_27 InlineTextBox "Import Data"
+                              uid=6_135 LineBreak "
+"
+                                uid=8_27 InlineTextBox "
+"
+                              uid=6_136 link "Import Best Practice Templates" url="https://train-americanfreight.lucernex.com/en/admin/BestPracticeTemplates.jsp"
+                                uid=6_137 StaticText "Import Best Practice Templates"
+                                  uid=8_27 InlineTextBox "Import Best Practice Templates"
+                              uid=6_138 LineBreak "
+"
+                                uid=8_27 InlineTextBox "
+"
+                              uid=6_139 link "Export Configuration" url="https://train-americanfreight.lucernex.com/en/admin/MessengerExportData.jsp"
+                                uid=6_140 StaticText "Export Configuration"
+                                  uid=8_27 InlineTextBox "Export Configuration"
+                              uid=6_141 LineBreak "
+"
+                                uid=8_27 InlineTextBox "
+"
+                              uid=6_142 link "Job Log" url="https://train-americanfreight.lucernex.com/en/admin/JobLogEdit.jsp?type=joblog"
+                                uid=6_143 StaticText "Job Log"
+                                  uid=8_27 InlineTextBox "Job Log"
+                              uid=6_144 LineBreak "
+"
+                                uid=8_27 InlineTextBox "
+"
+                              uid=6_145 link "Manage Top Menu" url="https://train-americanfreight.lucernex.com/en/admin/ManageTopMenu.jsp"
+                                uid=6_146 StaticText "Manage Top Menu"
+                                  uid=8_27 InlineTextBox "Manage Top Menu"
+                              uid=6_147 LineBreak "
+"
+                                uid=8_27 InlineTextBox "
+"
+                              uid=6_148 link "Manage Firm Dictionary" url="https://train-americanfreight.lucernex.com/en/admin/Dictionary.jsp"
+                                uid=6_149 StaticText "Manage Firm Dictionary"
+                                  uid=8_27 InlineTextBox "Manage Firm Dictionary"
+                              uid=6_150 LineBreak "
+"
+                                uid=8_27 InlineTextBox "
+"
+                              uid=6_151 LineBreak "
+"
+                                uid=8_27 InlineTextBox "
+"
+                              uid=8_74 generic
+                                uid=6_153 StaticText "Cost Management"
+                                  uid=8_27 InlineTextBox "Cost Management"
+                              uid=6_154 link "Manage Bid Package Templates" url="https://train-americanfreight.lucernex.com/en/admin/BidPackageTemplate.jsp"
+                                uid=6_155 StaticText "Manage Bid Package Templates"
+                                  uid=8_27 InlineTextBox "Manage Bid Package Templates"
+                              uid=6_156 LineBreak "
+"
+                                uid=8_27 InlineTextBox "
+"
+                              uid=6_157 link "Manage Budget Templates" url="https://train-americanfreight.lucernex.com/en/budget/BudgetTemplateEdit.jsp"
+                                uid=6_158 StaticText "Manage Budget Templates"
+                                  uid=8_27 InlineTextBox "Manage Budget Templates"
+                              uid=6_159 LineBreak "
+"
+                                uid=8_27 InlineTextBox "
+"
+                              uid=6_160 link "Manage Budget Views" url="https://train-americanfreight.lucernex.com/en/budget/BudgetLayoutView.jsp"
+                                uid=6_161 StaticText "Manage Budget Views"
+                                  uid=8_27 InlineTextBox "Manage Budget Views"
+                              uid=6_162 LineBreak "
+"
+                                uid=8_27 InlineTextBox "
+"
+                              uid=6_163 link "Manage Budget Types" url="https://train-americanfreight.lucernex.com/en/budget/BudgetColumnTypeEdit.jsp"
+                                uid=6_164 StaticText "Manage Budget Types"
+                                  uid=8_27 InlineTextBox "Manage Budget Types"
+                              uid=6_165 LineBreak "
+"
+                                uid=8_27 InlineTextBox "
+"
+                              uid=6_166 link "Manage Budget Summary Page" url="https://train-americanfreight.lucernex.com/en/budget/BudgetSummaryEdit.jsp"
+                                uid=6_167 StaticText "Manage Budget Summary Page"
+                                  uid=8_27 InlineTextBox "Manage Budget Summary Page"
+                              uid=6_168 LineBreak "
+"
+                                uid=8_27 InlineTextBox "
+"
+                              uid=6_169 link "Manage Budget Index Variables" url="https://train-americanfreight.lucernex.com/en/budget/BudgetIndexEdit.jsp"
+                                uid=6_170 StaticText "Manage Budget Index Variables"
+                                  uid=8_27 InlineTextBox "Manage Budget Index Variables"
+                              uid=6_171 LineBreak "
+"
+                                uid=8_27 InlineTextBox "
+"
+                              uid=6_172 link "Manage Exchange Rates" url="https://train-americanfreight.lucernex.com/en/admin/ManageCurrencyRates.jsp"
+                                uid=6_173 StaticText "Manage Exchange Rates"
+                                  uid=8_27 InlineTextBox "Manage Exchange Rates"
+                              uid=6_174 LineBreak "
+"
+                                uid=8_27 InlineTextBox "
+"
+                              uid=6_175 link "Manage Discount Rates" url="https://train-americanfreight.lucernex.com/en/admin/ManageDiscountRates.jsp"
+                                uid=6_176 StaticText "Manage Discount Rates"
+                                  uid=8_27 InlineTextBox "Manage Discount Rates"
+                              uid=6_177 LineBreak "
+"
+                                uid=8_27 InlineTextBox "
+"
+                              uid=6_178 link "Manage CPI Data" url="https://train-americanfreight.lucernex.com/en/admin/ManageCPIData.jsp"
+                                uid=6_179 StaticText "Manage CPI Data"
+                                  uid=8_27 InlineTextBox "Manage CPI Data"
+                              uid=6_180 LineBreak "
+"
+                                uid=8_27 InlineTextBox "
+"
+                              uid=6_181 LineBreak "
+"
+                                uid=8_27 InlineTextBox "
+"
+                              uid=8_75 generic
+                                uid=6_183 StaticText "Manage Defined Fields"
+                                  uid=8_27 InlineTextBox "Manage Defined Fields"
+                              uid=6_184 link "Manage Firm Drop Downs" url="https://train-americanfreight.lucernex.com/en/admin/FirmCodeList.jsp"
+                                uid=6_185 StaticText "Manage Firm Drop Downs"
+                                  uid=8_27 InlineTextBox "Manage Firm Drop Downs"
+                              uid=6_186 LineBreak "
+"
+                                uid=8_27 InlineTextBox "
+"
+                              uid=6_187 link "    Client Drop Downs" url="https://train-americanfreight.lucernex.com/en/admin/CustomCodeTableEdit.jsp"
+                                uid=6_188 StaticText "    Client Drop Downs"
+                                  uid=8_27 InlineTextBox "    Client Drop Downs"
+                              uid=6_189 LineBreak "
+"
+                                uid=8_27 InlineTextBox "
+"
+                    uid=8_76 generic
+                      uid=8_77 ignored
+                        uid=8_78 ignored
+                          uid=8_79 ignored
+                            uid=8_80 generic
+                              uid=6_195 StaticText "Portfolio/Capital Program Administration"
+                                uid=8_27 InlineTextBox "Portfolio/Capital Program Administration"
+                            uid=8_81 generic
+                              uid=6_197 StaticText " "
+                                uid=8_27 InlineTextBox " "
+                      uid=8_82 LayoutTable
+                        uid=8_83 ignored
+                          uid=8_84 LayoutTableRow
+                            uid=8_85 LayoutTableCell "Manage Portfolios/Capital Programs Manage Regions/Org Chart Manage Fiscal Calendar Manage Holiday Calendar "
+                              uid=6_202 link "Manage Portfolios/Capital Programs" url="https://train-americanfreight.lucernex.com/en/admin/ProgramEdit.jsp"
+                                uid=6_203 StaticText "Manage Portfolios/Capital Programs"
+                                  uid=8_27 InlineTextBox "Manage Portfolios/Capital Programs"
+                              uid=6_204 LineBreak "
+"
+                                uid=8_27 InlineTextBox "
+"
+                              uid=6_205 link "Manage Regions/Org Chart" url="https://train-americanfreight.lucernex.com/en/admin/OrgChartEdit.jsp"
+                                uid=6_206 StaticText "Manage Regions/Org Chart"
+                                  uid=8_27 InlineTextBox "Manage Regions/Org Chart"
+                              uid=6_207 LineBreak "
+"
+                                uid=8_27 InlineTextBox "
+"
+                              uid=6_208 link "Manage Fiscal Calendar" url="https://train-americanfreight.lucernex.com/en/admin/ManageFiscalPeriod.jsp"
+                                uid=6_209 StaticText "Manage Fiscal Calendar"
+                                  uid=8_27 InlineTextBox "Manage Fiscal Calendar"
+                              uid=6_210 LineBreak "
+"
+                                uid=8_27 InlineTextBox "
+"
+                              uid=6_211 link "Manage Holiday Calendar" url="https://train-americanfreight.lucernex.com/en/admin/ManageHolidayCalendar.jsp"
+                                uid=6_212 StaticText "Manage Holiday Calendar"
+                                  uid=8_27 InlineTextBox "Manage Holiday Calendar"
+                              uid=6_213 LineBreak "
+"
+                                uid=8_27 InlineTextBox "
+"
+                    uid=8_86 generic
+                      uid=8_87 ignored
+                        uid=8_88 ignored
+                          uid=8_89 ignored
+                            uid=8_90 generic
+                              uid=6_219 StaticText "Member Administration"
+                                uid=8_27 InlineTextBox "Member Administration"
+                            uid=8_91 generic
+                              uid=6_221 StaticText " "
+                                uid=8_27 InlineTextBox " "
+                      uid=8_92 LayoutTable
+                        uid=8_93 ignored
+                          uid=8_94 LayoutTableRow
+                            uid=8_95 LayoutTableCell "Manage Members/Contacts Manage Employer Members Manage Employers Manage Vendors Manage Membership Manage Security Manage Defined Fields     Job Function Code     Job Title Code     User Class Code "
+                              uid=6_226 link "Manage Members/Contacts" url="https://train-americanfreight.lucernex.com/en/admin/ContactEdit.jsp"
+                                uid=6_227 StaticText "Manage Members/Contacts"
+                                  uid=8_27 InlineTextBox "Manage Members/Contacts"
+                              uid=6_228 LineBreak "
+"
+                                uid=8_27 InlineTextBox "
+"
+                              uid=6_229 link "Manage Employer Members" url="https://train-americanfreight.lucernex.com/en/admin/ManageEmployerMembers.jsp"
+                                uid=6_230 StaticText "Manage Employer Members"
+                                  uid=8_27 InlineTextBox "Manage Employer Members"
+                              uid=6_231 LineBreak "
+"
+                                uid=8_27 InlineTextBox "
+"
+                              uid=6_232 link "Manage Employers" url="https://train-americanfreight.lucernex.com/en/admin/EmployerEdit.jsp"
+                                uid=6_233 StaticText "Manage Employers"
+                                  uid=8_27 InlineTextBox "Manage Employers"
+                              uid=6_234 LineBreak "
+"
+                                uid=8_27 InlineTextBox "
+"
+                              uid=6_235 link "Manage Vendors" url="https://train-americanfreight.lucernex.com/en/admin/VendorActivate.jsp"
+                                uid=6_236 StaticText "Manage Vendors"
+                                  uid=8_27 InlineTextBox "Manage Vendors"
+                              uid=6_237 LineBreak "
+"
+                                uid=8_27 InlineTextBox "
+"
+                              uid=6_238 link "Manage Membership" url="https://train-americanfreight.lucernex.com/en/admin/ManageOneMemberManyProjects.jsp"
+                                uid=6_239 StaticText "Manage Membership"
+                                  uid=8_27 InlineTextBox "Manage Membership"
+                              uid=6_240 LineBreak "
+"
+                                uid=8_27 InlineTextBox "
+"
+                              uid=6_241 link "Manage Security" url="https://train-americanfreight.lucernex.com/en/admin/SecurityPageAccess.jsp"
+                                uid=6_242 StaticText "Manage Security"
+                                  uid=8_27 InlineTextBox "Manage Security"
+                              uid=6_243 LineBreak "
+"
+                                uid=8_27 InlineTextBox "
+"
+                              uid=8_96 generic
+                                uid=6_245 StaticText "Manage Defined Fields"
+                                  uid=8_27 InlineTextBox "Manage Defined Fields"
+                              uid=6_246 link "    Job Function Code" url="javascript:"
+                                uid=6_247 StaticText "    Job Function Code"
+                                  uid=8_27 InlineTextBox "    Job Function Code"
+                              uid=6_248 LineBreak "
+"
+                                uid=8_27 InlineTextBox "
+"
+                              uid=6_249 link "    Job Title Code" url="javascript:"
+                                uid=6_250 StaticText "    Job Title Code"
+                                  uid=8_27 InlineTextBox "    Job Title Code"
+                              uid=6_251 LineBreak "
+"
+                                uid=8_27 InlineTextBox "
+"
+                              uid=6_252 link "    User Class Code" url="javascript:"
+                                uid=6_253 StaticText "    User Class Code"
+                                  uid=8_27 InlineTextBox "    User Class Code"
+                              uid=6_254 LineBreak "
+"
+                                uid=8_27 InlineTextBox "
+"
+                  uid=8_97 ignored
+                    uid=8_98 generic
+                      uid=8_99 ignored
+                        uid=8_100 ignored
+                          uid=8_101 ignored
+                            uid=8_102 generic
+                              uid=6_261 StaticText "Portfolio Administration"
+                                uid=8_27 InlineTextBox "Portfolio Administration"
+                            uid=8_103 generic
+                              uid=6_263 StaticText " "
+                                uid=8_27 InlineTextBox " "
+                      uid=8_104 LayoutTable
+                        uid=8_105 ignored
+                          uid=8_106 LayoutTableRow
+                            uid=8_107 LayoutTableCell "Manage Facilities Manage Contracts Manage Locations Manage Complex/Center Details Manage Organizations "
+                              uid=6_268 link "Manage Facilities" url="https://train-americanfreight.lucernex.com/en/admin/FacilityEditForm.jsp"
+                                uid=6_269 StaticText "Manage Facilities"
+                                  uid=8_27 InlineTextBox "Manage Facilities"
+                              uid=6_270 LineBreak "
+"
+                                uid=8_27 InlineTextBox "
+"
+                              uid=6_271 link "Manage Contracts" url="https://train-americanfreight.lucernex.com/en/admin/ContractEdit.jsp"
+                                uid=6_272 StaticText "Manage Contracts"
+                                  uid=8_27 InlineTextBox "Manage Contracts"
+                              uid=6_273 LineBreak "
+"
+                                uid=8_27 InlineTextBox "
+"
+                              uid=6_274 link "Manage Locations" url="https://train-americanfreight.lucernex.com/en/admin/LocationEdit.jsp"
+                                uid=6_275 StaticText "Manage Locations"
+                                  uid=8_27 InlineTextBox "Manage Locations"
+                              uid=6_276 LineBreak "
+"
+                                uid=8_27 InlineTextBox "
+"
+                              uid=6_277 link "Manage Complex/Center Details" url="https://train-americanfreight.lucernex.com/en/admin/ComplexEdit.jsp"
+                                uid=6_278 StaticText "Manage Complex/Center Details"
+                                  uid=8_27 InlineTextBox "Manage Complex/Center Details"
+                              uid=6_279 LineBreak "
+"
+                                uid=8_27 InlineTextBox "
+"
+                              uid=6_280 link "Manage Organizations" url="https://train-americanfreight.lucernex.com/en/admin/OrganizationEdit.jsp?AdminPage=true"
+                                uid=6_281 StaticText "Manage Organizations"
+                                  uid=8_27 InlineTextBox "Manage Organizations"
+                              uid=6_282 LineBreak "
+"
+                                uid=8_27 InlineTextBox "
+"
+                              uid=6_283 LineBreak "
+"
+                                uid=8_27 InlineTextBox "
+"
+                    uid=8_108 generic
+                      uid=8_109 ignored
+                        uid=8_110 ignored
+                          uid=8_111 ignored
+                            uid=8_112 generic
+                              uid=6_289 StaticText "Folder Administration"
+                                uid=8_27 InlineTextBox "Folder Administration"
+                            uid=8_113 generic
+                              uid=6_291 StaticText " "
+                                uid=8_27 InlineTextBox " "
+                      uid=8_114 LayoutTable
+                        uid=8_115 ignored
+                          uid=8_116 LayoutTableRow
+                            uid=8_117 LayoutTableCell "Manage Folder Templates Manage Defined Fields     Document Content Code     Document Type Code "
+                              uid=6_296 link "Manage Folder Templates" url="https://train-americanfreight.lucernex.com/en/admin/FolderTemplateEdit.jsp"
+                                uid=6_297 StaticText "Manage Folder Templates"
+                                  uid=8_27 InlineTextBox "Manage Folder Templates"
+                              uid=6_298 LineBreak "
+"
+                                uid=8_27 InlineTextBox "
+"
+                              uid=6_299 LineBreak "
+"
+                                uid=8_27 InlineTextBox "
+"
+                              uid=8_118 generic
+                                uid=6_301 StaticText "Manage Defined Fields"
+                                  uid=8_27 InlineTextBox "Manage Defined Fields"
+                              uid=6_302 link "    Document Content Code" url="javascript:"
+                                uid=6_303 StaticText "    Document Content Code"
+                                  uid=8_27 InlineTextBox "    Document Content Code"
+                              uid=6_304 LineBreak "
+"
+                                uid=8_27 InlineTextBox "
+"
+                              uid=6_305 link "    Document Type Code" url="javascript:"
+                                uid=6_306 StaticText "    Document Type Code"
+                                  uid=8_27 InlineTextBox "    Document Type Code"
+                              uid=6_307 LineBreak "
+"
+                                uid=8_27 InlineTextBox "
+"
+                  uid=8_119 ignored
+                    uid=8_120 generic
+                    uid=8_121 generic
+                      uid=8_122 ignored
+                        uid=8_123 ignored
+                          uid=8_124 ignored
+                            uid=8_125 generic
+                              uid=6_315 StaticText "Data/PS Tools"
+                                uid=8_27 InlineTextBox "Data/PS Tools"
+                            uid=8_126 generic
+                              uid=6_317 StaticText " "
+                                uid=8_27 InlineTextBox " "
+                      uid=8_127 LayoutTable
+                        uid=8_128 ignored
+                          uid=8_129 LayoutTableRow
+                            uid=8_130 LayoutTableCell "View Object Model View Data Model / Data Values (experimental) Audit Reports Email Log Report Log Export Schema Modify Straight Line Status Data Conversion Cleaner Test Email Address RESTful WebService Docs GraphQL Explorer Generate Enterprise Report File Layout Changes Delete Entities "
+                              uid=6_322 link "View Object Model" url="https://train-americanfreight.lucernex.com/en/admin/ShowObjectDetails.jsp"
+                                uid=6_323 StaticText "View Object Model"
+                                  uid=8_27 InlineTextBox "View Object Model"
+                              uid=6_324 LineBreak "
+"
+                                uid=8_27 InlineTextBox "
+"
+                              uid=6_325 link "View Data Model / Data Values (experimental)" url="https://train-americanfreight.lucernex.com/en/test/walkHierarchy.jsp"
+                                uid=6_326 StaticText "View Data Model / Data Values (experimental)"
+                                  uid=8_27 InlineTextBox "View Data Model / Data Values (experimental)"
+                              uid=6_327 LineBreak "
+"
+                                uid=8_27 InlineTextBox "
+"
+                              uid=6_328 link "Audit Reports" url="https://train-americanfreight.lucernex.com/en/reports/AuditReport.jsp"
+                                uid=6_329 StaticText "Audit Reports"
+                                  uid=8_27 InlineTextBox "Audit Reports"
+                              uid=6_330 LineBreak "
+"
+                                uid=8_27 InlineTextBox "
+"
+                              uid=6_331 link "Email Log" url="https://train-americanfreight.lucernex.com/en/reports/EMailLogs.jsp"
+                                uid=6_332 StaticText "Email Log"
+                                  uid=8_27 InlineTextBox "Email Log"
+                              uid=6_333 LineBreak "
+"
+                                uid=8_27 InlineTextBox "
+"
+                              uid=6_334 link "Report Log" url="https://train-americanfreight.lucernex.com/en/admin/JobLogEdit.jsp?type=reportlog"
+                                uid=6_335 StaticText "Report Log"
+                                  uid=8_27 InlineTextBox "Report Log"
+                              uid=6_336 LineBreak "
+"
+                                uid=8_27 InlineTextBox "
+"
+                              uid=6_337 link "Export Schema" url="javascript:"
+                                uid=6_338 StaticText "Export Schema"
+                                  uid=8_27 InlineTextBox "Export Schema"
+                              uid=6_339 LineBreak "
+"
+                                uid=8_27 InlineTextBox "
+"
+                              uid=6_340 link "Modify Straight Line Status" url="https://train-americanfreight.lucernex.com/en/admin/lxadmin/SLDemoTweaks.jsp"
+                                uid=6_341 StaticText "Modify Straight Line Status"
+                                  uid=8_27 InlineTextBox "Modify Straight Line Status"
+                              uid=6_342 LineBreak "
+"
+                                uid=8_27 InlineTextBox "
+"
+                              uid=6_343 link "Data Conversion Cleaner" url="https://train-americanfreight.lucernex.com/en/admin/lxadmin/DataLoadTweaks.jsp"
+                                uid=6_344 StaticText "Data Conversion Cleaner"
+                                  uid=8_27 InlineTextBox "Data Conversion Cleaner"
+                              uid=6_345 LineBreak "
+"
+                                uid=8_27 InlineTextBox "
+"
+                              uid=6_346 link "Test Email Address" url="https://train-americanfreight.lucernex.com/en/admin/lxadmin/EmailTest.jsp"
+                                uid=6_347 StaticText "Test Email Address"
+                                  uid=8_27 InlineTextBox "Test Email Address"
+                              uid=6_348 LineBreak "
+"
+                                uid=8_27 InlineTextBox "
+"
+                              uid=6_349 link "RESTful WebService Docs" url="https://train-americanfreight.lucernex.com/en/test/RESTful.jsp"
+                                uid=6_350 StaticText "RESTful WebService Docs"
+                                  uid=8_27 InlineTextBox "RESTful WebService Docs"
+                              uid=6_351 LineBreak "
+"
+                                uid=8_27 InlineTextBox "
+"
+                              uid=6_352 link "GraphQL Explorer" url="https://train-americanfreight.lucernex.com/en/admin/graphql.jsp"
+                                uid=6_353 StaticText "GraphQL Explorer"
+                                  uid=8_27 InlineTextBox "GraphQL Explorer"
+                              uid=6_354 LineBreak "
+"
+                                uid=8_27 InlineTextBox "
+"
+                              uid=6_355 link "Generate Enterprise Report File" url="https://train-americanfreight.lucernex.com/en/admin/GenBaseReport.jsp"
+                                uid=6_356 StaticText "Generate Enterprise Report File"
+                                  uid=8_27 InlineTextBox "Generate Enterprise Report File"
+                              uid=6_357 LineBreak "
+"
+                                uid=8_27 InlineTextBox "
+"
+                              uid=6_358 link "Layout Changes" url="https://train-americanfreight.lucernex.com/en/admin/ShowLayoutChanges.jsp"
+                                uid=6_359 StaticText "Layout Changes"
+                                  uid=8_27 InlineTextBox "Layout Changes"
+                              uid=6_360 LineBreak "
+"
+                                uid=8_27 InlineTextBox "
+"
+                              uid=6_361 link "Delete Entities" url="https://train-americanfreight.lucernex.com/en/admin/lxadmin/DeleteEntities.jsp"
+                                uid=6_362 StaticText "Delete Entities"
+                                  uid=8_27 InlineTextBox "Delete Entities"
+                              uid=6_363 LineBreak "
+"
+                                uid=8_27 InlineTextBox "
+"
+      uid=6_364 StaticText ">>"
+        uid=8_27 InlineTextBox ">>"
+      uid=6_365 separator orientation="vertical" value="50" valuemax="100" valuemin="0" valuetext=""
+      uid=6_366 region "Footer"
+        uid=8_131 LayoutTable
+          uid=8_132 LayoutTableRow
+            uid=8_133 LayoutTableCell "logo © Copyright 2026 Accruent All Rights Reserved Privacy Policy Test 2 User : (ASG)American Freight 2026-09-01 22:02:55 Central Standard Time Build 26.08.0.39 (2026/08/21 21:28)"
+              uid=8_134 ignored
+                uid=8_135 ignored
+                  uid=8_136 ignored
+                    uid=8_137 generic
+                      uid=6_374 image "logo" url="https://train-americanfreight.lucernex.com/all/img/logo/LxLogo.png"
+                    uid=8_138 generic
+                      uid=6_376 StaticText "© Copyright 2026 Accruent All Rights Reserved"
+                        uid=8_27 InlineTextBox "© Copyright 2026 Accruent All Rights Reserved"
+                      uid=6_377 StaticText " "
+                        uid=8_27 InlineTextBox " "
+                      uid=6_378 link "Privacy Policy" url="https://www.accruent.com/privacy-policy"
+                        uid=6_379 StaticText "Privacy Policy"
+                          uid=8_27 InlineTextBox "Privacy Policy"
+                    uid=8_139 generic
+                      uid=6_381 link "Test 2 User" url="javascript:"
+                        uid=6_382 StaticText "Test 2 User"
+                          uid=8_27 InlineTextBox "Test 2 User"
+                      uid=6_383 StaticText " : (ASG)American Freight"
+                        uid=8_27 InlineTextBox " : (ASG)American Freight"
+                      uid=6_384 StaticText " "
+                        uid=8_27 InlineTextBox " "
+                      uid=6_385 StaticText "2026-09-01 22:02:55 Central Standard Time"
+                        uid=8_27 InlineTextBox "2026-09-01 22:02:55 Central Standard Time"
+                      uid=6_386 StaticText " "
+                        uid=8_27 InlineTextBox " "
+                      uid=6_387 StaticText "Build 26.08.0.39 (2026/08/21 21:28)"
+                        uid=8_27 InlineTextBox "Build 26.08.0.39 (2026/08/21 21:28)"
+            uid=8_140 LayoutTableCell
+              uid=8_141 LayoutTable
+                uid=8_142 ignored
+                  uid=8_143 LayoutTableRow
+                    uid=8_144 LayoutTableCell
+                      uid=8_145 generic
+      uid=8_146 generic
+      uid=8_147 ignored
+        uid=8_148 ignored

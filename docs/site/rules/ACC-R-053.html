@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ACC-R-053 &middot; Lucernex Atlas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="../atlas.css">
+</head><body>
+<header><b>Lucernex Atlas</b>
+<nav><a href="../index.html">Overview</a><a href="../atlas.html">Interactive app</a>
+<a href="../entities/index.html">Record types</a><a href="../rules/index.html">Rules</a>
+<a href="../questions.html">Open questions</a></nav></header>
+<main><p class="crumb"><a href="../index.html">Atlas</a> &rsaquo; <a href="index.html">Rules</a> &rsaquo; ACC-R-053</p><h1 class="mono">ACC-R-053</h1><p class="sub">Lease Accounting &amp; Payments &middot; Accrual transaction tax handling</p><span class="tag obs">Observed</span><p class="lead">Both branches are stated verbatim by the vendor.</p><p>- Trigger: `AccrualTransaction` entry. - Inputs: `PeriodAmount`, `TaxAmount1` … `TaxAmount4`, `TaxesIncludedFlag`. - Condition: - `TaxesIncludedFlag = false` ⇒ `TotalAmount = PeriodAmount + Σ TaxAmountN`, `TotalAmount` read-only. - `TaxesIncludedFlag = true` ⇒ `PeriodAmount` becomes disabled, the system subtracts the tax amounts from the period amount, and `TotalAmount` becomes editable. - Confidence: Observed — both branches are stated in the definitions of `TaxesIncludedFlag`, `PeriodAmount` and `TotalAmount`.</p><p style="font-size:11.5px;color:var(--faint);margin-top:18px">Source: modules/accounting/rules.md</p></main></body></html>

@@ -1,0 +1,810 @@
+<title>Lucernex Atlas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+
+<style>
+:root{
+  --bg:#E7EAEE; --grid:#D6DBE2; --surface:#F8F9FB; --surface2:#EEF1F5;
+  --ink:#12161C; --ink2:#3D4650; --muted:#6B7480; --faint:#9AA3AF;
+  --line:#C4CBD4; --line2:#DDE2E8;
+  --accent:#0E6E7E; --accent-ink:#FFFFFF; --accent-soft:#D3E7EA;
+  --ok:#2F6B45; --warn:#8A5A12; --info:#2B5590;
+  --shadow:0 1px 2px rgba(16,22,30,.10),0 8px 24px rgba(16,22,30,.10);
+  --r:3px;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0D1116; --grid:#171D25; --surface:#141A21; --surface2:#1B222B;
+    --ink:#E6EAEF; --ink2:#BAC3CD; --muted:#8B95A2; --faint:#67727F;
+    --line:#2A323C; --line2:#212932;
+    --accent:#48BFD2; --accent-ink:#06222A; --accent-soft:#16323A;
+    --ok:#6FBF8C; --warn:#D6A34A; --info:#7FA9E0;
+    --shadow:0 1px 2px rgba(0,0,0,.5),0 10px 30px rgba(0,0,0,.45);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0D1116; --grid:#171D25; --surface:#141A21; --surface2:#1B222B;
+  --ink:#E6EAEF; --ink2:#BAC3CD; --muted:#8B95A2; --faint:#67727F;
+  --line:#2A323C; --line2:#212932;
+  --accent:#48BFD2; --accent-ink:#06222A; --accent-soft:#16323A;
+  --ok:#6FBF8C; --warn:#D6A34A; --info:#7FA9E0;
+  --shadow:0 1px 2px rgba(0,0,0,.5),0 10px 30px rgba(0,0,0,.45);
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font-family:"IBM Plex Sans",ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  font-size:14px; line-height:1.5; overflow:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+.mono{font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;font-variant-numeric:tabular-nums}
+
+/* ---------------------------------------------------------------- shell */
+#app{display:grid;grid-template-rows:auto 1fr;height:100dvh}
+
+header{
+  display:flex;align-items:center;gap:18px;flex-wrap:wrap;
+  padding:10px 16px;background:var(--surface);border-bottom:1px solid var(--line);
+  box-shadow:0 1px 0 rgba(0,0,0,.02);z-index:20;
+}
+.brand{display:flex;align-items:baseline;gap:10px;min-width:0}
+.brand h1{
+  font-size:15px;font-weight:600;margin:0;letter-spacing:-.01em;white-space:nowrap;
+}
+.brand .sub{
+  font-size:10.5px;letter-spacing:.10em;text-transform:uppercase;color:var(--muted);
+  white-space:nowrap;
+}
+.stats{display:flex;gap:0;flex-wrap:wrap;border-left:1px solid var(--line2);padding-left:16px}
+.stat{padding:0 14px;border-right:1px solid var(--line2)}
+.stat:last-child{border-right:0}
+.stat b{display:block;font-size:15px;font-weight:600;letter-spacing:-.01em}
+.stat span{display:block;font-size:9.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+
+.tools{margin-left:auto;display:flex;align-items:center;gap:8px}
+.search{position:relative}
+.search input{
+  font:inherit;font-size:13px;width:230px;padding:6px 26px 6px 10px;
+  background:var(--bg);color:var(--ink);
+  border:1px solid var(--line);border-radius:var(--r);outline:none;
+}
+.search input:focus{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft)}
+.search .clear{
+  position:absolute;right:4px;top:50%;transform:translateY(-50%);
+  border:0;background:none;color:var(--faint);cursor:pointer;font-size:15px;line-height:1;padding:2px 5px;
+}
+button.btn{
+  font:inherit;font-size:12px;padding:6px 10px;cursor:pointer;
+  background:var(--bg);color:var(--ink2);border:1px solid var(--line);border-radius:var(--r);
+}
+button.btn:hover{border-color:var(--accent);color:var(--ink)}
+button.btn:focus-visible,.search input:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+button.btn[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.depthbtns{display:flex;gap:0}
+.depthbtns button{border-radius:0;border-right-width:0;padding:6px 8px}
+.depthbtns button:first-child{border-radius:var(--r) 0 0 var(--r)}
+.depthbtns button:last-child{border-radius:0 var(--r) var(--r) 0;border-right-width:1px}
+
+/* ---------------------------------------------------------------- canvas */
+main{position:relative;overflow:hidden;background:
+  linear-gradient(var(--grid) 1px,transparent 1px) 0 0/28px 28px,
+  linear-gradient(90deg,var(--grid) 1px,transparent 1px) 0 0/28px 28px,
+  var(--bg);
+}
+#stage{position:absolute;inset:0;cursor:grab}
+#stage.drag{cursor:grabbing}
+svg{display:block;width:100%;height:100%}
+.link{fill:none;stroke:var(--line);stroke-width:1.25}
+.link.on{stroke:var(--accent);stroke-width:1.75}
+
+.node{cursor:pointer}
+.node rect.bx{
+  fill:var(--surface);stroke:var(--line);stroke-width:1;rx:3;
+  filter:drop-shadow(0 1px 1px rgba(16,22,30,.06));
+}
+.node:hover rect.bx{stroke:var(--accent)}
+.node.sel rect.bx{stroke:var(--accent);stroke-width:2}
+.node.hit rect.bx{fill:var(--accent-soft)}
+.node rect.hue{rx:2}
+.node text{font-size:12.5px;fill:var(--ink);dominant-baseline:middle;pointer-events:none}
+.node text.n{font-size:10.5px;fill:var(--muted);font-family:"IBM Plex Mono",monospace}
+.node text.k{font-size:8.5px;fill:var(--faint);letter-spacing:.09em;text-transform:uppercase}
+.node .toggle{fill:var(--surface2);stroke:var(--line)}
+.node .tsign{fill:var(--ink2);font-size:11px;text-anchor:middle;font-family:"IBM Plex Mono",monospace}
+.node.dim{opacity:.28}
+.node.rule rect.bx{fill:var(--accent-soft)}
+.node.walkthrough rect.bx{stroke:var(--accent);stroke-width:1.75}
+.node.oos rect.bx{stroke-dasharray:3 2;fill:var(--surface2)}
+.node.oos text{fill:var(--muted)}
+
+/* ---------------------------------------------------------------- drawer */
+#drawer{
+  position:absolute;top:0;right:0;bottom:0;width:min(400px,42vw);
+  background:var(--surface);border-left:1px solid var(--line);
+  box-shadow:var(--shadow);overflow-y:auto;z-index:15;
+  transform:translateX(101%);transition:transform .22s ease;
+}
+#drawer.open{transform:none}
+@media (prefers-reduced-motion:reduce){#drawer{transition:none}}
+.dhead{padding:16px 18px 12px;border-bottom:1px solid var(--line2);position:sticky;top:0;background:var(--surface);z-index:2}
+.dkind{font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
+.dhead h2{margin:0;font-size:17px;font-weight:600;letter-spacing:-.01em;word-break:break-word;text-wrap:balance}
+.dclose{position:absolute;top:12px;right:12px;border:0;background:none;color:var(--faint);font-size:19px;cursor:pointer;line-height:1;padding:3px 6px}
+.dclose:hover{color:var(--ink)}
+.dbody{padding:14px 18px 30px}
+.dbody p{margin:0 0 12px;color:var(--ink2);max-width:62ch}
+.crumb{font-size:10.5px;color:var(--muted);margin:0 0 12px;word-break:break-word;line-height:1.7}
+.crumb i{font-style:normal;color:var(--faint)}
+dl.kv{display:grid;grid-template-columns:auto 1fr;gap:5px 14px;margin:0 0 16px;font-size:12.5px}
+dl.kv dt{color:var(--muted);white-space:nowrap}
+dl.kv dd{margin:0;color:var(--ink)}
+.tag{
+  display:inline-block;font-size:9.5px;letter-spacing:.07em;text-transform:uppercase;
+  padding:2px 6px;border-radius:2px;border:1px solid var(--line);color:var(--muted);margin:0 4px 4px 0;
+}
+.tag.obs{color:var(--ok);border-color:currentColor}
+.tag.der{color:var(--info);border-color:currentColor}
+.tag.inf{color:var(--warn);border-color:currentColor}
+.dsec{margin:18px 0 0;padding-top:14px;border-top:1px solid var(--line2)}
+.dsec h3{margin:0 0 8px;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.chips{display:flex;flex-wrap:wrap;gap:5px}
+.chip{
+  font-size:11px;padding:3px 8px;border:1px solid var(--line);border-radius:2px;
+  background:var(--bg);color:var(--ink2);cursor:pointer;font-family:"IBM Plex Mono",monospace;
+}
+.chip:hover{border-color:var(--accent);color:var(--ink)}
+.scroller{max-height:280px;overflow:auto;border:1px solid var(--line2);border-radius:var(--r)}
+table.mini{width:100%;border-collapse:collapse;font-size:11.5px}
+table.mini th,table.mini td{padding:5px 8px;text-align:left;border-bottom:1px solid var(--line2)}
+table.mini th{position:sticky;top:0;background:var(--surface2);color:var(--muted);font-weight:600;font-size:9.5px;letter-spacing:.07em;text-transform:uppercase}
+table.mini td.num{text-align:right;font-family:"IBM Plex Mono",monospace}
+table.mini tr:last-child td{border-bottom:0}
+
+/* ---------------------------------------------------------------- legend */
+#legend{
+  position:absolute;left:14px;bottom:14px;z-index:12;
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--r);
+  padding:10px 12px;box-shadow:var(--shadow);font-size:11px;max-width:250px;
+}
+#legend h4{margin:0 0 7px;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.lrow{display:flex;align-items:center;gap:7px;margin-bottom:3px;color:var(--ink2)}
+.sw{width:10px;height:10px;border-radius:2px;flex:none}
+#legend .hint{margin-top:8px;padding-top:8px;border-top:1px solid var(--line2);color:var(--muted);font-size:10.5px;line-height:1.5}
+#hud{
+  position:absolute;right:14px;bottom:14px;z-index:12;display:flex;gap:6px;align-items:center;
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--r);
+  padding:5px 8px;box-shadow:var(--shadow);font-size:10.5px;color:var(--muted);
+}
+#hud .mono{color:var(--ink)}
+@media (max-width:820px){
+  .stats{display:none}
+  #legend{display:none}
+  #drawer{width:100%}
+  .search input{width:150px}
+}
+</style>
+
+<div id="app">
+<header>
+  <div class="brand">
+    <h1>Lucernex Atlas</h1>
+    <span class="sub" id="cap"></span>
+  </div>
+  <div class="stats" id="stats"></div>
+  <div class="tools">
+    <div class="search">
+      <input id="q" type="search" placeholder="Search entities and fields&hellip;" aria-label="Search entities and fields" autocomplete="off">
+      <button class="clear" id="qx" aria-label="Clear search" hidden>&times;</button>
+    </div>
+    <div class="depthbtns" role="group" aria-label="Open levels below the selected node" title="Open this many levels below whatever is selected">
+      <button class="btn" data-d="1">L1</button>
+      <button class="btn" data-d="2">L2</button>
+      <button class="btn" data-d="3">L3</button>
+      <button class="btn" data-d="4">L4</button>
+    </div>
+    <button class="btn" id="fit">Fit</button>
+    <button class="btn" id="reset">Reset</button>
+    <button class="btn" id="theme" aria-label="Toggle colour theme">&#9680;</button>
+  </div>
+</header>
+
+<main>
+  <div id="stage">
+    <svg id="svg" role="tree" aria-label="Lucernex system map">
+      <g id="cam">
+        <g id="links"></g>
+        <g id="nodes"></g>
+      </g>
+    </svg>
+  </div>
+
+  <div id="legend">
+    <h4>Depth</h4>
+    <div class="lrow"><span class="sw" style="background:var(--accent)"></span> Product &middot; Module</div>
+    <div class="lrow"><span class="sw" style="background:var(--info)"></span> Entity &middot; Field group</div>
+    <div class="lrow"><span class="sw" style="background:var(--muted)"></span> Field &middot; Type</div>
+    <div class="lrow"><span class="sw" style="background:var(--accent-soft);border:1px solid var(--accent)"></span> Hand-written walkthrough &middot; Rule</div>
+    <div class="hint">Click a node to open it and read its detail. <b>L1&ndash;L4</b> open that many levels below whatever is selected. Keep following a foreign key and the map keeps going &mdash; the graph is cyclic, so there is no bottom.</div>
+  </div>
+
+  <div id="hud">
+    <span>depth</span><b class="mono" id="hdepth">0</b>
+    <span>&middot;</span><span>nodes</span><b class="mono" id="hnodes">0</b>
+    <span>&middot;</span><span>zoom</span><b class="mono" id="hzoom">100%</b>
+  </div>
+
+  <aside id="drawer" aria-live="polite">
+    <div class="dhead">
+      <div class="dkind" id="dkind"></div>
+      <h2 id="dtitle"></h2>
+      <button class="dclose" id="dclose" aria-label="Close details">&times;</button>
+    </div>
+    <div class="dbody" id="dbody"></div>
+  </aside>
+</main>
+</div>
+
+<script id="mapdata" type="application/json">__MAPDATA__</script>
+
+<script>
+"use strict";
+const D = JSON.parse(document.getElementById('mapdata').textContent);
+
+/* ------------------------------------------------------------ curated notes
+   Facts established by direct observation of the running application, attached
+   to the modules they belong to. These are what a schema dump cannot tell you. */
+const NOTES = {
+  "layouts-forms-reporting": [
+    ["Conditional display is a real rule engine","observed",
+     "Every field or whole sub-page section can carry one rule set, read as a sentence: [Show | Show and Require | Hide] this field when [all | any] of the following rules match. Flat \u2014 no nesting, no mixed AND/OR."],
+    ["Operators depend on the driver's type","observed",
+     "Dropdown drivers get is in / is not in. Number drivers get = <> > >= < <=. Boolean drivers get selected / not selected. All three also get is specified / is not specified. 'is any value' is the neutral state."],
+    ["Rules cross entity boundaries","observed",
+     "A Contract layout offers 85 candidate driver fields drawn from four tables: Contract 65, ProjectEntity 9, Facility 7, Location 4. A Contract field can be hidden because of a value on its Location record."],
+    ["Text and Date can never drive a rule","observed",
+     "Only Dropdown, Number and Boolean fields appear as drivers, even though Contract has many text and date columns. A deliberate constraint that keeps rules explicable."],
+    ["A Form is not a Page","observed",
+     "A Page Layout presents an entity that already exists. A Form defines a new tenant-authored request type, and gets one layout per workflow step. A Custom List is a Form without the workflow."],
+    ["Rules are stored as an opaque JSON blob","observed",
+     "One json.conditionalFieldsConfig per target. Cheap to write, impossible to query \u2014 Lucernex cannot answer 'which layouts depend on this drop-down?'. Storing predicates as rows instead would give the rebuild a Where-Used answer for free."]
+  ],
+  "workflow": [
+    ["Four workflows are live, 1:1 with four form types","observed",
+     "Lease Admin Request (8 steps), Rent Payment Review/Approval (6), ASC 842 Schedule Review/Approval (3), User Request (2). The Form is the record; the Work Flow is its process."],
+    ["Lease Admin Request is BRD-24, already implemented","observed",
+     "Initial Review \u2192 Abstract Lease Document \u2192 ASG Review \u2192 Client Review \u2192 Import Payment History/Sales \u2192 Finalize \u2192 Finalize (Defaults) \u2192 Complete. The BRD says what the process should be; this shows what it is."],
+    ["A step shows a different screen to a different person","observed",
+     "Each workflow step binds its own layout. The same request record presents a different field surface at Submit, at Review and at Approve. That is what makes the engine expressive."],
+    ["Routing is by position, not by name","observed",
+     "Approval Level is Member, Job Title or Ad Hoc. The API's AssigneeType enum goes further: ALL, PARENT, REGION1, REGION2, MARKET, JOB_TITLE. Notifications walk the org chart to three explicit levels."],
+    ["Four ways to start a workflow","observed",
+     "KickOffMethod: STEP_ACTION, PAGE_LAYOUT, STATUS_CHANGE, TASK. This is the trigger taxonomy the rebuild's rule engine has to reproduce."],
+    ["No Task step exists anywhere","observed",
+     "All 19 configured steps are Form steps, though 'add task step' exists. WorkFlowTemplateStep has 55 fields and this screen surfaces six, so most of the step model is still unseen."]
+  ],
+  "accounting": [
+    ["One engine, three standards","observed",
+     "There is no separate ASC 842 module. There is one summary/period pair \u2014 SLSummary (134 fields) and SLPeriod (79) \u2014 with three mutually exclusive flags saying which standard a schedule was produced under."],
+    ["Classification is a separate record","observed",
+     "ContractFinancialTest (93 fields) runs the five ASC 842 tests and holds ASC 842 and IFRS 16 results side by side. An older ASC 840 'Cap Lease Test' still sits directly on Contract."],
+    ["Schedules are approved, not published","observed",
+     "The ASC 842 Schedule Review/Approval workflow gates output: generate \u2192 initial review \u2192 ASG approve \u2192 client approve. The rebuild needs a schedule state machine, not just a calculator."],
+    ["Amortisation has a policy switch","observed",
+     "GaapAmortizeMode has exactly two values: PER_DAY and PER_PERIOD."],
+    ["Every non-key column is TEXT","observed",
+     "In the physical Postgres export, 6,882 of 7,069 columns are TEXT \u2014 currency and percentage included. The other 187 are all primary keys. There is no numeric typing to inherit."],
+    ["Some fields are magnitude-typed","observed",
+     "SLSummary.SLRemainingAssetBalance is read as a percentage when 0\u2013100 and as currency at 100.01 and above. A genuine data-integrity hazard to design out."]
+  ],
+  "contracts-leases": [
+    ["Contract is the blocker","derived",
+     "570 fields across four physical tables, and 62 other objects point at it. Payment processing, percentage rent and ASC 842 accounting all sit downstream, which is why the schema freeze gates them."],
+    ["Vendor is a relabelled Employer","observed",
+     "PaymentTransaction.VendorID has declared type Employer ID. Contract has no direct Vendor foreign key at all \u2014 that relationship lives one level down, on Payment Transaction."],
+    ["Relationships are asymmetric by cardinality","observed",
+     "From Contract, Facility is reached as a single related record. From Facility, Contract is not offered that way \u2014 it appears as an embedded child grid. The UI models the one-to-many direction differently from the many-to-one."],
+    ["A contract can be its own parent","observed",
+     "MasterContractID has declared type Contract ID \u2014 a self-reference carrying the master-lease and sublease hierarchy."]
+  ],
+  "platform-tenancy": [
+    ["ProjectEntity is the spine","observed",
+     "163 foreign keys point at it, and it is a declared interface in the GraphQL schema rather than a naming convention. Almost every table carries a ProjectEntityID."],
+    ["The tenant travels in the token","observed",
+     "The session JWT carries firmname and a cluster claim shaped host:tenant \u2014 evidence that Lucernex routes each request to a tenant-specific database using a value inside the token."],
+    ["448 field-type codes hide a 10-value system","observed",
+     "The API's FieldType enum is BOOLEAN, COMPUTED, DATE, DATETIME, FK, FLOAT, INTEGER, MONEY, PERCENTAGE, STRING. COMPUTED and FK are first-class types \u2014 the platform distinguishes engine-calculated values from user input in its type system."],
+    ["Money is never a float","observed",
+     "BigDecimal is a declared GraphQL scalar, and MONEY and PERCENTAGE are distinct from FLOAT. Accruent reached the same conclusion the rebuild's constitution mandates."]
+  ],
+  "people-parties": [
+    ["Member is the most-referenced object in the product","derived",
+     "290 foreign keys point at it \u2014 more than ProjectEntity. Almost every record records who created and modified it, and workflow routing resolves to members."]
+  ]
+};
+
+/* module hues \u2014 muted atlas colours, one per module, legible on both grounds */
+const HUES = ["#4E7CA1","#7A6BA8","#3F8A78","#A8743F","#8A5470","#5B7F45","#9A5B4C","#4C6E9E",
+              "#7E7A46","#6A5D95","#3E8395","#8C6A3F","#5D8A5C","#96566A","#6E7683"];
+const hueOf = {};
+D.modules.forEach((m,i)=>hueOf[m.id]=HUES[i%HUES.length]);
+
+/* ------------------------------------------------------------------ helpers */
+const fmt = n => n.toLocaleString('en-US');
+const esc = s => String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const objOf = n => D.objects[n];
+
+const edgesFrom = {}, edgesTo = {};
+D.edges.forEach(e=>{
+  (edgesFrom[e[0]] = edgesFrom[e[0]]||[]).push(e);
+  if(e[3]) (edgesTo[e[3]] = edgesTo[e[3]]||[]).push(e);
+});
+
+/* ------------------------------------------------------------- tree model */
+let uid = 0;
+function N(name,kind,opt){
+  return Object.assign({id:++uid,name,kind,open:false,kids:null,parent:null},opt||{});
+}
+
+const ROOT = N(D.meta.product,'product',{
+  detail:`${D.meta.vendor}'s integrated workplace management system, as configured for the ${D.meta.tenant} tenant. Everything below was read out of the running application and its own schema tools on ${D.meta.captured}.`,
+  conf:'observed', src:'Live application, build '+D.meta.build
+});
+
+function childrenOf(n){
+  if(n.kids) return n.kids;
+  let k = [];
+
+  if(n.curatedKids){
+    k = n.curatedKids.map(c=>fromCurated(c, n.mod));
+    n.kids = k; k.forEach(c=>c.parent=n);
+    return k;
+  }
+
+  if(n.kind==='product'){
+    k = D.modules.map(m=>N(m.title,'module',{
+      mod:m.id, detail:m.what, conf:'derived',
+      src:'docs/mindmap/modules.json',
+      meta:[['Entities',fmt(m.oc)],['Fields',fmt(m.fc)],['FKs in',fmt(m.ei)],['FKs out',fmt(m.eo)],
+            ['In scope',m.scope?'yes':'no \u2014 cost and budget excluded by decision']]
+    }));
+  }
+
+  else if(n.kind==='module'){
+    const m = D.modules.find(x=>x.id===n.mod);
+    (NOTES[m.id]||[]).forEach(([t,c,dt])=>{
+      k.push(N(t,'finding',{mod:m.id,detail:dt,conf:c,src:'Live capture, 2026-09-10'}));
+    });
+    const cur = D.curated && D.curated[m.id];
+    if(cur){
+      k.push(N(cur.name, 'walkthrough', {
+        mod:m.id, curatedKids:cur.children||[],
+        conf:(cur.confidence||'derived'), src:cur.source||'Hand-authored module analysis',
+        detail:(cur.detail||'')+' This branch is written by hand: it organises the module by what it DOES, and carries the rules and constraints the schema alone cannot show. The record types below it are the same ones listed further down, reached by meaning rather than by size.'
+      }));
+    }
+    if(m.dep && m.dep.length){
+      k.push(N('Depends on '+m.dep.length+' other module'+(m.dep.length>1?'s':''),'link-group',{
+        mod:m.id, deps:m.dep, conf:'derived', src:'docs/mindmap/edges.json',
+        detail:'Modules this one holds foreign keys into. Following these is how you find the blast radius of a schema change.'
+      }));
+    }
+    m.objects.forEach(name=>{
+      const o = objOf(name); if(!o) return;
+      k.push(N(name,'entity',{mod:m.id,obj:name,conf:'observed',
+        src:'_lucernex_objects_summary.txt',
+        detail:`A record type in the ${m.title.toLowerCase()} area, holding ${fmt(o.n)} fields.`}));
+    });
+  }
+
+  else if(n.kind==='link-group'){
+    k = n.deps.map(id=>{
+      const m = D.modules.find(x=>x.id===id);
+      return N(m?m.title:id,'module',{mod:id,detail:m?m.what:'',conf:'derived',src:'docs/mindmap/edges.json',
+        meta:m?[['Entities',fmt(m.oc)],['Fields',fmt(m.fc)]]:[]});
+    });
+  }
+
+  else if(n.kind==='entity'){
+    const o = objOf(n.obj);
+    k = o.g.map(([g,fields])=>N(g,'group',{
+      mod:n.mod, obj:n.obj, grp:g, fields, conf:'derived',
+      src:'Grouped from the entity field list',
+      detail:D.groupBlurb[g]||'', meta:[['Fields',fmt(fields.length)]]
+    }));
+  }
+
+  else if(n.kind==='group'){
+    k = n.fields.map(([fn,ft,fam])=>N(fn,'field',{
+      mod:n.mod, obj:n.obj, ftype:ft, fam, conf:'observed',
+      src:'_lucernex_objects_summary.txt',
+      detail:`A ${ft.toLowerCase()} field on ${n.obj}.`
+    }));
+  }
+
+  else if(n.kind==='field'){
+    k = [N(n.ftype,'type',{mod:n.mod,obj:n.obj,ftype:n.ftype,fam:n.fam,col:n.name,conf:'observed',
+      src:'Declared field type',
+      detail:D.typeNote[n.ftype] || (n.fam==='fk'
+        ? 'A foreign key. Lucernex names the type after the table it points at, so the relationship is declared in the schema rather than implied by the column name.'
+        : n.fam==='dropdown'
+        ? 'A value chosen from a master code table that an administrator controls.'
+        : n.fam==='soft'
+        ? 'A soft reference. It names another record without a typed key behind it - a generic handle that resolves to whichever table the row belongs to. These are the joins a rebuild has to make explicit.'
+        : 'A declared field type.')})];
+  }
+
+  else if(n.kind==='type'){
+    if(n.fam==='fk'){
+      const e = (edgesFrom[n.obj]||[]).find(x=>x[1]===n.col);
+      if(e && e[3] && objOf(e[3])){
+        const t = objOf(e[3]);
+        k=[N(e[3],'entity',{mod:t.m,obj:e[3],conf:'observed',src:'docs/mindmap/edges.json',
+          detail:`The record this key points at. Opening it continues the map \u2014 the graph is cyclic, so you can keep going indefinitely.`,
+          meta:[['Reached via',n.obj+'.'+n.col],['Declared type',n.ftype],['Resolution',e[5]]]})];
+      } else if(e){
+        k=[N(e[2],'unresolved',{conf:'inferred',src:'docs/mindmap/edges.json',
+          detail:'This key declares a type that does not resolve to a named object in the schema dump. Generic entity handles like "Entity ID" and "item ID" behave this way \u2014 they point at whichever table the row belongs to.'})];
+      }
+    } else if(n.fam==='dropdown'){
+      const m=/\(([^)]+)\)/.exec(n.ftype);
+      k=[N(m?m[1]:'Code table','code-table',{conf:'derived',src:'docs/admin/007-firm-and-client-drop-downs.md',
+        detail:'A master list of allowed values. Lucernex keeps two kinds: 207 platform-fixed Firm Drop Downs whose values you may edit but whose catalogue you may not extend, and tenant-authored Client Drop Downs which support cascading parent/child lists and carry a field-level audit trail.',
+        meta:[['Governed by','Manage Firm Drop Downs / Client Drop Downs']]})];
+    }
+  }
+
+  n.kids = k;
+  k.forEach(c=>c.parent=n);
+  return k;
+}
+
+function depthOf(n){let d=0,p=n;while(p.parent){d++;p=p.parent}return d}
+
+/* Hand-authored trees carry the capabilities, rules and constraints that a schema
+   dump cannot express. They are converted lazily, same as everything else. */
+function fromCurated(c, mod){
+  const n = N(c.name, c.kind||'capability', {
+    mod: mod,
+    detail: c.detail||'',
+    conf: (c.confidence||'derived'),
+    src: c.source||'Hand-authored module analysis',
+    curatedKids: c.children||[]
+  });
+  return n;
+}
+
+/* ------------------------------------------------------------------ layout */
+const ROW=30, COLW=250, BOXH=24;
+let laid=[], links=[], maxDepth=0;
+
+function measure(n){
+  const name = typeof n==='string' ? n : n.name;
+  const d = typeof n==='string' ? 3 : (n._d||0);
+  const cap = d<=1 ? 320 : 210;
+  return Math.min(cap, 24 + name.length*6.9);
+}
+function labelCap(n){return (n._d||0)<=1 ? 44 : 28}
+
+function layout(){
+  laid=[];links=[];maxDepth=0;
+  let y=0;
+  (function walk(n,depth){
+    maxDepth=Math.max(maxDepth,depth);
+    const kids = n.open ? childrenOf(n) : [];
+    const my = y;
+    if(kids.length){
+      const ys=[];
+      kids.forEach(c=>{ys.push(walk(c,depth+1))});
+      n._y = (ys[0]+ys[ys.length-1])/2;
+      kids.forEach(c=>links.push([n,c]));
+    } else {
+      n._y = y; y += ROW;
+    }
+    n._x = depth*COLW; n._d = depth;
+    laid.push(n);
+    return n._y;
+  })(ROOT,0);
+}
+
+/* ------------------------------------------------------------------ render */
+const svg=document.getElementById('svg'), cam=document.getElementById('cam');
+const gL=document.getElementById('links'), gN=document.getElementById('nodes');
+let tx=90, ty=0, sc=1, sel=null, hits=new Set();
+
+function apply(){cam.setAttribute('transform',`translate(${tx},${ty}) scale(${sc})`);
+  document.getElementById('hzoom').textContent=Math.round(sc*100)+'%'}
+
+function render(){
+  layout();
+  gL.textContent='';gN.textContent='';
+  const NS='http://www.w3.org/2000/svg';
+
+  links.forEach(([a,b])=>{
+    const p=document.createElementNS(NS,'path');
+    const x1=a._x+measure(a)+16, y1=a._y, x2=b._x-4, y2=b._y, mx=(x1+x2)/2;
+    p.setAttribute('d',`M${x1},${y1} C${mx},${y1} ${mx},${y2} ${x2},${y2}`);
+    p.setAttribute('class','link'+((sel&&(sel===a||sel===b))?' on':''));
+    gL.appendChild(p);
+  });
+
+  laid.forEach(n=>{
+    const w=measure(n), g=document.createElementNS(NS,'g');
+    let cls='node'+(sel===n?' sel':'')+(hits.has(n.id)?' hit':'');
+    if(n.kind==='module'){const mm=D.modules.find(x=>x.id===n.mod); if(mm&&!mm.scope) cls+=' oos';}
+    if(n.kind==='rule') cls+=' rule';
+    if(n.kind==='walkthrough') cls+=' walkthrough';
+    if(hits.size && !hits.has(n.id) && !isAncestorOfHit(n)) cls+=' dim';
+    g.setAttribute('class',cls);
+    g.setAttribute('transform',`translate(${n._x},${n._y-BOXH/2})`);
+
+    const r=document.createElementNS(NS,'rect');
+    r.setAttribute('class','bx');r.setAttribute('width',w+16);r.setAttribute('height',BOXH);
+    g.appendChild(r);
+
+    const hue=document.createElementNS(NS,'rect');
+    hue.setAttribute('class','hue');hue.setAttribute('width',3);hue.setAttribute('height',BOXH-8);
+    hue.setAttribute('x',0);hue.setAttribute('y',4);
+    hue.setAttribute('fill', n.mod?hueOf[n.mod]:'var(--accent)');
+    g.appendChild(hue);
+
+    const t=document.createElementNS(NS,'text');
+    t.setAttribute('x',10);t.setAttribute('y',BOXH/2);
+    if(n.kind==='field'||n.kind==='entity'||n.kind==='type') t.setAttribute('class','n');
+    const LC=labelCap(n);
+    t.textContent = n.name.length>LC ? n.name.slice(0,LC-1)+'\u2026' : n.name;
+    g.appendChild(t);
+
+    const kids = n.open ? (n.kids||[]) : null;
+    const could = n.open ? (kids&&kids.length) : mightHaveKids(n);
+    if(could){
+      const c=document.createElementNS(NS,'circle');
+      c.setAttribute('class','toggle');c.setAttribute('cx',w+16);c.setAttribute('cy',BOXH/2);c.setAttribute('r',7);
+      g.appendChild(c);
+      const s=document.createElementNS(NS,'text');
+      s.setAttribute('class','tsign');s.setAttribute('x',w+16);s.setAttribute('y',BOXH/2+.5);
+      s.textContent=n.open?'\u2212':'+';
+      g.appendChild(s);
+    }
+
+    g.addEventListener('click',ev=>{ev.stopPropagation(); if(moved) return; toggle(n)});
+    gN.appendChild(g);
+  });
+
+  document.getElementById('hnodes').textContent=fmt(laid.length);
+  document.getElementById('hdepth').textContent=maxDepth;
+  apply();
+}
+
+function mightHaveKids(n){
+  if(n.curatedKids) return n.curatedKids.length>0;
+  if(n.kind==='unresolved'||n.kind==='code-table'||n.kind==='finding') return false;
+  if(n.kind==='type') return n.fam==='fk'||n.fam==='dropdown';
+  return true;
+}
+function isAncestorOfHit(n){
+  if(!hits.size) return false;
+  let found=false;
+  (function w(x){ if(found)return; if(hits.has(x.id)){found=true;return}
+    (x.open?(x.kids||[]):[]).forEach(w) })(n);
+  return found;
+}
+
+function toggle(n){
+  if(mightHaveKids(n)){ n.open=!n.open; if(n.open) childrenOf(n); }
+  select(n); render();
+}
+
+/* ------------------------------------------------------------------ drawer */
+const drawer=document.getElementById('drawer');
+function select(n){
+  sel=n;
+  document.getElementById('dkind').textContent=n.kind.replace('-',' ');
+  document.getElementById('dtitle').textContent=n.name;
+
+  const trail=[];let p=n;while(p){trail.unshift(p.name);p=p.parent}
+  let h=`<p class="crumb">${trail.map((s,i)=>i?`<i>\u203A</i> ${esc(s)}`:esc(s)).join(' ')}</p>`;
+
+  const cmap={observed:['obs','Observed'],derived:['der','Derived'],inferred:['inf','Inferred']};
+  if(n.conf){const c=cmap[n.conf];h+=`<span class="tag ${c[0]}">${c[1]}</span>`}
+  if(n.mod){const m=D.modules.find(x=>x.id===n.mod);if(m)h+=`<span class="tag">${esc(m.title)}</span>`}
+  h+=`<span class="tag">Level ${depthOf(n)}</span>`;
+
+  if(n.detail) h+=`<p>${esc(n.detail)}</p>`;
+
+  const kv=[];
+  if(n.meta) n.meta.forEach(([a,b])=>kv.push([a,b]));
+  if(n.kind==='entity'){
+    const o=objOf(n.obj);
+    kv.push(['Fields',fmt(o.n)]);
+    kv.push(['Postgres table',o.t||'\u2014 none exported \u2014']);
+    if(o.tc>1) kv.push(['Physical tables',o.tc+' (column-split)']);
+    kv.push(['Referenced by',fmt((edgesTo[n.obj]||[]).length)+' foreign keys']);
+    kv.push(['Points at',fmt((edgesFrom[n.obj]||[]).filter(e=>e[3]).length)+' other records']);
+  }
+  if(n.kind==='field'){
+    kv.push(['Column',n.name]);
+    if(n.ftype) kv.push(['Declared type',n.ftype]);
+    if(n.obj)   kv.push(['On entity',n.obj]);
+  }
+  if(n.kind==='type'&&n.fam==='fk'){
+    const e=(edgesFrom[n.obj]||[]).find(x=>x[1]===n.col);
+    if(e){kv.push(['Points at',e[3]||'(unresolved)']);kv.push(['Match confidence',e[5]||'-'])}
+  }
+  if(n.src) kv.push(['Source',n.src]);
+  if(kv.length) h+=`<dl class="kv">${kv.map(([a,b])=>`<dt>${esc(a)}</dt><dd>${esc(b)}</dd>`).join('')}</dl>`;
+
+  if(n.kind==='entity'){
+    const ins=(edgesTo[n.obj]||[]);
+    if(ins.length){
+      const by={};ins.forEach(e=>by[e[0]]=(by[e[0]]||0)+1);
+      const rows=Object.entries(by).sort((a,b)=>b[1]-a[1]).slice(0,40);
+      h+=`<div class="dsec"><h3>What points here (${fmt(ins.length)})</h3>
+        <div class="scroller"><table class="mini"><thead><tr><th>Record type</th><th class="num">Keys</th></tr></thead><tbody>
+        ${rows.map(([o,c])=>`<tr><td class="mono">${esc(o)}</td><td class="num">${c}</td></tr>`).join('')}
+        </tbody></table></div></div>`;
+    }
+  }
+  if(n.kind==='module'){
+    const m=D.modules.find(x=>x.id===n.mod);
+    if(m&&m.objects.length){
+      h+=`<div class="dsec"><h3>Largest record types</h3><div class="chips">`+
+        m.objects.slice(0,14).map(o=>`<span class="chip">${esc(o)} <span style="color:var(--faint)">${objOf(o)?objOf(o).n:''}</span></span>`).join('')+
+        `</div></div>`;
+    }
+  }
+  document.getElementById('dbody').innerHTML=h;
+  drawer.classList.add('open');
+}
+document.getElementById('dclose').onclick=()=>drawer.classList.remove('open');
+
+/* ------------------------------------------------------------- interaction */
+const stage=document.getElementById('stage');
+let dragging=false,sx=0,sy=0;
+/* Pointer capture must NOT be taken on pointerdown: it redirects every later
+   pointer event to the stage, so clicks never reach a node. Capture only once the
+   pointer has actually travelled far enough to count as a drag. */
+let downX=0,downY=0,moved=false,pid=null;
+const DRAG_SLOP=4;
+stage.addEventListener('pointerdown',e=>{
+  if(e.button!==0) return;
+  dragging=true; moved=false; pid=e.pointerId;
+  downX=e.clientX; downY=e.clientY;
+  sx=e.clientX-tx; sy=e.clientY-ty;
+});
+stage.addEventListener('pointermove',e=>{
+  if(!dragging) return;
+  if(!moved){
+    if(Math.abs(e.clientX-downX)<DRAG_SLOP && Math.abs(e.clientY-downY)<DRAG_SLOP) return;
+    moved=true; stage.classList.add('drag');
+    try{ stage.setPointerCapture(pid); }catch(err){}
+  }
+  tx=e.clientX-sx; ty=e.clientY-sy; apply();
+});
+function endDrag(e){
+  if(!dragging) return;
+  dragging=false; stage.classList.remove('drag');
+  if(moved && pid!==null){ try{ stage.releasePointerCapture(pid); }catch(err){} }
+  pid=null;
+  /* leave `moved` true until the click event has been and gone, so a drag that
+     ends over a node does not also toggle it */
+  setTimeout(()=>{moved=false},0);
+}
+stage.addEventListener('pointerup',endDrag);
+stage.addEventListener('pointercancel',endDrag);
+stage.addEventListener('wheel',e=>{
+  e.preventDefault();
+  const r=stage.getBoundingClientRect(),mx=e.clientX-r.left,my=e.clientY-r.top;
+  const k=Math.exp(-e.deltaY*0.0016), ns=Math.min(2.6,Math.max(0.06,sc*k));
+  tx=mx-(mx-tx)*(ns/sc); ty=my-(my-ty)*(ns/sc); sc=ns; apply();
+},{passive:false});
+
+function fit(){
+  if(!laid.length)return;
+  const xs=laid.map(n=>n._x),ys=laid.map(n=>n._y);
+  const minX=Math.min(...xs),maxX=Math.max(...xs),minY=Math.min(...ys),maxY=Math.max(...ys);
+  const w=maxX+320-minX, h=maxY-minY+120;
+  const r=stage.getBoundingClientRect();
+  const whole=Math.min(r.width/w,r.height/h)*.92;
+
+  // A tidy tree with hundreds of leaves is far taller than any screen. Squeezing it
+  // to fit produces an unreadable smear, so below a legible threshold we keep the
+  // type readable and centre on whatever is selected instead.
+  if(whole<0.45){
+    sc=0.8;
+    const f=sel&&sel._x!==undefined?sel:laid[0];
+    tx=Math.min(160, r.width*0.25)-f._x*sc;
+    ty=r.height/2-f._y*sc;
+  } else {
+    sc=Math.min(2.4,whole);
+    tx=40-minX*sc; ty=r.height/2-((minY+maxY)/2)*sc;
+  }
+  apply();
+}
+document.getElementById('fit').onclick=fit;
+document.getElementById('reset').onclick=()=>{
+  ROOT.kids=null;ROOT.open=true;childrenOf(ROOT);
+  hits.clear();document.getElementById('q').value='';document.getElementById('qx').hidden=true;
+  drawer.classList.remove('open');sel=null;render();fit();
+};
+document.querySelectorAll('.depthbtns button').forEach(b=>{
+  b.onclick=()=>{
+    const d=+b.dataset.d;
+    const base = sel || ROOT;              // expand from what you are looking at
+    (function w(n,depth){
+      n.open = depth<d;
+      if(n.open){childrenOf(n).forEach(c=>w(c,depth+1))} else if(n.kids){n.kids.forEach(c=>c.open=false)}
+    })(base,0);
+    let p=base.parent; while(p){p.open=true;p=p.parent}   // keep the path visible
+    render();fit();
+  };
+});
+
+/* ---------------------------------------------------------------- searching */
+const q=document.getElementById('q'), qx=document.getElementById('qx');
+let timer=null;
+q.addEventListener('input',()=>{clearTimeout(timer);timer=setTimeout(runSearch,180)});
+qx.onclick=()=>{q.value='';runSearch()};
+
+function runSearch(){
+  const s=q.value.trim().toLowerCase();
+  qx.hidden=!s;
+  hits.clear();
+  if(!s){render();return}
+
+  const paths=[];
+  D.modules.forEach(m=>{
+    if(m.title.toLowerCase().includes(s)) paths.push([m.id]);
+    m.objects.forEach(on=>{
+      const o=objOf(on); if(!o) return;
+      if(on.toLowerCase().includes(s)) paths.push([m.id,on]);
+      o.g.forEach(([g,fields])=>{
+        fields.forEach(([fn])=>{
+          if(fn.toLowerCase().includes(s)) paths.push([m.id,on,g,fn]);
+        });
+      });
+    });
+  });
+
+  const capped=paths.slice(0,220);
+  ROOT.open=true;childrenOf(ROOT);
+  capped.forEach(path=>{
+    let cur=ROOT;
+    path.forEach((step,i)=>{
+      cur.open=true;
+      const kids=childrenOf(cur);
+      const nxt=kids.find(c=>(i===0?c.mod===step:c.name===step));
+      if(!nxt){cur=null;return}
+      cur=nxt;
+    });
+    if(cur) hits.add(cur.id);
+  });
+  render();fit();
+}
+
+/* ------------------------------------------------------------------- chrome */
+document.getElementById('cap').textContent =
+  `${D.meta.vendor} \u00B7 ${D.meta.tenant} \u00B7 captured ${D.meta.captured}`;
+const S=[['Modules',D.meta.modules],['Record types',D.meta.objects],['Fields',fmt(D.meta.fields)],
+         ['Foreign keys',D.meta.edges],['Data Fields',fmt(D.meta.datafields)],['API types',D.meta.gqlTypes]];
+document.getElementById('stats').innerHTML=S.map(([l,v])=>`<div class="stat"><b class="mono">${v}</b><span>${l}</span></div>`).join('');
+
+const tb=document.getElementById('theme');
+tb.onclick=()=>{
+  const cur=document.documentElement.getAttribute('data-theme');
+  const dark=matchMedia('(prefers-color-scheme:dark)').matches;
+  const now=cur?cur:(dark?'dark':'light');
+  document.documentElement.setAttribute('data-theme', now==='dark'?'light':'dark');
+};
+
+document.addEventListener('keydown',e=>{
+  if(e.key==='/'&&document.activeElement!==q){e.preventDefault();q.focus()}
+  if(e.key==='Escape'){drawer.classList.remove('open')}
+});
+
+ROOT.open=true;childrenOf(ROOT);
+render();fit();
+select(ROOT);
+</script>

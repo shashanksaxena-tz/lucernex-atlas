@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ACC-R-033 &middot; Lucernex Atlas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="../atlas.css">
+</head><body>
+<header><b>Lucernex Atlas</b>
+<nav><a href="../index.html">Overview</a><a href="../atlas.html">Interactive app</a>
+<a href="../entities/index.html">Record types</a><a href="../rules/index.html">Rules</a>
+<a href="../questions.html">Open questions</a></nav></header>
+<main><p class="crumb"><a href="../index.html">Atlas</a> &rsaquo; <a href="index.html">Rules</a> &rsaquo; ACC-R-033</p><h1 class="mono">ACC-R-033</h1><p class="sub">Lease Accounting &amp; Payments &middot; Initial asset balance</p><span class="tag inf">Inferred</span><p class="lead">Standard practice is liability + prepaid rent + initial direct costs − lease incentives, and all four fields exist, but the actual formula is not stated. Do not code from the schema alone.</p><p>- Trigger: schedule generation. - Inputs: `InitialLiabilityBalance`, `InitialDirectCostAmount`, `LeaseIncentiveAmount`, `PreCommencePayAmount`, `DismantlingStorageCostAmount`, `InitialAssetBalanceAdjust`. - Computation: not documented. The vendor says only *&quot;This is a calculated value which contains the initial value over the asset of the lease.&quot;* - Output: `SLSummary.InitialAssetBalance`. - Confidence: Inferred — the standard ASC 842-20-30-5 build-up is `liability + prepaid + IDC − incentives`, and all four component fields exist on `SLSummary`, but the actual formula is not stated anywhere offline. ⚠ Do not code this from the schema alone.</p><p style="font-size:11.5px;color:var(--faint);margin-top:18px">Source: modules/accounting/rules.md</p></main></body></html>

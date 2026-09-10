@@ -1,0 +1,93 @@
+rows=6303 url=https://train-americanfreight.lucernex.com/en/pagebuilder/ReportGroupAvailableFieldEdit.jsp?isGlobal=true
+cell_counts={3: 2, 1: 3, 11: 6298}
+classes={'': 5, 'tblHeader': 1, 'rowColor1': 3121, 'rowHighLite': 3176}
+
+index=0 id='' class='' inline='' computed='table-row' cells=3
+['', '', '1']
+links=[{'text': '', 'href': None, 'onclick': None}, {'text': '', 'href': None, 'onclick': None}, {'text': '1', 'href': None, 'onclick': None}]
+inputs=[{'type': 'hidden', 'value': 'false', 'name': 'textEntered', 'id': '', 'onclick': None}, {'type': 'text', 'value': '', 'name': 'searchText', 'id': 'searchTextInput', 'onclick': None}]
+
+index=1 id='' class='' inline='' computed='table-row' cells=1
+['']
+links=[]
+inputs=[{'type': 'text', 'value': '', 'name': 'searchText', 'id': 'searchTextInput', 'onclick': None}]
+
+index=3 id='' class='' inline='' computed='table-row' cells=1
+['Group Name/Field Label <Expand All> Field Name Form Field Type Reqd? Read Only? Table Association Default Value Valid For Portfolio or Capital Program? Valid For Entity? Valid For Issue? Budget Yes Yes Yes Company Items No No No Complex Yes Yes Yes Contract No Yes Yes Demographics Criteria Yes Yes No Documents No No No Equipment/Assets No Yes Yes Facility Yes Yes Yes Location No Yes Yes Milestones Yes Yes Yes Parcel Yes Yes Yes Pro Forma Lease Yes Yes Yes Program Summary Information Yes No Yes Prototype Yes Yes Yes Purchase Management Yes Yes Yes RE Planner Yes No No RE Transaction Yes Yes Yes Schedule Yes Yes Yes Site Survey Yes Yes Yes Specialized Forms No No Yes Statics No No No Summary Information Yes Yes Yes Wizard No Yes No Workflow No No No']
+links=[{'text': '<Expand All>', 'href': 'JavaScript:ToggleAll(1,arry1)', 'onclick': None}, {'text': '', 'href': 'JavaScript:hideEmptyRows(1,arry1)', 'onclick': None}, {'text': 'edit details', 'href': "javascript:popupFormEdit(4,28963,'ReportGroupAvailableField','ReportGroupAvailableFieldID')", 'onclick': None}]
+inputs=[{'type': 'hidden', 'value': 'editBO', 'name': 'formSubmit', 'id': '', 'onclick': None}, {'type': 'button', 'value': 'Add Group', 'name': '', 'id': '', 'onclick': "popupFormAdd('ReportGroupData')"}]
+
+index=4 id='0' class='tblHeader' inline='' computed='table-row' cells=11
+['Group Name/Field Label <Expand All>', 'Field Name', 'Form Field Type', 'Reqd?', 'Read Only?', 'Table Association', 'Default Value', 'Valid For Portfolio or Capital Program?', 'Valid For Entity?', 'Valid For Issue?', '']
+links=[{'text': '<Expand All>', 'href': 'JavaScript:ToggleAll(1,arry1)', 'onclick': None}, {'text': '', 'href': 'JavaScript:hideEmptyRows(1,arry1)', 'onclick': None}]
+inputs=[]
+
+index=6 id='pmid2' class='rowColor1' inline='' computed='table-row' cells=11
+['Budget', '', '', '', '', '', '', 'Yes', 'Yes', 'Yes', '']
+links=[]
+inputs=[]
+
+index=7 id='pmid3' class='rowColor1' inline='none' computed='none' cells=11
+['Budget Column', '', '', '', '', '', '', 'Yes', 'Yes', 'No', '']
+links=[]
+inputs=[]
+
+index=8 id='pmid4' class='rowHighLite' inline='none' computed='none' cells=11
+['Allow UI Edit?', 'AllowUIEdit', 'sTYPE_BOOLEAN', 'No', 'No', 'BudgetColumn', '', '', '', '', 'edit details | Value Javascript']
+links=[{'text': 'edit details', 'href': "javascript:popupFormEdit(4,28963,'ReportGroupAvailableField','ReportGroupAvailableFieldID')", 'onclick': None}, {'text': 'Value Javascript', 'href': "javascript:Lx.Popup.createScriptRGAFWindow(28963,'Allow UI Edit?')", 'onclick': None}]
+inputs=[]
+
+index=9 id='pmid5' class='rowColor1' inline='none' computed='none' cells=11
+['Bid Package', 'BidPackageID', 'sTYPE_BID_PACKAGE', 'No', 'No', 'BudgetColumn', '', '', '', '', 'edit details | Value Javascript']
+links=[{'text': 'edit details', 'href': "javascript:popupFormEdit(5,53901,'ReportGroupAvailableField','ReportGroupAvailableFieldID')", 'onclick': None}, {'text': 'Value Javascript', 'href': "javascript:Lx.Popup.createScriptRGAFWindow(53901,'Bid Package')", 'onclick': None}]
+inputs=[]
+
+index=10 id='pmid6' class='rowHighLite' inline='none' computed='none' cells=11
+['Budget Column ClientID', 'BOMapClientRecordID', 'sTYPE_TEXT', 'Yes', 'No', 'BudgetColumn', '', '', '', '', 'edit details | Value Javascript']
+links=[{'text': 'edit details', 'href': "javascript:popupFormEdit(6,53902,'ReportGroupAvailableField','ReportGroupAvailableFieldID')", 'onclick': None}, {'text': 'Value Javascript', 'href': "javascript:Lx.Popup.createScriptRGAFWindow(53902,'Budget Column ClientID')", 'onclick': None}]
+inputs=[]
+
+index=11 id='pmid7' class='rowColor1' inline='none' computed='none' cells=11
+['Budget Column Name', 'BudgetColumnName', 'sTYPE_TEXT', 'No', 'No', 'BudgetColumn', '', '', '', '', 'edit details | Value Javascript']
+links=[{'text': 'edit details', 'href': "javascript:popupFormEdit(7,28964,'ReportGroupAvailableField','ReportGroupAvailableFieldID')", 'onclick': None}, {'text': 'Value Javascript', 'href': "javascript:Lx.Popup.createScriptRGAFWindow(28964,'Budget Column Name')", 'onclick': None}]
+inputs=[]
+
+index=12 id='pmid8' class='rowHighLite' inline='none' computed='none' cells=11
+['Budget Column RecID', 'BudgetColumnID', 'sTYPE_UNFORMATTED_NUMBER', 'No', 'No', 'BudgetColumn', '', '', '', '', 'edit details | Value Javascript']
+links=[{'text': 'edit details', 'href': "javascript:popupFormEdit(8,53903,'ReportGroupAvailableField','ReportGroupAvailableFieldID')", 'onclick': None}, {'text': 'Value Javascript', 'href': "javascript:Lx.Popup.createScriptRGAFWindow(53903,'Budget Column RecID')", 'onclick': None}]
+inputs=[]
+
+index=13 id='pmid9' class='rowColor1' inline='none' computed='none' cells=11
+['Budget Column Status', 'CodeBudgetColumnStatusID', 'sCODE_BUDGET_COLUMN_STATUS', 'Yes', 'No', 'BudgetColumn', '', '', '', '', 'edit details | Value Javascript']
+links=[{'text': 'edit details', 'href': "javascript:popupFormEdit(9,28965,'ReportGroupAvailableField','ReportGroupAvailableFieldID')", 'onclick': None}, {'text': 'Value Javascript', 'href': "javascript:Lx.Popup.createScriptRGAFWindow(28965,'Budget Column Status')", 'onclick': None}]
+inputs=[]
+
+index=14 id='pmid10' class='rowHighLite' inline='none' computed='none' cells=11
+['Budget Column Type', 'BudgetColumnTypeID', 'sTYPE_BUDGET_COLUMN_TYPE', 'Yes', 'No', 'BudgetColumn', '', '', '', '', 'edit details | Value Javascript']
+links=[{'text': 'edit details', 'href': "javascript:popupFormEdit(10,28966,'ReportGroupAvailableField','ReportGroupAvailableFieldID')", 'onclick': None}, {'text': 'Value Javascript', 'href': "javascript:Lx.Popup.createScriptRGAFWindow(28966,'Budget Column Type')", 'onclick': None}]
+inputs=[]
+
+index=15 id='pmid11' class='rowColor1' inline='none' computed='none' cells=11
+['Budget Template', 'BudgetTemplateID', 'sTYPE_BUDGET_TEMPLATE', 'Yes', 'No', 'BudgetColumn', '', '', '', '', 'edit details | Value Javascript']
+links=[{'text': 'edit details', 'href': "javascript:popupFormEdit(11,28967,'ReportGroupAvailableField','ReportGroupAvailableFieldID')", 'onclick': None}, {'text': 'Value Javascript', 'href': "javascript:Lx.Popup.createScriptRGAFWindow(28967,'Budget Template')", 'onclick': None}]
+inputs=[]
+
+index=16 id='pmid12' class='rowHighLite' inline='none' computed='none' cells=11
+['Created By Member', 'CreatedByMemberID', 'sTYPE_MEMBER', 'Yes', 'No', 'BudgetColumn', '', '', '', '', 'edit details | Value Javascript']
+links=[{'text': 'edit details', 'href': "javascript:popupFormEdit(12,28975,'ReportGroupAvailableField','ReportGroupAvailableFieldID')", 'onclick': None}, {'text': 'Value Javascript', 'href': "javascript:Lx.Popup.createScriptRGAFWindow(28975,'Created By Member')", 'onclick': None}]
+inputs=[]
+
+index=17 id='pmid13' class='rowColor1' inline='none' computed='none' cells=11
+['Created Date', 'CreatedDate', 'sTYPE_TIME', 'No', 'No', 'BudgetColumn', '', '', '', '', 'edit details | Value Javascript']
+links=[{'text': 'edit details', 'href': "javascript:popupFormEdit(13,28976,'ReportGroupAvailableField','ReportGroupAvailableFieldID')", 'onclick': None}, {'text': 'Value Javascript', 'href': "javascript:Lx.Popup.createScriptRGAFWindow(28976,'Created Date')", 'onclick': None}]
+inputs=[]
+
+index=18 id='pmid14' class='rowHighLite' inline='none' computed='none' cells=11
+['Description', 'Description', 'sTYPE_TEXTAREA', 'No', 'No', 'BudgetColumn', '', '', '', '', 'edit details | Value Javascript']
+links=[{'text': 'edit details', 'href': "javascript:popupFormEdit(14,28968,'ReportGroupAvailableField','ReportGroupAvailableFieldID')", 'onclick': None}, {'text': 'Value Javascript', 'href': "javascript:Lx.Popup.createScriptRGAFWindow(28968,'Description')", 'onclick': None}]
+inputs=[]
+
+index=19 id='pmid15' class='rowColor1' inline='none' computed='none' cells=11
+['Initialized From Budget Column', 'InitializedFromBudgetColumnID', 'sTYPE_BUDGET_COLUMN', 'No', 'No', 'BudgetColumn', '', '', '', '', 'edit details | Value Javascript']
+links=[{'text': 'edit details', 'href': "javascript:popupFormEdit(15,28969,'ReportGroupAvailableField','ReportGroupAvailableFieldID')", 'onclick': None}, {'text': 'Value Javascript', 'href': "javascript:Lx.Popup.createScriptRGAFWindow(28969,'Initialized From Budget Column')", 'onclick': None}]
+inputs=[]

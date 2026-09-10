@@ -1,0 +1,843 @@
+{
+  "sources": {
+    "global": {
+      "url": "https://train-americanfreight.lucernex.com/en/pagebuilder/ReportGroupAvailableFieldEdit.jsp?isGlobal=true",
+      "declaredScope": "global",
+      "declaredCount": 6297,
+      "actualRowCount": 6297,
+      "displayedCountPresence": "missing",
+      "displayedCountValue": null,
+      "activeTabsPresence": "missing",
+      "activeTabsValue": null
+    },
+    "firm": {
+      "url": "https://train-americanfreight.lucernex.com/en/pagebuilder/ReportGroupAvailableFieldEdit.jsp?isGlobal=false",
+      "declaredScope": "firm",
+      "declaredCount": 549,
+      "actualRowCount": 549,
+      "displayedCountPresence": "present",
+      "displayedCountValue": "",
+      "activeTabsPresence": "present",
+      "activeTabsValue": [
+        "Firm Fields"
+      ]
+    }
+  },
+  "structure": {
+    "global": {
+      "kindCounts": {
+        "top-level group": 24,
+        "subgroup": 320,
+        "leaf": 5953
+      },
+      "expandableCount": 344,
+      "indentDistribution": {
+        "0": 24,
+        "4": 320,
+        "8": 5953
+      },
+      "maximumIndentUnits": 8,
+      "levelsObserved": 3,
+      "uniqueTopLevelPaths": 24,
+      "uniqueSubgroupPaths": 320,
+      "uniqueLeafPaths": 5953,
+      "duplicateLeafPathRows": 0,
+      "actionSignatures": [
+        {
+          "actions": [
+            "edit details",
+            "Value Javascript"
+          ],
+          "count": 5953
+        },
+        {
+          "actions": [],
+          "count": 344
+        }
+      ],
+      "leafMetadataSummary": {
+        "firmPrefixInternalNameCount": 0,
+        "required": {
+          "No": 5316,
+          "Yes": 637
+        },
+        "readOnly": {
+          "No": 5953
+        },
+        "fieldTypesTop20": {
+          "sTYPE_TEXT": 961,
+          "sTYPE_MONEY": 891,
+          "sTYPE_DATE": 365,
+          "sTYPE_NUMBER": 336,
+          "sTYPE_UNFORMATTED_NUMBER": 279,
+          "sTYPE_MEMBER": 261,
+          "sTYPE_MONEY_MATH_OPERATION": 258,
+          "sTYPE_TIME": 232,
+          "sTYPE_BOOLEAN": 229,
+          "sTYPE_PERCENTAGE": 179,
+          "sTYPE_TEXTAREA": 158,
+          "sTYPE_CHECKBOX": 153,
+          "sTYPE_PERCENT_MATH_OPERATION": 134,
+          "sTYPE_CONTRACT": 62,
+          "sTYPE_SUBMITBUTTON": 62,
+          "sTYPE_AREA": 54,
+          "sTYPE_PAGE_LAYOUT": 46,
+          "sCODE_CURRENCY_TYPE": 37,
+          "sTYPE_NUMBER_FRACTION6DIGITS": 34,
+          "sTYPE_PERSON": 31
+        },
+        "tableAssociationsTop20": {
+          "ExpenseRecovery": 558,
+          "Contract": 255,
+          "LeaseInfo": 218,
+          "ProjectEntity": 165,
+          "SLSummary": 135,
+          "Asset": 126,
+          "PaymentTransaction": 118,
+          "ExpenseSetup": 103,
+          "ContractFinancialTest": 92,
+          "Facility": 88,
+          "Program": 85,
+          "Member": 78,
+          "SLPeriod": 78,
+          "SiteSurvey": 78,
+          "Parcel": 74,
+          "Scenario": 70,
+          "Employer": 66,
+          "VirtualSalesPeriod": 66,
+          "VirtualUsagePeriod": 66,
+          "Location": 61
+        }
+      }
+    },
+    "firm": {
+      "kindCounts": {
+        "top-level group": 24,
+        "subgroup": 320,
+        "leaf": 205
+      },
+      "expandableCount": 344,
+      "indentDistribution": {
+        "0": 24,
+        "4": 320,
+        "8": 205
+      },
+      "maximumIndentUnits": 8,
+      "levelsObserved": 3,
+      "uniqueTopLevelPaths": 24,
+      "uniqueSubgroupPaths": 320,
+      "uniqueLeafPaths": 205,
+      "duplicateLeafPathRows": 0,
+      "actionSignatures": [
+        {
+          "actions": [
+            "Add Field"
+          ],
+          "count": 313
+        },
+        {
+          "actions": [
+            "edit",
+            "delete",
+            "Value Javascript"
+          ],
+          "count": 205
+        },
+        {
+          "actions": [],
+          "count": 24
+        },
+        {
+          "actions": [
+            "edit",
+            "delete",
+            "Add Field"
+          ],
+          "count": 7
+        }
+      ],
+      "leafMetadataSummary": {
+        "firmPrefixInternalNameCount": 202,
+        "required": {
+          "No": 205
+        },
+        "readOnly": {
+          "No": 205
+        },
+        "fieldTypesTop20": {
+          "sTYPE_TEXT": 83,
+          "sTYPE_CUSTOM_CODE_FIELD": 54,
+          "sTYPE_DATE": 12,
+          "sTYPE_NUMBER": 12,
+          "sTYPE_PERCENTAGE": 9,
+          "sTYPE_TEXTAREA": 8,
+          "sTYPE_MONEY": 8,
+          "sTYPE_CLIENT_LISTS": 6,
+          "sTYPE_MONEY_MATH_OPERATION": 4,
+          "sTYPE_FIRM_LOGO": 3,
+          "sTYPE_NUMBER_FRACTION2DIGITS": 2,
+          "sTYPE_CHECKBOX": 2,
+          "sTYPE_MEMBER": 1,
+          "sTYPE_MATH_OPERATION": 1
+        },
+        "tableAssociationsTop20": {
+          "Contract": 147,
+          "KeyDate": 10,
+          "ExpenseRecovery": 9,
+          "Covenant": 7,
+          "Employer": 5,
+          "Location": 5,
+          "ProjectEntity": 5,
+          "Allowance": 4,
+          "ContractTerm": 3,
+          "PercentageRent": 3,
+          "ContractAmendment": 2,
+          "ExpenseSetup": 2,
+          "SecurityDeposit": 1,
+          "Facility": 1,
+          "Firm": 1
+        }
+      }
+    }
+  },
+  "comparisons": {
+    "top-level group": {
+      "pathKey": {
+        "globalRows": 24,
+        "firmRows": 24,
+        "sharedRowsMultiset": 24,
+        "globalOnlyRowsMultiset": 0,
+        "firmOnlyRowsMultiset": 0,
+        "sharedUniquePaths": 24,
+        "globalOnlyUniquePaths": 0,
+        "firmOnlyUniquePaths": 0
+      },
+      "compositeKey": {
+        "definition": "path + internalName + tableAssociation",
+        "sharedRowsMultiset": 24,
+        "globalOnlyRowsMultiset": 0,
+        "firmOnlyRowsMultiset": 0,
+        "sharedUniqueKeys": 24,
+        "globalOnlyUniqueKeys": 0,
+        "firmOnlyUniqueKeys": 0
+      },
+      "metadataDifferenceCountForSharedUniquePaths": 0,
+      "metadataDifferences": []
+    },
+    "subgroup": {
+      "pathKey": {
+        "globalRows": 320,
+        "firmRows": 320,
+        "sharedRowsMultiset": 320,
+        "globalOnlyRowsMultiset": 0,
+        "firmOnlyRowsMultiset": 0,
+        "sharedUniquePaths": 320,
+        "globalOnlyUniquePaths": 0,
+        "firmOnlyUniquePaths": 0
+      },
+      "compositeKey": {
+        "definition": "path + internalName + tableAssociation",
+        "sharedRowsMultiset": 320,
+        "globalOnlyRowsMultiset": 0,
+        "firmOnlyRowsMultiset": 0,
+        "sharedUniqueKeys": 320,
+        "globalOnlyUniqueKeys": 0,
+        "firmOnlyUniqueKeys": 0
+      },
+      "metadataDifferenceCountForSharedUniquePaths": 0,
+      "metadataDifferences": []
+    },
+    "leaf": {
+      "pathKey": {
+        "globalRows": 5953,
+        "firmRows": 205,
+        "sharedRowsMultiset": 0,
+        "globalOnlyRowsMultiset": 5953,
+        "firmOnlyRowsMultiset": 205,
+        "sharedUniquePaths": 0,
+        "globalOnlyUniquePaths": 5953,
+        "firmOnlyUniquePaths": 205
+      },
+      "compositeKey": {
+        "definition": "path + internalName + tableAssociation",
+        "sharedRowsMultiset": 0,
+        "globalOnlyRowsMultiset": 5953,
+        "firmOnlyRowsMultiset": 205,
+        "sharedUniqueKeys": 0,
+        "globalOnlyUniqueKeys": 5953,
+        "firmOnlyUniqueKeys": 205
+      }
+    },
+    "sharedLeafCompositeMetadata": {
+      "uniqueKeysWithOneRowPerScopeAndIdenticalMetadata": 0,
+      "uniqueKeysWithOneRowPerScopeAndMetadataDifferences": 0,
+      "sharedKeysExcludedAsDuplicateOrAmbiguous": 0,
+      "differenceExamples": []
+    },
+    "candidateOverridePaths": {
+      "definition": "same reconstructed leaf path exists in both scopes but internal-name/table-association identity sets differ",
+      "count": 0,
+      "all": []
+    }
+  },
+  "examples": {
+    "globalFirstLeaves": [
+      {
+        "id": "pmid4",
+        "indent": 8,
+        "kind": "leaf",
+        "path": "Budget / Budget Column / Allow UI Edit?",
+        "label": "Allow UI Edit?",
+        "internalName": "AllowUIEdit",
+        "fieldType": "sTYPE_BOOLEAN",
+        "required": "No",
+        "readOnly": "No",
+        "tableAssociation": "BudgetColumn",
+        "defaultValue": "",
+        "validForPortfolioOrCapitalProgram": "",
+        "validForEntity": "",
+        "validForIssue": "",
+        "actions": [
+          "edit details",
+          "Value Javascript"
+        ]
+      },
+      {
+        "id": "pmid5",
+        "indent": 8,
+        "kind": "leaf",
+        "path": "Budget / Budget Column / Bid Package",
+        "label": "Bid Package",
+        "internalName": "BidPackageID",
+        "fieldType": "sTYPE_BID_PACKAGE",
+        "required": "No",
+        "readOnly": "No",
+        "tableAssociation": "BudgetColumn",
+        "defaultValue": "",
+        "validForPortfolioOrCapitalProgram": "",
+        "validForEntity": "",
+        "validForIssue": "",
+        "actions": [
+          "edit details",
+          "Value Javascript"
+        ]
+      },
+      {
+        "id": "pmid6",
+        "indent": 8,
+        "kind": "leaf",
+        "path": "Budget / Budget Column / Budget Column ClientID",
+        "label": "Budget Column ClientID",
+        "internalName": "BOMapClientRecordID",
+        "fieldType": "sTYPE_TEXT",
+        "required": "Yes",
+        "readOnly": "No",
+        "tableAssociation": "BudgetColumn",
+        "defaultValue": "",
+        "validForPortfolioOrCapitalProgram": "",
+        "validForEntity": "",
+        "validForIssue": "",
+        "actions": [
+          "edit details",
+          "Value Javascript"
+        ]
+      },
+      {
+        "id": "pmid7",
+        "indent": 8,
+        "kind": "leaf",
+        "path": "Budget / Budget Column / Budget Column Name",
+        "label": "Budget Column Name",
+        "internalName": "BudgetColumnName",
+        "fieldType": "sTYPE_TEXT",
+        "required": "No",
+        "readOnly": "No",
+        "tableAssociation": "BudgetColumn",
+        "defaultValue": "",
+        "validForPortfolioOrCapitalProgram": "",
+        "validForEntity": "",
+        "validForIssue": "",
+        "actions": [
+          "edit details",
+          "Value Javascript"
+        ]
+      },
+      {
+        "id": "pmid8",
+        "indent": 8,
+        "kind": "leaf",
+        "path": "Budget / Budget Column / Budget Column RecID",
+        "label": "Budget Column RecID",
+        "internalName": "BudgetColumnID",
+        "fieldType": "sTYPE_UNFORMATTED_NUMBER",
+        "required": "No",
+        "readOnly": "No",
+        "tableAssociation": "BudgetColumn",
+        "defaultValue": "",
+        "validForPortfolioOrCapitalProgram": "",
+        "validForEntity": "",
+        "validForIssue": "",
+        "actions": [
+          "edit details",
+          "Value Javascript"
+        ]
+      },
+      {
+        "id": "pmid9",
+        "indent": 8,
+        "kind": "leaf",
+        "path": "Budget / Budget Column / Budget Column Status",
+        "label": "Budget Column Status",
+        "internalName": "CodeBudgetColumnStatusID",
+        "fieldType": "sCODE_BUDGET_COLUMN_STATUS",
+        "required": "Yes",
+        "readOnly": "No",
+        "tableAssociation": "BudgetColumn",
+        "defaultValue": "",
+        "validForPortfolioOrCapitalProgram": "",
+        "validForEntity": "",
+        "validForIssue": "",
+        "actions": [
+          "edit details",
+          "Value Javascript"
+        ]
+      },
+      {
+        "id": "pmid10",
+        "indent": 8,
+        "kind": "leaf",
+        "path": "Budget / Budget Column / Budget Column Type",
+        "label": "Budget Column Type",
+        "internalName": "BudgetColumnTypeID",
+        "fieldType": "sTYPE_BUDGET_COLUMN_TYPE",
+        "required": "Yes",
+        "readOnly": "No",
+        "tableAssociation": "BudgetColumn",
+        "defaultValue": "",
+        "validForPortfolioOrCapitalProgram": "",
+        "validForEntity": "",
+        "validForIssue": "",
+        "actions": [
+          "edit details",
+          "Value Javascript"
+        ]
+      },
+      {
+        "id": "pmid11",
+        "indent": 8,
+        "kind": "leaf",
+        "path": "Budget / Budget Column / Budget Template",
+        "label": "Budget Template",
+        "internalName": "BudgetTemplateID",
+        "fieldType": "sTYPE_BUDGET_TEMPLATE",
+        "required": "Yes",
+        "readOnly": "No",
+        "tableAssociation": "BudgetColumn",
+        "defaultValue": "",
+        "validForPortfolioOrCapitalProgram": "",
+        "validForEntity": "",
+        "validForIssue": "",
+        "actions": [
+          "edit details",
+          "Value Javascript"
+        ]
+      },
+      {
+        "id": "pmid12",
+        "indent": 8,
+        "kind": "leaf",
+        "path": "Budget / Budget Column / Created By Member",
+        "label": "Created By Member",
+        "internalName": "CreatedByMemberID",
+        "fieldType": "sTYPE_MEMBER",
+        "required": "Yes",
+        "readOnly": "No",
+        "tableAssociation": "BudgetColumn",
+        "defaultValue": "",
+        "validForPortfolioOrCapitalProgram": "",
+        "validForEntity": "",
+        "validForIssue": "",
+        "actions": [
+          "edit details",
+          "Value Javascript"
+        ]
+      },
+      {
+        "id": "pmid13",
+        "indent": 8,
+        "kind": "leaf",
+        "path": "Budget / Budget Column / Created Date",
+        "label": "Created Date",
+        "internalName": "CreatedDate",
+        "fieldType": "sTYPE_TIME",
+        "required": "No",
+        "readOnly": "No",
+        "tableAssociation": "BudgetColumn",
+        "defaultValue": "",
+        "validForPortfolioOrCapitalProgram": "",
+        "validForEntity": "",
+        "validForIssue": "",
+        "actions": [
+          "edit details",
+          "Value Javascript"
+        ]
+      },
+      {
+        "id": "pmid14",
+        "indent": 8,
+        "kind": "leaf",
+        "path": "Budget / Budget Column / Description",
+        "label": "Description",
+        "internalName": "Description",
+        "fieldType": "sTYPE_TEXTAREA",
+        "required": "No",
+        "readOnly": "No",
+        "tableAssociation": "BudgetColumn",
+        "defaultValue": "",
+        "validForPortfolioOrCapitalProgram": "",
+        "validForEntity": "",
+        "validForIssue": "",
+        "actions": [
+          "edit details",
+          "Value Javascript"
+        ]
+      },
+      {
+        "id": "pmid15",
+        "indent": 8,
+        "kind": "leaf",
+        "path": "Budget / Budget Column / Initialized From Budget Column",
+        "label": "Initialized From Budget Column",
+        "internalName": "InitializedFromBudgetColumnID",
+        "fieldType": "sTYPE_BUDGET_COLUMN",
+        "required": "No",
+        "readOnly": "No",
+        "tableAssociation": "BudgetColumn",
+        "defaultValue": "",
+        "validForPortfolioOrCapitalProgram": "",
+        "validForEntity": "",
+        "validForIssue": "",
+        "actions": [
+          "edit details",
+          "Value Javascript"
+        ]
+      }
+    ],
+    "firmFirstLeaves": [
+      {
+        "id": "pmid26",
+        "indent": 8,
+        "kind": "leaf",
+        "path": "Company Items / Employers / Alternate Payee",
+        "label": "Alternate Payee",
+        "internalName": "Firm_AlternatePayee",
+        "fieldType": "sTYPE_TEXT",
+        "required": "No",
+        "readOnly": "No",
+        "tableAssociation": "Employer",
+        "defaultValue": "",
+        "validForPortfolioOrCapitalProgram": "",
+        "validForEntity": "",
+        "validForIssue": "",
+        "actions": [
+          "edit",
+          "delete",
+          "Value Javascript"
+        ]
+      },
+      {
+        "id": "pmid27",
+        "indent": 8,
+        "kind": "leaf",
+        "path": "Company Items / Employers / Attention",
+        "label": "Attention",
+        "internalName": "Firm_EmployerAttention",
+        "fieldType": "sTYPE_TEXT",
+        "required": "No",
+        "readOnly": "No",
+        "tableAssociation": "Employer",
+        "defaultValue": "",
+        "validForPortfolioOrCapitalProgram": "",
+        "validForEntity": "",
+        "validForIssue": "",
+        "actions": [
+          "edit",
+          "delete",
+          "Value Javascript"
+        ]
+      },
+      {
+        "id": "pmid28",
+        "indent": 8,
+        "kind": "leaf",
+        "path": "Company Items / Employers / Care of",
+        "label": "Care of",
+        "internalName": "Firm_EmployerCareof",
+        "fieldType": "sTYPE_TEXT",
+        "required": "No",
+        "readOnly": "No",
+        "tableAssociation": "Employer",
+        "defaultValue": "",
+        "validForPortfolioOrCapitalProgram": "",
+        "validForEntity": "",
+        "validForIssue": "",
+        "actions": [
+          "edit",
+          "delete",
+          "Value Javascript"
+        ]
+      },
+      {
+        "id": "pmid29",
+        "indent": 8,
+        "kind": "leaf",
+        "path": "Company Items / Employers / Payment Method",
+        "label": "Payment Method",
+        "internalName": "Firm_PaymentMethod",
+        "fieldType": "sTYPE_CUSTOM_CODE_FIELD",
+        "required": "No",
+        "readOnly": "No",
+        "tableAssociation": "Employer",
+        "defaultValue": "",
+        "validForPortfolioOrCapitalProgram": "",
+        "validForEntity": "",
+        "validForIssue": "",
+        "actions": [
+          "edit",
+          "delete",
+          "Value Javascript"
+        ]
+      },
+      {
+        "id": "pmid30",
+        "indent": 8,
+        "kind": "leaf",
+        "path": "Company Items / Employers / Store Number",
+        "label": "Store Number",
+        "internalName": "Firm_EmployerStoreNumber",
+        "fieldType": "sTYPE_TEXT",
+        "required": "No",
+        "readOnly": "No",
+        "tableAssociation": "Employer",
+        "defaultValue": "",
+        "validForPortfolioOrCapitalProgram": "",
+        "validForEntity": "",
+        "validForIssue": "",
+        "actions": [
+          "edit",
+          "delete",
+          "Value Javascript"
+        ]
+      },
+      {
+        "id": "pmid60",
+        "indent": 8,
+        "kind": "leaf",
+        "path": "Contract / Allowance / Cost PSF",
+        "label": "Cost PSF",
+        "internalName": "Firm_AllowCostPSF",
+        "fieldType": "sTYPE_MONEY_MATH_OPERATION",
+        "required": "No",
+        "readOnly": "No",
+        "tableAssociation": "Allowance",
+        "defaultValue": "",
+        "validForPortfolioOrCapitalProgram": "",
+        "validForEntity": "",
+        "validForIssue": "",
+        "actions": [
+          "edit",
+          "delete",
+          "Value Javascript"
+        ]
+      },
+      {
+        "id": "pmid61",
+        "indent": 8,
+        "kind": "leaf",
+        "path": "Contract / Allowance / Document",
+        "label": "Document",
+        "internalName": "Firm_AllowanceDocument",
+        "fieldType": "sTYPE_TEXT",
+        "required": "No",
+        "readOnly": "No",
+        "tableAssociation": "Allowance",
+        "defaultValue": "",
+        "validForPortfolioOrCapitalProgram": "",
+        "validForEntity": "",
+        "validForIssue": "",
+        "actions": [
+          "edit",
+          "delete",
+          "Value Javascript"
+        ]
+      },
+      {
+        "id": "pmid62",
+        "indent": 8,
+        "kind": "leaf",
+        "path": "Contract / Allowance / Page",
+        "label": "Page",
+        "internalName": "Firm_AllowancePage",
+        "fieldType": "sTYPE_TEXT",
+        "required": "No",
+        "readOnly": "No",
+        "tableAssociation": "Allowance",
+        "defaultValue": "",
+        "validForPortfolioOrCapitalProgram": "",
+        "validForEntity": "",
+        "validForIssue": "",
+        "actions": [
+          "edit",
+          "delete",
+          "Value Javascript"
+        ]
+      },
+      {
+        "id": "pmid70",
+        "indent": 8,
+        "kind": "leaf",
+        "path": "Contract / Common Area Maintenance / Administrative Fee",
+        "label": "Administrative Fee",
+        "internalName": "Firm_CAMAdministrativeYN",
+        "fieldType": "sTYPE_CUSTOM_CODE_FIELD",
+        "required": "No",
+        "readOnly": "No",
+        "tableAssociation": "Contract",
+        "defaultValue": "",
+        "validForPortfolioOrCapitalProgram": "",
+        "validForEntity": "",
+        "validForIssue": "",
+        "actions": [
+          "edit",
+          "delete",
+          "Value Javascript"
+        ]
+      },
+      {
+        "id": "pmid71",
+        "indent": 8,
+        "kind": "leaf",
+        "path": "Contract / Common Area Maintenance / Administrative Fee Definition",
+        "label": "Administrative Fee Definition",
+        "internalName": "Firm_CAMAdministrativeFeeDefinition",
+        "fieldType": "sTYPE_TEXT",
+        "required": "No",
+        "readOnly": "No",
+        "tableAssociation": "Contract",
+        "defaultValue": "",
+        "validForPortfolioOrCapitalProgram": "",
+        "validForEntity": "",
+        "validForIssue": "",
+        "actions": [
+          "edit",
+          "delete",
+          "Value Javascript"
+        ]
+      },
+      {
+        "id": "pmid72",
+        "indent": 8,
+        "kind": "leaf",
+        "path": "Contract / Common Area Maintenance / Administrative Fee Exclusions",
+        "label": "Administrative Fee Exclusions",
+        "internalName": "Firm_CAMAdministrativeFeeExclusionsYN",
+        "fieldType": "sTYPE_CUSTOM_CODE_FIELD",
+        "required": "No",
+        "readOnly": "No",
+        "tableAssociation": "Contract",
+        "defaultValue": "",
+        "validForPortfolioOrCapitalProgram": "",
+        "validForEntity": "",
+        "validForIssue": "",
+        "actions": [
+          "edit",
+          "delete",
+          "Value Javascript"
+        ]
+      },
+      {
+        "id": "pmid73",
+        "indent": 8,
+        "kind": "leaf",
+        "path": "Contract / Common Area Maintenance / Administrative Fee Percent",
+        "label": "Administrative Fee Percent",
+        "internalName": "Firm_CAMAdministrativeFeePercent",
+        "fieldType": "sTYPE_PERCENTAGE",
+        "required": "No",
+        "readOnly": "No",
+        "tableAssociation": "Contract",
+        "defaultValue": "",
+        "validForPortfolioOrCapitalProgram": "",
+        "validForEntity": "",
+        "validForIssue": "",
+        "actions": [
+          "edit",
+          "delete",
+          "Value Javascript"
+        ]
+      }
+    ],
+    "firmEditableSubgroups": [
+      {
+        "path": "Contract / Common Area Maintenance",
+        "actions": [
+          "edit",
+          "delete",
+          "Add Field"
+        ]
+      },
+      {
+        "path": "Contract / Custom Lists",
+        "actions": [
+          "edit",
+          "delete",
+          "Add Field"
+        ]
+      },
+      {
+        "path": "Contract / Delivery Requirements",
+        "actions": [
+          "edit",
+          "delete",
+          "Add Field"
+        ]
+      },
+      {
+        "path": "Contract / Ongoing Co Tenancy",
+        "actions": [
+          "edit",
+          "delete",
+          "Add Field"
+        ]
+      },
+      {
+        "path": "Contract / Opening Co Tenancy",
+        "actions": [
+          "edit",
+          "delete",
+          "Add Field"
+        ]
+      },
+      {
+        "path": "Contract / Real Estate Taxes",
+        "actions": [
+          "edit",
+          "delete",
+          "Add Field"
+        ]
+      },
+      {
+        "path": "Contract / Test",
+        "actions": [
+          "edit",
+          "delete",
+          "Add Field"
+        ]
+      }
+    ],
+    "duplicateLeafPaths": {
+      "global": [],
+      "firm": []
+    }
+  }
+}

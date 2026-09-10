@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CON-R-144 &middot; Lucernex Atlas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="../atlas.css">
+</head><body>
+<header><b>Lucernex Atlas</b>
+<nav><a href="../index.html">Overview</a><a href="../atlas.html">Interactive app</a>
+<a href="../entities/index.html">Record types</a><a href="../rules/index.html">Rules</a>
+<a href="../questions.html">Open questions</a></nav></header>
+<main><p class="crumb"><a href="../index.html">Atlas</a> &rsaquo; <a href="index.html">Rules</a> &rsaquo; CON-R-144</p><h1 class="mono">CON-R-144</h1><p class="sub">Contracts &amp; Leases &middot; 12. Contract status and lifecycle</p><span class="tag obs">Observed</span><p class="lead">The tenant needs a lifecycle status: Contract.Firm_LeaseStatus (a Firm-scope custom code field, with a Firm_LeaseStatusNotes companion) is ASG&#x27;s own answer, sitting in the same Contract Info sub-group as the platform&#x27;s status field — not to be confused with the platform&#x27;s own Lease Status Code (2043), which is used by exactly one unrelated object.</p><div class="wrapt"><table><tbody><tr><td>The tenant needs a lifecycle status</td></tr><tr><td>`Contract.Firm_LeaseStatus` (`sTYPE_CUSTOM_CODE_FIELD`, Firm) + `Firm_LeaseStatusNotes`</td></tr><tr><td>ASG added its own contract-status field in the same `Contract / Contract Info` sub-group as the platform&#x27;s. Do not confuse with `LeaseInfo.CodeLeaseStatusID` (`Lease Status Code` 2043), which is used by exactly one object and that object has no `ContractID` column</td></tr><tr><td>Tenant-authored lifecycle</td></tr><tr><td>Observed</td></tr></tbody></table></div><p style="font-size:11.5px;color:var(--faint);margin-top:18px">Source: modules/contracts/rules.md</p></main></body></html>

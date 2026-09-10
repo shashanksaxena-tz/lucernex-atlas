@@ -1,0 +1,425 @@
+{
+  "global": {
+    "url": "https://train-americanfreight.lucernex.com/en/pagebuilder/ReportGroupAvailableFieldEdit.jsp?isGlobal=true",
+    "scope": "global",
+    "declaredCount": 6297,
+    "actualCount": 6297,
+    "displayedCount": "__MISSING__",
+    "activeTabs": "__MISSING__",
+    "indentDistribution": {
+      "0": 24,
+      "4": 320,
+      "8": 5953
+    },
+    "expandableByIndent": {
+      "0": {
+        "total": 24,
+        "expandable": 24,
+        "nonExpandable": 0,
+        "examples": [
+          [
+            "Budget",
+            "",
+            true
+          ],
+          [
+            "Company Items",
+            "",
+            true
+          ],
+          [
+            "Complex",
+            "",
+            true
+          ],
+          [
+            "Contract",
+            "",
+            true
+          ],
+          [
+            "Demographics Criteria",
+            "",
+            true
+          ],
+          [
+            "Documents",
+            "",
+            true
+          ],
+          [
+            "Equipment/Assets",
+            "",
+            true
+          ],
+          [
+            "Facility",
+            "",
+            true
+          ],
+          [
+            "Location",
+            "",
+            true
+          ],
+          [
+            "Milestones",
+            "",
+            true
+          ]
+        ]
+      },
+      "4": {
+        "total": 320,
+        "expandable": 320,
+        "nonExpandable": 0,
+        "examples": [
+          [
+            "Budget Column",
+            "",
+            true
+          ],
+          [
+            "Budget Index",
+            "",
+            true
+          ],
+          [
+            "Budget Index Value",
+            "",
+            true
+          ],
+          [
+            "Budget Item Value",
+            "",
+            true
+          ],
+          [
+            "Budget Line Item",
+            "",
+            true
+          ],
+          [
+            "Budget Option",
+            "",
+            true
+          ],
+          [
+            "Budget Type Configuration",
+            "",
+            true
+          ],
+          [
+            "Budget Types",
+            "",
+            true
+          ],
+          [
+            "Budget View",
+            "",
+            true
+          ],
+          [
+            "Summary Information",
+            "",
+            true
+          ]
+        ]
+      },
+      "8": {
+        "total": 5953,
+        "expandable": 0,
+        "nonExpandable": 5953,
+        "examples": [
+          [
+            "Allow UI Edit?",
+            "AllowUIEdit",
+            false
+          ],
+          [
+            "Bid Package",
+            "BidPackageID",
+            false
+          ],
+          [
+            "Budget Column ClientID",
+            "BOMapClientRecordID",
+            false
+          ],
+          [
+            "Budget Column Name",
+            "BudgetColumnName",
+            false
+          ],
+          [
+            "Budget Column RecID",
+            "BudgetColumnID",
+            false
+          ],
+          [
+            "Budget Column Status",
+            "CodeBudgetColumnStatusID",
+            false
+          ],
+          [
+            "Budget Column Type",
+            "BudgetColumnTypeID",
+            false
+          ],
+          [
+            "Budget Template",
+            "BudgetTemplateID",
+            false
+          ],
+          [
+            "Created By Member",
+            "CreatedByMemberID",
+            false
+          ],
+          [
+            "Created Date",
+            "CreatedDate",
+            false
+          ]
+        ]
+      }
+    },
+    "rowTypes": {
+      "expandable": 344,
+      "leaf": 5953
+    },
+    "linkSignatures": [
+      [
+        [
+          "edit details",
+          "Value Javascript"
+        ],
+        5953
+      ],
+      [
+        [],
+        344
+      ]
+    ]
+  },
+  "firm": {
+    "url": "https://train-americanfreight.lucernex.com/en/pagebuilder/ReportGroupAvailableFieldEdit.jsp?isGlobal=false",
+    "scope": "firm",
+    "declaredCount": 549,
+    "actualCount": 549,
+    "displayedCount": "",
+    "activeTabs": [
+      "Firm Fields"
+    ],
+    "indentDistribution": {
+      "0": 24,
+      "4": 320,
+      "8": 205
+    },
+    "expandableByIndent": {
+      "0": {
+        "total": 24,
+        "expandable": 24,
+        "nonExpandable": 0,
+        "examples": [
+          [
+            "Budget",
+            "",
+            true
+          ],
+          [
+            "Company Items",
+            "",
+            true
+          ],
+          [
+            "Complex",
+            "",
+            true
+          ],
+          [
+            "Contract",
+            "",
+            true
+          ],
+          [
+            "Demographics Criteria",
+            "",
+            true
+          ],
+          [
+            "Documents",
+            "",
+            true
+          ],
+          [
+            "Equipment/Assets",
+            "",
+            true
+          ],
+          [
+            "Facility",
+            "",
+            true
+          ],
+          [
+            "Location",
+            "",
+            true
+          ],
+          [
+            "Milestones",
+            "",
+            true
+          ]
+        ]
+      },
+      "4": {
+        "total": 320,
+        "expandable": 320,
+        "nonExpandable": 0,
+        "examples": [
+          [
+            "Budget Column",
+            "",
+            true
+          ],
+          [
+            "Budget Index",
+            "",
+            true
+          ],
+          [
+            "Budget Index Value",
+            "",
+            true
+          ],
+          [
+            "Budget Item Value",
+            "",
+            true
+          ],
+          [
+            "Budget Line Item",
+            "",
+            true
+          ],
+          [
+            "Budget Option",
+            "",
+            true
+          ],
+          [
+            "Budget Type Configuration",
+            "",
+            true
+          ],
+          [
+            "Budget Types",
+            "",
+            true
+          ],
+          [
+            "Budget View",
+            "",
+            true
+          ],
+          [
+            "Summary Information",
+            "",
+            true
+          ]
+        ]
+      },
+      "8": {
+        "total": 205,
+        "expandable": 0,
+        "nonExpandable": 205,
+        "examples": [
+          [
+            "Alternate Payee",
+            "Firm_AlternatePayee",
+            false
+          ],
+          [
+            "Attention",
+            "Firm_EmployerAttention",
+            false
+          ],
+          [
+            "Care of",
+            "Firm_EmployerCareof",
+            false
+          ],
+          [
+            "Payment Method",
+            "Firm_PaymentMethod",
+            false
+          ],
+          [
+            "Store Number",
+            "Firm_EmployerStoreNumber",
+            false
+          ],
+          [
+            "Cost PSF",
+            "Firm_AllowCostPSF",
+            false
+          ],
+          [
+            "Document",
+            "Firm_AllowanceDocument",
+            false
+          ],
+          [
+            "Page",
+            "Firm_AllowancePage",
+            false
+          ],
+          [
+            "Administrative Fee",
+            "Firm_CAMAdministrativeYN",
+            false
+          ],
+          [
+            "Administrative Fee Definition",
+            "Firm_CAMAdministrativeFeeDefinition",
+            false
+          ]
+        ]
+      }
+    },
+    "rowTypes": {
+      "expandable": 344,
+      "leaf": 205
+    },
+    "linkSignatures": [
+      [
+        [
+          "Add Field"
+        ],
+        313
+      ],
+      [
+        [
+          "edit",
+          "delete",
+          "Value Javascript"
+        ],
+        205
+      ],
+      [
+        [],
+        24
+      ],
+      [
+        [
+          "edit",
+          "delete",
+          "Add Field"
+        ],
+        7
+      ]
+    ]
+  }
+}

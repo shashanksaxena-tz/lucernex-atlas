@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ACC-R-026 &middot; Lucernex Atlas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="../atlas.css">
+</head><body>
+<header><b>Lucernex Atlas</b>
+<nav><a href="../index.html">Overview</a><a href="../atlas.html">Interactive app</a>
+<a href="../entities/index.html">Record types</a><a href="../rules/index.html">Rules</a>
+<a href="../questions.html">Open questions</a></nav></header>
+<main><p class="crumb"><a href="../index.html">Atlas</a> &rsaquo; <a href="index.html">Rules</a> &rsaquo; ACC-R-026</p><h1 class="mono">ACC-R-026</h1><p class="sub">Lease Accounting &amp; Payments &middot; Secondary schedule allocation</p><span class="tag obs">Observed</span><p class="lead">A stated percentage goes to a secondary schedule; the remainder is assumed to go to the primary.</p><p>- Trigger: an `AcctingAssumptionAdjust` or `Covenant` carries a secondary allocation. - Inputs: `AcctingAssumptionAdjust.SecondaryRentSchedAllocPercent`, `Covenant.SecondaryRentSchedAllocPercent`. - Computation: the stated percentage of the amount is allocated to a secondary schedule; the remainder to the primary. - Confidence: Observed that the fields exist and mean an allocation percentage (*&quot;If the expense setup has a secondary schedule allocation percentage, enter the allocation in this field&quot;*); Inferred that the remainder goes to the primary.</p><p style="font-size:11.5px;color:var(--faint);margin-top:18px">Source: modules/accounting/rules.md</p></main></body></html>

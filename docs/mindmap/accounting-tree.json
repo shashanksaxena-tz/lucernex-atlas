@@ -1,0 +1,2309 @@
+{
+ "name": "Lease Accounting Engine",
+ "kind": "module",
+ "detail": "The part of Lucernex that turns a lease contract into accounting numbers. It answers three questions: is this lease effectively a purchase or a rental (classification), what is it worth on the balance sheet on day one (measurement), and how do those numbers move month by month until it ends (the schedule). 38 objects and 1,265 fields in the product's own module taxonomy; this map covers the 20 that carry the calculation, plus the live approval process that governs its output. In production ASG runs one of the three standards the engine supports: the ASC 842 schedule-type table holds a single row, and the straight-line and IFRS 16 tables are empty.",
+ "confidence": "observed",
+ "source": "docs/modules/accounting/README.md",
+ "children": [
+  {
+   "name": "Straight-line & accounting schedules",
+   "kind": "submodule",
+   "detail": "The calculation half of the engine. One pair of tables — a schedule header and one row per accounting period — produces every lease schedule the product makes, whether it is a legacy straight-line schedule, an ASC 842 schedule or an IFRS 16 schedule. The name is historical: 'straight-line' was the old accounting method, but the tables outlived it.",
+   "confidence": "observed",
+   "source": "_lucernex_objects_summary.txt",
+   "children": [
+    {
+     "name": "SLSummary — the schedule header",
+     "kind": "entity",
+     "detail": "One row per accounting schedule. 134 fields in the object export (135 in the field catalog). Holds the assumptions the schedule was built under, the opening balances, every present-value adjustment, the deltas against any schedule it replaced, and two blocks of pre-computed disclosure figures. Physical table: s_l_summary.",
+     "confidence": "observed",
+     "source": "_lucernex_objects_summary.txt",
+     "children": [
+      {
+       "name": "Schedule identity flags",
+       "kind": "field-group",
+       "detail": "Three independent yes/no flags that say which accounting standard this schedule was generated under. They are the only thing distinguishing a straight-line schedule from an ASC 842 one — the columns, the arithmetic and the period rows are otherwise identical. Nothing in the database stops two of them being true at once.",
+       "confidence": "observed",
+       "source": "docs/data-fields/all-fields.csv",
+       "children": [
+        {
+         "name": "IsASC842Schedule",
+         "kind": "field",
+         "detail": "'Is ASC 842 Schedule?' — set when the schedule was produced by the Generate 842 Rent Schedule button. Vendor definition: \"This flag indicates that the schedule is an ASC 842 schedule.\" It is written by the system, not ticked by a user.",
+         "confidence": "observed",
+         "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+         "children": [
+          {
+           "name": "CodeASC842Schedule — the schedule-type table it implies (TableType 2162)",
+           "kind": "code-table",
+           "detail": "A schedule flagged as ASC 842 must point at a row in this tenant-defined table via CodeASC842ScheduleID. The table is what actually connects the calculation to the customer's general ledger. 24 columns, of which only four carry meaning and twenty are numbered account slots. Its IFRS 16 and straight-line twins are byte-identical in shape — confirmed from the admin screen, where all three render the same four columns. Physical table: code_a_s_c842_schedule.",
+           "confidence": "observed",
+           "source": "_lucernex_objects_summary.txt",
+           "children": [
+            {
+             "name": "842 Rent — the only configured schedule type",
+             "kind": "code-value",
+             "detail": "Opened directly in the tenant on 2026-09-10: this table holds exactly one row. Type '842 Rent', description '842 Rent', Don't Amortize Asset Value unchecked, Inactive unchecked. So every ASC 842 schedule in the tenant routes through this one configuration, and there is exactly one set of twenty general-ledger slots in play — not a matrix. That makes a migration substantially simpler than the schema suggested.",
+             "confidence": "observed",
+             "source": "docs/data-model/code-table-registry.md (live tenant, 2026-09-10)",
+             "children": [
+              {
+               "name": "GL export account slots (ExportAcct1Number … ExportAcct20Number)",
+               "kind": "field-group",
+               "detail": "Twenty free-text columns holding general-ledger account numbers. Vendor definition, repeated on all twenty: \"Export Accounts are tied to GL accounts in your Enterprise Resource Planning (ERP) System.\" When a schedule is generated, all twenty values are copied verbatim onto every single period row, so a 120-month lease carries 2,400 copies of the same twenty numbers.",
+               "confidence": "observed",
+               "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+               "children": [
+                {
+                 "name": "ExportAcct1Number",
+                 "kind": "field",
+                 "detail": "The first GL account slot. Which accounting concept it represents — lease liability, ROU asset, interest expense, amortisation — is not recorded anywhere in the schema. The slot is numbered, not named.",
+                 "confidence": "observed",
+                 "source": "_lucernex_objects_summary.txt",
+                 "children": [
+                  {
+                   "name": "Text, max length 50",
+                   "kind": "type",
+                   "detail": "Lucernex type 'Text'; catalog type sTYPE_TEXT; stored in PostgreSQL as TEXT. An account number is a label, not a quantity, so text is the right choice here — unlike the currency columns, which are also TEXT and should not be.",
+                   "confidence": "observed",
+                   "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+                   "children": []
+                  },
+                  {
+                   "name": "The slot number is not a name",
+                   "kind": "constraint",
+                   "detail": "Nothing in the data model says what slot 1 means. Twenty unnamed slots, and the mapping from slot to accounting concept is pure tenant convention held outside the system. It must be recovered before any ERP export can be rebuilt — and because only one schedule type is configured, that is now a single row of twenty values to read rather than a survey. It is also why ASG Edge+ should replace numbered slots with named debit/credit mapping rules.",
+                   "confidence": "derived",
+                   "source": "docs/modules/accounting/asg-edgeplus-mapping.md",
+                   "children": []
+                  },
+                  {
+                   "name": "ACC-R-029 — GL account denormalization",
+                   "kind": "rule",
+                   "detail": "On creating each period row, the schedule type's twenty account numbers are copied onto it unchanged.",
+                   "confidence": "derived",
+                   "source": "docs/modules/accounting/rules.md",
+                   "children": []
+                  }
+                 ]
+                }
+               ]
+              },
+              {
+               "name": "DontAmortizeAssetValue",
+               "kind": "field",
+               "detail": "The only behaviour switch on the entire table. A yes/no flag whose name says it suppresses amortisation of the right-of-use asset for schedules of this type. It has no vendor definition anywhere, so what exactly it suppresses is unconfirmed.",
+               "confidence": "observed",
+               "source": "_lucernex_objects_summary.txt",
+               "children": [
+                {
+                 "name": "Unchecked on the only configured row — so it does nothing here",
+                 "kind": "constraint",
+                 "detail": "The single ASC 842 schedule type, 842 Rent, has this flag off, and the other two schedule-type tables are empty. The flag therefore has no observable effect anywhere in this tenant's data, so the rule below can never be validated against it and stays permanently a guess. A rebuild should either implement it from the accounting standard and flag the divergence risk, or leave it out and record the omission — but should not claim parity on it.",
+                 "confidence": "observed",
+                 "source": "docs/data-model/code-table-registry.md (live tenant, 2026-09-10)",
+                 "children": []
+                },
+                {
+                 "name": "ACC-R-030 — Suppress ROU asset amortization",
+                 "kind": "rule",
+                 "detail": "If the flag is set, no asset amortisation is recognised. Inferred from the field name — the only rule in the module resting on naming alone, and now known to be inert in production.",
+                 "confidence": "inferred",
+                 "source": "docs/modules/accounting/rules.md",
+                 "children": []
+                }
+               ]
+              },
+              {
+               "name": "ShortName / ActualLongName / Inactive",
+               "kind": "field-group",
+               "detail": "The three generic code-table columns every Lucernex drop-down carries: the short label shown in the list, a long description, and a soft-delete flag. They are absent from the Manage Data Fields catalog, which only exposes the twenty account slots and the amortisation switch.",
+               "confidence": "observed",
+               "source": "_lucernex_objects_summary.txt",
+               "children": []
+              }
+             ]
+            }
+           ]
+          },
+          {
+           "name": "BOOLEAN (canonical) / sTYPE_CHECKBOX (presentation)",
+           "kind": "type",
+           "detail": "A yes/no value. Lucernex's live API declares a ten-value canonical type system in which BOOLEAN is one entry; the 448 sTYPE_* codes in Manage Data Fields are a presentation layer over it.",
+           "confidence": "observed",
+           "source": "docs/data-model/graphql-api.md (live GraphQL schema, build 26.08.0.46, 2026-09-10)",
+           "children": []
+          }
+         ]
+        },
+        {
+         "name": "IsIFRS16Schedule",
+         "kind": "field",
+         "detail": "'Is IFRS 16 Schedule?' — the same flag for the international standard, pointing at the structurally identical CodeIFRS16Schedule table.",
+         "confidence": "observed",
+         "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+         "children": []
+        },
+        {
+         "name": "IsSLSchedule",
+         "kind": "field",
+         "detail": "'Is SL Schedule?' — the legacy straight-line flag, kept alongside the two newer standards rather than replaced by them.",
+         "confidence": "observed",
+         "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+         "children": []
+        },
+        {
+         "name": "Only one of the three is usable in this tenant",
+         "kind": "constraint",
+         "detail": "The ASC 842 schedule-type table holds one row; the straight-line and IFRS 16 tables are both empty. With nothing to point at, no straight-line or IFRS 16 schedule can be generated — so IsSLSchedule and IsIFRS16Schedule should be false on every row. Any row where one of them is true is an orphan whose schedule type was deleted, and it would still be carrying balances. A one-query data-integrity check with real migration consequences.",
+         "confidence": "observed",
+         "source": "docs/data-model/code-table-registry.md (live tenant, 2026-09-10)",
+         "children": []
+        },
+        {
+         "name": "Three independent booleans, no uniqueness rule",
+         "kind": "constraint",
+         "detail": "These are three separate yes/no columns, not one 'which standard' choice. The database does not prevent two being true on one schedule, nor two active ASC 842 schedules on one contract. ASG Edge+ should replace them with a single standard enum plus a uniqueness constraint.",
+         "confidence": "derived",
+         "source": "docs/modules/accounting/asg-edgeplus-mapping.md",
+         "children": []
+        }
+       ]
+      },
+      {
+       "name": "Opening balances",
+       "kind": "field-group",
+       "detail": "What the lease is worth on the books the day the schedule starts: the liability owed to the landlord, and the right-of-use asset that mirrors it.",
+       "confidence": "observed",
+       "source": "docs/data-fields/all-fields.csv",
+       "children": [
+        {
+         "name": "InitialLiabilityBalance",
+         "kind": "field",
+         "detail": "The lease liability at the accounting begin date. Vendor definition: \"This is the total of all of the Period Payment Present Values over the life of the lease\" — i.e. every future rent payment discounted back to today and added up.",
+         "confidence": "observed",
+         "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+         "children": [
+          {
+           "name": "MONEY (canonical) / sTYPE_MONEY (presentation)",
+           "kind": "type",
+           "detail": "A currency amount. Declared maximum 999,999,999,999,999 — fifteen digits — with no declared decimal scale. Lucernex's live API keeps MONEY distinct from FLOAT and publishes BigDecimal as a scalar, so the vendor does not treat money as a float either.",
+           "confidence": "observed",
+           "source": "docs/data-model/graphql-api.md (live GraphQL schema, build 26.08.0.46, 2026-09-10)",
+           "children": [
+            {
+             "name": "Stored in PostgreSQL as TEXT",
+             "kind": "constraint",
+             "detail": "Every non-key column in the customer database export is TEXT, currency included. There is no numeric typing to inherit and no database guarantee that a currency column even contains a number. Every migrated value must be parsed, and each parse failure is a data-quality finding rather than an error to swallow.",
+             "confidence": "observed",
+             "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+             "children": []
+            }
+           ]
+          },
+          {
+           "name": "ACC-R-031 — Initial liability balance",
+           "kind": "rule",
+           "detail": "Sum the present value of every period's cash payment across the life of the lease.",
+           "confidence": "observed",
+           "source": "docs/modules/accounting/rules.md",
+           "children": []
+          }
+         ]
+        },
+        {
+         "name": "InitialAssetBalance",
+         "kind": "field",
+         "detail": "The right-of-use asset at the accounting begin date. Vendor definition says only \"This is a calculated value which contains the initial value over the asset of the lease\" — the actual arithmetic is documented nowhere.",
+         "confidence": "observed",
+         "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+         "children": [
+          {
+           "name": "The formula is missing",
+           "kind": "constraint",
+           "detail": "Every ingredient exists as its own field — initial direct costs, lease incentives, pre-commencement payments, dismantling costs, a manual adjustment — but no source states how they combine. This is the single most important undocumented computation in the module and it blocks the measurement service in any rebuild.",
+           "confidence": "observed",
+           "source": "docs/modules/accounting/asc-842.md",
+           "children": []
+          },
+          {
+           "name": "ACC-R-033 — Initial asset balance",
+           "kind": "rule",
+           "detail": "Standard practice is liability + prepaid rent + initial direct costs − lease incentives, and all four fields exist, but the actual formula is not stated. Do not code from the schema alone.",
+           "confidence": "inferred",
+           "source": "docs/modules/accounting/rules.md",
+           "children": []
+          }
+         ]
+        },
+        {
+         "name": "BalanceForward",
+         "kind": "field",
+         "detail": "When a schedule replaces an earlier one, the difference between the asset and the liability carried across. It splits two ways: the part that stays on the balance sheet, and the part recognised immediately as a gain or loss.",
+         "confidence": "observed",
+         "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+         "children": [
+          {
+           "name": "ACC-R-034 — Balance forward and its split",
+           "kind": "rule",
+           "detail": "BalanceForward = InitialAssetBalance − InitialLiabilityBalance, and it equals RemeasurementBalanceForward + ProfitAndLossImpact.",
+           "confidence": "derived",
+           "source": "docs/modules/accounting/rules.md",
+           "children": []
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "name": "Recalculation state",
+       "kind": "field-group",
+       "detail": "The engine does not recompute when something changes. It raises a dirty flag and waits for a human. This group is that flag plus its audit trail.",
+       "confidence": "observed",
+       "source": "docs/data-fields/all-fields.csv",
+       "children": [
+        {
+         "name": "NeedsRecalculation",
+         "kind": "field",
+         "detail": "Shown in the UI as 'Recalc?'. Vendor definition: \"When set to Yes, this flag indicates that the lease accounting schedule must be recalculated.\" The System Administrator Dashboard has a dedicated 'ASC 842 Recalculations' widget for working the queue.",
+         "confidence": "observed",
+         "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+         "children": [
+          {
+           "name": "RecalcTriggerDate",
+           "kind": "field",
+           "detail": "The date the flag went up — so an analyst can see how long a schedule has been stale.",
+           "confidence": "observed",
+           "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+           "children": []
+          },
+          {
+           "name": "NeedsRecalcModifiedByMemberIDList",
+           "kind": "field",
+           "detail": "Every user whose edit would have raised the flag, kept as a list inside a single text column. A rebuild should make this a proper join table; the separator Lucernex uses is not documented.",
+           "confidence": "observed",
+           "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+           "children": []
+          },
+          {
+           "name": "ACC-R-020 — Schedule-type change dirties the schedule",
+           "kind": "rule",
+           "detail": "Changing the ASC 842 or IFRS 16 schedule type on the Accounting Assumptions, Covenants or Recurring Expenses page sets Recalc? to Yes.",
+           "confidence": "observed",
+           "source": "docs/modules/accounting/rules.md",
+           "children": []
+          },
+          {
+           "name": "ACC-R-021 — New expense setup dirties the schedule using its expense type",
+           "kind": "rule",
+           "detail": "Creating an expense setup with a schedule flips Recalc? on whichever accounting schedule uses that expense type.",
+           "confidence": "observed",
+           "source": "docs/modules/accounting/rules.md",
+           "children": []
+          },
+          {
+           "name": "ACC-R-022 — Accounting method change requires remeasurement",
+           "kind": "rule",
+           "detail": "Vendor definition of the accounting method field: \"If its value is changed, you will need to remeasure your schedule.\" It states the consequence, not whether the flag is set.",
+           "confidence": "observed",
+           "source": "docs/modules/accounting/rules.md",
+           "children": []
+          },
+          {
+           "name": "ACC-R-023 — Recalculation audit trail",
+           "kind": "rule",
+           "detail": "Raising the flag stamps the date, the last user, and appends to the member list.",
+           "confidence": "observed",
+           "source": "docs/modules/accounting/rules.md",
+           "children": []
+          }
+         ]
+        },
+        {
+         "name": "AssociatedExpenseSetupIDs",
+         "kind": "field",
+         "detail": "A maintained reverse index: the list of expense setups whose expense type feeds this schedule. It exists so the engine can find which schedules to dirty when an expense setup changes, without scanning everything. Stored as delimited text, and not typed as a foreign key even though that is what it is.",
+         "confidence": "observed",
+         "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+         "children": []
+        },
+        {
+         "name": "RecalcOverrideNotes",
+         "kind": "entity",
+         "detail": "A free-text justification attached to a schedule when someone decides not to recalculate. Seven fields, essentially a note plus who wrote it. Whether writing one clears the flag is unknown.",
+         "confidence": "observed",
+         "source": "_lucernex_objects_summary.txt",
+         "children": [
+          {
+           "name": "ACC-R-024 — Recalculation override",
+           "kind": "rule",
+           "detail": "A note is recorded against the schedule. Whether it clears Recalc? is undocumented.",
+           "confidence": "derived",
+           "source": "docs/modules/accounting/rules.md",
+           "children": []
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "name": "Modification and remeasurement deltas",
+       "kind": "field-group",
+       "detail": "Lucernex does not record a lease modification as an event. It creates a whole new schedule carrying six difference figures measured against the one it replaces, and marks the old one inactive. This group is those six figures.",
+       "confidence": "observed",
+       "source": "docs/modules/accounting/asc-842.md",
+       "children": [
+        {
+         "name": "PriorLastPostedPeriodID",
+         "kind": "field",
+         "detail": "Points back at the schedule this one replaced — the link that makes the version chain walkable.",
+         "confidence": "observed",
+         "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+         "children": []
+        },
+        {
+         "name": "PostedInitAssetAdj / PostedInitLiabilityAdj",
+         "kind": "field",
+         "detail": "How far the new schedule's opening balances differ from the old schedule's balances as at the last period that was already posted to the ledger.",
+         "confidence": "observed",
+         "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+         "children": []
+        },
+        {
+         "name": "Shortened-term differences",
+         "kind": "field-group",
+         "detail": "Four further figures used only when a lease is terminated early: the restated liability over the shortened term, and three differences against the original schedule.",
+         "confidence": "observed",
+         "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+         "children": [
+          {
+           "name": "ACC-R-047 — Term shortening",
+           "kind": "rule",
+           "detail": "Four formulas, all stated verbatim by the vendor, covering the restated liability and the asset, liability and rent differences.",
+           "confidence": "observed",
+           "source": "docs/modules/accounting/rules.md",
+           "children": []
+          }
+         ]
+        },
+        {
+         "name": "ACC-R-045 — Schedule supersession",
+         "kind": "rule",
+         "detail": "Creating a replacement schedule links it to its predecessor, copies the posted cut-off date, computes four adjustment figures, and marks the predecessor inactive.",
+         "confidence": "observed",
+         "source": "docs/modules/accounting/rules.md",
+         "children": []
+        },
+        {
+         "name": "ACC-R-046 — Mid-period remeasurement split",
+         "kind": "rule",
+         "detail": "Two fields hold the partial interest and partial expense from the period start to the remeasurement date.",
+         "confidence": "observed",
+         "source": "docs/modules/accounting/rules.md",
+         "children": []
+        }
+       ]
+      },
+      {
+       "name": "Roll-forward disclosure block",
+       "kind": "field-group",
+       "detail": "25 fields reproducing the asset and liability roll-forward that ASC 842 requires in the financial statement notes: opening balances, plus new leases, plus remeasurements, plus reclassifications, less expirations and amortisation, equals closing balances. Every one of the 25 is a currency figure and none of them has a vendor definition — this is the least-documented block in the whole module.",
+       "confidence": "observed",
+       "source": "docs/data-fields/all-fields.csv",
+       "children": [
+        {
+         "name": "Two near-identical reclassification triples",
+         "kind": "constraint",
+         "detail": "The block contains both Reclassification* and Reclass* versions of gross asset, accumulated amortisation and lease liability impact — six fields, two sets of three, and nothing offline explains the difference between them.",
+         "confidence": "observed",
+         "source": "docs/modules/accounting/asc-842.md",
+         "children": []
+        }
+       ]
+      },
+      {
+       "name": "Maturity ladder block",
+       "kind": "field-group",
+       "detail": "14 fields giving the future cash expense by fiscal year — this year, next year, third through sixth, and everything beyond — plus four quarterly figures for the current year. ASC 842 asks for five years plus a tail; Lucernex offers six.",
+       "confidence": "observed",
+       "source": "docs/data-fields/all-fields.csv",
+       "children": [
+        {
+         "name": "Quarterly fields are conditionally populated",
+         "kind": "constraint",
+         "detail": "Q1 only fills if the report starts in period 1; Q2 if periods 1–4; Q3 if 1–7; Q4 if 1–9. Stated exactly in the vendor definitions and very easy to miss.",
+         "confidence": "observed",
+         "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+         "children": []
+        }
+       ]
+      },
+      {
+       "name": "Commitment totals",
+       "kind": "field-group",
+       "detail": "Two headline figures a portfolio manager reads without opening the schedule: everything still owed, and everything ever owed.",
+       "confidence": "observed",
+       "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+       "children": [
+        {
+         "name": "TotalCommitment",
+         "kind": "field",
+         "detail": "Vendor definition: \"The sum of all rent payments for the life of the lease.\"",
+         "confidence": "observed",
+         "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+         "children": [
+          {
+           "name": "ACC-R-035 — Total commitment",
+           "kind": "rule",
+           "detail": "Sum of all rent payments over the lease life.",
+           "confidence": "observed",
+           "source": "docs/modules/accounting/rules.md",
+           "children": []
+          }
+         ]
+        },
+        {
+         "name": "CurrentRemainingCashBalance",
+         "kind": "field",
+         "detail": "The current and future remaining lease payments. A sibling field gives the same figure excluding the current period.",
+         "confidence": "observed",
+         "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+         "children": [
+          {
+           "name": "ACC-R-036 — Remaining cash balance",
+           "kind": "rule",
+           "detail": "One figure includes the current period, the other excludes it.",
+           "confidence": "observed",
+           "source": "docs/modules/accounting/rules.md",
+           "children": []
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "name": "SLRemainingAssetBalance",
+       "kind": "field",
+       "detail": "How much right-of-use asset should remain after the schedule ends — used on finance leases where the tenant expects to keep something of value.",
+       "confidence": "observed",
+       "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+       "children": [
+        {
+         "name": "Percent or Currency — the value carries no unit",
+         "kind": "type",
+         "detail": "A single column that may hold either a percentage or a dollar amount. Vendor definition: \"If you enter a value between 0-100, the system will default the option button setting to Percentage. If you enter a value of 100.01 or above, the system will default the option button setting to Currency. You can override the default option button setting.\"",
+         "confidence": "observed",
+         "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+         "children": [
+          {
+           "name": "Migration hazard: the guess can be overridden",
+           "kind": "constraint",
+           "detail": "Because a user can override the magnitude-based guess, and no column in the schema stores that override, a stored 50 might mean 50% or $50 and nothing in the data says which. Reading it by magnitude will silently misinterpret every overridden record — and this field drives a balance-sheet number, not a display.",
+           "confidence": "derived",
+           "source": "docs/modules/accounting/asg-edgeplus-mapping.md",
+           "children": []
+          }
+         ]
+        },
+        {
+         "name": "ACC-R-049 — Final asset amount / residual carve-out",
+         "kind": "rule",
+         "detail": "Only available on finance contracts. The final-asset date defaults to the schedule end date; a later date amortises beyond it.",
+         "confidence": "observed",
+         "source": "docs/modules/accounting/rules.md",
+         "children": []
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "name": "SLPeriod — one row per accounting period",
+     "kind": "entity",
+     "detail": "The atomic output of the engine: for each month (or each of 13 retail periods) it records what cash was paid, what expense was recognised, how much of that was interest, and what the asset and liability are worth at the end. 79 fields — but 23 of them exist only for currency translation and 23 more only to carry general-ledger account numbers, so the real accounting payload is about 21 numbers. Physical table: s_l_period.",
+     "confidence": "observed",
+     "source": "_lucernex_objects_summary.txt",
+     "children": [
+      {
+       "name": "Cash versus expense — the straight-line idea itself",
+       "kind": "field-group",
+       "detail": "The whole point of straight-lining: rent is often paid unevenly (free months, step-ups), but accounting recognises it evenly. The gap between what you paid and what you recognised is the deferred balance.",
+       "confidence": "observed",
+       "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+       "children": [
+        {
+         "name": "PeriodCashAmount",
+         "kind": "field",
+         "detail": "What was actually paid this period.",
+         "confidence": "observed",
+         "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+         "children": []
+        },
+        {
+         "name": "PeriodExpenseAmount",
+         "kind": "field",
+         "detail": "Vendor definition: \"The cash rent straight lined over the life of the schedule.\" The even figure recognised in the profit and loss account.",
+         "confidence": "observed",
+         "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+         "children": []
+        },
+        {
+         "name": "PeriodDeferredAmount",
+         "kind": "field",
+         "detail": "Vendor definition: \"The difference between the period cash rent and straight line rent expense.\" Positive in periods you overpay relative to the even line, negative when you underpay.",
+         "confidence": "observed",
+         "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+         "children": [
+          {
+           "name": "Sign convention unstated",
+           "kind": "constraint",
+           "detail": "The wording implies cash minus expense, but no source says so outright. Getting the sign backwards inverts the deferred-rent balance for the whole lease.",
+           "confidence": "derived",
+           "source": "docs/modules/accounting/rules.md",
+           "children": []
+          }
+         ]
+        },
+        {
+         "name": "CumulativeDeferredBalance",
+         "kind": "field",
+         "detail": "The running total of deferred rent from the start of the schedule to this period — the balance-sheet accrual a straight-line schedule exists to produce.",
+         "confidence": "observed",
+         "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+         "children": []
+        },
+        {
+         "name": "PVOfPeriodCashAmount",
+         "kind": "field",
+         "detail": "This period's payment expressed in today's money. Vendor definition: \"The Present Value of a future cash payment in today's valuation. This value is discounted to present value from the period that the payment will be made.\" Summing this column across the lease is what produces the opening liability.",
+         "confidence": "observed",
+         "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+         "children": [
+          {
+           "name": "ACC-R-032 — Present value of a period payment",
+           "kind": "rule",
+           "detail": "Discount the payment from its own period back to the accounting begin date. The compounding convention is not documented.",
+           "confidence": "derived",
+           "source": "docs/modules/accounting/rules.md",
+           "children": []
+          }
+         ]
+        },
+        {
+         "name": "ACC-R-037 — Straight-line expense and deferral",
+         "kind": "rule",
+         "detail": "Expense is the total cash spread evenly; deferral is cash minus expense; the cumulative balance is the running sum.",
+         "confidence": "observed",
+         "source": "docs/modules/accounting/rules.md",
+         "children": []
+        }
+       ]
+      },
+      {
+       "name": "Balances and amortisation",
+       "kind": "field-group",
+       "detail": "How the asset and the liability wind down period by period.",
+       "confidence": "observed",
+       "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+       "children": [
+        {
+         "name": "CumulativeAssetAmortExpense",
+         "kind": "field",
+         "detail": "Accumulated amortisation. Vendor definition gives the recurrence exactly: for the first period it equals that period's amortisation; for every later period it is that period's amortisation plus the previous period's accumulated balance.",
+         "confidence": "observed",
+         "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+         "children": [
+          {
+           "name": "ACC-R-039 — Accumulated amortization recurrence",
+           "kind": "rule",
+           "detail": "A simple running total, stated verbatim by the vendor.",
+           "confidence": "observed",
+           "source": "docs/modules/accounting/rules.md",
+           "children": []
+          }
+         ]
+        },
+        {
+         "name": "GrossAssetBalance",
+         "kind": "field",
+         "detail": "Vendor definition: \"This field's value is equal to the Asset Balance + the Accumulated Amortization Balance\" — i.e. the asset before any wear-down, useful for the disclosure roll-forward.",
+         "confidence": "observed",
+         "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+         "children": [
+          {
+           "name": "ACC-R-040 — Gross asset balance",
+           "kind": "rule",
+           "detail": "Asset balance plus accumulated amortisation.",
+           "confidence": "observed",
+           "source": "docs/modules/accounting/rules.md",
+           "children": []
+          }
+         ]
+        },
+        {
+         "name": "PeriodInterestAmount",
+         "kind": "field",
+         "detail": "The interest accruing on the lease liability at the discount rate. Whether it is computed on the opening or the closing balance is not documented — a one-period difference that compounds across the whole lease.",
+         "confidence": "observed",
+         "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+         "children": [
+          {
+           "name": "ACC-R-038 — Interest expense",
+           "kind": "rule",
+           "detail": "Interest on the liability at the discount rate; the balance it is charged on is unconfirmed.",
+           "confidence": "derived",
+           "source": "docs/modules/accounting/rules.md",
+           "children": []
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "name": "Short-term / long-term split",
+       "kind": "field-group",
+       "detail": "Balance sheets separate what falls due within twelve months from what falls due later. This group computes both sides — and stores two competing versions of the short-term liability.",
+       "confidence": "observed",
+       "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+       "children": [
+        {
+         "name": "Forward12MonthLiabilityAmortBased",
+         "kind": "field",
+         "detail": "The next twelve months of liability reduction, computed on an amortisation basis.",
+         "confidence": "observed",
+         "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+         "children": []
+        },
+        {
+         "name": "Forward12MonthLiabilityPVBased",
+         "kind": "field",
+         "detail": "The same quantity computed on a present-value basis. Both are stored on every row.",
+         "confidence": "observed",
+         "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+         "children": []
+        },
+        {
+         "name": "A firm setting picks the winner",
+         "kind": "constraint",
+         "detail": "Admin > Manage Company > Financial Settings holds a 'Short-Term/Long-Term Liability Calculation Method' choice. That page is not an object in the schema export, so where it persists is unknown — the 18-field Firm record's JSONConfigText column is the only plausible home. The present-value formula itself is not available offline.",
+         "confidence": "observed",
+         "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+         "children": [
+          {
+           "name": "ACC-R-042 — Which short-term liability is reported",
+           "kind": "rule",
+           "detail": "A firm-level setting selects the amortisation-based or PV-based figure.",
+           "confidence": "observed",
+           "source": "docs/modules/accounting/rules.md",
+           "children": []
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "name": "Currency translation",
+       "kind": "field-group",
+       "detail": "Twelve fields for leases denominated in a foreign currency. Four of the formulas are published verbatim by the vendor — and one of them is almost certainly wrong.",
+       "confidence": "observed",
+       "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+       "children": [
+        {
+         "name": "LiabilityTranslationAdjustment",
+         "kind": "field",
+         "detail": "The published formula reads: current asset balance + (payment − interest) − prior month's asset balance.",
+         "confidence": "observed",
+         "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+         "children": [
+          {
+           "name": "The published formula is probably a documentation error",
+           "kind": "constraint",
+           "detail": "It references the asset balance twice and never the liability balance, while calling itself a liability adjustment. Do not implement as written; confirm against a live FX-impact grid first.",
+           "confidence": "derived",
+           "source": "docs/modules/accounting/straight-line.md",
+           "children": []
+          }
+         ]
+        },
+        {
+         "name": "ConversionRateAverage / ConversionRateMonthEnd",
+         "kind": "field",
+         "detail": "The two exchange rates a period needs: an average rate for flows and a month-end rate for balances. Both typed to six decimal places.",
+         "confidence": "observed",
+         "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+         "children": []
+        },
+        {
+         "name": "ACC-R-043 — Currency translation",
+         "kind": "rule",
+         "detail": "Four published formulas covering asset, liability, cumulative translation adjustment and liability FX impact.",
+         "confidence": "observed",
+         "source": "docs/modules/accounting/rules.md",
+         "children": []
+        },
+        {
+         "name": "ACC-R-044 — Translation vs. revaluation mapping",
+         "kind": "rule",
+         "detail": "A contract flagged 'Is Translation' uses the translation mapping; otherwise the revaluation mapping.",
+         "confidence": "observed",
+         "source": "docs/modules/accounting/rules.md",
+         "children": []
+        }
+       ]
+      },
+      {
+       "name": "NumberDays",
+       "kind": "field",
+       "detail": "How many days long this period is. It is stored rather than derived because the amortisation basis setting can weight each period by its day count — see the portfolio policy branch.",
+       "confidence": "observed",
+       "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+       "children": []
+      },
+      {
+       "name": "RecordStatus",
+       "kind": "field",
+       "detail": "Where this period stands with the ledger: posted, not posted, or mixed. 'Mixed' means a period can be partially posted, which is why the closed/open boundary is a date rather than a flag.",
+       "confidence": "observed",
+       "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+       "children": []
+      },
+      {
+       "name": "ACC-R-028 — Period row generation",
+       "kind": "rule",
+       "detail": "One period row per fiscal period between the schedule's begin and end dates, taken from the portfolio's fiscal calendar.",
+       "confidence": "derived",
+       "source": "docs/modules/accounting/rules.md",
+       "children": []
+      },
+      {
+       "name": "ACC-R-041 — Short-term / long-term split",
+       "kind": "rule",
+       "detail": "Five formulas covering the twelve-month-forward changes and the long-term remainder.",
+       "confidence": "observed",
+       "source": "docs/modules/accounting/rules.md",
+       "children": []
+      }
+     ]
+    },
+    {
+     "name": "The three generate buttons",
+     "kind": "capability",
+     "detail": "The engine has exactly three entry points, all of them buttons on the contract summary page. They are not stored data — the field catalog types them as form action buttons that trigger a server-side process.",
+     "confidence": "observed",
+     "source": "docs/data-fields/all-fields.csv",
+     "children": [
+      {
+       "name": "GenerateStraightLineRent",
+       "kind": "field",
+       "detail": "'Generate Straight-line Rent Schedule' — produces a legacy straight-line schedule.",
+       "confidence": "observed",
+       "source": "docs/data-fields/all-fields.csv",
+       "children": []
+      },
+      {
+       "name": "GenerateFASBSchedule",
+       "kind": "field",
+       "detail": "'Generate 842 Rent Schedule' — produces an ASC 842 schedule. Named for FASB, the US standards board, rather than for the standard.",
+       "confidence": "observed",
+       "source": "docs/data-fields/all-fields.csv",
+       "children": []
+      },
+      {
+       "name": "GenerateIFRS16Schedule",
+       "kind": "field",
+       "detail": "'Generate IFRS 16 Rent Schedule' — produces an IFRS 16 schedule.",
+       "confidence": "observed",
+       "source": "docs/data-fields/all-fields.csv",
+       "children": []
+      },
+      {
+       "name": "ModifyStraightLineStatus",
+       "kind": "field",
+       "detail": "'Modify Straight-Line Status' — a fourth button with no vendor definition at all. A similarly-named but different admin utility also exists at a separate route.",
+       "confidence": "observed",
+       "source": "docs/data-fields/all-fields.csv",
+       "children": [
+        {
+         "name": "Two controls share this name",
+         "kind": "constraint",
+         "detail": "One is this contract-level button; the other is a firm-wide admin utility at /en/admin/lxadmin/SLDemoTweaks.jsp, sitting beside Data Conversion Cleaner and Delete Entities, classified during exploration as explicitly mutating and high risk. Neither was activated, so what either does is unknown.",
+         "confidence": "observed",
+         "source": "docs/admin/004-company-administration.md",
+         "children": []
+        }
+       ]
+      },
+      {
+       "name": "ACC-R-027 — Schedule-type flag stamping",
+       "kind": "rule",
+       "detail": "Whichever button ran sets the matching identity flag on the new schedule header.",
+       "confidence": "derived",
+       "source": "docs/modules/accounting/rules.md",
+       "children": []
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "name": "ASC 842 classification — operating or finance?",
+   "kind": "submodule",
+   "detail": "Before a lease can be measured it must be classified. A finance lease sits on the balance sheet like a purchase; an operating lease is a smoother, simpler charge. Lucernex decides with five pass/fail tests, and the polarity is counter-intuitive: passing all five means operating, and failing any single one means finance.",
+   "confidence": "observed",
+   "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+   "children": [
+    {
+     "name": "ContractFinancialTest — the classification record",
+     "kind": "entity",
+     "detail": "93 fields. One row per test run; a contract accumulates many over its life and only the locked ones count. It holds the five test results, the inputs they consume, and — unusually — two complete parallel measurements, one under ASC 842 and one under IFRS 16, computed whether or not the tenant reports under both. Physical table: contract_financial_test.",
+     "confidence": "observed",
+     "source": "_lucernex_objects_summary.txt",
+     "children": [
+      {
+       "name": "The five ASC 842 tests",
+       "kind": "field-group",
+       "detail": "Three of the five are simply questions a person answers with a tick box. Two are computed comparisons against a threshold. Together they implement the classification criteria in the US standard.",
+       "confidence": "observed",
+       "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+       "children": [
+        {
+         "name": "Test #1 — does ownership transfer to the tenant?",
+         "kind": "rule",
+         "detail": "A tick box. If ownership of the asset ends up with the tenant, the arrangement is really a purchase, so the lease is a finance lease.",
+         "confidence": "observed",
+         "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+         "children": [
+          {
+           "name": "ACC-R-005 — Test 1: title transfer",
+           "kind": "rule",
+           "detail": "Title reverts to the tenant = Fail = finance lease.",
+           "confidence": "observed",
+           "source": "docs/modules/accounting/rules.md",
+           "children": []
+          }
+         ]
+        },
+        {
+         "name": "Test #2 — is there a purchase option the tenant will take?",
+         "kind": "rule",
+         "detail": "A tick box. If the tenant is reasonably certain to buy, it is a purchase in substance.",
+         "confidence": "observed",
+         "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+         "children": [
+          {
+           "name": "ACC-R-006 — Test 2: purchase option reasonably certain to be exercised",
+           "kind": "rule",
+           "detail": "A bargain purchase option = Fail = finance lease.",
+           "confidence": "observed",
+           "source": "docs/modules/accounting/rules.md",
+           "children": []
+          }
+         ]
+        },
+        {
+         "name": "Test #3 — is the lease term most of the asset's remaining life?",
+         "kind": "rule",
+         "detail": "Computed. Divide the term used for the test by the asset's remaining economic life; if the result is below the threshold (usually 75%) the lease passes. A separate tick box, 'is the lease commencement at or near the end of the economic life', forces a pass regardless.",
+         "confidence": "observed",
+         "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+         "children": [
+          {
+           "name": "ACC-R-007 — Test 3: major part of remaining economic life",
+           "kind": "rule",
+           "detail": "Test term divided by remaining life, compared against the threshold. The default threshold comes from the portfolio.",
+           "confidence": "observed",
+           "source": "docs/modules/accounting/rules.md",
+           "children": []
+          },
+          {
+           "name": "ACC-R-008 — Test 3 override: commencement near end of economic life",
+           "kind": "rule",
+           "detail": "The 'lease is near end' tick box forces a Pass unconditionally.",
+           "confidence": "observed",
+           "source": "docs/modules/accounting/rules.md",
+           "children": []
+          }
+         ]
+        },
+        {
+         "name": "Test #4 — do the payments amount to substantially all the asset's value?",
+         "kind": "rule",
+         "detail": "Computed, and the most involved of the five. If the present value of what you will pay is close to what the asset is worth, you have effectively bought it. Vendor definition: \"If you exceed your Threshold Fair Value Controlled, your Test #4 result will be 'Failed'.\"",
+         "confidence": "observed",
+         "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+         "children": [
+          {
+           "name": "ACC-R-009 — Test 4: substantially all of fair value",
+           "kind": "rule",
+           "detail": "Fair value times the portion controlled times the threshold gives the benchmark; a liability above it fails. Which liability figure is used is ambiguous.",
+           "confidence": "observed",
+           "source": "docs/modules/accounting/rules.md",
+           "children": []
+          },
+          {
+           "name": "Test #4 inputs",
+           "kind": "field-group",
+           "detail": "Four values feed this test: what the whole asset is worth, how much of it you control, the threshold percentage, and the liability you booked.",
+           "confidence": "observed",
+           "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+           "children": [
+            {
+             "name": "FairValueOfAsset",
+             "kind": "field",
+             "detail": "What the whole underlying asset is worth. Vendor definition quotes the standard: \"FASB 842.10.20 defines fair value as the price that would be received to sell an asset or paid to transfer a liability in an orderly transaction between market participants at the measurement date.\"",
+             "confidence": "observed",
+             "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+             "children": [
+              {
+               "name": "MONEY / sTYPE_MONEY",
+               "kind": "type",
+               "detail": "A currency amount, entered by a person rather than computed. Fifteen declared digits, no declared decimal scale, stored as TEXT in the customer database.",
+               "confidence": "observed",
+               "source": "docs/data-fields/all-fields.csv",
+               "children": [
+                {
+                 "name": "Asset — the source entity this value also lives on",
+                 "kind": "entity",
+                 "detail": "For an equipment lease the same fair value is recorded on the physical asset record, not just on the test. Asset carries 122 fields and a complete duplicate of the classification inputs — fair value, discount rate override, 'too specialised for the lessor', 'has a buyout option', 'title reverts to tenant', residual, depreciable life — because an equipment contract can hold many assets, each classified in its own right.",
+                 "confidence": "observed",
+                 "source": "_lucernex_objects_summary.txt",
+                 "children": [
+                  {
+                   "name": "The comparison that makes Test #4 decisive",
+                   "kind": "constraint",
+                   "detail": "Fair value alone decides nothing. It is multiplied by the portion of the asset you control to give the fair value you actually command, then multiplied by the threshold percentage (usually 90%) to give the benchmark. The lease liability is compared against that benchmark, and exceeding it fails the test and makes the lease a finance lease. Which liability figure is used — before or after manual adjustment — is genuinely ambiguous in the vendor's own documentation, and it is the difference between an operating and a finance lease on a borderline contract.",
+                   "confidence": "observed",
+                   "source": "docs/modules/accounting/asc-842.md",
+                   "children": []
+                  },
+                  {
+                   "name": "Asset-level overrides beat the contract",
+                   "kind": "constraint",
+                   "detail": "Asset carries its own discount rate override, accounting method override, and accounting begin/end dates. Vendor definition: if the override dates are blank, the test and schedules run from the asset's expense schedule dates instead.",
+                   "confidence": "observed",
+                   "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+                   "children": []
+                  }
+                 ]
+                }
+               ]
+              }
+             ]
+            },
+            {
+             "name": "PortionOfAssetControlled",
+             "kind": "field",
+             "detail": "What share of the asset this lease actually gives you — vendor definition: \"the percentage based upon the rentable area divided by the total area of the asset\". A floor in a tower is not the tower.",
+             "confidence": "observed",
+             "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+             "children": []
+            },
+            {
+             "name": "FairValueThreshold",
+             "kind": "field",
+             "detail": "The fraction of fair value that counts as 'substantially all'. Vendor definition: \"This value is usually set to 90%.\" The default comes from the portfolio.",
+             "confidence": "observed",
+             "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+             "children": []
+            },
+            {
+             "name": "FairValueControlled (computed)",
+             "kind": "field",
+             "detail": "Fair value multiplied by the portion controlled. Typed by the catalog as a system-calculated currency amount, so the engine writes it rather than a user.",
+             "confidence": "observed",
+             "source": "docs/data-fields/all-fields.csv",
+             "children": []
+            },
+            {
+             "name": "ThresholdFairValueControlled (computed)",
+             "kind": "field",
+             "detail": "The controlled fair value multiplied by the threshold — the actual benchmark the liability is measured against.",
+             "confidence": "observed",
+             "source": "docs/data-fields/all-fields.csv",
+             "children": []
+            },
+            {
+             "name": "InitLiabilityBalToThreshFairValueCtrld (computed)",
+             "kind": "field",
+             "detail": "The liability expressed as a percentage of that benchmark. Over 100% and the test fails.",
+             "confidence": "observed",
+             "source": "docs/data-fields/all-fields.csv",
+             "children": []
+            }
+           ]
+          }
+         ]
+        },
+        {
+         "name": "Test #5 — is the asset too specialised to re-let?",
+         "kind": "rule",
+         "detail": "A tick box. If nobody but this tenant could use the asset, the landlord has effectively sold it.",
+         "confidence": "observed",
+         "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+         "children": [
+          {
+           "name": "ACC-R-010 — Test 5: specialised asset",
+           "kind": "rule",
+           "detail": "A specialised asset = Fail = finance lease.",
+           "confidence": "observed",
+           "source": "docs/modules/accounting/rules.md",
+           "children": []
+          }
+         ]
+        },
+        {
+         "name": "Fail any one, and the lease is a finance lease",
+         "kind": "constraint",
+         "detail": "Stated on all five result fields: \"If you 'fail' at least one of the five tests, the lease will be classified as a Finance lease. If you 'pass' all tests, the lease will be considered an Operating lease.\" The result is written to Final Result. Note the inverted polarity — 'passing' is the unremarkable outcome.",
+         "confidence": "observed",
+         "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+         "children": [
+          {
+           "name": "ACC-R-011 — Final classification (inverted polarity)",
+           "kind": "rule",
+           "detail": "Any fail means finance; all five passes means operating.",
+           "confidence": "observed",
+           "source": "docs/modules/accounting/rules.md",
+           "children": []
+          },
+          {
+           "name": "ACC-R-012 — Accounting method override",
+           "kind": "rule",
+           "detail": "An 'Accounting Type Override' on the test, and a second override on the asset, can supersede the computed verdict. Precedence between the two is undocumented.",
+           "confidence": "derived",
+           "source": "docs/modules/accounting/rules.md",
+           "children": []
+          }
+         ]
+        },
+        {
+         "name": "PASS_FAIL / COMPUTED",
+         "kind": "type",
+         "detail": "The five result fields are typed as a pass/fail pair in the field catalog — a computed verdict, not an input. Lucernex's live API makes COMPUTED one of its ten canonical field types, which is vendor confirmation that the platform itself separates calculated values from entered ones.",
+         "confidence": "observed",
+         "source": "docs/data-model/graphql-api.md (live GraphQL schema, build 26.08.0.46, 2026-09-10)",
+         "children": []
+        }
+       ]
+      },
+      {
+       "name": "Accounting dates",
+       "kind": "field-group",
+       "detail": "The window the test and the schedule are run over - which is not the same as the lease's own commencement and expiry.",
+       "confidence": "observed",
+       "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+       "children": [
+        {
+         "name": "Topic842BeginDate",
+         "kind": "field",
+         "detail": "Labelled 'Accounting Begin Date'. Vendor definition: \"This date is the date your organization is adopting ASC 842, or the Possession Begin Date, whichever is later.\"",
+         "confidence": "observed",
+         "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+         "children": []
+        },
+        {
+         "name": "Topic842EndDate",
+         "kind": "field",
+         "detail": "Labelled 'Accounting End Date'. Vendor definition: \"This is the end date of your ASC 842 financial accounting for the contract, including any likely options.\"",
+         "confidence": "observed",
+         "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+         "children": []
+        },
+        {
+         "name": "CommenceDate / ExpireDate",
+         "kind": "field",
+         "detail": "Both are pulled from the contract summary page rather than typed here.",
+         "confidence": "observed",
+         "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+         "children": []
+        },
+        {
+         "name": "ACC-R-017 — Accounting date window",
+         "kind": "rule",
+         "detail": "Begin date is the later of the firm's adoption date and possession; end date includes likely options.",
+         "confidence": "observed",
+         "source": "docs/modules/accounting/rules.md",
+         "children": []
+        },
+        {
+         "name": "ACC-R-018 — Asset-level accounting date override",
+         "kind": "rule",
+         "detail": "On an equipment lease, asset-level override dates set the window; if blank, the asset's expense schedule dates do.",
+         "confidence": "observed",
+         "source": "docs/modules/accounting/rules.md",
+         "children": []
+        }
+       ]
+      },
+      {
+       "name": "Three different term lengths",
+       "kind": "field-group",
+       "detail": "The easiest thing to get wrong. A lease has a contractual term, a 'likely' term including renewal options the tenant will probably take, and a term chosen specifically for the test — and Lucernex stores all three separately.",
+       "confidence": "observed",
+       "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+       "children": [
+        {
+         "name": "TermLength",
+         "kind": "field",
+         "detail": "Simply expiry date minus commencement date.",
+         "confidence": "observed",
+         "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+         "children": []
+        },
+        {
+         "name": "LikelyTermLength",
+         "kind": "field",
+         "detail": "Computed from renewal terms a user has marked 'Likely' on the contract's Terms page.",
+         "confidence": "observed",
+         "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+         "children": []
+        },
+        {
+         "name": "TestTermLength",
+         "kind": "field",
+         "detail": "The term actually fed into Test #3. Its vendor definition names 'Test Begin Date' and 'Test End Date' fields that do not exist anywhere in the schema.",
+         "confidence": "observed",
+         "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+         "children": [
+          {
+           "name": "The fields its definition names are missing",
+           "kind": "constraint",
+           "detail": "The nearest candidates are the Accounting Begin and End Dates. Whether they are the same fields under a later label is unresolved.",
+           "confidence": "observed",
+           "source": "docs/modules/accounting/asc-842.md",
+           "children": []
+          }
+         ]
+        },
+        {
+         "name": "ACC-R-016 — Term-length sourcing",
+         "kind": "rule",
+         "detail": "Three term lengths, three different definitions.",
+         "confidence": "observed",
+         "source": "docs/modules/accounting/rules.md",
+         "children": []
+        }
+       ]
+      },
+      {
+       "name": "Dual measurement — both standards, every time",
+       "kind": "field-group",
+       "detail": "Fourteen fields, seven per standard, computing the same seven quantities twice: the cash value of the lease before and after adjustments, its present value before and after adjustments, the opening asset, the opening liability, and the net liability. The ASC 842 and IFRS 16 vendor definitions are word-for-word identical.",
+       "confidence": "observed",
+       "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+       "children": [
+        {
+         "name": "ASC842InitialLiabilityBalance / IFRS16InitialLiabilityBalance",
+         "kind": "field",
+         "detail": "The same quantity under each standard. Both are typed as system-calculated currency amounts. Whether the IFRS 16 half is ever actually populated in this tenant is untested.",
+         "confidence": "observed",
+         "source": "docs/data-fields/all-fields.csv",
+         "children": []
+        }
+       ]
+      },
+      {
+       "name": "Present-value adjustments",
+       "kind": "field-group",
+       "detail": "Twelve things that move the measured value up or down: purchase and cancellation options, residual value guarantees, structuring costs, initial direct costs, lease incentives, impairments, dismantling costs, pre-commencement payments. Nine are typed by a person; three are pulled automatically from the contract's covenants.",
+       "confidence": "observed",
+       "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+       "children": [
+        {
+         "name": "Covenant — where three of them come from",
+         "kind": "entity",
+         "detail": "A covenant is any promise written into the lease. Three kinds carry money into the accounting: a purchase option, a cancellation option, and a residual value guarantee. Vendor definition: the amount is pulled into the accounting assumptions and the schedule only if the covenant's accounting adjustment type is one of those three.",
+         "confidence": "observed",
+         "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+         "children": [
+          {
+           "name": "CodeAccountingAdjustmentTypeID",
+           "kind": "code-table",
+           "detail": "The gate. Its values are known from the vendor definition of the matching field on Financial Adjustment: Cancellation Option, Residual Value Guarantee, Purchase Option.",
+           "confidence": "observed",
+           "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+           "children": [
+            {
+             "name": "Purchase Option",
+             "kind": "code-value",
+             "detail": "A right to buy the asset. Feeds Purchase Option Amount on both the test and the schedule, and is what Test #2 is asking about.",
+             "confidence": "observed",
+             "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+             "children": []
+            },
+            {
+             "name": "Residual Value Guarantee",
+             "kind": "code-value",
+             "detail": "A promise that the asset will be worth a certain amount at the end. Splits into a total and the portion a third party guarantees.",
+             "confidence": "observed",
+             "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+             "children": []
+            },
+            {
+             "name": "Cancellation Option",
+             "kind": "code-value",
+             "detail": "A right to end the lease early, with its own price.",
+             "confidence": "observed",
+             "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+             "children": []
+            }
+           ]
+          },
+          {
+           "name": "ACC-R-019 — Covenant-sourced measurement adjustments",
+           "kind": "rule",
+           "detail": "Only the three named adjustment types flow into the accounting.",
+           "confidence": "observed",
+           "source": "docs/modules/accounting/rules.md",
+           "children": []
+          }
+         ]
+        },
+        {
+         "name": "Impairments are entered as negative numbers",
+         "kind": "constraint",
+         "detail": "Stated three times, on three different objects: \"Enter any deductions related to the diminished value of the asset as a negative number.\" Three separate impairment inputs exist — on the schedule, on the test, and on the asset — and which one wins when more than one is filled in is not documented.",
+         "confidence": "observed",
+         "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+         "children": [
+          {
+           "name": "ACC-R-048 — Impairment",
+           "kind": "rule",
+           "detail": "Total impairment impact is the impairment plus the prior accumulated amortisation balance. Precedence among the three inputs is unresolved.",
+           "confidence": "observed",
+           "source": "docs/modules/accounting/rules.md",
+           "children": []
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "name": "Locking makes a test authoritative",
+       "kind": "field-group",
+       "detail": "A test is a draft until someone locks it. Locking is one-way.",
+       "confidence": "observed",
+       "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+       "children": [
+        {
+         "name": "IsLocked",
+         "kind": "field",
+         "detail": "Vendor definition: \"Locking the test ensures that the test cannot be modified. You cannot delete a classification test once it has been locked, but you can create another test as necessary.\" An append-only, immutable-once-locked audit chain.",
+         "confidence": "observed",
+         "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+         "children": []
+        },
+        {
+         "name": "Contract.LatestFinancialTestFinalResult",
+         "kind": "field",
+         "detail": "The contract-level answer. Vendor definition: \"The final result of the most recently locked ASC 842 test.\" Unlocked tests do not count.",
+         "confidence": "observed",
+         "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+         "children": []
+        },
+        {
+         "name": "AutoComputed",
+         "kind": "field",
+         "detail": "Vendor definition: \"This field will have a true value if the ASC 842 test was computed automatically by the system.\" The conditions under which the system decides to run a test on its own are not documented anywhere.",
+         "confidence": "observed",
+         "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+         "children": [
+          {
+           "name": "ACC-R-015 — Auto-computation marker",
+           "kind": "rule",
+           "detail": "Set when the system ran the test rather than a user. The trigger is unknown.",
+           "confidence": "observed",
+           "source": "docs/modules/accounting/rules.md",
+           "children": []
+          }
+         ]
+        },
+        {
+         "name": "ACC-R-013 — Test locking",
+         "kind": "rule",
+         "detail": "Locked tests are immutable and undeletable.",
+         "confidence": "observed",
+         "source": "docs/modules/accounting/rules.md",
+         "children": []
+        },
+        {
+         "name": "ACC-R-014 — Propagation of the authoritative result",
+         "kind": "rule",
+         "detail": "The most recently locked test's verdict propagates to the contract.",
+         "confidence": "observed",
+         "source": "docs/modules/accounting/rules.md",
+         "children": []
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "name": "The legacy Cap Lease Test",
+     "kind": "capability",
+     "detail": "A second, older five-test structure still sitting on the contract record itself — the ASC 840 capital-lease test that ASC 842 replaced. It splits Test 5 into 5a and 5b, bases its Test 4 on building and land market values rather than present value, stores its results as free text instead of pass/fail, and has no lock and no child record. Eight of its fields are documented as dead. Migrate the data for audit; do not rebuild the logic.",
+     "confidence": "observed",
+     "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+     "children": [
+      {
+       "name": "Four Ratio* fields",
+       "kind": "field-group",
+       "detail": "Vendor definition on all four: \"This is a legacy field that was used in the Capital Lease Test. It is no longer used, and does not impact the test.\"",
+       "confidence": "observed",
+       "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+       "children": []
+      },
+      {
+       "name": "Four renewal-option flags",
+       "kind": "field-group",
+       "detail": "Vendor definition on all four: \"This field is not implemented for contracts or equipment contracts.\"",
+       "confidence": "observed",
+       "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+       "children": []
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "name": "Cash-flow sourcing and routing",
+   "kind": "submodule",
+   "detail": "Before anything can be straight-lined there has to be a stream of payments to straight-line. That stream comes from the rent engine, and the route it takes into a particular accounting schedule is decided by something surprising: the expense *type*, not the contract and not the expense record.",
+   "confidence": "observed",
+   "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+   "children": [
+    {
+     "name": "ExpenseSetup — a recurring charge on a lease",
+     "kind": "entity",
+     "detail": "96 fields. One row per recurring obligation: base rent, common-area maintenance, real estate taxes, insurance. It defines what is owed, to whom, how often, on what area basis, with what caps — but not the individual amounts. Physical table: expense_setup.",
+     "confidence": "observed",
+     "source": "_lucernex_objects_summary.txt",
+     "children": [
+      {
+       "name": "ExpenseSchedule — the amounts, period by period",
+       "kind": "entity",
+       "detail": "51 fields. The generated child of an expense setup: for each date range, what the payment is, what the annual amount is, what taxes apply, whether it has been approved and processed. This is the actual cash stream the accounting engine consumes. Physical table: expense_schedule.",
+       "confidence": "observed",
+       "source": "_lucernex_objects_summary.txt",
+       "children": [
+        {
+         "name": "CodeExpenseType — the routing table (TableType 3013)",
+         "kind": "code-table",
+         "detail": "Every expense setup names an expense type, and the expense type is where the routing lives. Vendor definition: \"Expense Types are used to associate records with lease accounting schedules, AP export numbers, expense accrual accounts, percentage rent accrual accounts, and real estate tax accounts.\" 31 fields, most of them account numbers. Physical table: code_expense_type.",
+         "confidence": "observed",
+         "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+         "children": [
+          {
+           "name": "The three schedule-type foreign keys",
+           "kind": "field-group",
+           "detail": "One routing key per accounting standard, sitting side by side on the expense type. This is the mechanism that lets a single contract feed three different schedules at once — and it means changing one expense type's routing dirties every schedule that uses it.",
+           "confidence": "observed",
+           "source": "_lucernex_objects_summary.txt",
+           "children": [
+            {
+             "name": "CodeASC842ScheduleID",
+             "kind": "field",
+             "detail": "Which ASC 842 schedule type this expense's cash flows belong to. Vendor definition adds a behavioural note: \"This field is functional, and changing its value on the Accounting Assumptions page, the Covenants page, or the Recurring Expenses page will set the Recalc? flag to YES.\"",
+             "confidence": "observed",
+             "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+             "children": [
+              {
+               "name": "CodeASC842Schedule — the table it points at",
+               "kind": "code-table",
+               "detail": "The same tenant-defined schedule-type table the schedule header points at. Reached here from a completely different direction: the header says which type a schedule *is*; the expense type says which type a cash flow *goes to*.",
+               "confidence": "observed",
+               "source": "_lucernex_objects_summary.txt",
+               "children": [
+                {
+                 "name": "842 Rent — the single configured row",
+                 "kind": "code-value",
+                 "detail": "In principle a tenant defines several schedule types to separate, say, real-estate from equipment leases, or to route expense categories to different ledger accounts. In practice this tenant defined one. Every expense type's ASC 842 routing therefore resolves to the same destination, and the two sibling routing keys have no valid target at all.",
+                 "confidence": "observed",
+                 "source": "docs/data-model/code-table-registry.md (live tenant, 2026-09-10)",
+                 "children": [
+                  {
+                   "name": "DontAmortizeAssetValue — the behaviour flag",
+                   "kind": "field",
+                   "detail": "The only switch on the table that changes what the engine computes rather than where it exports. Name says it suppresses right-of-use asset amortisation for schedules of this type. No vendor definition exists, so its exact effect is the one genuinely load-bearing unknown at this depth.",
+                   "confidence": "observed",
+                   "source": "_lucernex_objects_summary.txt",
+                   "children": [
+                    {
+                     "name": "BOOLEAN / sTYPE_BOOLEAN",
+                     "kind": "type",
+                     "detail": "A plain yes/no. Present identically on all three schedule-type tables — ASC 842, IFRS 16 and straight-line — each with its own independent value.",
+                     "confidence": "observed",
+                     "source": "docs/data-fields/all-fields.csv",
+                     "children": []
+                    }
+                   ]
+                  }
+                 ]
+                }
+               ]
+              }
+             ]
+            },
+            {
+             "name": "CodeIFRS16ScheduleID",
+             "kind": "field",
+             "detail": "The same routing key for the international standard.",
+             "confidence": "observed",
+             "source": "_lucernex_objects_summary.txt",
+             "children": []
+            },
+            {
+             "name": "CodeSLScheduleID",
+             "kind": "field",
+             "detail": "The same routing key for the legacy straight-line schedule.",
+             "confidence": "observed",
+             "source": "_lucernex_objects_summary.txt",
+             "children": []
+            }
+           ]
+          },
+          {
+           "name": "The 2000/3000 TableType band does not predict behaviour",
+           "kind": "constraint",
+           "detail": "Lucernex registers all 207 of its drop-down tables under numeric type ids in two bands, 2000-2190 and 3000-3016, and it is tempting to read the 3000 band as 'the tables that carry behaviour'. Checked against the eleven code-table objects the schema actually contains, that is wrong. Expense Type (3013) supports it, but Sales Type (3012) is a bare three-column lookup and Problem (3001) close to one — while the three schedule-type tables (2161-2163, 24 fields each) and Issue Type (2035, 19 fields) are the most behaviour-bearing tables in the product and all sit in the 2000 band. The band is a registration-order artefact. Which code tables need more than a code, a label and an active flag has to be read per table.",
+           "confidence": "derived",
+           "source": "docs/data-model/code-table-registry.md (live tenant, 2026-09-10)",
+           "children": []
+          },
+          {
+           "name": "Sixteen GL account slots",
+           "kind": "field-group",
+           "detail": "Four sets of four: expense accrual accounts, percentage-rent accrual accounts, real estate tax accrual accounts, and accounts-payable export numbers. Copied down onto accrual transactions when they are generated.",
+           "confidence": "observed",
+           "source": "_lucernex_objects_summary.txt",
+           "children": []
+          }
+         ]
+        },
+        {
+         "name": "HoldFlag",
+         "kind": "field",
+         "detail": "A yes/no marker on a schedule. Every hold flag in this module is documented as informational only — the hold is a convention among users, not something the system enforces.",
+         "confidence": "observed",
+         "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+         "children": []
+        }
+       ]
+      },
+      {
+       "name": "AcctingAssumptionAdjust — accounting-only overlay",
+       "kind": "entity",
+       "detail": "19 fields. A payment stream that exists purely for accounting and never produces cash: a way for an accountant to say 'for measurement purposes, assume this extra amount over this period'. Carries its own routing keys, so an adjustment can be steered to a different schedule from the base rent. Physical table: accting_assumption_adjust.",
+       "confidence": "observed",
+       "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+       "children": [
+        {
+         "name": "Entering one amount fills in three others",
+         "kind": "constraint",
+         "detail": "Vendor definition: the first payment, last payment and annual amount \"will auto-populate depending upon the value you enter in the Payment Amount field and the frequency you select from the Frequency field\".",
+         "confidence": "observed",
+         "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+         "children": []
+        },
+        {
+         "name": "SecondaryRentSchedAllocPercent",
+         "kind": "field",
+         "detail": "Splits an amount across a primary and a secondary schedule. Where the remainder goes is not stated.",
+         "confidence": "observed",
+         "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+         "children": []
+        },
+        {
+         "name": "AdjustmentPercent",
+         "kind": "field",
+         "detail": "Documented as dead: \"This field is a placeholder in preparation for an upcoming enhancement.\"",
+         "confidence": "observed",
+         "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+         "children": []
+        }
+       ]
+      },
+      {
+       "name": "AlternateRentSchedule — the rent overlay",
+       "kind": "entity",
+       "detail": "25 fields. Used when a lease temporarily switches to a different rent basis — commonly a percentage of sales during a co-tenancy failure. Contains the three flags most often mistaken for accounting controls.",
+       "confidence": "observed",
+       "source": "_lucernex_objects_summary.txt",
+       "children": [
+        {
+         "name": "SuspendSL",
+         "kind": "field",
+         "detail": "'Suspend SL?' — the field whose name promises the ability to pause a straight-line schedule. Vendor definition, in full: \"This field is no longer used.\" Do not rebuild it. If ASG Edge+ needs schedule suspension, that is a new requirement, not a port.",
+         "confidence": "observed",
+         "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+         "children": []
+        },
+        {
+         "name": "SetExpHoldFlag / SetPRHoldFlag",
+         "kind": "field",
+         "detail": "These put generated recurring-expense and percentage-rent transactions on hold during an alternate-rent window. They are cash-side controls and do not touch the accounting schedule at all.",
+         "confidence": "observed",
+         "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+         "children": [
+          {
+           "name": "ACC-R-055 — Alternate-rent hold propagation",
+           "kind": "rule",
+           "detail": "A hold flag is set on transactions generated during the window.",
+           "confidence": "observed",
+           "source": "docs/modules/accounting/rules.md",
+           "children": []
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "name": "ACC-R-025 — Cash-flow routing by expense type",
+       "kind": "rule",
+       "detail": "Each cash flow lands on the schedule its expense type designates for the standard being generated.",
+       "confidence": "derived",
+       "source": "docs/modules/accounting/rules.md",
+       "children": []
+      },
+      {
+       "name": "ACC-R-026 — Secondary schedule allocation",
+       "kind": "rule",
+       "detail": "A stated percentage goes to a secondary schedule; the remainder is assumed to go to the primary.",
+       "confidence": "derived",
+       "source": "docs/modules/accounting/rules.md",
+       "children": []
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "name": "Portfolio-level accounting policy",
+   "kind": "submodule",
+   "detail": "Almost every setting that changes how the engine computes lives not on the contract or the schedule but on the Portfolio — the object Lucernex calls Program. This branch was missed entirely in the first pass of this documentation and found later from the vendor field definitions.",
+   "confidence": "observed",
+   "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+   "children": [
+    {
+     "name": "Program (UI: Portfolio)",
+     "kind": "entity",
+     "detail": "180 fields, of which about 25 are accounting policy. It is the default-setter: the discount rate, both classification thresholds, three amortisation-basis switches, two proration switches, the fiscal year end, and fourteen exchange-rate-type selectors. Physical table: program.",
+     "confidence": "observed",
+     "source": "_lucernex_objects_summary.txt",
+     "children": [
+      {
+       "name": "The amortisation basis",
+       "kind": "field-group",
+       "detail": "How an amount is spread across periods. Not one setting but three independent ones, and the asset switch alone carries a scope restriction the other two do not.",
+       "confidence": "observed",
+       "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+       "children": [
+        {
+         "name": "SLAssetAmortizeMethod",
+         "kind": "field",
+         "detail": "Vendor definition: \"There are two options: Per Day, and Per Period. By Period distributes the amortization equally among periods, and Per Day distributes the amortization according to the number of days in the period. This setting impacts only ASC 842 Finance leases.\"",
+         "confidence": "observed",
+         "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+         "children": [
+          {
+           "name": "GaapAmortizeMode",
+           "kind": "code-table",
+           "detail": "The live GraphQL API names this value set as a two-value enumeration. It is the authoritative value list, because the database columns themselves are just free text.",
+           "confidence": "observed",
+           "source": "docs/data-model/graphql-api.md (live GraphQL schema, build 26.08.0.46, 2026-09-10)",
+           "children": [
+            {
+             "name": "PER_PERIOD",
+             "kind": "code-value",
+             "detail": "Every period gets an equal share, whatever its length.",
+             "confidence": "observed",
+             "source": "docs/data-model/graphql-api.md (live GraphQL schema, build 26.08.0.46, 2026-09-10)",
+             "children": []
+            },
+            {
+             "name": "PER_DAY",
+             "kind": "code-value",
+             "detail": "Each period is weighted by how many days it contains. This is what the day count stored on every period row is for.",
+             "confidence": "observed",
+             "source": "docs/data-model/graphql-api.md (live GraphQL schema, build 26.08.0.46, 2026-09-10)",
+             "children": []
+            }
+           ]
+          },
+          {
+           "name": "Stored as free text, not an enum",
+           "kind": "constraint",
+           "detail": "The three columns are typed Text in the schema and TEXT in PostgreSQL, while the API exposes a proper enumeration. Whether the column stores the enum name, a display string or a code is unknown, and a migration needs to know.",
+           "confidence": "observed",
+           "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+           "children": []
+          },
+          {
+           "name": "ACC-R-056 — Amortisation basis: Per Day or Per Period",
+           "kind": "rule",
+           "detail": "Three independent switches, one per schedule column. Do not collapse them into one.",
+           "confidence": "observed",
+           "source": "docs/modules/accounting/rules.md",
+           "children": []
+          }
+         ]
+        },
+        {
+         "name": "SLCashAmortizeMethod / SLExpenseAmortizeMethod",
+         "kind": "field",
+         "detail": "The same choice for cash rent and for rent expense. Neither carries the finance-lease restriction the asset switch does.",
+         "confidence": "observed",
+         "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+         "children": []
+        }
+       ]
+      },
+      {
+       "name": "SLProrate35As28",
+       "kind": "field",
+       "detail": "A proration rule for partial first and last periods. Vendor definition: prorate on a 28-day multiplier, and \"If you have a partial period that is greater than or equal to 28 days, it will be considered a whole period by the system and will not prorate.\" Only affects columns set to Per Period.",
+       "confidence": "observed",
+       "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+       "children": [
+        {
+         "name": "ACC-R-057 — 28-day proration of partial periods",
+         "kind": "rule",
+         "detail": "Interacts with the amortisation basis: inert on Per Day columns.",
+         "confidence": "observed",
+         "source": "docs/modules/accounting/rules.md",
+         "children": []
+        }
+       ]
+      },
+      {
+       "name": "SLDiscountRate",
+       "kind": "field",
+       "detail": "The portfolio's default borrowing rate — the rate used to discount future rent back to today's money. Vendor definition ends with a trap: \"To enter a discount rate, enter the number no % or decimal is necessary.\"",
+       "confidence": "observed",
+       "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+       "children": [
+        {
+         "name": "5 means five percent, not five hundredths",
+         "kind": "constraint",
+         "detail": "The entry convention is a bare number with no percent sign and no decimal point. That is a migration parsing rule, not a display nicety, and getting it wrong scales every present value by a hundred.",
+         "confidence": "observed",
+         "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+         "children": []
+        },
+        {
+         "name": "ACC-R-001 — Default discount rate resolution",
+         "kind": "rule",
+         "detail": "Portfolio rate first; firm rate if there is none. The contract-level rate is explicitly not consulted for this default.",
+         "confidence": "observed",
+         "source": "docs/modules/accounting/rules.md",
+         "children": []
+        }
+       ]
+      },
+      {
+       "name": "The two classification thresholds",
+       "kind": "field-group",
+       "detail": "The portfolio holds the defaults that Test #3 and Test #4 compare against. Both vendor definitions end with the same sentence: \"This field is used in the ASC 842 Test.\"",
+       "confidence": "observed",
+       "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+       "children": [
+        {
+         "name": "FairValueThreshold",
+         "kind": "field",
+         "detail": "\"Usually set to 90%.\" The fraction of the asset's value that counts as substantially all of it.",
+         "confidence": "observed",
+         "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+         "children": []
+        },
+        {
+         "name": "RemainingEconomicLifeThreshold",
+         "kind": "field",
+         "detail": "\"Usually set to 75%.\" The fraction of remaining life that counts as a major part of it.",
+         "confidence": "observed",
+         "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+         "children": []
+        },
+        {
+         "name": "Contract-level twins are computed, not stored",
+         "kind": "constraint",
+         "detail": "The matching contract fields are typed as computed precisely because they resolve the chain — portfolio value if one exists, otherwise the firm value — rather than holding a value of their own.",
+         "confidence": "observed",
+         "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+         "children": []
+        }
+       ]
+      },
+      {
+       "name": "Fourteen exchange-rate-type selectors",
+       "kind": "field-group",
+       "detail": "Seven schedule columns — asset amortisation, asset balance, liability amortisation, liability balance, cash expenses, interest, single lease expense — each with two settings: one for contracts needing revaluation and one for contracts needing translation. This is what the contract's 'Is Translation' flag actually selects between.",
+       "confidence": "observed",
+       "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+       "children": [
+        {
+         "name": "ACC-R-059 — Per-column FX rate-type selection",
+         "kind": "rule",
+         "detail": "The rate type is chosen per schedule column at portfolio level, not once per firm.",
+         "confidence": "observed",
+         "source": "docs/modules/accounting/rules.md",
+         "children": []
+        }
+       ]
+      },
+      {
+       "name": "FiscalYearEnd",
+       "kind": "field",
+       "detail": "The month and day the fiscal year ends — the anchor the whole fiscal calendar is built from.",
+       "confidence": "observed",
+       "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+       "children": []
+      },
+      {
+       "name": "SLMatchYearEnds",
+       "kind": "field",
+       "detail": "\"This field determines if the program allows for matching of fiscal/calendar year rent.\" The only setting that could reconcile the contract's parallel fiscal-year and calendar-year rollups. What it actually does is unconfirmed.",
+       "confidence": "observed",
+       "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+       "children": [
+        {
+         "name": "ACC-R-058 — Fiscal / calendar year-end matching",
+         "kind": "rule",
+         "detail": "The switch exists and is named; what matching does is inferred, not documented.",
+         "confidence": "inferred",
+         "source": "docs/modules/accounting/rules.md",
+         "children": []
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "name": "FiscalPeriod — the calendar backbone",
+     "kind": "entity",
+     "detail": "17 fields defining each named period of the fiscal year: begin and end dates, days, weeks, quarter, and the calendar month it overlaps. Retail tenants commonly run 13 periods of 4 or 5 weeks rather than 12 calendar months, which is why every period row stores its own day count. Physical table: fiscal_period.",
+     "confidence": "observed",
+     "source": "_lucernex_objects_summary.txt",
+     "children": [
+      {
+       "name": "Is4or5WeekPeriod",
+       "kind": "field",
+       "detail": "Marks a retail period as four or five weeks long — the source of the uneven period lengths the Per Day amortisation basis exists to handle.",
+       "confidence": "observed",
+       "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+       "children": []
+      }
+     ]
+    },
+    {
+     "name": "DiscountRate — the rate lookup table",
+     "kind": "entity",
+     "detail": "16 fields. A rate scoped by portfolio, country, state, contract use, accounting method, and a schedule-length band in months, with an effective-through date. Vendor definition of the accounting-method column: \"If you leave the field blank, the discount rate will apply to both Finance and Operating.\" Physical table: discount_rate.",
+     "confidence": "observed",
+     "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+     "children": [
+      {
+       "name": "No standard dimension",
+       "kind": "constraint",
+       "detail": "The table can scope a rate to finance or operating, but not to ASC 842 versus IFRS 16. An entity reporting under both with different borrowing rates has nowhere to put the second one.",
+       "confidence": "derived",
+       "source": "docs/modules/accounting/ifrs-16.md",
+       "children": []
+      },
+      {
+       "name": "ACC-R-002 — Contract-level discount rate override",
+       "kind": "rule",
+       "detail": "A rate typed directly on the contract is used ahead of the resolved default. The precedence is not stated by the vendor.",
+       "confidence": "inferred",
+       "source": "docs/modules/accounting/rules.md",
+       "children": []
+      },
+      {
+       "name": "ACC-R-003 — Asset-level discount rate override",
+       "kind": "rule",
+       "detail": "An equipment asset may carry its own rate, which supersedes both.",
+       "confidence": "observed",
+       "source": "docs/modules/accounting/rules.md",
+       "children": []
+      },
+      {
+       "name": "ACC-R-004 — Discount rate applicability scoping",
+       "kind": "rule",
+       "detail": "A blank accounting method matches both; the month band bounds the schedule lengths the rate applies to.",
+       "confidence": "observed",
+       "source": "docs/modules/accounting/rules.md",
+       "children": []
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "name": "Review, approval and posting",
+   "kind": "submodule",
+   "detail": "The engine's output is not published by the calculation. A generated schedule is a proposal that a chain of people accepts — and this is the part of the module that is invisible in the database and only shows up in the running application.",
+   "confidence": "observed",
+   "source": "docs/modules/layouts-and-forms/forms-vs-pages-vs-layouts.md (live tenant, 2026-09-10)",
+   "children": [
+    {
+     "name": "ASC 842 Schedule Review/Approval",
+     "kind": "capability",
+     "detail": "A live, configured workflow in the ASG tenant. Three ordered steps, every one a form step, every one resolving its approver as a named member. Captured from Manage Work Flows at build 26.08.0.46 on 2026-09-10.",
+     "confidence": "observed",
+     "source": "docs/modules/layouts-and-forms/forms-vs-pages-vs-layouts.md (live tenant, 2026-09-10)",
+     "children": [
+      {
+       "name": "Step 1 — Initial Review of ASC 842 Schedules",
+       "kind": "capability",
+       "detail": "The first human look at a generated schedule.",
+       "confidence": "observed",
+       "source": "docs/modules/layouts-and-forms/forms-vs-pages-vs-layouts.md (live tenant, 2026-09-10)",
+       "children": [
+        {
+         "name": "ASR Initial Review of ASC 842 Schedule",
+         "kind": "field-group",
+         "detail": "The form layout bound to this step. A form type gets one layout per workflow step, so the same record shows different fields to different people depending where it is in the process. What this layout actually collects has not been read.",
+         "confidence": "observed",
+         "source": "docs/modules/layouts-and-forms/forms-vs-pages-vs-layouts.md (live tenant, 2026-09-10)",
+         "children": []
+        }
+       ]
+      },
+      {
+       "name": "Step 2 — Approve ASC 842 Schedules (ASG)",
+       "kind": "capability",
+       "detail": "ASG, the service provider, signs off internally before the client ever sees it.",
+       "confidence": "observed",
+       "source": "docs/modules/layouts-and-forms/forms-vs-pages-vs-layouts.md (live tenant, 2026-09-10)",
+       "children": [
+        {
+         "name": "ASR Approve ASC 842 Schedules (ASG)",
+         "kind": "field-group",
+         "detail": "The internal approval layout.",
+         "confidence": "observed",
+         "source": "docs/modules/layouts-and-forms/forms-vs-pages-vs-layouts.md (live tenant, 2026-09-10)",
+         "children": []
+        }
+       ]
+      },
+      {
+       "name": "Step 3 — Approve ASC 842 Schedules (Client)",
+       "kind": "capability",
+       "detail": "The client signs off. Only after this does the schedule count.",
+       "confidence": "observed",
+       "source": "docs/modules/layouts-and-forms/forms-vs-pages-vs-layouts.md (live tenant, 2026-09-10)",
+       "children": [
+        {
+         "name": "ASR Approve ASC 842 Schedules (Client)",
+         "kind": "field-group",
+         "detail": "The client-facing approval layout.",
+         "confidence": "observed",
+         "source": "docs/modules/layouts-and-forms/forms-vs-pages-vs-layouts.md (live tenant, 2026-09-10)",
+         "children": []
+        }
+       ]
+      },
+      {
+       "name": "Attachable to Portfolio and RE Contract only",
+       "kind": "constraint",
+       "detail": "The form type declares a yes/no per entity kind. Portfolio and RE Contract are yes; Equipment Contract is no — even though equipment leases generate ASC 842 schedules and have their own Generate 842 button. So either equipment schedules skip the approval gate entirely or they are approved at portfolio level. Unresolved, and it blocks the approval design.",
+       "confidence": "observed",
+       "source": "docs/modules/layouts-and-forms/forms-vs-pages-vs-layouts.md (live tenant, 2026-09-10)",
+       "children": [
+        {
+         "name": "ACC-R-061 — What an ASC 842 review request may be raised against",
+         "kind": "rule",
+         "detail": "Portfolio and RE Contract only; Equipment Contract excluded.",
+         "confidence": "observed",
+         "source": "docs/modules/accounting/rules.md",
+         "children": []
+        }
+       ]
+      },
+      {
+       "name": "ACC-R-060 — Schedules are not auto-published",
+       "kind": "rule",
+       "detail": "Generate, review, ASG approval, client approval. A schedule therefore has a state, not a flag — and only the final state is representable in the database.",
+       "confidence": "observed",
+       "source": "docs/modules/accounting/rules.md",
+       "children": []
+      },
+      {
+       "name": "ACC-R-062 — Approver resolution",
+       "kind": "rule",
+       "detail": "All three steps resolve their approver as a named Member, even though the platform also supports routing by job title or org-chart position.",
+       "confidence": "observed",
+       "source": "docs/modules/accounting/rules.md",
+       "children": []
+      }
+     ]
+    },
+    {
+     "name": "SLSummary.IsApproved",
+     "kind": "field",
+     "detail": "The one column that records the outcome. Vendor definition: \"This flag indicates that the schedule has been approved. Once a schedule has been approved, it cannot be un-approved.\"",
+     "confidence": "observed",
+     "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+     "children": [
+      {
+       "name": "Irreversible, with no rejection path",
+       "kind": "constraint",
+       "detail": "Approval cannot be undone through the application, and nothing in the schema represents a rejected schedule. What happens when a client rejects at step 3 is undocumented.",
+       "confidence": "observed",
+       "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+       "children": []
+      },
+      {
+       "name": "Five real states, one storable",
+       "kind": "constraint",
+       "detail": "The true lifecycle is draft, submitted, under initial review, ASG-approved, client-approved. Only the last is representable on the schedule; the four before it live in the workflow instance. A rebuild that models approval as a boolean setter has modelled the wrong thing.",
+       "confidence": "derived",
+       "source": "docs/modules/accounting/asg-edgeplus-mapping.md",
+       "children": []
+      },
+      {
+       "name": "ACC-R-050 — Approval is irreversible",
+       "kind": "rule",
+       "detail": "One-way, and it is the terminus of the workflow.",
+       "confidence": "observed",
+       "source": "docs/modules/accounting/rules.md",
+       "children": []
+      }
+     ]
+    },
+    {
+     "name": "Posting to the ledger",
+     "kind": "field-group",
+     "detail": "Separate from approval. Posting happens period by period, and a period can be partially posted — the status vocabulary is posted, not posted, or mixed.",
+     "confidence": "observed",
+     "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+     "children": [
+      {
+       "name": "LastPostedEndDate",
+       "kind": "field",
+       "detail": "The closed/open cut line. Everything at or before it is settled; everything after can be re-derived. A modification measures all its differences against exactly this date.",
+       "confidence": "observed",
+       "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+       "children": []
+      },
+      {
+       "name": "LastBalancePosted",
+       "kind": "field",
+       "detail": "\"This is the asset minus the liability as of the last posted period.\"",
+       "confidence": "observed",
+       "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+       "children": []
+      },
+      {
+       "name": "ACC-R-051 — Posting state and the closed cut-line",
+       "kind": "rule",
+       "detail": "The last posted period's end date is the boundary all remeasurement deltas are taken against.",
+       "confidence": "derived",
+       "source": "docs/modules/accounting/rules.md",
+       "children": []
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "name": "Accruals",
+   "kind": "submodule",
+   "detail": "A separate, smaller engine for recognising an expense before it is billed — the classic case being an annual property tax bill accrued monthly through the year so no single month carries the whole hit.",
+   "confidence": "observed",
+   "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+   "children": [
+    {
+     "name": "ExpenseAccrualSetup",
+     "kind": "entity",
+     "detail": "31 fields configuring what to accrue and over which periods. Its record-type field decides whether this is an accrual, a forecast or a plan — three different purposes on one table. Physical table: expense_accrual_setup.",
+     "confidence": "observed",
+     "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+     "children": [
+      {
+       "name": "CodeAccrualTypeID",
+       "kind": "code-table",
+       "detail": "Vendor definition names all three values: \"Select whether this is an accrual, a forecast, or a plan from this field.\"",
+       "confidence": "observed",
+       "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+       "children": [
+        {
+         "name": "Accrual",
+         "kind": "code-value",
+         "detail": "A real accounting entry.",
+         "confidence": "observed",
+         "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+         "children": []
+        },
+        {
+         "name": "Forecast",
+         "kind": "code-value",
+         "detail": "A projection, not posted.",
+         "confidence": "observed",
+         "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+         "children": []
+        },
+        {
+         "name": "Plan",
+         "kind": "code-value",
+         "detail": "A budget figure.",
+         "confidence": "observed",
+         "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+         "children": []
+        }
+       ]
+      },
+      {
+       "name": "Blank rentable area is not the same as zero",
+       "kind": "constraint",
+       "detail": "Vendor definition: \"If you are not going to use rentable area, do not enter 0. Leave this field blank.\" A real behavioural difference between empty and zero.",
+       "confidence": "observed",
+       "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+       "children": []
+      }
+     ]
+    },
+    {
+     "name": "ExpenseAccrualSchedule",
+     "kind": "entity",
+     "detail": "31 fields holding the generated period-by-period amounts, plus growth and cap percentages for the forecast and plan variants. Physical table: expense_accrual_schedule.",
+     "confidence": "observed",
+     "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+     "children": [
+      {
+       "name": "ACC-R-052 — Accrual amount derivation",
+       "kind": "rule",
+       "detail": "Entering any one of the annual amount, period amount or accrual rate auto-fills the other two plus the first and last payment amounts.",
+       "confidence": "observed",
+       "source": "docs/modules/accounting/rules.md",
+       "children": []
+      }
+     ]
+    },
+    {
+     "name": "AccrualTransaction",
+     "kind": "entity",
+     "detail": "55 fields — the individual posting. Carries eight organisation account numbers plus sixteen more copied down from the expense type, and four tax amounts. Physical table: accrual_transaction.",
+     "confidence": "observed",
+     "source": "_lucernex_objects_summary.txt",
+     "children": [
+      {
+       "name": "TaxesIncludedFlag flips which field is editable",
+       "kind": "constraint",
+       "detail": "If taxes are not included, the total is computed and read-only. If they are included, the period amount is disabled, the system subtracts the taxes from it, and the total becomes editable. Two different data-entry modes on one record.",
+       "confidence": "observed",
+       "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+       "children": [
+        {
+         "name": "ACC-R-053 — Accrual transaction tax handling",
+         "kind": "rule",
+         "detail": "Both branches are stated verbatim by the vendor.",
+         "confidence": "observed",
+         "source": "docs/modules/accounting/rules.md",
+         "children": []
+        }
+       ]
+      },
+      {
+       "name": "ProcessedFlag",
+       "kind": "field",
+       "detail": "Vendor definition carries its own warning: \"Warning - once you mark a transaction as processed, you cannot change it.\"",
+       "confidence": "observed",
+       "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+       "children": [
+        {
+         "name": "ACC-R-054 — Accrual transaction immutability",
+         "kind": "rule",
+         "detail": "Processed accrual transactions are frozen.",
+         "confidence": "observed",
+         "source": "docs/modules/accounting/rules.md",
+         "children": []
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "name": "IFRS 16",
+   "kind": "submodule",
+   "detail": "The international counterpart to ASC 842. In this data model it is not a second engine — it is one extra code table, one routing key repeated on five objects, seven measurement columns, and a flag. Everything else is shared verbatim with ASC 842.",
+   "confidence": "observed",
+   "source": "docs/modules/accounting/ifrs-16.md",
+   "children": [
+    {
+     "name": "CodeIFRS16Schedule (TableType 2163) — empty",
+     "kind": "code-table",
+     "detail": "24 columns, structurally identical to its ASC 842 and straight-line twins: a name, a long description, an inactive flag, one amortisation switch, and twenty GL account slots. Opened directly on 2026-09-10 and it returns 'No rows to display'. Physical table: code_i_f_r_s16_schedule.",
+     "confidence": "observed",
+     "source": "docs/data-model/code-table-registry.md (live tenant, 2026-09-10)",
+     "children": [
+      {
+       "name": "With no schedule type, no IFRS 16 schedule can exist",
+       "kind": "constraint",
+       "detail": "The schedule header's IFRS 16 routing key has nothing valid to point at, no expense type can route to IFRS 16, and the Generate IFRS 16 Rent Schedule button has no type to stamp. The capability is present in the product and unused by this customer.",
+       "confidence": "derived",
+       "source": "docs/modules/accounting/ifrs-16.md",
+       "children": []
+      },
+      {
+       "name": "The measurement columns may still hold data",
+       "kind": "constraint",
+       "detail": "The seven IFRS16-prefixed columns on the classification record are computed per test, independently of any schedule configuration. So they may well be populated even though no IFRS 16 schedule has ever been produced. That is the sharpest remaining technical question on this branch: it separates 'IFRS 16 is dead schema' from 'IFRS 16 measurement runs silently and nobody looks at it'.",
+       "confidence": "derived",
+       "source": "docs/modules/accounting/ifrs-16.md",
+       "children": []
+      }
+     ]
+    },
+    {
+     "name": "Building IFRS 16 is a business decision, not a technical one",
+     "kind": "constraint",
+     "detail": "The incumbent supports IFRS 16 and ASG does not use it, so building it in the replacement is a product choice about future international leases rather than a parity requirement. If the answer is no, roughly a fifth of the measurement surface drops out along with standard-scoped accounting dates, standard-scoped practical expedients and a standard dimension on the discount rate. If the answer is yes, all of those are still needed — but as greenfield design, because there is no working configuration to copy.",
+     "confidence": "derived",
+     "source": "docs/modules/accounting/asg-edgeplus-mapping.md",
+     "children": []
+    },
+    {
+     "name": "No IFRS 16 classification test exists",
+     "kind": "constraint",
+     "detail": "Correctly so — IFRS 16 does not ask lessees to classify leases. But it means every classification concept in this module is ASC 842's.",
+     "confidence": "observed",
+     "source": "docs/modules/accounting/ifrs-16.md",
+     "children": []
+    },
+    {
+     "name": "No IFRS 16 accounting dates exist",
+     "kind": "constraint",
+     "detail": "The only accounting begin and end dates are named for ASC 842 ('the date your organization is adopting ASC 842'). An entity that adopted IFRS 16 in 2019 and ASC 842 in 2022 cannot express both transition dates.",
+     "confidence": "observed",
+     "source": "docs/modules/accounting/ifrs-16.md",
+     "children": []
+    },
+    {
+     "name": "No IFRS 16 approval workflow exists",
+     "kind": "constraint",
+     "detail": "The tenant runs exactly four workflows and one of them is ASC-842-named. If ASG reports under IFRS 16, those schedules are ungated. This single question decides how much of the IFRS 16 surface matters at all.",
+     "confidence": "observed",
+     "source": "docs/modules/layouts-and-forms/forms-vs-pages-vs-layouts.md (live tenant, 2026-09-10)",
+     "children": []
+    },
+    {
+     "name": "Practical expedients are not scoped to a standard",
+     "kind": "constraint",
+     "detail": "'Is Short Term' and 'Is Low Asset Value' exist on both the contract and the asset, unnamespaced — even though the low-value exemption is an IFRS 16 concept with no ASC 842 equivalent. On the asset they are three-state (yes / no / unset); on the contract they are plain yes/no.",
+     "confidence": "observed",
+     "source": "docs/data-fields/all-fields.csv",
+     "children": [
+      {
+       "name": "Three-state versus two-state",
+       "kind": "type",
+       "detail": "The asset versions use a null-checkbox type carrying a meaningful 'unset', which almost certainly means 'inherit from the contract'. Modelling both as a plain boolean destroys that. Nothing documents the inheritance rule.",
+       "confidence": "observed",
+       "source": "docs/data-fields/all-fields.csv",
+       "children": []
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "name": "Output surfaces",
+   "kind": "submodule",
+   "detail": "What leaves the engine: journal entries for the customer's finance system, and the disclosure tables that go into the financial statements.",
+   "confidence": "observed",
+   "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+   "children": [
+    {
+     "name": "GL export",
+     "kind": "capability",
+     "detail": "Every period row carries twenty account numbers copied from its schedule type, plus three straight-line-specific ones. The slots are numbered rather than named, so the mapping from slot to accounting concept lives entirely in tenant convention.",
+     "confidence": "observed",
+     "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+     "children": []
+    },
+    {
+     "name": "Roll-forward report",
+     "kind": "capability",
+     "detail": "The asset and liability movement table required in the financial statement notes. Gated by a single include flag on the schedule header, and built from 25 stored fields that carry no vendor documentation at all.",
+     "confidence": "observed",
+     "source": "docs/data-fields/all-fields.csv",
+     "children": []
+    },
+    {
+     "name": "Maturity analysis",
+     "kind": "capability",
+     "detail": "Future cash commitments laid out by fiscal year, with quarterly detail for the current year. Six years plus a tail, where the standard asks for five.",
+     "confidence": "observed",
+     "source": "_xlsx_lucernex_jcrew.txt (vendor field definitions)",
+     "children": []
+    },
+    {
+     "name": "ASC 842 Recalculations dashboard widget",
+     "kind": "capability",
+     "detail": "The operational surface for the recalculation queue — a configurable dashboard component observed in the tenant's widget catalog.",
+     "confidence": "observed",
+     "source": "docs/screens/001-dashboard-home.md",
+     "children": []
+    }
+   ]
+  },
+  {
+   "name": "Rebuild notes for ASG Edge+",
+   "kind": "submodule",
+   "detail": "Where this module meets the replacement system. The target design already exists and is in several respects better than what it replaces; the work is porting the calculation surface into a structure that was designed differently on purpose.",
+   "confidence": "derived",
+   "source": "docs/modules/accounting/asg-edgeplus-mapping.md",
+   "children": [
+    {
+     "name": "Money precision conflict",
+     "kind": "constraint",
+     "detail": "The platform's Money type rounds to the currency's natural scale — two decimal places for dollars. The Accounting Engine requirements document asks for at least four. Amortisation divides a total across a hundred-odd periods, so rounding each intermediate to cents drifts visibly over the life of a lease. This must be resolved before any schedule arithmetic is written.",
+     "confidence": "observed",
+     "source": "docs/modules/accounting/asg-edgeplus-mapping.md",
+     "children": []
+    },
+    {
+     "name": "No rate primitive exists",
+     "kind": "constraint",
+     "detail": "Money is the only financial type in the platform. Discount rates, exchange rates (six decimal places) and threshold percentages all need their own type, or the classic 0.04375-versus-4.375 unit bug crosses a service boundary sooner or later.",
+     "confidence": "derived",
+     "source": "docs/modules/accounting/asg-edgeplus-mapping.md",
+     "children": []
+    },
+    {
+     "name": "The vendor independently forbids floats too",
+     "kind": "constraint",
+     "detail": "Lucernex's live API keeps MONEY and PERCENTAGE distinct from FLOAT and publishes BigDecimal as a scalar. The all-text database columns are a persistence-layer artefact, not the intended design — which is a useful argument when the no-doubles rule is questioned.",
+     "confidence": "observed",
+     "source": "docs/data-model/graphql-api.md (live GraphQL schema, build 26.08.0.46, 2026-09-10)",
+     "children": []
+    },
+    {
+     "name": "Thresholds should become versioned policy, not columns",
+     "kind": "constraint",
+     "detail": "The classification thresholds, borrowing rates and low-value limits sit on the Portfolio as bare unversioned columns. The replacement design puts them in an administration screen where each value is versioned, effective-dated, and approved by a second person — and explicitly does not retroactively change anything already posted.",
+     "confidence": "observed",
+     "source": "KnowledgeFolder/ProjectProposals/ASG Edge Plus/Source/_md_cache/ASG_Gen_accounting engine.md",
+     "children": []
+    },
+    {
+     "name": "The schedule approval gate is not in the requirements yet",
+     "kind": "constraint",
+     "detail": "The Accounting Engine requirements cover transaction approval. The gate found in the live tenant sits one level up, on the schedule that produces those transactions, and involves two parties. That is a build item, not a port.",
+     "confidence": "derived",
+     "source": "docs/modules/accounting/asg-edgeplus-mapping.md",
+     "children": []
+    },
+    {
+     "name": "Fifteen dead fields",
+     "kind": "constraint",
+     "detail": "Fifteen accounting fields are documented by the vendor as no longer used, not implemented, legacy, or informational-only. Migrate the data for audit; do not implement the behaviour.",
+     "confidence": "observed",
+     "source": "docs/modules/accounting/computed-vs-input-fields.md",
+     "children": []
+    }
+   ]
+  }
+ ]
+}

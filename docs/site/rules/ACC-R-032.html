@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ACC-R-032 &middot; Lucernex Atlas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="../atlas.css">
+</head><body>
+<header><b>Lucernex Atlas</b>
+<nav><a href="../index.html">Overview</a><a href="../atlas.html">Interactive app</a>
+<a href="../entities/index.html">Record types</a><a href="../rules/index.html">Rules</a>
+<a href="../questions.html">Open questions</a></nav></header>
+<main><p class="crumb"><a href="../index.html">Atlas</a> &rsaquo; <a href="index.html">Rules</a> &rsaquo; ACC-R-032</p><h1 class="mono">ACC-R-032</h1><p class="sub">Lease Accounting &amp; Payments &middot; Present value of a period payment</p><span class="tag obs">Observed</span><p class="lead">Discount the payment from its own period back to the accounting begin date. The compounding convention is not documented.</p><p>- Trigger: period row generation. - Inputs: `SLPeriod.PeriodCashAmount`, the discount rate (ACC-R-001…003), the period offset. - Computation: discount the cash payment from the period it is made back to the accounting begin date. - Output: `SLPeriod.PVOfPeriodCashAmount`. - Confidence: Observed for the intent — *&quot;The Present Value of a future cash payment in today&#x27;s valuation. This value is discounted to present value from the period that the payment will be made.&quot;*; Inferred for the compounding convention. `Asset.CodeCompoundingFrequencyID` exists but is undocumented.</p><p style="font-size:11.5px;color:var(--faint);margin-top:18px">Source: modules/accounting/rules.md</p></main></body></html>

@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Contracts in ASG Edge+ — How a Lease Moves From Receipt to First Rent</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:#FAFAF7;color:#1a1a1a;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Inter",system-ui,sans-serif;line-height:1.5;-webkit-font-smoothing:antialiased}
+  .container{max-width:1200px;margin:0 auto;padding:48px 32px 80px}
+  .top-bar{display:flex;justify-content:space-between;align-items:baseline;padding-bottom:24px;border-bottom:2px solid #1a1a1a;margin-bottom:48px}
+  .top-bar .brand{font-weight:700;font-size:14px;letter-spacing:0.12em;text-transform:uppercase}
+  .top-bar .brand span{color:#7B1E1E}
+  .top-bar .meta{font-size:12px;color:#666}
+  h1{font-size:clamp(40px,6vw,72px);font-weight:800;line-height:1.05;letter-spacing:-0.03em;margin-bottom:24px;max-width:18ch}
+  h1 em{font-style:normal;color:#7B1E1E}
+  .lede{font-size:20px;line-height:1.5;color:#333;max-width:60ch;margin-bottom:48px}
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border:2px solid #1a1a1a;margin-bottom:64px}
+  .stat{padding:28px 24px;border-right:2px solid #1a1a1a}
+  .stat:last-child{border-right:none}
+  .stat .n{font-size:56px;font-weight:800;line-height:1;letter-spacing:-0.02em}
+  .stat .l{font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#666;margin-top:8px}
+  .stat .d{font-size:14px;color:#444;margin-top:12px}
+  .stat .n.red{color:#7B1E1E}
+  .stat .n.blue{color:#1e4a7b}
+  section{margin-bottom:80px}
+  h2{font-size:14px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:#7B1E1E;margin-bottom:12px}
+  h3{font-size:32px;font-weight:700;letter-spacing:-0.01em;line-height:1.15;margin-bottom:24px;max-width:24ch}
+  .phases{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+  .phase{background:#fff;border:2px solid #1a1a1a;padding:24px 20px;position:relative}
+  .phase .num{font-size:64px;font-weight:800;line-height:1;color:#7B1E1E;margin-bottom:12px;letter-spacing:-0.04em}
+  .phase .name{font-size:20px;font-weight:700;margin-bottom:8px;line-height:1.2}
+  .phase .dur{font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#666;margin-bottom:16px}
+  .phase .steps{font-size:14px;color:#333;line-height:1.6}
+  .phase .steps b{color:#1a1a1a}
+  .phase.alt{background:#1a1a1a;color:#fff}
+  .phase.alt .num{color:#fff}
+  .phase.alt .steps{color:#ccc}
+  .phase.alt .steps b{color:#fff}
+  .flow{border:2px solid #1a1a1a;background:#fff;padding:0;margin-bottom:32px;overflow:hidden}
+  .flow-head{background:#1a1a1a;color:#fff;padding:16px 24px;font-size:14px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;display:flex;justify-content:space-between;align-items:center}
+  .flow-head .ph-num{font-size:32px;font-weight:800;letter-spacing:0;margin-right:12px}
+  .flow-body{padding:24px}
+  .step-row{display:grid;grid-template-columns:60px 1fr 200px;gap:24px;padding:16px 0;border-bottom:1px dashed #ccc;align-items:start}
+  .step-row:last-child{border-bottom:none}
+  .step-row .step-id{font-size:11px;font-weight:700;letter-spacing:0.08em;color:#7B1E1E;padding-top:3px}
+  .step-row .step-name{font-size:18px;font-weight:600;line-height:1.3}
+  .step-row .step-name .who{font-size:13px;font-weight:400;color:#666;display:block;margin-top:4px}
+  .step-row .step-actor{font-size:12px;letter-spacing:0.06em;text-transform:uppercase;color:#1e4a7b;text-align:right}
+  .callout-big{background:#7B1E1E;color:#fff;padding:48px 40px;margin-bottom:32px;display:grid;grid-template-columns:1fr 2fr;gap:32px;align-items:center}
+  .callout-big .bn{font-size:160px;font-weight:800;line-height:0.9;letter-spacing:-0.04em}
+  .callout-big .bt{font-size:22px;line-height:1.35}
+  .callout-big .bt b{font-size:32px;display:block;margin-bottom:8px;letter-spacing:-0.01em}
+  .compare{display:grid;grid-template-columns:1fr 1fr;gap:0;border:2px solid #1a1a1a;margin-bottom:32px}
+  .compare .col{padding:24px}
+  .compare .col:first-child{border-right:2px solid #1a1a1a;background:#1a1a1a;color:#fff}
+  .compare .col h4{font-size:11px;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:8px}
+  .compare .col h4.light{color:#aaa}
+  .compare .col h4.dark{color:#ff8a8a}
+  .compare .col .src{font-size:13px;color:#888;margin-bottom:16px}
+  .compare .col ul{list-style:none}
+  .compare .col li{font-size:14px;padding:8px 0;border-bottom:1px solid rgba(127,127,127,0.25)}
+  .compare .col li:last-child{border-bottom:none}
+  .compare .col li b{color:#fff}
+  .compare .col.dark li b{color:#ff8a8a}
+  .bars{background:#fff;border:2px solid #1a1a1a;padding:24px;margin-bottom:32px}
+  .bar-row{display:grid;grid-template-columns:200px 1fr 50px;gap:12px;align-items:center;padding:5px 0;font-size:13px}
+  .bar-row .label{color:#333;font-weight:500}
+  .bar-row .bar-wrap{background:#f0ede5;height:18px;position:relative}
+  .bar-row .bar{background:#7B1E1E;height:100%;display:block}
+  .bar-row .count{font-weight:700;text-align:right;font-variant-numeric:tabular-nums}
+  table.fields{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:16px}
+  table.fields th{background:#1a1a1a;color:#fff;padding:10px 12px;text-align:left;font-weight:600;font-size:11px;letter-spacing:0.06em;text-transform:uppercase}
+  table.fields td{padding:8px 12px;border-bottom:1px solid #e5e1d3}
+  table.fields tr:last-child td{border-bottom:none}
+  table.fields td .pill{display:inline-block;padding:2px 8px;font-size:10px;font-weight:700;letter-spacing:0.04em;border-radius:2px;background:#eee;color:#1a1a1a;text-transform:uppercase}
+  table.fields td .pill.req{background:#7B1E1E;color:#fff}
+  table.fields td .pill.opt{background:#1e4a7b;color:#fff}
+  .one-example{background:#fff;border:2px solid #1a1a1a;padding:32px;margin-bottom:24px}
+  .one-example h4{font-size:24px;font-weight:700;margin-bottom:8px}
+  .timeline{position:relative;padding-left:32px;margin-top:24px}
+  .timeline::before{content:"";position:absolute;left:8px;top:8px;bottom:8px;width:3px;background:#1a1a1a}
+  .tl-item{position:relative;padding-bottom:20px}
+  .tl-item::before{content:"";position:absolute;left:-29px;top:6px;width:16px;height:16px;background:#7B1E1e;border-radius:50%;border:3px solid #fff;box-shadow:0 0 0 2px #1a1a1a}
+  .tl-item .when{font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#7B1E1E;margin-bottom:4px}
+  .tl-item .what{font-size:15px;font-weight:600;margin-bottom:4px}
+  .tl-item .detail{font-size:13px;color:#555;line-height:1.5}
+  .foot{margin-top:80px;padding-top:24px;border-top:2px solid #1a1a1a;font-size:12px;color:#666}
+  .foot p{margin-bottom:6px}
+  @media (max-width:768px){
+    .stats,.phases,.compare{grid-template-columns:1fr 1fr}
+    .stat,.phase{border-right:none;border-bottom:2px solid #1a1a1a}
+    .callout-big{grid-template-columns:1fr}
+    .callout-big .bn{font-size:96px}
+    .step-row{grid-template-columns:50px 1fr}
+    .step-row .step-actor{grid-column:1 / -1;text-align:left;padding-left:62px}
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="top-bar">
+    <div class="brand">ASG <span>Edge+</span> · Contracts</div>
+    <div class="meta">BRD-24 · ADR-0008 · 2026-09-03</div>
+  </div>
+
+  <h1>A <em>contract</em> is 13 steps,<br>30 requirements,<br>and one frozen schema.</h1>
+  <p class="lede">A lease in ASG Edge+ doesn't just appear. It goes from a PDF in someone's inbox to a contract feeding recurring payments — through four phases, six actor roles, and a chain of wizards and workflows. Here's the whole thing, in one page.</p>
+
+  <div class="stats">
+    <div class="stat">
+      <div class="n">13</div>
+      <div class="l">Process steps</div>
+      <div class="d">From PJ-01 "receipt of lease" to PJ-13 "process 1st month of rent"</div>
+    </div>
+    <div class="stat">
+      <div class="n">30</div>
+      <div class="l">Functional requirements</div>
+      <div class="d">FR-001 to FR-030. All "Must" priority. Drives the build order.</div>
+    </div>
+    <div class="stat">
+      <div class="n red">2,823</div>
+      <div class="l">Lx fields under "Contract"</div>
+      <div class="d">Out of 6,158 total Lx leaves. The biggest single feature area.</div>
+    </div>
+    <div class="stat">
+      <div class="n blue">W12</div>
+      <div class="l">Schema-freeze deadline</div>
+      <div class="d">ADR-0008: contract schema must be frozen by week 12. After that, additive only.</div>
+    </div>
+  </div>
+
+  <section>
+    <h2>The shape of it</h2>
+    <h3>Four phases, one lease, six actors</h3>
+    <div class="phases">
+      <div class="phase">
+        <div class="num">01</div>
+        <div class="name">Intake &amp;<br>Initial Setup</div>
+        <div class="dur">Steps PJ-01 to PJ-03</div>
+        <div class="steps">
+          <b>Lease PDF arrives</b> → Analyst links the physical <b>Center</b> via wizard → creates the <b>contract shell</b> with templates.
+        </div>
+      </div>
+      <div class="phase">
+        <div class="num">02</div>
+        <div class="name">Abstraction<br>Workflow</div>
+        <div class="dur">Steps PJ-04 to PJ-06</div>
+        <div class="steps">
+          Analyst enters the <b>financial baseline</b> (rent, CAM, % rent) → kicks off the <b>full abstraction workflow</b> → abstractor reviews the lease PDF.
+        </div>
+      </div>
+      <div class="phase alt">
+        <div class="num">03</div>
+        <div class="name">Review &amp;<br>Approval</div>
+        <div class="dur">Steps PJ-07 to PJ-09</div>
+        <div class="steps">
+          <b>QA</b> reviews for exceptions → optionally <b>client</b> approves → senior analyst <b>closes the workflow</b>.
+        </div>
+      </div>
+      <div class="phase alt">
+        <div class="num">04</div>
+        <div class="name">Go-Live &amp;<br>First Rent</div>
+        <div class="dur">Steps PJ-10 to PJ-13</div>
+        <div class="steps">
+          Store opens → <b>critical dates</b> recalibrated → vendor linked → <b>first month of rent</b> processed. Now contract feeds recurring payments.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>One contract, walked through</h2>
+    <h3>What actually happens, in order</h3>
+
+    <div class="flow">
+      <div class="flow-head">
+        <span><span class="ph-num">01</span>Intake &amp; Initial Setup</span>
+        <span>3 steps</span>
+      </div>
+      <div class="flow-body">
+        <div class="step-row">
+          <div class="step-id">PJ-01</div>
+          <div class="step-name">Receipt of lease &amp; initial dates<div class="who">Client sends the lease PDF + target possession/opening dates. Intake is created.</div></div>
+          <div class="step-actor">Client, Lease Analyst</div>
+        </div>
+        <div class="step-row">
+          <div class="step-id">PJ-02</div>
+          <div class="step-name">Center linking wizard<div class="who">Before the contract exists, the analyst links the physical Center. Required fields: ASG Center ID, Developer, address, region, market, currency, taxes.</div></div>
+          <div class="step-actor">Lease Analyst</div>
+        </div>
+        <div class="step-row">
+          <div class="step-id">PJ-03</div>
+          <div class="step-name">Contract shell via wizard + templates<div class="who">The contract record is created. Templates seed folders, covenants, responsibilities. Status set to Pre-Open / Pending.</div></div>
+          <div class="step-actor">Lease Analyst</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flow">
+      <div class="flow-head">
+        <span><span class="ph-num">02</span>Abstraction Workflow</span>
+        <span>3 steps</span>
+      </div>
+      <div class="flow-body">
+        <div class="step-row">
+          <div class="step-id">PJ-04</div>
+          <div class="step-name">Initial financial abstraction<div class="who">Expenses, % rent, breakpoints, exclusions captured. This is the "payment-ready baseline" — what the first rent will be calculated from.</div></div>
+          <div class="step-actor">Lease Analyst</div>
+        </div>
+        <div class="step-row">
+          <div class="step-id">PJ-05</div>
+          <div class="step-name">Kick off full abstraction workflow<div class="who">A workflow is created. The lease PDF is attached with version control. Assigned to the abstraction team with a due date.</div></div>
+          <div class="step-actor">Lease Analyst</div>
+        </div>
+        <div class="step-row">
+          <div class="step-id">PJ-06</div>
+          <div class="step-name">Deep contract abstraction<div class="who">Abstractor reviews the lease PDF, extracts legal clauses, covenants, responsibilities. Returns the workflow when done.</div></div>
+          <div class="step-actor">Abstractor</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flow">
+      <div class="flow-head">
+        <span><span class="ph-num">03</span>Review &amp; Approval</span>
+        <span>3 steps</span>
+      </div>
+      <div class="flow-body">
+        <div class="step-row">
+          <div class="step-id">PJ-07</div>
+          <div class="step-name">QA review &amp; exception handling<div class="who">Senior analyst reviews the abstract, checks exceptions, may send back for correction with explicit reason.</div></div>
+          <div class="step-actor">QA / Senior Analyst</div>
+        </div>
+        <div class="step-row">
+          <div class="step-id">PJ-08</div>
+          <div class="step-name">Client review &amp; approval<div class="who">Required or skipped depending on client operating model. The decision is preserved in history either way.</div></div>
+          <div class="step-actor">Client</div>
+        </div>
+        <div class="step-row">
+          <div class="step-id">PJ-09</div>
+          <div class="step-name">Close workflow<div class="who">Senior analyst closes the workflow. Full transition and document history is preserved forever.</div></div>
+          <div class="step-actor">Senior Analyst</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flow">
+      <div class="flow-head">
+        <span><span class="ph-num">04</span>Go-Live &amp; First Rent</span>
+        <span>4 steps</span>
+      </div>
+      <div class="flow-body">
+        <div class="step-row">
+          <div class="step-id">PJ-10</div>
+          <div class="step-name">Store opens &amp; status adjustment<div class="who">Status moves to Open. Actual store open date and confirmed possession date are stored.</div></div>
+          <div class="step-actor">Lease Analyst</div>
+        </div>
+        <div class="step-row">
+          <div class="step-id">PJ-11</div>
+          <div class="step-name">Critical dates review<div class="who">All critical dates are reviewed and recalibrated. Triggers, renewals, expirations become accurate.</div></div>
+          <div class="step-actor">Lease Analyst</div>
+        </div>
+        <div class="step-row">
+          <div class="step-id">PJ-12</div>
+          <div class="step-name">Vendor record setup<div class="who">Create or link a vendor. Capture client-specific payment details, AP details.</div></div>
+          <div class="step-actor">Lease Analyst, AP Coordinator</div>
+        </div>
+        <div class="step-row">
+          <div class="step-id">PJ-13</div>
+          <div class="step-name">Process 1st month of rent<div class="who">Validates the entire setup. The contract is now ready to feed downstream recurring payment processing.</div></div>
+          <div class="step-actor">Lease Analyst</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Why this matters</h2>
+    <h3>Contracts are the project's single critical blocker</h3>
+
+    <div class="callout-big">
+      <div class="bn">3</div>
+      <div class="bt">
+        <b>Contract schema change = 3 components must rebuild.</b>
+        Payment Processing (Component #21), Percentage Rent &amp; Sales (#22), ASC 842 Accounting (#23) all consume the contract schema. A late change cascades through every downstream test corpus and journal-entry math. That's why ADR-0008 freezes the schema at week 12.
+      </div>
+    </div>
+
+    <div class="compare">
+      <div class="col">
+        <h4 class="dark">In Lx today</h4>
+        <div class="src">Lucernex contracts — what firms see now</div>
+        <ul>
+          <li><b>2,823 fields</b> under the "Contract" top group across ~95 sub-areas</li>
+          <li><b>Payment Transaction</b> is the biggest sub-group (117 fields)</li>
+          <li>Contract Info, Expense Setup, % Rent Breakpoints, Covenants are the spine</li>
+          <li>Wizards exist, but they don't enforce a flow — analysts can enter things out of order</li>
+          <li>Vendor, accounting, and payment setup live in separate modules — no "is this contract ready to pay?" status</li>
+        </ul>
+      </div>
+      <div class="col dark">
+        <h4 class="light">In ASG Edge+</h4>
+        <div class="src">The new platform — what BRD-24 mandates</div>
+        <ul>
+          <li>One connected <b>contract record</b> from intake through first rent</li>
+          <li><b>Wizard-driven</b> setup — atomic creation, no partial shells</li>
+          <li>Workflow is the abstraction path: kick-off → abstractor → QA → client → close</li>
+          <li>Auto-assigns ASG + client users from org chart at creation (FR-011/012)</li>
+          <li>Status lifecycle: Open → Active → Possession → Paying Rent → Closed (FR-010)</li>
+          <li>All changes audit-logged with who, what, when, why (FR-029)</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>What "Contract" actually contains</h2>
+    <h3>The 2,823 Lx fields, by sub-group</h3>
+    <p style="font-size:15px;color:#444;margin-bottom:24px;max-width:60ch">Every leaf under the Lx "Contract" top group. The bar lengths are proportional to field counts. This is what the migration has to preserve, not invent.</p>
+
+    <div class="bars">
+      <div class="bar-row"><span class="label">Payment Transaction</span><span class="bar-wrap"><span class="bar" style="width:100%"></span></span><span class="count">117</span></div>
+      <div class="bar-row"><span class="label">Straight Line Summary</span><span class="bar-wrap"><span class="bar" style="width:82%"></span></span><span class="count">96</span></div>
+      <div class="bar-row"><span class="label">Expense Setup</span><span class="bar-wrap"><span class="bar" style="width:68%"></span></span><span class="count">79</span></div>
+      <div class="bar-row"><span class="label">Straight Line Period</span><span class="bar-wrap"><span class="bar" style="width:67%"></span></span><span class="count">78</span></div>
+      <div class="bar-row"><span class="label">Contract Info</span><span class="bar-wrap"><span class="bar" style="width:60%"></span></span><span class="count">70</span></div>
+      <div class="bar-row"><span class="label">Usage Period</span><span class="bar-wrap"><span class="bar" style="width:56%"></span></span><span class="count">66</span></div>
+      <div class="bar-row"><span class="label">Sales Period</span><span class="bar-wrap"><span class="bar" style="width:56%"></span></span><span class="count">66</span></div>
+      <div class="bar-row"><span class="label">Expense Recovery</span><span class="bar-wrap"><span class="bar" style="width:56%"></span></span><span class="count">65</span></div>
+      <div class="bar-row"><span class="label">Accrual Transaction</span><span class="bar-wrap"><span class="bar" style="width:46%"></span></span><span class="count">54</span></div>
+      <div class="bar-row"><span class="label">Financial Test</span><span class="bar-wrap"><span class="bar" style="width:43%"></span></span><span class="count">50</span></div>
+      <div class="bar-row"><span class="label">Expense Schedule</span><span class="bar-wrap"><span class="bar" style="width:43%"></span></span><span class="count">50</span></div>
+      <div class="bar-row"><span class="label">Common Area Maintenance</span><span class="bar-wrap"><span class="bar" style="width:40%"></span></span><span class="count">47</span></div>
+      <div class="bar-row"><span class="label">Real Estate Taxes</span><span class="bar-wrap"><span class="bar" style="width:38%"></span></span><span class="count">44</span></div>
+      <div class="bar-row"><span class="label">Percentage Rent</span><span class="bar-wrap"><span class="bar" style="width:38%"></span></span><span class="count">44</span></div>
+      <div class="bar-row"><span class="label">Covenant</span><span class="bar-wrap"><span class="bar" style="width:37%"></span></span><span class="count">43</span></div>
+      <div class="bar-row"><span class="label">Accounting Assumptions</span><span class="bar-wrap"><span class="bar" style="width:37%"></span></span><span class="count">43</span></div>
+      <div class="bar-row"><span class="label">Key Date</span><span class="bar-wrap"><span class="bar" style="width:35%"></span></span><span class="count">41</span></div>
+      <div class="bar-row"><span class="label">% Rent Breakpoints</span><span class="bar-wrap"><span class="bar" style="width:33%"></span></span><span class="count">39</span></div>
+      <div class="bar-row"><span class="label">% Rent Schedule</span><span class="bar-wrap"><span class="bar" style="width:32%"></span></span><span class="count">37</span></div>
+      <div class="bar-row"><span class="label">Responsibility</span><span class="bar-wrap"><span class="bar" style="width:26%"></span></span><span class="count">31</span></div>
+    </div>
+    <p style="font-size:13px;color:#666;margin-top:8px">+ ~75 more sub-groups including Contract Term (29), Contract Amendment (19), Allowance (20), Vendor Allocation, Co-Tenancy, Insurance, Security Deposit, etc.</p>
+  </section>
+
+  <section>
+    <h2>What the intake wizard shows</h2>
+    <h3>The first form anyone ever fills out for a contract</h3>
+    <p style="font-size:15px;color:#444;margin-bottom:24px;max-width:60ch">From BRD-24 §8.1. This is the entry point for every new contract in ASG Edge+. Compare it with the Lx intake today — these are the fields the analyst will actually key in.</p>
+
+    <table class="fields">
+      <thead>
+        <tr><th style="width:35%">Field</th><th style="width:15%">Type</th><th style="width:10%">Required</th><th>What it is</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Portfolio / context</td><td>Lookup</td><td><span class="pill req">Yes</span></td><td>Active portfolio — drives routing, org-chart assignments, regional rules</td></tr>
+        <tr><td>Store</td><td>Lookup</td><td><span class="pill req">Yes</span></td><td>The Center reference the lease attaches to</td></tr>
+        <tr><td>Possession date</td><td>Date</td><td><span class="pill opt">No</span></td><td>Target or known possession date. Can be target first, confirmed later.</td></tr>
+        <tr><td>Target opening date</td><td>Date</td><td><span class="pill opt">No</span></td><td>Forthcoming opening date for downstream setup</td></tr>
+        <tr><td>Request type</td><td>Dropdown</td><td><span class="pill req">Yes</span></td><td>RK classifier: routes the request to the right workflow</td></tr>
+        <tr><td>Notes</td><td>Multi-line</td><td><span class="pill opt">No</span></td><td>Free text from client or analyst</td></tr>
+        <tr><td>Attachments</td><td>File / Lookup</td><td><span class="pill opt">No</span></td><td>Lease PDF. Stays traceable even if intake proceeds without it.</td></tr>
+      </tbody>
+    </table>
+
+    <p style="font-size:13px;color:#7B1E1E;font-weight:600;margin-top:8px">FR-003 rule: form can't submit until minimum required data is present — but if the PDF isn't attached, the request stays "document-pending" rather than failing silently.</p>
+  </section>
+
+  <section>
+    <h2>What a real contract looks like</h2>
+    <h3>One lease, one timeline</h3>
+
+    <div class="one-example">
+      <h4>"Starbucks — 123 Main St, Austin TX"</h4>
+      <p style="font-size:14px;color:#666;margin-bottom:24px">A 5-year retail lease. Here's how it would move through ASG Edge+ in 8 weeks.</p>
+
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="when">Day 0 — Outside the system</div>
+          <div class="what">Client signs the lease, emails the PDF</div>
+          <div class="detail">PDF + target dates (possession 2026-10-01, open 2026-11-15) reach the Lease Analyst. No contract record exists yet.</div>
+        </div>
+        <div class="tl-item">
+          <div class="when">Day 1 — Intake</div>
+          <div class="what">Lease Admin Request created (FR-001)</div>
+          <div class="detail">Portfolio=Texas, Store=Center-4421, Request type=New lease, PDF attached. Workflow record created with ID, actor, timestamp, initial state. This is now traceable.</div>
+        </div>
+        <div class="tl-item">
+          <div class="when">Day 2 — Center linked</div>
+          <div class="what">Center linking wizard completed (PJ-02)</div>
+          <div class="detail">ASG Center ID, Developer, address, region, market, currency, primary/secondary tax captured. Validation passes. Center record exists.</div>
+        </div>
+        <div class="tl-item">
+          <div class="when">Day 2 — Contract shell</div>
+          <div class="what">Contract shell created via wizard + template (PJ-03)</div>
+          <div class="detail">Status=Pre-Open. Folders, covenants, responsibilities seeded from "Retail – US Standard" template. Commence/Execute/Possession/Open dates set. Default ASG + client users auto-assigned via org chart (FR-011/012).</div>
+        </div>
+        <div class="tl-item">
+          <div class="when">Day 5 — Financial baseline</div>
+          <div class="what">Initial abstraction done (PJ-04)</div>
+          <div class="detail">Base Rent=$8,500/mo, CAM=$2,100/mo, % Rent Yes, breakpoints at $1.2M, exclusions: utilities. Payment-ready baseline now exists.</div>
+        </div>
+        <div class="tl-item">
+          <div class="when">Day 6 — Workflow kicked off</div>
+          <div class="what">Full abstraction workflow launched (PJ-05)</div>
+          <div class="detail">Workflow instance created. Lease PDF attached with version v1. Assigned to Abstractor-A, due 2026-09-15.</div>
+        </div>
+        <div class="tl-item">
+          <div class="when">Day 14 — Returned from abstraction</div>
+          <div class="what">Deep abstraction complete (PJ-06)</div>
+          <div class="detail">Abstractor returns workflow with extracted clauses, covenants, responsibilities. Status moves to QA Review.</div>
+        </div>
+        <div class="tl-item">
+          <div class="when">Day 18 — QA passes</div>
+          <div class="what">QA review with no exceptions (PJ-07)</div>
+          <div class="detail">Senior analyst reviews, no issues found. Client review not required for this operating model — workflow advances to close.</div>
+        </div>
+        <div class="tl-item">
+          <div class="when">Day 19 — Workflow closed</div>
+          <div class="what">Workflow closed (PJ-09)</div>
+          <div class="detail">Full history preserved: 5 transitions, 1 document version, audit entries for every action. Workflow marked closed.</div>
+        </div>
+        <div class="tl-item">
+          <div class="when">Day 50 — Store opens</div>
+          <div class="what">Status = Open, dates stored (PJ-10/11)</div>
+          <div class="detail">Actual open date 2026-11-12 (3 days before target). Possession confirmed 2026-10-01. Critical dates recalibrated.</div>
+        </div>
+        <div class="tl-item">
+          <div class="when">Day 51 — Vendor linked</div>
+          <div class="what">Vendor setup (PJ-12)</div>
+          <div class="detail">Existing vendor "Starbucks Corp – Vendor-8821" linked. Client-specific payment details, AP details captured. First Rent flag = false.</div>
+        </div>
+        <div class="tl-item">
+          <div class="when">Day 52 — First rent processed</div>
+          <div class="what">First month of rent processed (PJ-13)</div>
+          <div class="detail">$10,600 validated and processed. Flag = true. Contract now feeds downstream recurring payment processing.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>The single rule</h2>
+    <h3>If the contract schema is wrong, everything downstream is wrong</h3>
+    <div class="callout-big" style="background:#1a1a1a">
+      <div class="bn" style="color:#7B1E1E">W12</div>
+      <div class="bt">
+        <b>Schema-freeze deadline.</b>
+        ADR-0008. After week 12, changes to the contract schema must be additive only — new columns, new tables, never breaking changes. Because every financial feature (payments, % rent, ASC 842) reads from this schema, and rewriting their test corpora in Phase 4 would blow the timeline.
+      </div>
+    </div>
+  </section>
+
+  <div class="foot">
+    <p><b>Source material</b></p>
+    <p>BRD-24 Contract Setup (signed 2026-04-27) — 13 process steps, 30 functional requirements, 8 data-field tables, 12 acceptance criteria.</p>
+    <p>ADR-0008 Treat Contract Management as critical blocker (2026-05-29) — schema-freeze by week 12, read-only view first.</p>
+    <p>Component #20 ContractManagementService — system of record for lease/contract lifecycle.</p>
+    <p>Lx "Contract" top group — 2,823 leaves across ~95 sub-groups, surfaced from the Lx UI tree export.</p>
+    <p style="margin-top:16px;color:#999">Open this file in any browser. No server, no dependencies.</p>
+  </div>
+
+</div>
+</body>
+</html>

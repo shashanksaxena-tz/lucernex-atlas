@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>WF-R-032 &middot; Lucernex Atlas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="../atlas.css">
+</head><body>
+<header><b>Lucernex Atlas</b>
+<nav><a href="../index.html">Overview</a><a href="../atlas.html">Interactive app</a>
+<a href="../entities/index.html">Record types</a><a href="../rules/index.html">Rules</a>
+<a href="../questions.html">Open questions</a></nav></header>
+<main><p class="crumb"><a href="../index.html">Atlas</a> &rsaquo; <a href="index.html">Rules</a> &rsaquo; WF-R-032</p><h1 class="mono">WF-R-032</h1><p class="sub">Workflow &amp; Approvals &middot; C. Routing resolution</p><span class="tag der">Derived</span><p class="lead">Notifiees exist only as the flat WorkFlowStep.NotifieeMemberIDList. No WorkFlowStepNotifiee table exists anywhere in the 223-object schema, so no delivery or acknowledgement is ever tracked for them.</p><div class="wrapt"><table><tbody><tr><td>Step instantiation</td></tr><tr><td>resolved notifiee set</td></tr><tr><td>—</td></tr><tr><td>No per-person row is created. Notifiees exist only as `WFS.NotifieeMemberIDList`; no delivery or acknowledgement is tracked for them</td></tr><tr><td>Derived — no `WorkFlowStepNotifiee` object exists</td></tr></tbody></table></div><p style="font-size:11.5px;color:var(--faint);margin-top:18px">Source: modules/workflow/rules.md</p></main></body></html>

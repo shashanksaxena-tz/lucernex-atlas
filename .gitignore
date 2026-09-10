@@ -1,0 +1,12 @@
+# Agent and editor scratch
+.omc/
+.lavish/
+.claude/
+.DS_Store
+
+# Python
+__pycache__/
+*.pyc
+
+# Local servers / temp
+*.log

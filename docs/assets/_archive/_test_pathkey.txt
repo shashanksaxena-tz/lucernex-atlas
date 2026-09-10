@@ -1,0 +1,5 @@
+SHARED_UNIQUE_PATHS=0
+SHARED_UNIQUE_KEYS=0
+CANDIDATE_OVERRIDES_COUNT=0
+GLOBAL_KINDCOUNTS={'top-level group': 24, 'subgroup': 320, 'leaf': 5953}
+FIRM_KINDCOUNTS={'top-level group': 24, 'subgroup': 320, 'leaf': 205}

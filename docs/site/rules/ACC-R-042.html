@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ACC-R-042 &middot; Lucernex Atlas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="../atlas.css">
+</head><body>
+<header><b>Lucernex Atlas</b>
+<nav><a href="../index.html">Overview</a><a href="../atlas.html">Interactive app</a>
+<a href="../entities/index.html">Record types</a><a href="../rules/index.html">Rules</a>
+<a href="../questions.html">Open questions</a></nav></header>
+<main><p class="crumb"><a href="../index.html">Atlas</a> &rsaquo; <a href="index.html">Rules</a> &rsaquo; ACC-R-042</p><h1 class="mono">ACC-R-042</h1><p class="sub">Lease Accounting &amp; Payments &middot; Which short-term liability is reported</p><span class="tag obs">Observed</span><p class="lead">A firm-level setting selects the amortisation-based or PV-based figure.</p><p>- Trigger: reporting the short-term liability. - Inputs: firm setting Short-Term/Long-Term Liability Calculation Method (`Admin &gt; Manage Company &gt; Financial Settings`). - Condition: `Liability Amortization Based` ⇒ use `Forward12MonthLiabilityAmortBased`; `PV Based` ⇒ use `Forward12MonthLiabilityPVBased`. - Confidence: Observed for the switch; the PV-based formula itself is not available offline.</p><p style="font-size:11.5px;color:var(--faint);margin-top:18px">Source: modules/accounting/rules.md</p></main></body></html>

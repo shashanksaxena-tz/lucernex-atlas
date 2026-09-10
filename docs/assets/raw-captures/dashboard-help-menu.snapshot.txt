@@ -1,0 +1,157 @@
+uid=3_0 RootWebArea "LxRetail" url="https://train-americanfreight.lucernex.com/en/dashboard/DashboardDispatch.jsp"
+  uid=5_0 ignored
+    uid=5_1 application "~~Main Content#~"
+      uid=3_1 region "Top Menu"
+        uid=5_2 generic
+          uid=5_3 generic
+            uid=5_4 ignored
+              uid=5_5 ignored
+                uid=5_6 ignored
+                  uid=5_7 generic
+                    uid=5_8 generic
+                  uid=5_9 ignored
+                    uid=3_2 form
+                      uid=5_10 LayoutTable
+                        uid=5_11 ignored
+                          uid=5_12 LayoutTableRow
+                            uid=5_13 LayoutTableCell "Search Advanced Search"
+                              uid=5_14 generic
+                                uid=3_3 textbox "Search"
+                                  uid=5_15 ignored
+                                  uid=5_16 generic
+                                uid=3_4 image "Advanced Search" description="Advanced Search" url="https://train-americanfreight.lucernex.com/all/img/accruent/searchicon.png"
+                  uid=5_17 generic
+                    uid=5_18 generic
+                      uid=5_19 toolbar orientation="horizontal"
+                        uid=3_5 button focusable focused haspopup="menu"
+                          uid=5_20 image
+                            uid=5_21 ignored
+                          uid=4_0 menu orientation="vertical"
+                            uid=4_1 menuitem "User Guides"
+                              uid=5_22 StaticText "User Guides"
+                                uid=5_23 InlineTextBox "User Guides"
+                            uid=4_2 menuitem "User Guide Walk-Thrus"
+                              uid=5_24 StaticText "User Guide Walk-Thrus"
+                                uid=5_23 InlineTextBox "User Guide Walk-Thrus"
+                            uid=4_3 menuitem "Tutorials"
+                              uid=5_25 StaticText "Tutorials"
+                                uid=5_23 InlineTextBox "Tutorials"
+                        uid=3_6 button "1"
+                          uid=5_26 image
+                            uid=5_27 ignored
+                          uid=5_28 generic
+                            uid=5_29 generic
+                              uid=5_30 StaticText "1"
+                                uid=5_23 InlineTextBox "1"
+                        uid=3_7 button haspopup="menu"
+                          uid=5_31 image
+                            uid=5_32 ignored
+                        uid=3_8 button
+                          uid=5_33 image
+                            uid=5_34 ignored
+                        uid=3_9 button
+                          uid=5_35 image
+                            uid=5_36 ignored
+                        uid=3_10 button
+                          uid=5_37 image
+                            uid=5_38 ignored
+                        uid=3_11 button
+                          uid=5_39 image
+                            uid=5_40 ignored
+                        uid=3_12 button haspopup="menu"
+                          uid=5_41 image
+                            uid=5_42 ignored
+                        uid=3_13 button
+                          uid=5_43 image
+                            uid=5_44 ignored
+                        uid=3_14 button
+                          uid=5_45 image
+                            uid=5_46 ignored
+            uid=5_47 generic
+            uid=5_48 generic
+              uid=5_49 image
+            uid=5_50 generic
+              uid=5_51 image
+          uid=3_15 form
+          uid=3_16 form
+      uid=3_17 region "Main Panel"
+        uid=5_52 generic
+          uid=5_53 generic
+            uid=3_18 StaticText "(ASG)American Freight"
+              uid=5_23 InlineTextBox "(ASG)American Freight"
+          uid=5_54 generic
+            uid=5_55 image
+            uid=5_56 generic
+              uid=3_19 link "printable Printable View" url="https://train-americanfreight.lucernex.com/en/dashboard/DashboardDispatch.jsp#"
+                uid=3_20 image "printable" url="https://train-americanfreight.lucernex.com/en/img/preview.gif"
+                uid=3_21 StaticText "Printable View"
+                  uid=5_23 InlineTextBox "Printable View"
+            uid=5_57 generic
+              uid=5_58 generic
+                uid=5_59 toolbar orientation="horizontal"
+                  uid=3_22 button "Expand panel"
+                  uid=3_23 StaticText " "
+                    uid=5_23 InlineTextBox " "
+                uid=5_60 tablist orientation="horizontal"
+                  uid=3_24 tab "Map" selectable
+                    uid=5_61 ignored
+                    uid=5_62 generic
+                      uid=5_63 StaticText "Map"
+                        uid=5_23 InlineTextBox "Map"
+                    uid=5_64 ignored
+                  uid=3_25 tab "Dashboard" selectable selected
+                    uid=5_65 ignored
+                    uid=5_66 generic
+                      uid=5_67 StaticText "Dashboard"
+                        uid=5_23 InlineTextBox "Dashboard"
+                    uid=5_68 ignored
+                  uid=3_26 tab "+" selectable
+                    uid=5_69 ignored
+                    uid=5_70 generic
+                      uid=5_71 StaticText "+"
+                        uid=5_23 InlineTextBox "+"
+                    uid=5_72 ignored
+                uid=3_27 tabpanel "Dashboard"
+      uid=3_28 StaticText ">>"
+        uid=5_23 InlineTextBox ">>"
+      uid=3_29 separator orientation="vertical" value="50" valuemax="100" valuemin="0" valuetext=""
+      uid=3_30 region "Footer"
+        uid=5_73 LayoutTable
+          uid=5_74 LayoutTableRow
+            uid=5_75 LayoutTableCell "logo © Copyright 2026 Accruent All Rights Reserved Privacy Policy Test 2 User : (ASG)American Freight 2026-09-01 21:54:17 Central Standard Time Build 26.08.0.39 (2026/08/21 21:28)"
+              uid=5_76 ignored
+                uid=5_77 ignored
+                  uid=5_78 ignored
+                    uid=5_79 generic
+                      uid=3_31 image "logo" url="https://train-americanfreight.lucernex.com/all/img/logo/LxLogo.png"
+                    uid=5_80 generic
+                      uid=3_32 StaticText "© Copyright 2026 Accruent All Rights Reserved"
+                        uid=5_23 InlineTextBox "© Copyright 2026 Accruent All Rights Reserved"
+                      uid=3_33 StaticText " "
+                        uid=5_23 InlineTextBox " "
+                      uid=3_34 link "Privacy Policy" url="https://www.accruent.com/privacy-policy"
+                        uid=3_35 StaticText "Privacy Policy"
+                          uid=5_23 InlineTextBox "Privacy Policy"
+                    uid=5_81 generic
+                      uid=3_36 link "Test 2 User" url="javascript:"
+                        uid=3_37 StaticText "Test 2 User"
+                          uid=5_23 InlineTextBox "Test 2 User"
+                      uid=3_38 StaticText " : (ASG)American Freight"
+                        uid=5_23 InlineTextBox " : (ASG)American Freight"
+                      uid=3_39 StaticText " "
+                        uid=5_23 InlineTextBox " "
+                      uid=3_40 StaticText "2026-09-01 21:54:17 Central Standard Time"
+                        uid=5_23 InlineTextBox "2026-09-01 21:54:17 Central Standard Time"
+                      uid=3_41 StaticText " "
+                        uid=5_23 InlineTextBox " "
+                      uid=3_42 StaticText "Build 26.08.0.39 (2026/08/21 21:28)"
+                        uid=5_23 InlineTextBox "Build 26.08.0.39 (2026/08/21 21:28)"
+            uid=5_82 LayoutTableCell
+              uid=5_83 LayoutTable
+                uid=5_84 ignored
+                  uid=5_85 LayoutTableRow
+                    uid=5_86 LayoutTableCell
+                      uid=5_87 generic
+      uid=5_88 generic
+      uid=5_89 ignored
+        uid=5_90 ignored

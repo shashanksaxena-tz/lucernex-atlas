@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ACC-R-021 &middot; Lucernex Atlas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="../atlas.css">
+</head><body>
+<header><b>Lucernex Atlas</b>
+<nav><a href="../index.html">Overview</a><a href="../atlas.html">Interactive app</a>
+<a href="../entities/index.html">Record types</a><a href="../rules/index.html">Rules</a>
+<a href="../questions.html">Open questions</a></nav></header>
+<main><p class="crumb"><a href="../index.html">Atlas</a> &rsaquo; <a href="index.html">Rules</a> &rsaquo; ACC-R-021</p><h1 class="mono">ACC-R-021</h1><p class="sub">Lease Accounting &amp; Payments &middot; New expense setup dirties the schedule that uses its expense type</p><span class="tag obs">Observed</span><p class="lead">Creating an expense setup with a schedule flips Recalc? on whichever accounting schedule uses that expense type.</p><p>- Trigger: an `ExpenseSetup` with an `ExpenseSchedule` is created. - Inputs: `ExpenseSetup.CodeExpenseTypeID`; `SLSummary.AssociatedExpenseSetupIDs`. - Condition: the accounting schedule associated with that expense type is dirtied. - Output: `SLSummary.NeedsRecalculation := true`; `AssociatedExpenseSetupIDs` extended. - Confidence: Observed — *&quot;If a new expense setup with an expense schedule is created, the accounting schedule associated with the expense type will have its Recalc? flag flipped to Yes.&quot;*</p><p style="font-size:11.5px;color:var(--faint);margin-top:18px">Source: modules/accounting/rules.md</p></main></body></html>

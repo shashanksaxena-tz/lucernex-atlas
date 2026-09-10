@@ -1,0 +1,1713 @@
+{
+ "name": "Workflow & Approvals",
+ "kind": "module",
+ "detail": "The engine that routes a record through a sequence of approval steps: who must act, what they see, and what happens when they do. It is a step-numbered, template-instantiated approval router, not a general-purpose BPM engine — the only branch predicate is a human choosing which button to press, and the only conditional logic is raw JavaScript stored in a text column. The live tenant runs four workflows totalling 19 steps, three of them lease-accounting processes ASG runs today, and every step is strictly ordinal with no branch, merge or parallel construct visible anywhere in the configuration. The single most important mechanism is layout-per-step-per-role: the same request record shows a different set of fields to a different person at every stage of its life, which is what makes a control-flow-poor engine expressive enough to run a real business process.",
+ "confidence": "observed",
+ "source": "docs/modules/workflow/README.md",
+ "children": [
+  {
+   "name": "Triggering a workflow",
+   "kind": "capability",
+   "detail": "How a workflow gets started at all. The schema names four distinct trigger mechanisms, and one of them — a record's status changing — is missing from Lucernex's own administrator help text, which only ever told people about three. Anyone building from the documentation alone would miss a quarter of the trigger model.",
+   "confidence": "observed",
+   "source": "docs/modules/workflow/data-model.md",
+   "children": [
+    {
+     "name": "KickOffMethod — the four trigger types",
+     "kind": "code-table",
+     "detail": "A GraphQL enum naming exactly how a workflow can start: by an action on another workflow's step, by completion of a form, by a record's status changing, or by completion of a schedule task. This is the authoritative list; the vendor help text names only three of them.",
+     "confidence": "observed",
+     "source": "docs/data-model/graphql-api.md",
+     "children": [
+      {
+       "name": "STEP_ACTION",
+       "kind": "code-value",
+       "detail": "A workflow is kicked off by a button press on a step of a different, already-running workflow. This is how one process hands work to another — a Lease Admin Request finishing could, for example, launch an ASC 842 Schedule Review, though no live configuration was captured actually doing this.",
+       "confidence": "observed",
+       "source": "docs/modules/workflow/step-actions.md",
+       "children": [
+        {
+         "name": "KickOffWorkFlowTemplateID",
+         "kind": "field",
+         "detail": "The action field an administrator sets to name which template gets spawned when this button is pressed. Vendor definition: \"If you want to kick off another work flow with the completion of this action, select the work flow from this field.\"",
+         "confidence": "observed",
+         "source": "docs/modules/workflow/step-actions.md",
+         "children": [
+          {
+           "name": "WF-R-017 — spawning a workflow",
+           "kind": "rule",
+           "detail": "An action with a non-null kick-off target creates a brand-new workflow instance from that template the moment the action fires. No column on the new instance records which parent workflow, step or action spawned it — a spawned workflow is an orphan from the moment it is born.",
+           "confidence": "observed",
+           "source": "docs/modules/workflow/rules.md",
+           "children": [
+            {
+             "name": "What crosses the boundary into the spawned workflow",
+             "kind": "field-group",
+             "detail": "Exactly two things carry over from parent to child: the ad-hoc assignee slot and the priority level. No data, no context, and no reference back to the parent travel with it.",
+             "confidence": "observed",
+             "source": "docs/modules/workflow/step-actions.md",
+             "children": [
+              {
+               "name": "PassAdhocToNewWF",
+               "kind": "field",
+               "detail": "Vendor definition: \"assign the ad hoc member assigned to this task to the first task in the new work flow kicked off by this step.\"",
+               "confidence": "observed",
+               "source": "docs/modules/workflow/step-actions.md",
+               "children": [
+                {
+                 "name": "WF-R-022 — ad-hoc assignee passthrough",
+                 "kind": "rule",
+                 "detail": "If set, the parent workflow's ad-hoc assignee becomes the ad-hoc assignee of the first step of the newly spawned workflow.",
+                 "confidence": "observed",
+                 "source": "docs/modules/workflow/rules.md",
+                 "children": []
+                }
+               ]
+              },
+              {
+               "name": "PassPriorityToNewWF",
+               "kind": "field",
+               "detail": "Vendor definition: \"transfer the priority level of this work flow to a new work flow that is kicked off by this step.\"",
+               "confidence": "observed",
+               "source": "docs/modules/workflow/step-actions.md",
+               "children": [
+                {
+                 "name": "WF-R-020 — priority passthrough",
+                 "kind": "rule",
+                 "detail": "If set, the parent workflow's priority overrides the spawned workflow's own template default (WF-R-019).",
+                 "confidence": "observed",
+                 "source": "docs/modules/workflow/rules.md",
+                 "children": []
+                }
+               ]
+              }
+             ]
+            },
+            {
+             "name": "A spawned workflow is a permanent orphan",
+             "kind": "constraint",
+             "detail": "Combined with the missing parent pointer, an auditor looking at a spawned workflow instance has no way to trace which parent process, step or button created it. For a SOX/SOC-2 rebuild this is a defect to fix on day one — D6 recommends every instance record its origin (parent instance, parent step, parent action, or the kick-off form/task) explicitly.",
+             "confidence": "derived",
+             "source": "docs/modules/workflow/asg-edgeplus-mapping.md",
+             "children": []
+            }
+           ]
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "name": "PAGE_LAYOUT",
+       "kind": "code-value",
+       "detail": "A workflow is kicked off by completion of a form — a person fills out a page layout and presses Submit. This is the ordinary case: three of the four live workflows are configured this way, each with its own dedicated Submit layout.",
+       "confidence": "observed",
+       "source": "docs/modules/workflow/data-model.md",
+       "children": [
+        {
+         "name": "WorkFlowTemplate.PageLayoutID",
+         "kind": "field",
+         "detail": "The template column labelled \"Active Layout\" in the catalog, but its vendor definition says something more specific: \"Select the form whose completion you want to have kick off this work flow.\" It is the kick-off form's layout, not a general home screen for the workflow.",
+         "confidence": "observed",
+         "source": "docs/modules/workflow/data-model.md",
+         "children": [
+          {
+           "name": "This is the kick-off form's layout, not the workflow's own layout",
+           "kind": "constraint",
+           "detail": "A naming trap for anyone reading only the catalog label. Following this FK to PageLayout.CodeIssueTypeID and on to CodeIssueType.IsValidFor* is what actually gives a workflow its list of attachable entity types — WorkFlowTemplate itself carries no attachability columns of its own.",
+           "confidence": "derived",
+           "source": "docs/modules/workflow/data-model.md",
+           "children": [
+            {
+             "name": "sTYPE_FORM_PAGE_LAYOUT",
+             "kind": "type",
+             "detail": "A field type that appears on exactly three fields in the entire 6,158-leaf Manage Data Fields catalog, and all three belong to the workflow engine. The platform treats \"a layout bound to a workflow kick-off or step\" as its own distinct type — structural confirmation, not a naming coincidence.",
+             "confidence": "observed",
+             "source": "docs/modules/layouts-and-forms/forms-vs-pages-vs-layouts.md",
+             "children": [
+              {
+               "name": "The other two fields carrying this type",
+               "kind": "field-group",
+               "detail": "WorkFlowTemplateStep.PageLayoutApproversID and PageLayoutAssigneesID. One kick-off layout lives on the workflow itself; two per-role layouts live on every step — that split, not the type name, is the actual mechanism worth reproducing.",
+               "confidence": "observed",
+               "source": "docs/modules/workflow/template-vs-instance.md",
+               "children": [
+                {
+                 "name": "WF-R-010a — layout-per-step-per-role",
+                 "kind": "rule",
+                 "detail": "The step renders one layout per role, not one layout per step. A Form type therefore owns many layouts named after the step they serve — \"LAR Initial Review of Lease Admin Request\", \"LAR Abstract Lease Document\", and so on — and the same underlying record shows an entirely different field surface to the approver than to the assignee at the same stage of its life.",
+                 "confidence": "observed",
+                 "source": "docs/modules/workflow/rules.md",
+                 "children": [
+                  {
+                   "name": "The picker is an unconstrained foreign key",
+                   "kind": "constraint",
+                   "detail": "Nothing ties a layout to the Form Type it is meant to serve. An administrator can bind any layout to any step, and the naming convention (LAR/ASR/RPR prefixes) is the only thing keeping the system coherent in practice — exactly the sync burden ASG's own users report: \"For every step the administrator must manually select the correct Form Layouts for both Assignees and Approvers.\"",
+                   "confidence": "observed",
+                   "source": "docs/modules/workflow/template-vs-instance.md",
+                   "children": [
+                    {
+                     "name": "D12a — enforce the binding in ASG Edge+",
+                     "kind": "rule",
+                     "detail": "Keep the layout-per-step-per-role mechanism exactly as Lucernex built it, but constrain the picker so only layouts whose Form Type matches the step's Form Type can be selected. The mechanism is right; only the missing guard rail is wrong, and fixing it removes the reported cognitive load entirely.",
+                     "confidence": "derived",
+                     "source": "docs/modules/workflow/asg-edgeplus-mapping.md",
+                     "children": []
+                    }
+                   ]
+                  }
+                 ]
+                }
+               ]
+              }
+             ]
+            }
+           ]
+          }
+         ]
+        },
+        {
+         "name": "WF-R-005 — a workflow's attachability is inherited, not declared",
+         "kind": "rule",
+         "detail": "The workflow's own attachability is whatever its kick-off form's Form Type declares. WorkFlowTemplate carries no IsValidFor* columns of its own — the chain runs through PageLayoutID to the layout's Form Type.",
+         "confidence": "derived",
+         "source": "docs/modules/workflow/rules.md",
+         "children": []
+        },
+        {
+         "name": "WF-R-015 — form completion creates the instance",
+         "kind": "rule",
+         "detail": "When a form matching the configured kick-off layout is completed, a WorkFlow row is created with KickOffIssueID pointing at that form.",
+         "confidence": "observed",
+         "source": "docs/modules/workflow/rules.md",
+         "children": []
+        }
+       ]
+      },
+      {
+       "name": "STATUS_CHANGE",
+       "kind": "code-value",
+       "detail": "A workflow is kicked off when a watched record's status changes — the one trigger method Lucernex's own administrator help text never mentions at all. Its existence is the only thing that explains two otherwise-mysterious columns sitting on the workflow template.",
+       "confidence": "observed",
+       "source": "docs/modules/workflow/data-model.md",
+       "children": [
+        {
+         "name": "StatusChangeID / StatusChangeType",
+         "kind": "field-group",
+         "detail": "Two columns with no vendor help text at all, sitting on WorkFlowTemplate next to the ordinary kick-off fields. They only make sense once STATUS_CHANGE is known to exist: this is where an administrator would configure which status transition fires the workflow.",
+         "confidence": "derived",
+         "source": "docs/modules/workflow/data-model.md",
+         "children": [
+          {
+           "name": "WF-R-014a — status-change kick-off",
+           "kind": "rule",
+           "detail": "When a watched record's status changes to the configured value, a WorkFlow row is created. This is the only reading that explains StatusChangeID/StatusChangeType, since no vendor text describes them directly.",
+           "confidence": "derived",
+           "source": "docs/modules/workflow/rules.md",
+           "children": []
+          }
+         ]
+        },
+        {
+         "name": "The vendor help text is out of date",
+         "kind": "constraint",
+         "detail": "The administrator-facing documentation states plainly \"there are three ways a work flow can be kicked off\" and lists the other three, silently omitting this one. The documentation had fallen behind the product's own schema.",
+         "confidence": "observed",
+         "source": "docs/modules/workflow/README.md",
+         "children": []
+        }
+       ]
+      },
+      {
+       "name": "TASK",
+       "kind": "code-value",
+       "detail": "A workflow is kicked off by completion of a schedule task. The mechanism is real in the schema, but it has never fired in this tenant, because no schedule-task step exists anywhere in the live configuration.",
+       "confidence": "observed",
+       "source": "docs/modules/workflow/data-model.md",
+       "children": [
+        {
+         "name": "WorkFlowTemplate.TaskName",
+         "kind": "field",
+         "detail": "Vendor definition: \"Select the schedule task whose completion you want to have kick off this work flow.\"",
+         "confidence": "observed",
+         "source": "docs/modules/workflow/data-model.md",
+         "children": [
+          {
+           "name": "WF-R-016 — task completion kick-off",
+           "kind": "rule",
+           "detail": "When the named schedule task completes, a WorkFlow row is created with KickOffTaskID pointing at it.",
+           "confidence": "observed",
+           "source": "docs/modules/workflow/rules.md",
+           "children": []
+          }
+         ]
+        },
+        {
+         "name": "Zero Task steps exist in the live tenant",
+         "kind": "constraint",
+         "detail": "All 19 configured steps across all four live workflows are Form steps. The \"add task step\" button exists on the workflow grid and the capability is real, but nobody at ASG has ever used it — which is itself the finding: this half of the engine may be safe to drop entirely.",
+         "confidence": "observed",
+         "source": "docs/modules/workflow/issues-and-tasks.md",
+         "children": [
+          {
+           "name": "B1 — recommend dropping Task steps from ASG Edge+ scope",
+           "kind": "rule",
+           "detail": "If Tasks are out of scope, IsFormStep collapses to always-true, and TaskName, TaskID, AutoAdjustTaskDates, SetTaskInProcess, SetTaskCanceled, plus the entire Task/TaskGroup/TaskItem/TaskPredecessor schedule family, can leave the rebuild's scope entirely — removing roughly half the step model.",
+           "confidence": "derived",
+           "source": "docs/modules/workflow/asg-edgeplus-mapping.md",
+           "children": []
+          }
+         ]
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "name": "WF-R-014 — four kick-off methods, not three",
+     "kind": "rule",
+     "detail": "A workflow may be kicked off any of four ways per the GraphQL enum. This corrects the vendor help text, which names only three and omits STATUS_CHANGE.",
+     "confidence": "observed",
+     "source": "docs/modules/workflow/rules.md",
+     "children": []
+    },
+    {
+     "name": "WF-R-018 — polymorphic binding to the triggering record",
+     "kind": "rule",
+     "detail": "WorkFlow.TriggerCodeSQLTableID + TriggerObjectID together read \"this workflow was triggered by row TriggerObjectID of table TriggerCodeSQLTableID\" — a table-name-plus-primary-key polymorphic reference. Both columns are catalog-only, absent from the physical database extract, which is either an extraction gap or evidence they are computed rather than stored (OQ-1).",
+     "confidence": "derived",
+     "source": "docs/modules/workflow/rules.md",
+     "children": []
+    }
+   ]
+  },
+  {
+   "name": "Template versus instance — the definition tier",
+   "kind": "submodule",
+   "detail": "Instantiation is not a copy. At the header level WorkFlowTemplate and WorkFlow share almost nothing but the foreign key. At the step level exactly 20 of 59 fields are frozen onto the running instance while 35 stay behind and are read live off the mutable template — a hybrid model that means editing a live template changes some behaviour of every running instance and none of the rest. Any rebuild that picks one discipline, pure snapshot or pure live-read, will diverge from Lucernex on migrated data.",
+   "confidence": "derived",
+   "source": "docs/modules/workflow/template-vs-instance.md",
+   "children": [
+    {
+     "name": "WorkFlowTemplate — the workflow definition",
+     "kind": "entity",
+     "detail": "25 columns describing a workflow before anyone runs it: its name, its kick-off configuration, and a handful of behaviour flags that — unusually — are read live off this very record even after instances are running.",
+     "confidence": "observed",
+     "source": "docs/modules/workflow/data-model.md",
+     "children": [
+      {
+       "name": "WF-R-001 — template save and revision",
+       "kind": "rule",
+       "detail": "WorkFlowTemplateName is required; every save increments RevNumber by one and stamps the modifying member and date. RevNumber is a modification counter, not a version — there is no draft/published state and no effective date anywhere on the template.",
+       "confidence": "observed",
+       "source": "docs/modules/workflow/rules.md",
+       "children": []
+      },
+      {
+       "name": "WF-R-002 — a default priority is required",
+       "kind": "rule",
+       "detail": "DefaultWFCodePriorityID must be set from Priority Code; every workflow instance inherits it unless a spawning action overrides it.",
+       "confidence": "observed",
+       "source": "docs/modules/workflow/rules.md",
+       "children": []
+      },
+      {
+       "name": "LimitByEntity",
+       "kind": "field",
+       "detail": "Vendor definition: \"If this value is 1, the work flow template is only available for certain portfolios. If this value is 0, the work flow template is available for all portfolios.\"",
+       "confidence": "observed",
+       "source": "docs/modules/workflow/data-model.md",
+       "children": [
+        {
+         "name": "WF-R-003 — availability gate",
+         "kind": "rule",
+         "detail": "A template restricted by LimitByEntity is offered only for its listed portfolios. The join table that would store which portfolios does not appear anywhere in the 223-object schema — where the restriction list actually lives is unresolved (OQ-3).",
+         "confidence": "observed",
+         "source": "docs/modules/workflow/rules.md",
+         "children": []
+        }
+       ]
+      },
+      {
+       "name": "The escape hatch: IsEnabledLxJSCode",
+       "kind": "field",
+       "detail": "Vendor definition: \"This field is where you will enter your custom JavaScript used to kick off conditional work flows.\" It appears twice in the whole engine — here, and again on the action row — and both instances mean the same thing: conditional logic is tenant JavaScript in a text column, with no sandbox, no signature, no version and no test surface.",
+       "confidence": "observed",
+       "source": "docs/modules/workflow/data-model.md",
+       "children": [
+        {
+         "name": "WF-R-012 — the engine's only conditional-logic mechanism",
+         "kind": "rule",
+         "detail": "When present, this JavaScript executes — for conditional kick-off on the template, or as a custom action on a step action. There is no other conditional construct anywhere in the 223-object schema.",
+         "confidence": "observed",
+         "source": "docs/modules/workflow/rules.md",
+         "children": [
+          {
+           "name": "B8 — what replaces this in ASG Edge+?",
+           "kind": "constraint",
+           "detail": "A sandboxed expression language, a rules service, or nothing at all are the three candidates. Some tenants will have real production JavaScript here that must be reimplemented, not merely translated.",
+           "confidence": "derived",
+           "source": "docs/modules/workflow/asg-edgeplus-mapping.md",
+           "children": []
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "name": "AutoAssignInitiator",
+       "kind": "field",
+       "detail": "Vendor definition: \"the system will automatically assign the person who kicks off the work flow as an ad hoc assignee to the kickoff step or form, and on any step that requires an ad hoc assignee in the work flow.\"",
+       "confidence": "observed",
+       "source": "docs/modules/workflow/data-model.md",
+       "children": [
+        {
+         "name": "WF-R-021 — auto-assign the initiator",
+         "kind": "rule",
+         "detail": "When set, the workflow's initiator is written into WorkFlow.AdhocMemberID at instantiation and used for every later step that declares an ad-hoc assignee.",
+         "confidence": "observed",
+         "source": "docs/modules/workflow/rules.md",
+         "children": []
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "name": "WorkFlowTemplateStep — one step of the definition",
+     "kind": "entity",
+     "detail": "59 fields (55 physical plus 4 catalog-only) describing everything a step can be configured to do before anyone runs it: who acts, what they see, how long they have, and what happens if they are late. The live admin grid renders only six of these 59 as columns — roughly 90% of the step model has never been directly observed in the running product.",
+     "confidence": "observed",
+     "source": "docs/modules/workflow/data-model.md",
+     "children": [
+      {
+       "name": "Identity & ordering",
+       "kind": "field-group",
+       "detail": "The step's name and its place in the sequence — seven columns, mostly bookkeeping.",
+       "confidence": "observed",
+       "source": "docs/modules/workflow/data-model.md",
+       "children": [
+        {
+         "name": "WF-R-007 — steps are ordered by a plain integer",
+         "kind": "rule",
+         "detail": "StepNumber and WorkFlowTemplateStepName are both required, and the step is ordered within its template by StepNumber. Uniqueness of StepNumber within one template is not enforced by any observed constraint.",
+         "confidence": "observed",
+         "source": "docs/modules/workflow/rules.md",
+         "children": []
+        }
+       ]
+      },
+      {
+       "name": "IsFormStep",
+       "kind": "field",
+       "detail": "Vendor definition: \"This field has one of two values: Form Step or Task Step.\" This single Boolean is the fork between the two work-object families the engine can route: a Form, or a schedule Task.",
+       "confidence": "observed",
+       "source": "docs/modules/workflow/data-model.md",
+       "children": [
+        {
+         "name": "WF-R-008 — form step vs task step",
+         "kind": "rule",
+         "detail": "True selects a Form step, rendering a page layout and collecting a decision; false selects a Task step, working a schedule item with no form surface at all.",
+         "confidence": "observed",
+         "source": "docs/modules/workflow/rules.md",
+         "children": []
+        }
+       ]
+      },
+      {
+       "name": "SLA & notification timing — the escalation family",
+       "kind": "field-group",
+       "detail": "Fourteen fields that give each step two independent clocks — one for approvers, one for assignees — each with a deadline and two escalation tiers. This is the entire timing model the engine has, and every single timer in it ends the same way: it sends more email and changes nothing else.",
+       "confidence": "observed",
+       "source": "docs/modules/workflow/data-model.md",
+       "children": [
+        {
+         "name": "DurationDaysApprovers",
+         "kind": "field",
+         "detail": "Vendor definition: \"Enter how long in days an approver has to complete a step in this field.\" Drives the instance's DueDateApprovers.",
+         "confidence": "observed",
+         "source": "docs/modules/workflow/data-model.md",
+         "children": [
+          {
+           "name": "WF-R-038 — due date computation",
+           "kind": "rule",
+           "detail": "DueDateApprovers = StartDate + DurationDaysApprovers; DueDateAssignees is computed the same way for the assignee clock; DueDate is whichever of the two governs the step overall.",
+           "confidence": "derived",
+           "source": "docs/modules/workflow/rules.md",
+           "children": []
+          }
+         ]
+        },
+        {
+         "name": "DaysUntilWarnApprovers",
+         "kind": "field",
+         "detail": "Vendor definition: \"Enter how many days there will be before an approver receives a notification that this step has not been completed in this field.\" The gentler of the two escalation tiers — it notifies the actor, not a manager.",
+         "confidence": "observed",
+         "source": "docs/modules/workflow/data-model.md",
+         "children": []
+        },
+        {
+         "name": "DaysUntilAlertApprovers",
+         "kind": "field",
+         "detail": "Vendor definition: \"Enter how many days there will be before a manager is notified that this step has not been completed in this field.\" The harsher escalation tier — a manager, not the approver, is told the step is overdue. Tracing this one field's runtime effect all the way through is representative of everything the engine's timing model can and cannot do.",
+         "confidence": "observed",
+         "source": "docs/modules/workflow/routing-and-approvals.md",
+         "children": [
+          {
+           "name": "Number",
+           "kind": "type",
+           "detail": "A plain day count with no calendar semantics of its own on this object. A sibling object, HolidaySchedule, exists for the schedule module's task durations, but whether the workflow engine's day counts honour it at all is unconfirmed.",
+           "confidence": "observed",
+           "source": "docs/modules/workflow/routing-and-approvals.md",
+           "children": [
+            {
+             "name": "Working days vs calendar days is unresolved for workflow steps",
+             "kind": "constraint",
+             "detail": "The schedule module states explicitly that task durations count working days only. No equivalent statement exists for workflow step durations, and getting this wrong shifts every migrated due date in a rebuild.",
+             "confidence": "derived",
+             "source": "docs/modules/workflow/routing-and-approvals.md",
+             "children": [
+              {
+               "name": "ComputedAlertDateApprovers",
+               "kind": "field",
+               "detail": "The actual calendar date this offset produces, materialised once the step starts and stored on the running instance rather than recomputed on every read. It is catalog-only — present in the Manage Data Fields list but absent from the raw database extract — meaning it is most likely a computed value rather than a stored column.",
+               "confidence": "observed",
+               "source": "docs/modules/workflow/data-model.md",
+               "children": [
+                {
+                 "name": "WF-R-039 — the hidden escalation calendar is materialised at step start",
+                 "kind": "rule",
+                 "detail": "All five Computed*Date fields — warn and alert, for both roles, plus one notification due date — are calculated the moment the step becomes current, from the DaysUntilWarn*/DaysUntilAlert* offsets, and then simply sit there until the system clock reaches them.",
+                 "confidence": "derived",
+                 "source": "docs/modules/workflow/rules.md",
+                 "children": [
+                  {
+                   "name": "WF-R-047 — what actually happens when the alert date arrives",
+                   "kind": "rule",
+                   "detail": "A notification goes to a manager. That is the entire effect. Vendor definition: \"before a manager is notified that this step has not been completed.\" The step's status does not change, nobody is reassigned, and nothing is auto-approved or auto-denied.",
+                   "confidence": "observed",
+                   "source": "docs/modules/workflow/rules.md",
+                   "children": [
+                    {
+                     "name": "Escalation only ever notifies — it never acts",
+                     "kind": "constraint",
+                     "detail": "Across every timer the engine has, the only observable effect of a missed deadline is more email. ASG's own users have already named the gap: \"no proactive alerts for at-risk items beyond the basic duration triggers.\" The recommended fix for ASG Edge+ is a genuine escalation ladder — notify, then reassign to a delegate, then escalate to a supervisor, then optionally auto-decide, configurable per step (D7).",
+                     "confidence": "derived",
+                     "source": "docs/modules/workflow/asg-edgeplus-mapping.md",
+                     "children": []
+                    }
+                   ]
+                  }
+                 ]
+                }
+               ]
+              }
+             ]
+            }
+           ]
+          }
+         ]
+        },
+        {
+         "name": "DaysUntilWarnAssignees / DaysUntilAlertAssignees",
+         "kind": "field-group",
+         "detail": "The identical pair of timers for the assignee role, running independently of the approver clock on the same step.",
+         "confidence": "observed",
+         "source": "docs/modules/workflow/data-model.md",
+         "children": []
+        },
+        {
+         "name": "EMailMessage",
+         "kind": "field",
+         "detail": "One free-text message body, shared by every notification this step or any of its actions ever sends. There is no subject line, no merge-field syntax, and no per-audience wording anywhere in the engine.",
+         "confidence": "observed",
+         "source": "docs/modules/workflow/data-model.md",
+         "children": []
+        }
+       ]
+      },
+      {
+       "name": "Step behaviour & task coupling",
+       "kind": "field-group",
+       "detail": "Nine fields governing what happens at the moment a step starts: which layouts render, whether the next step launches automatically, and whether a linked schedule task is nudged in step.",
+       "confidence": "observed",
+       "source": "docs/modules/workflow/data-model.md",
+       "children": [
+        {
+         "name": "AutoLaunchNextStep",
+         "kind": "field",
+         "detail": "Vendor definition: \"Select this check box if you want Lucernex to automatically launch the next step if it is a form.\" Read live off the mutable template even after instances are running.",
+         "confidence": "observed",
+         "source": "docs/modules/workflow/data-model.md",
+         "children": []
+        },
+        {
+         "name": "SetTaskInProcess / SetTaskCanceled",
+         "kind": "field-group",
+         "detail": "Two flags whose labels say \"task\" but whose vendor definitions say \"work flow step\" — a direct contradiction inside the product's own documentation.",
+         "confidence": "observed",
+         "source": "docs/modules/workflow/data-model.md",
+         "children": [
+          {
+           "name": "WF-R-040 — mark the task in process at step start",
+           "kind": "rule",
+           "detail": "Vendor definition: \"set the work flow step status to 'In Process' when the step starts.\" Whether this writes Task.CodeTaskStatusID or WorkFlowStep.CodeWorkFlowStatusID is contradicted between the field label and its own definition (OQ-29).",
+           "confidence": "observed",
+           "source": "docs/modules/workflow/rules.md",
+           "children": []
+          },
+          {
+           "name": "WF-R-041 — adjust the linked task's dates",
+           "kind": "rule",
+           "detail": "When AutoAdjustTaskDates is set, the linked schedule task's dates are rewritten to match the step's own start and due dates.",
+           "confidence": "observed",
+           "source": "docs/modules/workflow/rules.md",
+           "children": []
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "name": "Dead placeholders",
+       "kind": "field-group",
+       "detail": "Eight fields — the RunAt* approver hooks and their catalog-only scheduled-job siblings — that every source names as \"a placeholder for an upcoming feature.\" Their naming (start/complete × approver × scheduled-job) reveals the intended design of pre- and post-step hooks, but the feature never shipped.",
+       "confidence": "observed",
+       "source": "docs/modules/workflow/data-model.md",
+       "children": [
+        {
+         "name": "WF-R-035 — UnassignedApproverID has no effect",
+         "kind": "rule",
+         "detail": "Both this field and Member.IsUnassignedWorkFlowApprover are documented as unimplemented placeholders.",
+         "confidence": "observed",
+         "source": "docs/modules/workflow/rules.md",
+         "children": []
+        },
+        {
+         "name": "WF-R-036 — the RunAt* family has no effect",
+         "kind": "rule",
+         "detail": "All eight RunAtStart*/RunAtComplete*/runAt*ScheduledJob* fields are unimplemented; a rebuild should not implement them either, though the naming pattern is worth recording as a design intent that never shipped.",
+         "confidence": "observed",
+         "source": "docs/modules/workflow/rules.md",
+         "children": []
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "name": "WorkFlowTemplateStepAction — the action buttons",
+     "kind": "entity",
+     "detail": "38 fields (37 physical plus one catalog-only) — the object where the engine's entire behavioural expressiveness lives, and it has never been directly observed in the running product. Of the 38 fields, 11 are bookkeeping and 8 are dead or finance-specific; the real behavioural surface is 19 flags expressing exactly six kinds of effect.",
+     "confidence": "observed",
+     "source": "docs/modules/workflow/step-actions.md",
+     "children": [
+      {
+       "name": "WorkFlowTemplateStepActionName",
+       "kind": "field",
+       "detail": "What the approver sees on the button. There is no controlled vocabulary anywhere in the schema — action names are free text per template.",
+       "confidence": "observed",
+       "source": "docs/modules/workflow/step-actions.md",
+       "children": [
+        {
+         "name": "WF-R-011 — no standard action vocabulary",
+         "kind": "rule",
+         "detail": "The name is required and free text. This is why ASG reports \"there is no obvious, standard Send Back to Previous Step or Request Rework action\" — the engine has no notion of a canonical set of actions at all.",
+         "confidence": "observed",
+         "source": "docs/modules/workflow/rules.md",
+         "children": []
+        }
+       ]
+      },
+      {
+       "name": "Decision semantics",
+       "kind": "field-group",
+       "detail": "Four fields expressing what an approver's button press actually decides: approve or not, whether everyone must agree, and whether a signature is required.",
+       "confidence": "observed",
+       "source": "docs/modules/workflow/step-actions.md",
+       "children": [
+        {
+         "name": "WF-R-049 — the approver's action is recorded",
+         "kind": "rule",
+         "detail": "Vendor definition: \"The approver should select the appropriate action for the work flow step from this field.\" Selecting an action stamps the button pressed, a comment, the date, and HasTakenAction = true onto the approver's own row.",
+         "confidence": "observed",
+         "source": "docs/modules/workflow/rules.md",
+         "children": []
+        },
+        {
+         "name": "WF-R-050 / WF-R-051 — approval is a binary",
+         "kind": "rule",
+         "detail": "Vendor definition of IsApprovalAction: \"Specifies whether the current action is an approval or not. If it is not, then the step is either restarted or denied.\" The engine knows approve vs not-approve and nothing finer; denial and send-back are the same class, differing only in what RestartStep and MoveToStepNumber do next.",
+         "confidence": "observed",
+         "source": "docs/modules/workflow/rules.md",
+         "children": []
+        },
+        {
+         "name": "WF-R-052 — signature requirement",
+         "kind": "rule",
+         "detail": "RequireApproverSig forces WorkFlowStepApprover.SignatureDate to be captured before the action counts as taken.",
+         "confidence": "observed",
+         "source": "docs/modules/workflow/rules.md",
+         "children": []
+        },
+        {
+         "name": "WF-R-053 — unanimous approval can deadlock with no recovery",
+         "kind": "rule",
+         "detail": "Vendor definition of RequireAllApprovers: \"require all qualified approvers on the entity to take the same action on the work flow step for the work flow to progress.\" If qualified approvers choose different actions, the unanimity condition can never be satisfied. This is ASG's loudest reported defect: \"if Dana takes one action, Jen takes another, and then Jess takes a third option, the workflow can't move forward.\"",
+         "confidence": "observed",
+         "source": "docs/modules/workflow/rules.md",
+         "children": [
+          {
+           "name": "D2 — an explicit quorum policy and conflict outcome",
+           "kind": "constraint",
+           "detail": "Recommended for ASG Edge+: unanimous, first-decisive, N-of-M, or weighted quorum per step, plus an explicit conflict outcome such as \"deny wins\" or \"escalate to a named resolver.\" Migration maps RequireAllApprovers = true to unanimous and false to first-decisive, matching today's behaviour exactly.",
+           "confidence": "derived",
+           "source": "docs/modules/workflow/asg-edgeplus-mapping.md",
+           "children": []
+          }
+         ]
+        },
+        {
+         "name": "WF-R-054 — the default is first-decisive",
+         "kind": "rule",
+         "detail": "When RequireAllApprovers is false, the first approver to act decides for the whole step. The vendor definition states only the true case, so this reading is Inferred, not confirmed.",
+         "confidence": "inferred",
+         "source": "docs/modules/workflow/rules.md",
+         "children": []
+        }
+       ]
+      },
+      {
+       "name": "Control flow",
+       "kind": "field-group",
+       "detail": "Three fields — the entire control-flow vocabulary the engine has. The workflow graph is a state machine over plain integers: (StepNumber, ActionID) maps to a next StepNumber, and nothing materialises that graph anywhere.",
+       "confidence": "observed",
+       "source": "docs/modules/workflow/step-actions.md",
+       "children": [
+        {
+         "name": "WF-R-058 — jump to a specific step",
+         "kind": "rule",
+         "detail": "MoveToStepNumber is a plain integer the administrator types in. A lower number is a send-back; nothing in the schema distinguishes it from ordinary forward movement, so no report can tell rework loops apart from progress.",
+         "confidence": "observed",
+         "source": "docs/modules/workflow/rules.md",
+         "children": []
+        },
+        {
+         "name": "WF-R-059 — auto-launch the next step",
+         "kind": "rule",
+         "detail": "Vendor definition: \"automatically launch the next step if it is a form.\" Precedence against MoveToStepNumber and RestartStep is unstated (OQ-15, OQ-16).",
+         "confidence": "observed",
+         "source": "docs/modules/workflow/rules.md",
+         "children": []
+        },
+        {
+         "name": "WF-R-057 — restarting a step",
+         "kind": "rule",
+         "detail": "RestartStep sets WorkFlowStep.IsReDo = true and pushes the current submission round into the single Prior* slot. Only one prior round survives; a third round overwrites the second.",
+         "confidence": "observed",
+         "source": "docs/modules/workflow/rules.md",
+         "children": []
+        }
+       ]
+      },
+      {
+       "name": "Record-state write",
+       "kind": "field-group",
+       "detail": "Three fields, and they are the engine's only field-write capability. There is no generic \"set field X to value Y\" action anywhere.",
+       "confidence": "observed",
+       "source": "docs/modules/workflow/step-actions.md",
+       "children": [
+        {
+         "name": "WF-R-055 — stamping the form's business status",
+         "kind": "rule",
+         "detail": "CodeLastActionStatusID writes Issue.CodeLastActionStatusID and Issue.LastActionStatusChangeDate. This is the only field the engine can write on the record it is routing.",
+         "confidence": "derived",
+         "source": "docs/modules/workflow/rules.md",
+         "children": []
+        },
+        {
+         "name": "WF-R-056 — locking the record after a decision",
+         "kind": "rule",
+         "detail": "Vendor definition of DisableEditAfterDecision: \"prevents users from making any more changes after the step status is changed to Approved or Denied.\" This is also the only place in the whole corpus that names two concrete step-status values.",
+         "confidence": "observed",
+         "source": "docs/modules/workflow/rules.md",
+         "children": []
+        }
+       ]
+      },
+      {
+       "name": "Notification fan-out",
+       "kind": "field-group",
+       "detail": "Five Boolean flags that together enumerate the engine's complete audience model on action completion — and notifiees are conspicuously not among them.",
+       "confidence": "observed",
+       "source": "docs/modules/workflow/step-actions.md",
+       "children": [
+        {
+         "name": "WF-R-060 — the five completion audiences",
+         "kind": "rule",
+         "detail": "NotifyStepAssigneesComplete, NotifyStepApproversComplete, NotifyPriorAssigneesComplete, NotifyPriorApproversComplete and NotifyInitiatorComplete are the complete set. All five share the step's single EMailMessage body and its two channel switches; there is no per-audience wording.",
+         "confidence": "observed",
+         "source": "docs/modules/workflow/rules.md",
+         "children": []
+        },
+        {
+         "name": "WF-R-062 — closing the workflow",
+         "kind": "rule",
+         "detail": "An action with CloseWorkFlow = true sets WorkFlow.IsCompleted, ClosedDate and a terminal CodeWorkFlowStatusID, and fires the three template-level completion notifications read live off WorkFlowTemplate.",
+         "confidence": "observed",
+         "source": "docs/modules/workflow/rules.md",
+         "children": []
+        }
+       ]
+      },
+      {
+       "name": "Cost management side effects — 6 fields, out of scope",
+       "kind": "field-group",
+       "detail": "⊘ Cost Management and Budgeting are out of scope (2026-09-10). AutoCopyAmounts, AutoClearAmounts, FifoPayApp, GenPurchOrderLineSeqNum, SendPaymentInfo and bidAwdApCodeLastActionStatusID are retained, not deleted, because they are the entire set of hard-coded business operations the engine can perform — omitting them would make the engine look more general than it is. Do not build Cost Management functionality from this list. The structural point survives the scope cut: the engine has no general mechanism for passing data from one step to the next; its single exception is hard-coded to an out-of-scope module, so ASG Edge+ must design step-to-step data flow from scratch.",
+       "confidence": "observed",
+       "source": "docs/modules/workflow/step-actions.md",
+       "children": []
+      }
+     ]
+    },
+    {
+     "name": "The 20 / 35 / 30 split — a hybrid snapshot model",
+     "kind": "constraint",
+     "detail": "At the step level, exactly 20 configuration fields are copied onto the running instance at creation time; 35 stay behind on the template and are read live through the instance's foreign key; 30 more exist only on the instance itself. The consequence: editing a live template changes running instances for the un-snapshotted half (routing rules, AutoLaunchNextStep, task-coupling flags, notification-start flags) and does nothing for the snapshotted half (SLA durations, layout ids, the message body).",
+     "confidence": "derived",
+     "source": "docs/modules/workflow/template-vs-instance.md",
+     "children": [
+      {
+       "name": "WF-R-024 — what gets copied at step instantiation",
+       "kind": "rule",
+       "detail": "Twenty fields are copied verbatim: StepNumber, TaskName, IsFormStep, Priority, both PageLayout* ids, both Approver/Assignee/Notifiee member lists, both duration pairs, all four warn/alert day-offsets, both EMailAlert flags, both channel switches, and EMailMessage.",
+       "confidence": "derived",
+       "source": "docs/modules/workflow/rules.md",
+       "children": []
+      },
+      {
+       "name": "WF-R-013 — the un-snapshotted fields are read live",
+       "kind": "rule",
+       "detail": "The 35 template-only fields — routing rules, AutoLaunchNextStep, SetTaskInProcess, SetTaskCanceled, AutoAdjustTaskDates, both NotifyStep*Started flags, and the three header-level Notify*Complete flags — are read through WorkFlowStep.WorkFlowTemplateStepID and therefore change behaviour on every running instance the moment the template is edited.",
+       "confidence": "derived",
+       "source": "docs/modules/workflow/rules.md",
+       "children": [
+        {
+         "name": "D1 — version templates; pin every instance to a version",
+         "kind": "rule",
+         "detail": "Non-deterministic instance behaviour — where the rule that governs a running approval can change mid-flight — is unauditable, and SOX/SOC-2 will not accept \"the rule changed under the running approval.\" Migrated Lucernex instances carry no version and must be pinned to a synthetic \"as imported\" version.",
+         "confidence": "derived",
+         "source": "docs/modules/workflow/asg-edgeplus-mapping.md",
+         "children": []
+        }
+       ]
+      },
+      {
+       "name": "One thing Lucernex freezes correctly: the layout",
+       "kind": "constraint",
+       "detail": "PageLayoutApproversID and PageLayoutAssigneesID are among the 20 snapshotted fields, and their type narrows across the boundary — a workflow-bound layout reference on the template, a plain layout id on the instance. An administrator editing layouts cannot change what a half-completed approval shows. Lucernex freezes the presentation and floats the behaviour; ASG Edge+ should freeze both.",
+       "confidence": "derived",
+       "source": "docs/modules/workflow/template-vs-instance.md",
+       "children": []
+      }
+     ]
+    },
+    {
+     "name": "WorkFlow — the running instance",
+     "kind": "entity",
+     "detail": "21 fields in union with the catalog. Shares almost nothing with its template beyond the foreign key and four bookkeeping columns — not even the name.",
+     "confidence": "observed",
+     "source": "docs/modules/workflow/data-model.md",
+     "children": [
+      {
+       "name": "WF-R-019 — priority is seeded from the template",
+       "kind": "rule",
+       "detail": "WorkFlow.WorkFlowCodePriorityID is seeded from the template's DefaultWFCodePriorityID, unless a spawning action overrides it per WF-R-020.",
+       "confidence": "derived",
+       "source": "docs/modules/workflow/rules.md",
+       "children": []
+      },
+      {
+       "name": "WF-R-023 — the initiator is recorded",
+       "kind": "rule",
+       "detail": "InitiatedByMemberID is set to whoever triggered the kick-off.",
+       "confidence": "observed",
+       "source": "docs/modules/workflow/rules.md",
+       "children": []
+      },
+      {
+       "name": "Termination is expressed three ways at once",
+       "kind": "constraint",
+       "detail": "IsCompleted (Boolean), CodeWorkFlowStatusID (dropdown) and ClosedDate (Date) are three independent columns nothing in the schema forces to agree, plus Inactive as a fourth, orthogonal soft-delete flag.",
+       "confidence": "derived",
+       "source": "docs/modules/workflow/data-model.md",
+       "children": []
+      }
+     ]
+    },
+    {
+     "name": "WorkFlowStep — one running step",
+     "kind": "entity",
+     "detail": "54 fields in union. Carries three parallel date tracks — actual, deadline, and escalation — and a two-slot submission ring buffer that retains only the immediately preceding round.",
+     "confidence": "observed",
+     "source": "docs/modules/workflow/data-model.md",
+     "children": [
+      {
+       "name": "WF-R-045 — submission is stamped once per step, not once per assignee",
+       "kind": "rule",
+       "detail": "When an assignee completes the form and presses Submit, SubmitForApprovalByMemberID/Name/Date are set once for the whole step. This is the direct consequence of the approver/assignee asymmetry: assignees do the work, one stamp records that it happened.",
+       "confidence": "derived",
+       "source": "docs/modules/workflow/rules.md",
+       "children": []
+      },
+      {
+       "name": "CheckedOutByMemberID / CheckedOutDate",
+       "kind": "field-group",
+       "detail": "A pessimistic lock a user presses Checkout to acquire, with no expiry column at all.",
+       "confidence": "observed",
+       "source": "docs/modules/workflow/data-model.md",
+       "children": [
+        {
+         "name": "WF-R-048 — checkout has no expiry",
+         "kind": "rule",
+         "detail": "Only the same user or a system administrator can release the lock. This is a directly reported defect: \"People check out by mistake all the time… I have to manually navigate to each item and check it in.\" ASG's own proposed fix is recorded verbatim: rename to Lock/Unlock, grant managers the unlock right, and expire after 48 hours (D9).",
+         "confidence": "observed",
+         "source": "docs/modules/workflow/rules.md",
+         "children": []
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "name": "Routing — who acts on a step",
+   "kind": "submodule",
+   "detail": "Every step routes to three independent audiences — approvers, assignees and notifiees — using a shared principal selector. The three roles are not symmetric: approvers decide and each decision is individually recorded; assignees do the work and only their notification state is recorded; notifiees get an email and no record at all. The live tenant barely exercises the rich role-based routing the schema supports: of 19 configured steps, 17 route to a named Member, one to a Job Title, one Ad Hoc.",
+   "confidence": "observed",
+   "source": "docs/modules/workflow/routing-and-approvals.md",
+   "children": [
+    {
+     "name": "MemberNotifyType — the eight-value principal selector",
+     "kind": "code-table",
+     "detail": "The authoritative, complete form of \"what kind of thing names the people who act.\" It contains all four categories the vendor help names, and refines the vague \"Org Chart Level\" category into five concrete values.",
+     "confidence": "observed",
+     "source": "docs/data-model/graphql-api.md",
+     "children": [
+      {
+       "name": "MEMBERID",
+       "kind": "code-value",
+       "detail": "A named person, chosen at design time. 17 of the 19 live steps use this — the elaborate role-based routing the schema supports is, in production, almost entirely unused.",
+       "confidence": "observed",
+       "source": "docs/modules/workflow/routing-and-approvals.md",
+       "children": []
+      },
+      {
+       "name": "JOBTITLE",
+       "kind": "code-value",
+       "detail": "A job title, resolved at step instantiation against the entity's own roster of members. One live step uses this: User Request step 1, routed to whoever holds the System Administrator title.",
+       "confidence": "observed",
+       "source": "docs/modules/workflow/routing-and-approvals.md",
+       "children": [
+        {
+         "name": "ApproverJobTitleIDList",
+         "kind": "field",
+         "detail": "Vendor definition: \"Select the job titles that should approve this work flow task.\" The template-side list of job titles that qualify.",
+         "confidence": "observed",
+         "source": "docs/modules/workflow/data-model.md",
+         "children": [
+          {
+           "name": "Job Title Code — TableType 2038",
+           "kind": "code-table",
+           "detail": "The tenant-editable master list of job titles, entry point Manage Firm Drop Downs. It is registered as one of the 207 platform code tables, and it is what actually gets stored in every *JobTitleIDList column across the workflow schema — the same table also drives task auto-assignment elsewhere in the product.",
+           "confidence": "observed",
+           "source": "docs/data-model/code-table-registry.md",
+           "children": [
+            {
+             "name": "LinkMemberProjectEntity — the per-entity roster",
+             "kind": "entity",
+             "detail": "The join table that turns \"this job title\" into \"these specific people.\" Every member working an entity has zero or more job titles recorded against them for that entity specifically, separate from their global title in Member Administration.",
+             "confidence": "observed",
+             "source": "docs/modules/workflow/routing-and-approvals.md",
+             "children": [
+              {
+               "name": "Two competing job-title columns on the roster",
+               "kind": "constraint",
+               "detail": "CodeJobTitleIDList (the member's own global titles) versus AssignedCodeJobTitleIDList (titles overridden specifically for this entity) — which one job-title routing actually reads is unresolved, and it matters: a person can hold a role on one contract that they do not hold globally.",
+               "confidence": "inferred",
+               "source": "docs/modules/workflow/routing-and-approvals.md",
+               "children": [
+                {
+                 "name": "WF-R-026 — job-title resolution",
+                 "kind": "rule",
+                 "detail": "The step's ApproverJobTitleIDList is intersected against the roster of the entity the workflow is running on, filtered to members holding a matching job title, and the resulting flat member list is frozen onto the running step as WorkFlowStep.ApproverMemberIDList.",
+                 "confidence": "derived",
+                 "source": "docs/modules/workflow/rules.md",
+                 "children": [
+                  {
+                   "name": "Only one live step actually uses this path",
+                   "kind": "constraint",
+                   "detail": "Of 19 configured steps across four workflows, exactly one — User Request step 1 — resolves by job title. The other 18 either name a person directly or defer the choice to runtime. Role-based routing is real and fully implemented, but ASG barely exercises it.",
+                   "confidence": "observed",
+                   "source": "docs/modules/layouts-and-forms/forms-vs-pages-vs-layouts.md",
+                   "children": [
+                    {
+                     "name": "OQ-42 — deliberate policy, or is role-based routing simply unusable in practice?",
+                     "kind": "rule",
+                     "detail": "The \"all-for-one\" overload defect — every matching person gets added as an approver, and RequireAllApprovers then demands all of them act — is one plausible reason ASG names individuals instead of roles. Answering this decides how much of the elaborate routing engine ASG Edge+ actually needs on day one.",
+                     "confidence": "inferred",
+                     "source": "docs/modules/workflow/routing-and-approvals.md",
+                     "children": []
+                    }
+                   ]
+                  }
+                 ]
+                }
+               ]
+              }
+             ]
+            }
+           ]
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "name": "USERCLASS",
+       "kind": "code-value",
+       "detail": "A user-class membership, resolved against Member.CodeUserClassID. No live step uses this category.",
+       "confidence": "derived",
+       "source": "docs/modules/workflow/routing-and-approvals.md",
+       "children": []
+      },
+      {
+       "name": "ORGCHART_ALL / ORGCHART_LEV1 / ORGCHART_LEV2 / ORGCHART_LEV3 / ORGCHART_MKT",
+       "kind": "code-value",
+       "detail": "Five org-chart variants — every level, or exactly one, two or three supervisor-hops up, or the market level. Member.SupervisorID is the org chart; the enum bounds its usable depth at three explicit hops. From whom the hops are counted (the initiator? the entity's manager?) is unresolved (OQ-22).",
+       "confidence": "observed",
+       "source": "docs/data-model/graphql-api.md",
+       "children": [
+        {
+         "name": "WorkFlowTemplateStepMember.OrgChartLevel",
+         "kind": "field",
+         "detail": "The number storing the chosen depth. This table has no physical database table at all in the schema extract (OQ-2) — the biggest single hole in the routing analysis.",
+         "confidence": "observed",
+         "source": "docs/modules/workflow/routing-and-approvals.md",
+         "children": []
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "name": "AssigneeType — the six-value scope selector",
+     "kind": "code-table",
+     "detail": "A second, orthogonal enum, read not as a kind of principal but as a scope: where to search for one. PARENT, REGION1, REGION2 and MARKET are all ProjectEntity hierarchy concepts; JOB_TITLE is the one value meaningful on either axis, which is the overlap that makes the two enums look like rivals when they are not.",
+     "confidence": "observed",
+     "source": "docs/data-model/graphql-api.md",
+     "children": [
+      {
+       "name": "ALL",
+       "kind": "code-value",
+       "detail": "Search across every entity, unrestricted by hierarchy.",
+       "confidence": "observed",
+       "source": "docs/data-model/graphql-api.md",
+       "children": []
+      },
+      {
+       "name": "PARENT",
+       "kind": "code-value",
+       "detail": "Search on the parent entity one level up the hierarchy.",
+       "confidence": "derived",
+       "source": "docs/modules/workflow/routing-and-approvals.md",
+       "children": []
+      },
+      {
+       "name": "REGION1 / REGION2",
+       "kind": "code-value",
+       "detail": "Search at region level 1 or region level 2, reading ProjectEntity.RegionID / RootRegionID / SubRegionID.",
+       "confidence": "derived",
+       "source": "docs/modules/workflow/routing-and-approvals.md",
+       "children": []
+      },
+      {
+       "name": "MARKET",
+       "kind": "code-value",
+       "detail": "Search at the market level, crossing ProjectEntity.CodeMarketAreaID / CodeMarketTypeID with the org chart.",
+       "confidence": "derived",
+       "source": "docs/modules/workflow/routing-and-approvals.md",
+       "children": []
+      },
+      {
+       "name": "JOB_TITLE",
+       "kind": "code-value",
+       "detail": "The one value shared with the principal-selector enum — meaningful whether read as a kind of principal or as a scope.",
+       "confidence": "observed",
+       "source": "docs/modules/workflow/routing-and-approvals.md",
+       "children": []
+      }
+     ]
+    },
+    {
+     "name": "Approval Level (UI) does not match the routing enums (API)",
+     "kind": "constraint",
+     "detail": "The step editor in Manage Work Flows offers exactly three choices for who approves a step — Member, Job Title, Ad Hoc — while the GraphQL schema behind the same product declares eight values for MemberNotifyType and six for AssigneeType. These are not the same vocabulary rendered two ways: nothing confirms the legacy database column even encodes the modern enum's integers, and the two vocabularies may belong to genuinely different eras of the product (OQ-8).",
+     "confidence": "derived",
+     "source": "docs/modules/workflow/routing-and-approvals.md",
+     "children": []
+    },
+    {
+     "name": "Ad Hoc — a first-class routing category, not a schema-visible enum value",
+     "kind": "code-value",
+     "detail": "The live UI's third Approval Level value appears in neither GraphQL enum. It maps to WorkFlowTemplateStepMember.IsAdhoc and WorkFlow.AdhocMemberID: the step declares at design time that a person will be chosen at runtime, and names nobody. The live grid shows an empty Approver column for both Ad Hoc steps, exactly what that reading predicts.",
+     "confidence": "observed",
+     "source": "docs/modules/workflow/routing-and-approvals.md",
+     "children": [
+      {
+       "name": "WF-R-009b — an Ad Hoc step names no principal at design time",
+       "kind": "rule",
+       "detail": "One is chosen when the workflow is kicked off, from the form's ad-hoc-assignee picker scoped to the entity's own members, or auto-set to the initiator per AutoAssignInitiator.",
+       "confidence": "observed",
+       "source": "docs/modules/workflow/rules.md",
+       "children": []
+      },
+      {
+       "name": "Where ASG actually uses it",
+       "kind": "constraint",
+       "detail": "Rent Payment Review/Approval step 2 (\"Approve Rent Preview File (ASG)\") and User Request step 2 (\"Submit Revisions\") — both cases where the right person genuinely depends on the specific request, not a legacy wart to route around.",
+       "confidence": "observed",
+       "source": "docs/modules/workflow/routing-and-approvals.md",
+       "children": []
+      }
+     ]
+    },
+    {
+     "name": "WF-R-009 / WF-R-009a — two orthogonal routing dimensions",
+     "kind": "rule",
+     "detail": "The principal selector (what kind of thing names the people) and the scope selector (where to search for them) are two independent dimensions, not two rival vocabularies for one idea. A rebuild should model routing as one reusable principal selector crossed with an orthogonal scope selector, and let workflow, notification and task assignment all consume the same mechanism — Lucernex already reuses this exact shape on NotifyTemplateMember and LinkTaskByCodeMember.",
+     "confidence": "derived",
+     "source": "docs/modules/workflow/rules.md",
+     "children": []
+    },
+    {
+     "name": "Approver vs. assignee vs. notifiee — three asymmetric runtime records",
+     "kind": "entity",
+     "detail": "Approvers get a full 20-column decision record; assignees get an 11-column notification record with no decision fields at all; notifiees get nothing beyond a flat name list. This asymmetry is the clearest single statement of the engine's model of work: who decides, who does, and who merely needs to know.",
+     "confidence": "observed",
+     "source": "docs/modules/workflow/routing-and-approvals.md",
+     "children": [
+      {
+       "name": "WF-R-030 / WF-R-031 — per-person rows are created for approvers and assignees",
+       "kind": "rule",
+       "detail": "One WorkFlowStepApprover row per resolved approver, HasTakenAction starting false; one WorkFlowStepAssignee row per resolved assignee, carrying StepMemberResponsibility — described as \"lists step members whose responsibility matches the responsibility for the workflow template step,\" a fifth, undocumented routing dimension (OQ-4).",
+       "confidence": "derived",
+       "source": "docs/modules/workflow/rules.md",
+       "children": []
+      },
+      {
+       "name": "WF-R-032 — notifiees get no per-person row at all",
+       "kind": "rule",
+       "detail": "Notifiees exist only as the flat WorkFlowStep.NotifieeMemberIDList. No WorkFlowStepNotifiee table exists anywhere in the 223-object schema, so no delivery or acknowledgement is ever tracked for them.",
+       "confidence": "derived",
+       "source": "docs/modules/workflow/rules.md",
+       "children": []
+      },
+      {
+       "name": "D4 / D4a — an append-only decision log, with one caveat",
+       "kind": "constraint",
+       "detail": "ASG Edge+ should replace the single Prior* slot and the approver/assignee split with one append-only decision log keyed by (request, step, actor, role). This is a deliberate improvement that captures who submitted, which Lucernex loses entirely — but for migrated data, assignee rows in that log can only ever be reconstructed as one synthetic row per step, from the single SubmitForApprovalByMemberID stamp. It must not be modelled as if historical per-assignee decisions actually exist in the source data.",
+       "confidence": "derived",
+       "source": "docs/modules/workflow/asg-edgeplus-mapping.md",
+       "children": []
+      }
+     ]
+    },
+    {
+     "name": "WF-R-027 / WF-R-028 / WF-R-029 — the remaining resolution paths",
+     "kind": "rule",
+     "detail": "User Class routing resolves against Member.CodeUserClassID intersected with the entity roster; Org Chart Level routing walks Member.SupervisorID the configured number of hops from an anchor that is itself unstated (OQ-22); assignees and notifiees are resolved through the identical pipeline used for approvers, just against their own type/list columns.",
+     "confidence": "derived",
+     "source": "docs/modules/workflow/rules.md",
+     "children": []
+    },
+    {
+     "name": "WF-R-034 — reassignment by job title only",
+     "kind": "rule",
+     "detail": "Vendor definition: \"When added to a form, this field allows users with appropriate permissions to reassign approvers by job title.\" Reassignment is a form field an administrator places on a layout, not a workflow operation, and it can only redirect to a job title, never to a named person. Whether it persists back to the template or only to the running step is unresolved (OQ-26).",
+     "confidence": "observed",
+     "source": "docs/modules/workflow/rules.md",
+     "children": []
+    },
+    {
+     "name": "No sequence, no partial quorum, no tie-break",
+     "kind": "constraint",
+     "detail": "WorkFlowStepApprover has no order, level or tier column — approval is structurally parallel, corroborated by ASG's own report that \"the UI does not indicate if the approval process is sequential or parallel.\" There is no vote tally and no threshold beyond all-or-first. D3 recommends ASG Edge+ support both parallel and sequential approval explicitly, since lease approvals routinely need \"analyst then manager then director.\"",
+     "confidence": "derived",
+     "source": "docs/modules/workflow/routing-and-approvals.md",
+     "children": []
+    },
+    {
+     "name": "D10 — amount-banded approval routing is absent from the engine",
+     "kind": "constraint",
+     "detail": "Member carries eight approval-limit currency columns — PaymentApprovalMinAmount/MaxAmount, RecurringApprovalMinAmount/MaxAmount, and two Equip* pairs — and no workflow field anywhere reads any of them (OQ-19). ASG Edge+ will certainly need amount-banded lease and rent-payment approvals; this is in scope, since it concerns lease and rent payments, not capital-project Cost Management. Constitution §4.4 forbids double in financial code — implement any threshold comparison in BigDecimal.",
+     "confidence": "derived",
+     "source": "docs/modules/workflow/asg-edgeplus-mapping.md",
+     "children": []
+    }
+   ]
+  },
+  {
+   "name": "What a step shows — layout-per-step-per-role",
+   "kind": "submodule",
+   "detail": "The mechanism that makes a control-flow-poor engine expressive enough to run a real business. A step does not render one page; it renders one of two, depending on whether the viewer is an approver or an assignee, and a Form type accumulates one such layout per step per role over the life of its process — Submit shows entry fields, Review shows read-mostly fields plus a decision, Approve shows the approval surface.",
+   "confidence": "observed",
+   "source": "docs/modules/workflow/template-vs-instance.md",
+   "children": [
+    {
+     "name": "PageLayoutApproversID / PageLayoutAssigneesID",
+     "kind": "field-group",
+     "detail": "Vendor definitions: \"Select which form layout approvers should see for this step\" and \"...which form layout assignees should see.\" Two independent, unconstrained foreign keys per step — the platform allows them to point at the same layout or two entirely different ones, with no rule forcing either.",
+     "confidence": "observed",
+     "source": "docs/modules/workflow/data-model.md",
+     "children": [
+      {
+       "name": "The live grid renders only the approver layout",
+       "kind": "constraint",
+       "detail": "The Manage Work Flows step grid's Form/Task column shows the bound layout suffixed \"(Approvers)\" — confirming the assignee layout exists on every step but is simply never displayed on that screen.",
+       "confidence": "observed",
+       "source": "docs/modules/workflow/template-vs-instance.md",
+       "children": []
+      }
+     ]
+    },
+    {
+     "name": "The four live workflows",
+     "kind": "entity",
+     "detail": "ASG's real, running processes, captured directly from the tenant. Between them they use 19 steps and roughly N+1 layouts each — the extra one being the kick-off Submit form.",
+     "confidence": "observed",
+     "source": "docs/modules/layouts-and-forms/forms-vs-pages-vs-layouts.md",
+     "children": [
+      {
+       "name": "ASC 842 Schedule Review/Approval — 3 steps, prefix ASR",
+       "kind": "entity",
+       "detail": "Produce → internal review → ASG approval → client approval. Schedules are not auto-published: the accounting engine needs a review gate, not just a calculation. Attachable to Portfolio and RE Contract.",
+       "confidence": "observed",
+       "source": "docs/modules/workflow/README.md",
+       "children": []
+      },
+      {
+       "name": "Lease Admin Request — 8 steps, prefix LAR",
+       "kind": "entity",
+       "detail": "The contract-setup process, already implemented in production: initial review → abstract the lease document → ASG review → client review → import payment history/sales → finalize → finalize (defaults) → complete. Attachable to Portfolio and RE Contract. Nine layouts exist for these eight steps, the extra one being Submit.",
+       "confidence": "observed",
+       "source": "docs/modules/workflow/README.md",
+       "children": [
+        {
+         "name": "Step 1 — Initial Review of Lease Admin Request",
+         "kind": "entity",
+         "detail": "Approval Level: Member.",
+         "confidence": "observed",
+         "source": "docs/modules/layouts-and-forms/forms-vs-pages-vs-layouts.md",
+         "children": []
+        },
+        {
+         "name": "Step 2 — Abstract Lease Document",
+         "kind": "entity",
+         "detail": "The step where the raw uploaded lease document is turned into structured contract data. Approval Level: Member.",
+         "confidence": "observed",
+         "source": "docs/modules/layouts-and-forms/forms-vs-pages-vs-layouts.md",
+         "children": [
+          {
+           "name": "Bound layout: LAR Abstract Lease Document",
+           "kind": "entity",
+           "detail": "The layout rendered for this step, shown in the live grid suffixed (Approvers).",
+           "confidence": "observed",
+           "source": "docs/modules/workflow/template-vs-instance.md",
+           "children": [
+            {
+             "name": "Whether the assignee sees a different layout here is unresolved for this specific step",
+             "kind": "constraint",
+             "detail": "PageLayoutApproversID and PageLayoutAssigneesID are independent, unconstrained foreign keys, so this step's two layouts could be identical or entirely different by design — nothing in the schema forces either answer.",
+             "confidence": "derived",
+             "source": "docs/modules/workflow/template-vs-instance.md",
+             "children": [
+              {
+               "name": "OQ-47 — read both foreign keys directly to settle it",
+               "kind": "rule",
+               "detail": "The layout-to-step binding lives in database rows, not in any offline column list, so no amount of schema reading answers this. The fix is cheap: open the step editor and record both \"Layout To Use With Approvers\" and \"Layout To Use With Assignees.\"",
+               "confidence": "derived",
+               "source": "docs/modules/workflow/template-vs-instance.md",
+               "children": [
+                {
+                 "name": "Two explanations fit the evidence, and they are not mutually exclusive",
+                 "kind": "constraint",
+                 "detail": "Either layouts are deliberately shared across steps — an Approve (ASG) and an Approve (Client) step plausibly rendering the same underlying layout — or there really are two layouts per step and the admin grid is only ever showing one of them.",
+                 "confidence": "derived",
+                 "source": "docs/modules/workflow/template-vs-instance.md",
+                 "children": [
+                  {
+                   "name": "The orphan layout: LAR Review Financial Abstract",
+                   "kind": "entity",
+                   "detail": "A ninth layout exists on this Form type with no step of the same name anywhere in the eight-step grid. Its shape is exactly what an unrendered assignee layout for one of the review steps would look like — a layout that exists, does real work, and simply never appears on the screen that only shows approver layouts.",
+                   "confidence": "observed",
+                   "source": "docs/modules/workflow/template-vs-instance.md",
+                   "children": [
+                    {
+                     "name": "One observation will not settle this",
+                     "kind": "constraint",
+                     "detail": "Because both layout foreign keys are unconstrained, seeing sharing occur once proves only that sharing is possible, not that it is the rule. Reading both FKs across several steps in at least two of the four workflows is the minimum evidence needed before concluding anything about the intended pattern.",
+                     "confidence": "derived",
+                     "source": "docs/modules/workflow/template-vs-instance.md",
+                     "children": [
+                      {
+                       "name": "Recommendation: make the two-layout-per-step model explicit and mandatory",
+                       "kind": "rule",
+                       "detail": "Rather than leave it ambiguous whether a step has one layout or two, ASG Edge+ should require every step to declare both an approver surface and an assignee surface at design time, even when the two are configured identically — removing the need to ever guess which reading applies.",
+                       "confidence": "derived",
+                       "source": "docs/modules/workflow/asg-edgeplus-mapping.md",
+                       "children": []
+                      }
+                     ]
+                    }
+                   ]
+                  }
+                 ]
+                }
+               ]
+              }
+             ]
+            }
+           ]
+          }
+         ]
+        },
+        {
+         "name": "Step 3 — ASG Review of Lease Abstract",
+         "kind": "entity",
+         "detail": "Approval Level: Member.",
+         "confidence": "observed",
+         "source": "docs/modules/layouts-and-forms/forms-vs-pages-vs-layouts.md",
+         "children": []
+        },
+        {
+         "name": "Step 4 — Client Review of Lease Abstract",
+         "kind": "entity",
+         "detail": "Approval Level: Member.",
+         "confidence": "observed",
+         "source": "docs/modules/layouts-and-forms/forms-vs-pages-vs-layouts.md",
+         "children": []
+        },
+        {
+         "name": "Step 5 — Import Payment History/Sales",
+         "kind": "entity",
+         "detail": "Approval Level: Member.",
+         "confidence": "observed",
+         "source": "docs/modules/layouts-and-forms/forms-vs-pages-vs-layouts.md",
+         "children": []
+        },
+        {
+         "name": "Step 6 — Finalize Lease Admin Request",
+         "kind": "entity",
+         "detail": "Approval Level: Member. Followed immediately by a near-duplicate step (step 7), the shape you get when an engine cannot branch: rather than one step with a conditional path, the administrator laid out both outcomes in sequence.",
+         "confidence": "observed",
+         "source": "docs/modules/workflow/step-actions.md",
+         "children": []
+        },
+        {
+         "name": "Step 7 — Finalize Lease Admin Requests (Defaults)",
+         "kind": "entity",
+         "detail": "Approval Level: Member. No layout of a matching name exists in the nine captured for this Form type — one of the two live gaps in the otherwise clean step-to-layout correspondence.",
+         "confidence": "observed",
+         "source": "docs/modules/workflow/template-vs-instance.md",
+         "children": []
+        },
+        {
+         "name": "Step 8 — Complete Lease Admin Request",
+         "kind": "entity",
+         "detail": "Approval Level: Member. The terminal step; almost certainly carries an action with CloseWorkFlow = true, though no action row has been directly observed to confirm it (OQ-37).",
+         "confidence": "observed",
+         "source": "docs/modules/workflow/step-actions.md",
+         "children": []
+        }
+       ]
+      },
+      {
+       "name": "Rent Payment Review/Approval — 6 steps, prefix RPR",
+       "kind": "entity",
+       "detail": "Preview → approve ×3 → generate. Approve steps: ASG (Ad Hoc), LA (Member), Client (Member); Generate Final Rent Payment File is its own workflow step, not a side effect of approval — a direct obligation on the payments module. Attachability not captured (OQ-46).",
+       "confidence": "observed",
+       "source": "docs/modules/workflow/README.md",
+       "children": []
+      },
+      {
+       "name": "User Request — 2 steps",
+       "kind": "entity",
+       "detail": "Complete User Request (Job Title → System Administrator), then Submit Revisions (Ad Hoc). The process behind the reported single-point-of-failure and no-delegation pain points. Attachability not captured (OQ-46).",
+       "confidence": "observed",
+       "source": "docs/modules/workflow/README.md",
+       "children": []
+      }
+     ]
+    },
+    {
+     "name": "WF-R-010b — the N+1 pattern",
+     "kind": "rule",
+     "detail": "ASC 842 has 3 steps and 4 layouts; Lease Admin Request has 8 steps and 9 layouts — in both cases the extra one is named Submit, and Submit is exactly WorkFlowTemplate.PageLayoutID, the kick-off form. This independently confirms the kick-off model: the Submit layout is the kick-off form, and the remaining N layouts are the step layouts.",
+     "confidence": "derived",
+     "source": "docs/modules/workflow/rules.md",
+     "children": []
+    }
+   ]
+  },
+  {
+   "name": "The Issue record — a Form is an Issue Type",
+   "kind": "submodule",
+   "detail": "A Form is not a distinct entity kind; it is a value in an ordinary code table, and the record it produces is an Issue — the generic unit-of-work table for the entire product. Manage Forms runs on the same generic FirmCodeEdit.jsp screen Firm Drop Downs uses, discriminated by TableType, and TableType=2035 is proven to be Issue Type Code. Nine other tables extend Issue by carrying an IssueID and nothing of their own that a title, description, due date, assignee or status would need.",
+   "confidence": "observed",
+   "source": "docs/modules/workflow/issues-and-tasks.md",
+   "children": [
+    {
+     "name": "Issue Type Code — TableType 2035",
+     "kind": "code-table",
+     "detail": "The tenant-editable master list Manage Forms actually edits. Proving TableType=2035 is Issue Type Code upgrades \"a Form is an Issue Type\" from an inference to an observed fact: the object behind Manage Forms is an ordinary code table that has grown a field schema and a set of layouts, not a bespoke form-builder engine.",
+     "confidence": "observed",
+     "source": "docs/data-model/code-table-registry.md",
+     "children": [
+      {
+       "name": "Lease Admin Request — one row in this table",
+       "kind": "code-value",
+       "detail": "One of exactly four rows the tenant has defined. Each row is a Form Type: a name, a sequence prefix, and a set of behaviour and attachability flags — nothing more exotic than any other drop-down value in the product, until you look at what those flags unlock.",
+       "confidence": "observed",
+       "source": "docs/modules/layouts-and-forms/forms-vs-pages-vs-layouts.md",
+       "children": [
+        {
+         "name": "Attachability — eleven yes/no flags",
+         "kind": "field-group",
+         "detail": "A boolean per entity kind — Portfolio, RE Contract, Facility, Location, and seven others — controlling which kinds of record a request of this type may be raised against. Both lease-accounting Form Types are set Portfolio=Yes, RE Contract=Yes and every other flag No — exactly right for lease accounting and nothing else.",
+         "confidence": "observed",
+         "source": "docs/modules/workflow/issues-and-tasks.md",
+         "children": [
+          {
+           "name": "IsValidForContract — rendered in the UI as RE Contract",
+           "kind": "field",
+           "detail": "One flag among the eleven, and the one this Form Type actually needs turned on. \"RE\" distinguishes it from the sibling flag for equipment contracts — the same Form Type engine serves both real-estate and equipment leasing, discriminated only by which of two similarly-named flags is checked.",
+           "confidence": "derived",
+           "source": "docs/modules/workflow/issues-and-tasks.md",
+           "children": [
+            {
+             "name": "RE Contract — the entity kind this flag names",
+             "kind": "entity",
+             "detail": "The attachable target itself: an ASG real-estate lease contract. A Lease Admin Request raised against a Portfolio versus against an RE Contract is the same Form Type and the same workflow, just anchored to a different level of the entity hierarchy — one flag, two very different scopes of request.",
+             "confidence": "inferred",
+             "source": "docs/modules/workflow/issues-and-tasks.md",
+             "children": [
+              {
+               "name": "The mapping between flag name and UI label is not fully proven",
+               "kind": "constraint",
+               "detail": "Ten of the eleven flag-to-label pairings are directly Observed on both sides. The eleventh — whether IsValidForPotentialProject really is the UI's \"Site\" — is the one label left over after the other ten match, which is suggestive but not confirmed.",
+               "confidence": "derived",
+               "source": "docs/modules/workflow/issues-and-tasks.md",
+               "children": [
+                {
+                 "name": "B2 — narrow the attachability matrix ASG Edge+ actually has to build",
+                 "kind": "rule",
+                 "detail": "Because both lease-accounting Form Types in production use only two of the eleven attachable entity kinds, the rebuild's attachability model may be far smaller than the schema's eleven-flag family suggests — pending confirmation of what the other two live Form Types attach to.",
+                 "confidence": "derived",
+                 "source": "docs/modules/workflow/asg-edgeplus-mapping.md",
+                 "children": [
+                  {
+                   "name": "OQ-46 — two Form Types' attachability is still unknown",
+                   "kind": "rule",
+                   "detail": "Rent Payment Review/Approval and User Request were not opened in the live capture that recorded the other two Form Types' flags. Until they are, the attachability matrix is only half confirmed.",
+                   "confidence": "observed",
+                   "source": "docs/modules/workflow/data-model.md",
+                   "children": []
+                  }
+                 ]
+                }
+               ]
+              }
+             ]
+            }
+           ]
+          }
+         ]
+        },
+        {
+         "name": "WF-R-004a — Form:Workflow is 1:1",
+         "kind": "rule",
+         "detail": "WORK FLOW field set? renders CodeIssueType.IsWorkFlow, and it is Yes for all four live Form Types. Manage Forms and Manage Work Flows list exactly the same four names — this reading was Inferred before the live capture and is now fully Observed.",
+         "confidence": "observed",
+         "source": "docs/modules/workflow/rules.md",
+         "children": []
+        },
+        {
+         "name": "WF-R-004b — sequence numbering",
+         "kind": "rule",
+         "detail": "SequencePrefix and IsSequencePerFirm control the human-readable request number — live prefixes ASR, LAR, RPR. Caution: the UI label \"Global Sequence Numbers?\" and the column name \"IsSequencePerFirm\" are near-inverses; do not assume they carry the same polarity (OQ-45).",
+         "confidence": "observed",
+         "source": "docs/modules/workflow/rules.md",
+         "children": []
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "name": "Issue — the generic Form record",
+     "kind": "entity",
+     "detail": "56 columns. Only 4 of them appear in the Manage Data Fields catalog at all, so the physical schema and the vendor help text are the only real sources. Every vendor label on this object says \"Form,\" never \"Issue\" — the internal table name and the product's own vocabulary diverge completely.",
+     "confidence": "observed",
+     "source": "docs/modules/workflow/issues-and-tasks.md",
+     "children": [
+      {
+       "name": "Ticket core",
+       "kind": "field-group",
+       "detail": "IssueID, SequenceNumber, Subject (labelled Title), Body (labelled Description), CodeIssueTypeID (labelled Type), CreatedDate, InitiatedByMemberID (labelled Creator) — a titled, numbered, typed, authored document.",
+       "confidence": "observed",
+       "source": "docs/modules/workflow/issues-and-tasks.md",
+       "children": []
+      },
+      {
+       "name": "WF-R-055 (record-state write) lands here",
+       "kind": "field-group",
+       "detail": "CodeLastActionStatusID and LastActionStatusChangeDate are the only fields the workflow engine can write on this record — the entire field-write surface of the whole engine terminates on these two columns.",
+       "confidence": "derived",
+       "source": "docs/modules/workflow/issues-and-tasks.md",
+       "children": []
+      },
+      {
+       "name": "LastPageLayoutID",
+       "kind": "field",
+       "detail": "Vendor definition: \"the name of the last form layout used to update the issue.\" The only pointer from a completed request back to a layout — and because a Form shows a different surface at every step, this single pointer cannot reconstruct what each approver actually saw.",
+       "confidence": "observed",
+       "source": "docs/modules/workflow/template-vs-instance.md",
+       "children": [
+        {
+         "name": "Historical reconstruction is lossy",
+         "kind": "constraint",
+         "detail": "It preserves which surface the record was last edited through, not which surface each step used. Re-rendering a finished eight-step Lease Admin Request as each approver actually saw it requires joining back through WorkFlowStep.PageLayoutApproversID per step — which works only while those step rows survive. D4 recommends storing the layout reference on the decision record itself, not just on the request.",
+         "confidence": "derived",
+         "source": "docs/modules/workflow/template-vs-instance.md",
+         "children": []
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "name": "The nine subtypes prove Issue is a genuine supertype",
+     "kind": "constraint",
+     "detail": "PurchaseOrder, ChangeOrder, PayApp, InvoiceIssue, WorkOrder, ServiceRequest, BidderIssue, BidPackage and Question each extend Issue by carrying an IssueID and nothing of their own that a title, description, due date, assignee, status or attachment would need — those all live only on Issue. Seven of the nine belong to Cost Management, out of scope as modules, but retained as the structural evidence for the supertype claim: listing three subtypes instead of nine would weaken an argument the rebuild depends on.",
+     "confidence": "derived",
+     "source": "docs/modules/workflow/issues-and-tasks.md",
+     "children": [
+      {
+       "name": "WorkOrder and ServiceRequest each have their own single-approver approval path",
+       "kind": "constraint",
+       "detail": "Both carry their own ApproverMemberID/ApproverPartyID plus an approval date — a second approval mechanism that sits entirely outside the workflow engine. Whether this bypasses the engine deliberately or by historical accident is unresolved (OQ-33), and D14/B7 name it as a decision ASG must make: one approval mechanism, or two.",
+       "confidence": "derived",
+       "source": "docs/modules/workflow/issues-and-tasks.md",
+       "children": []
+      }
+     ]
+    },
+    {
+     "name": "The design insight: Lucernex never built a form builder",
+     "kind": "constraint",
+     "detail": "It built one ticket type, made the subtype a value in an ordinary code table, gave each subtype its own user-defined fields and one layout per workflow step, and got a form builder for free. That is a genuinely economical piece of design: four wildly different-looking business processes — lease admin requests, rent-payment approvals, invoice disputes, bid questions — all run on the same 56-column Issue table underneath.",
+     "confidence": "derived",
+     "source": "docs/modules/workflow/issues-and-tasks.md",
+     "children": []
+    },
+    {
+     "name": "The warning: modelling each request type as its own aggregate needs one workflow engine per type",
+     "kind": "constraint",
+     "detail": "Every request-shaped feature in this product is the same table. D13 in the mapping document: keep exactly ONE Form/request aggregate in ASG Edge+, thin its core, and move type-specific columns to their owning modules — this is a column-placement change, not a decomposition into separate aggregates. The failure mode to avoid is the opposite one: modelling Lease Admin Request, rent-payment approval, invoice dispute and bid question as four aggregates means building four workflow engines where Lucernex needed exactly one.",
+     "confidence": "derived",
+     "source": "docs/modules/workflow/asg-edgeplus-mapping.md",
+     "children": []
+    }
+   ]
+  },
+  {
+   "name": "The three nested state machines",
+   "kind": "submodule",
+   "detail": "A running approval process is actually three state machines nested inside each other: the workflow instance as a whole, the individual step within it, and each approver's personal decision on that step. Both the workflow and the step draw their status from the same code table, Work Flow Status Code — so a rebuild cannot give them separate enums without diverging from the source. Much of this section is inferred from the schema's shape rather than watched directly running; the concrete status values were never fully observed, and one earlier attempt to name their source was simply wrong.",
+   "confidence": "inferred",
+   "source": "docs/modules/workflow/state-machine.md",
+   "children": [
+    {
+     "name": "Work Flow Status Code — the shared vocabulary behind both machines",
+     "kind": "field",
+     "detail": "The single dropdown column that both the workflow instance and every one of its steps bind to. Whatever values this table has, they must mean the same thing on both objects — a rebuild cannot invent separate enums for instance-status and step-status without diverging from Lucernex.",
+     "confidence": "observed",
+     "source": "docs/modules/workflow/state-machine.md",
+     "children": [
+      {
+       "name": "This table is not one of the 207 tenant-editable platform code tables",
+       "kind": "constraint",
+       "detail": "A table of this name exists in the schema — both WorkFlow and WorkFlowStep declare the type — but it is not exposed in Manage Firm Drop Downs. An earlier draft of this documentation wrongly asserted it was tenant-editable and sent anyone following that instruction to look in the wrong place and find nothing. The nearest tenant-editable neighbours are Approval Status Code, Last Action Status Code and Decision Status Code — none of them this one.",
+       "confidence": "observed",
+       "source": "docs/modules/workflow/state-machine.md",
+       "children": [
+        {
+         "name": "Why it is hidden: a tenant able to rename Approved would break the engine",
+         "kind": "constraint",
+         "detail": "Work Flow Status Code governs engine transitions rather than presentation, which is consistent with the platform keeping it off the tenant-editable list. A rebuild should ship it as a code enum inside the workflow service itself, not as tenant-configurable master data.",
+         "confidence": "derived",
+         "source": "docs/modules/workflow/asg-edgeplus-mapping.md",
+         "children": [
+          {
+           "name": "OQ-7 — the only two ways left to actually read the values",
+           "kind": "rule",
+           "detail": "Introspect codeWorkFlowStatusID through the GraphQL API, which returns the whole enumeration regardless of whether any live record uses every value, or read the Status column on a running workflow's list and step list — cheaper, but only ever shows values currently in use.",
+           "confidence": "derived",
+           "source": "docs/modules/workflow/state-machine.md",
+           "children": [
+            {
+             "name": "Four values recovered indirectly, from unrelated vendor text",
+             "kind": "field-group",
+             "detail": "Nobody has read this table directly. Four of its members are named only as a side effect of documentation written for entirely different fields — proof they exist, not proof the list is complete.",
+             "confidence": "observed",
+             "source": "docs/modules/workflow/state-machine.md",
+             "children": [
+              {
+               "name": "In Process",
+               "kind": "code-value",
+               "detail": "Named in the definition of SetTaskInProcess: \"set the work flow step status to 'In Process' when the step starts.\"",
+               "confidence": "observed",
+               "source": "docs/modules/workflow/state-machine.md",
+               "children": []
+              },
+              {
+               "name": "Approved",
+               "kind": "code-value",
+               "detail": "Named in the definition of DisableEditAfterDecision: \"after the step status is changed to Approved or Denied.\"",
+               "confidence": "observed",
+               "source": "docs/modules/workflow/state-machine.md",
+               "children": []
+              },
+              {
+               "name": "Denied",
+               "kind": "code-value",
+               "detail": "Named in the same definition as Approved, its only appearance anywhere in the corpus.",
+               "confidence": "observed",
+               "source": "docs/modules/workflow/state-machine.md",
+               "children": []
+              },
+              {
+               "name": "Canceled",
+               "kind": "code-value",
+               "detail": "Named in the definition of SetTaskCanceled: \"set the work flow step status to 'Canceled' when the user cancels the step.\"",
+               "confidence": "observed",
+               "source": "docs/modules/workflow/state-machine.md",
+               "children": []
+              }
+             ]
+            }
+           ]
+          }
+         ]
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "name": "The workflow instance state machine",
+     "kind": "entity",
+     "detail": "Four states inferred from the schema's shape: Initiated, Open, Closed, Deactivated. Only Deactivated has a directly named source (the Inactive flag's own vendor text); the other three states are named by this analysis, not by Lucernex.",
+     "confidence": "inferred",
+     "source": "docs/modules/workflow/state-machine.md",
+     "children": [
+      {
+       "name": "Closed",
+       "kind": "field-group",
+       "detail": "IsCompleted = true, ClosedDate set, and a terminal CodeWorkFlowStatusID — three independent columns nothing in the schema forces to agree with each other. Fires NotifyInitiatorComplete, NotifyAllApproversComplete and NotifyAllAssigneesComplete, all three read live off the mutable template even at this final moment.",
+       "confidence": "derived",
+       "source": "docs/modules/workflow/state-machine.md",
+       "children": []
+      },
+      {
+       "name": "Deactivated",
+       "kind": "field",
+       "detail": "Vendor definition of Inactive: \"If true, this work flow has been deactivated on the Work Flow page.\" An independent soft-delete flag, orthogonal to IsCompleted — nothing in the schema prevents an instance being both closed and deactivated at once.",
+       "confidence": "observed",
+       "source": "docs/modules/workflow/state-machine.md",
+       "children": []
+      }
+     ]
+    },
+    {
+     "name": "The step state machine",
+     "kind": "entity",
+     "detail": "This is the machine that matters day to day: Not Started, In Process, Awaiting Approval, Re-Do, Approved, Denied, Completed, Locked, Canceled — plus a tenth state the schema has no representation for at all.",
+     "confidence": "derived",
+     "source": "docs/modules/workflow/state-machine.md",
+     "children": [
+      {
+       "name": "Awaiting Approval",
+       "kind": "field",
+       "detail": "SubmitForApprovalDate set, IsCompleted still false — the three SubmitForApproval* columns exist for no other purpose than marking this state.",
+       "confidence": "derived",
+       "source": "docs/modules/workflow/state-machine.md",
+       "children": []
+      },
+      {
+       "name": "Re-Do",
+       "kind": "field",
+       "detail": "IsReDo = true. Vendor definition: \"If this value is true, the step must be completed again... This is related to the action the approver takes on the step.\" The runtime marker set whenever an action's RestartStep flag fires.",
+       "confidence": "observed",
+       "source": "docs/modules/workflow/state-machine.md",
+       "children": []
+      },
+      {
+       "name": "Deadlocked — a real failure mode with no schema representation at all",
+       "kind": "constraint",
+       "detail": "When RequireAllApprovers is true and qualified approvers choose different actions, the step simply never satisfies its condition and never advances. This is not a modelled state anywhere in the schema; it is an observed behaviour reported directly by ASG users, and it is the single most concrete piece of evidence that the routing model (see the Routing spine's WF-R-053) needs a designed conflict-resolution policy in ASG Edge+.",
+       "confidence": "observed",
+       "source": "docs/modules/workflow/state-machine.md",
+       "children": []
+      },
+      {
+       "name": "No timer-driven transition anywhere in this machine",
+       "kind": "constraint",
+       "detail": "Every transition in the step's life is caused by a person pressing a button, except the two escalation timers, and both of those only ever send a notification — never advance, reassign, or auto-decide the step.",
+       "confidence": "derived",
+       "source": "docs/modules/workflow/state-machine.md",
+       "children": []
+      }
+     ]
+    },
+    {
+     "name": "The approver decision state machine",
+     "kind": "entity",
+     "detail": "Per WorkFlowStepApprover row, three real states and one lossy one: Pending, Notified, Acknowledged, Acted, and Superseded — reached only if the step is restarted, at which point the acted-on values move into the single Prior* slot.",
+     "confidence": "derived",
+     "source": "docs/modules/workflow/state-machine.md",
+     "children": [
+      {
+       "name": "Only one prior round survives",
+       "kind": "constraint",
+       "detail": "A step restarted a third time overwrites the second round's Prior* values with the (former) current round, permanently losing the first re-do's detail. This is the engine's entire re-do history, and it is lossy by construction.",
+       "confidence": "derived",
+       "source": "docs/modules/workflow/data-model.md",
+       "children": []
+      },
+      {
+       "name": "WorkFlowStepAssignee has no decision states at all",
+       "kind": "constraint",
+       "detail": "Its machine is Pending → Notified → Acknowledged and stops there — no Acted state exists, because assignees have no action columns to act with. The asymmetry with the approver machine is deliberate, not an oversight.",
+       "confidence": "observed",
+       "source": "docs/modules/workflow/state-machine.md",
+       "children": []
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

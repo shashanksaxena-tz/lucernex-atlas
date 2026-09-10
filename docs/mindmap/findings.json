@@ -1,0 +1,82 @@
+{
+  "layouts-forms-reporting": [
+    ["Conditional display is a real rule engine", "observed",
+     "Every field, or a whole sub-page section, can carry one rule set, read as a sentence: [Show | Show and Require | Hide] this field when [all | any] of the following rules match. Flat structure — no nesting, no mixed AND/OR."],
+    ["Operators depend on the driver's type", "observed",
+     "Dropdown drivers get is in / is not in. Number drivers get = <> > >= < <=. Boolean drivers get selected / not selected. All three also get is specified / is not specified. 'is any value' is the neutral state that contributes no predicate."],
+    ["Rules cross entity boundaries", "observed",
+     "A Contract layout offers 85 candidate driver fields drawn from four tables: Contract 65, ProjectEntity 9, Facility 7, Location 4. A Contract field can be hidden because of a value on its Location record."],
+    ["Text and Date can never drive a rule", "observed",
+     "Only Dropdown, Number and Boolean fields appear as drivers, even though Contract has many text and date columns. A deliberate constraint that keeps rules explicable and indexable."],
+    ["A Form is not a Page", "observed",
+     "A Page Layout presents a record that already exists. A Form defines a new tenant-authored request type and gets one layout per workflow step. A Custom List is a Form without the workflow."],
+    ["Rules are stored as an opaque JSON blob", "observed",
+     "One json.conditionalFieldsConfig per target. Cheap to write, impossible to query — Lucernex cannot answer 'which layouts depend on this drop-down?'. Storing predicates as rows instead would give the rebuild a Where-Used answer for free."],
+    ["The report catalogue and the field catalogue are one table", "observed",
+     "Every field-consuming subsystem joins to ReportGroupAvailableField, and the vendor's own schema names the key to it 'Report/Form Field ID' — a single type unifying report field and form field."]
+  ],
+  "workflow": [
+    ["Four workflows are live, one per form type", "observed",
+     "Lease Admin Request (8 steps), Rent Payment Review/Approval (6), ASC 842 Schedule Review/Approval (3), User Request (2). The Form is the record; the Work Flow is its process; they share a name."],
+    ["Lease Admin Request is BRD-24, already implemented", "observed",
+     "Initial Review, Abstract Lease Document, ASG Review, Client Review, Import Payment History/Sales, Finalize, Finalize (Defaults), Complete. The BRD says what the process should be; this shows what it is."],
+    ["A step shows a different screen to a different person", "observed",
+     "Each workflow step binds its own layout. The same request record presents a different field surface at Submit, at Review and at Approve. That is what makes the engine expressive enough to run a real business process."],
+    ["Routing is by position, not by name", "observed",
+     "Approval Level is Member, Job Title or Ad Hoc. The API's AssigneeType enum goes further: ALL, PARENT, REGION1, REGION2, MARKET, JOB_TITLE. Notifications walk the org chart to three explicit levels."],
+    ["Four ways to start a workflow", "observed",
+     "KickOffMethod: STEP_ACTION, PAGE_LAYOUT, STATUS_CHANGE, TASK. This is the trigger taxonomy any rebuilt rule engine has to reproduce."],
+    ["No Task step exists anywhere", "observed",
+     "All 19 configured steps are Form steps, though 'add task step' exists. WorkFlowTemplateStep has 55 fields and the admin grid surfaces six, so most of the step model is still unseen."],
+    ["Workflow status is not a Firm Drop Down", "observed",
+     "Work Flow Status Code is absent from the catalogue of 207. The nearest that exist are Approval Status Code, Last Action Status Code and Decision Status Code. Where status values actually live is unresolved."]
+  ],
+  "accounting": [
+    ["One engine, three standards", "observed",
+     "There is no separate ASC 842 module. There is one summary/period pair — SLSummary with 134 fields and SLPeriod with 79 — plus three mutually exclusive flags saying which standard a schedule was produced under."],
+    ["Classification is a separate record", "observed",
+     "ContractFinancialTest, 93 fields, runs the five ASC 842 tests and holds ASC 842 and IFRS 16 results side by side. An older ASC 840 Cap Lease Test still sits directly on Contract."],
+    ["Schedules are approved, not published", "observed",
+     "The ASC 842 Schedule Review/Approval workflow gates output: generate, initial review, ASG approve, client approve. The rebuild needs a schedule state machine, not just a calculator."],
+    ["This tenant runs ASC 842 only", "observed",
+     "The ASC 842 Schedule Type table holds exactly one value, 842 Rent. The Straight Line and IFRS 16 schedule-type tables are both empty. The capability is present and unused — whether the rebuild needs IFRS 16 is a business question."],
+    ["Amortisation has a policy switch", "observed",
+     "GaapAmortizeMode has exactly two values: PER_DAY and PER_PERIOD."],
+    ["Every non-key column is TEXT", "observed",
+     "In the physical Postgres export, 6,882 of 7,069 columns are TEXT, currency and percentage included. The other 187 are all primary keys. There is no numeric typing to inherit."],
+    ["Some fields are magnitude-typed", "observed",
+     "SLSummary.SLRemainingAssetBalance is read as a percentage when 0 to 100 and as currency at 100.01 and above. A genuine data-integrity hazard to design out."],
+    ["GL account slots are numbered, not named", "observed",
+     "Each schedule type carries ExportAcct1Number through ExportAcct20Number. Which accounting concept each slot represents — lease liability, ROU asset, interest expense, amortisation — is recorded nowhere in the schema."]
+  ],
+  "contracts-leases": [
+    ["Contract is the blocker", "derived",
+     "570 fields across four physical tables, and 62 other record types point at it. Payment processing, percentage rent and ASC 842 accounting all sit downstream, which is why the schema freeze gates them."],
+    ["Vendor is a relabelled Employer", "observed",
+     "PaymentTransaction.VendorID has declared type Employer ID. Contract has no direct Vendor foreign key at all — that relationship lives one level down, on Payment Transaction."],
+    ["Relationships are asymmetric by cardinality", "observed",
+     "From Contract, Facility is reached as a single related record. From Facility, Contract is not offered that way — it appears as an embedded child grid. The UI models the one-to-many direction differently from the many-to-one."],
+    ["A contract can be its own parent", "observed",
+     "MasterContractID has declared type Contract ID — a self-reference carrying the master-lease and sublease hierarchy."],
+    ["Lifecycle lives in tenant data, not schema", "observed",
+     "The nine lifecycle states — Open, Future Possession, Possession, Possession - Paying Rent, Active, Closed - Active, Closed, and two Accounting Purposes Only variants — sit in a tenant-authored drop-down. Contract Status Code, the platform field, has only three values and means something different. Both are required on the same form."],
+    ["CAM does not follow the pattern", "derived",
+     "Expense recovery is a reconciliation grid with no schedule layer. Treating it as an instance of the Clause/Schedule/Transaction/Projection pattern would be the single most expensive modelling mistake available here."]
+  ],
+  "platform-tenancy": [
+    ["ProjectEntity is the spine, but not the tenant key", "observed",
+     "163 foreign keys point at it and it is a declared interface in the GraphQL schema. It is the universal entity supertype — one row per thing you can own. The tenant key is FirmID; ProjectEntity partitions within a tenant."],
+    ["The tenant travels in the token", "observed",
+     "The session JWT carries firmname and a cluster claim shaped host:tenant — evidence that Lucernex routes each request to a tenant-specific database using a value inside the token."],
+    ["448 field-type codes hide a 10-value system", "observed",
+     "The API's FieldType enum is BOOLEAN, COMPUTED, DATE, DATETIME, FK, FLOAT, INTEGER, MONEY, PERCENTAGE, STRING. COMPUTED and FK are first-class types — the platform distinguishes engine-calculated values from user input in its type system."],
+    ["Money is never a float", "observed",
+     "BigDecimal is a declared GraphQL scalar, and MONEY and PERCENTAGE are distinct from FLOAT. The vendor reached the same conclusion the rebuild's constitution mandates."],
+    ["One code-table registry, 207 entries", "observed",
+     "All Firm Drop Downs are values of a single TableType discriminator on one generic editor. TableType 2035 is Issue Type Code — which is why Manage Forms opens that same editor."]
+  ],
+  "people-parties": [
+    ["Member is the most-referenced record in the product", "derived",
+     "290 foreign keys point at it, more than ProjectEntity. Almost every record stores who created and modified it, and workflow routing resolves to members."]
+  ]
+}

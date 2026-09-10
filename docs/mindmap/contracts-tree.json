@@ -1,0 +1,2344 @@
+{
+ "name": "Contracts & Leases",
+ "kind": "module",
+ "detail": "Lucernex does not have five financial subsystems for leases — it has one architectural pattern applied five times, plus one deliberate outlier. A human-entered clause is expanded by an operator-invoked generator into a schedule of period rows, a second generator posts those as GL-coded transactions, and a fourth layer of never-stored Virtual objects computes forward-looking projections — the Clause/Schedule/Transaction/Projection pattern that recurs across recurring expense, accrual, percentage rent and use-based rent. Expense recovery (CAM) is the exception: a reconciliation grid, not a schedule, and treating it as a sixth instance of the pattern is called out as the single most expensive modelling mistake available in this corpus. 55 objects and roughly 2,700 fields hang off one aggregate root, Contract, which itself carries no vendor and encodes its master-lease/sublease hierarchy as a single unconstrained self-reference. And underneath the contract layout's two required status fields sits a finding that resolves a real gap against the ASG Edge+ BRD: the operational lifecycle is not a platform enum at all, but nine values in a tenant-editable drop-down, sitting beside a three-value platform record-state field that means something entirely different.",
+ "confidence": "observed",
+ "source": "docs/modules/contracts/README.md",
+ "children": [
+  {
+   "name": "The Clause → Schedule → Transaction → Projection pattern",
+   "kind": "capability",
+   "detail": "The module's architectural centrepiece, and the single most reusable finding in the whole corpus: rather than five bespoke financial subsystems, Lucernex has one pattern applied five times, in four layers rather than the three a first look suggests. A human-entered clause (carrying AmendmentID, CovenantID, Section, a validity window and a RevNumber) is expanded by an operator-invoked generator into a schedule of dated period rows, a second generator posts those as GL-coded, vendor-bound transactions, and a fourth layer of Virtual* objects computes forward-looking projections that are never stored. For ASG Edge+, whose contract schema freezes at Week 12, this means building one generic four-layer abstraction and five concrete instantiations, not five separate designs.",
+   "confidence": "observed",
+   "source": "docs/modules/contracts/setup-schedule-transaction-pattern.md",
+   "children": [
+    {
+     "name": "The four layers, and how to tell them apart",
+     "kind": "capability",
+     "detail": "The reusable, field-level test for which layer any given record belongs to — it holds across all five families and is the part of this analysis most directly portable into code.",
+     "confidence": "observed",
+     "source": "docs/modules/contracts/setup-schedule-transaction-pattern.md",
+     "children": [
+      {
+       "name": "L0 — Clause markers",
+       "kind": "field-group",
+       "detail": "How to recognise a clause record without knowing which of the five families it belongs to: it carries both an AmendmentID (which lease amendment introduced this term) and a Section (the paragraph reference in the lease document), plus a BeginDate/EndDate that is the clause's own validity window, not a billing period, and a RevNumber that versions edits. A record with that shape is something a human abstracted from the lease text, not something the system calculated. This combination appears on no L1 or L2 object, which is why it works as a test.",
+       "confidence": "observed",
+       "source": "docs/modules/contracts/setup-schedule-transaction-pattern.md",
+       "children": [
+        {
+         "name": "CON-R-001",
+         "kind": "rule",
+         "detail": "Classifying any financial record by its field set: if it carries both AmendmentID and Section, it is an L0 clause record.",
+         "confidence": "observed",
+         "source": "docs/modules/contracts/rules.md",
+         "children": []
+        },
+        {
+         "name": "CON-R-005",
+         "kind": "rule",
+         "detail": "An L0 clause is created or edited: its validity window is its own BeginDate..EndDate; a new RevNumber supersedes the prior revision.",
+         "confidence": "derived",
+         "source": "docs/modules/contracts/rules.md",
+         "children": []
+        }
+       ]
+      },
+      {
+       "name": "L1 — Schedule markers",
+       "kind": "field-group",
+       "detail": "A schedule row is what a clause looks like after a generator has expanded it into dated, amount-bearing periods. The tell is an FK pointing back at its own L0 clause plus a ProcessedFlag/ProcessedDate pair that guards against generating the same row twice. The richest part of the shape is the doubly-linked list: PreviousExpenseScheduleID and NextExpenseScheduleID chain successive rate steps together, and each row carries its own amount plus both neighbours' amounts, so a single row shows an escalation step without needing to look anywhere else. ASG Edge+ should copy this idea directly — it makes an escalation auditable on one row instead of scattered across a table scan.",
+       "confidence": "observed",
+       "source": "docs/modules/contracts/setup-schedule-transaction-pattern.md",
+       "children": [
+        {
+         "name": "CON-R-002",
+         "kind": "rule",
+         "detail": "Classifying any financial record: if it carries an FK to an L0 object and ProcessedFlag, it is an L1 schedule row.",
+         "confidence": "observed",
+         "source": "docs/modules/contracts/rules.md",
+         "children": []
+        },
+        {
+         "name": "CON-R-006",
+         "kind": "rule",
+         "detail": "Operator invokes a generator command on the L0 clause and its modifiers: the generator materialises L1 rows spanning the clause window.",
+         "confidence": "observed",
+         "source": "docs/modules/contracts/rules.md",
+         "children": []
+        },
+        {
+         "name": "CON-R-013",
+         "kind": "rule",
+         "detail": "An escalation step is materialised: L1 rows form a doubly-linked list; each row carries PreviousAnnualAmount/AnnualAmount/NextAnnualAmount.",
+         "confidence": "observed",
+         "source": "docs/modules/contracts/rules.md",
+         "children": []
+        },
+        {
+         "name": "PreviousExpenseScheduleID / NextExpenseScheduleID",
+         "kind": "field",
+         "detail": "The two ends of the linked-list chain. Declared type Text in the object model, even though Manage Data Fields separately types the same leaf sTYPE_EXPENSE_SCHEDULE — the presentation layer knows it's a foreign key, the storage layer doesn't say so.",
+         "confidence": "observed",
+         "source": "docs/modules/contracts/data-model.md",
+         "children": [
+          {
+           "name": "Text (declared) vs sTYPE_EXPENSE_SCHEDULE (catalog)",
+           "kind": "type",
+           "detail": "Two type systems disagree about the same column: the object-model export calls it plain text, the field catalog calls it a typed foreign key to another Expense Schedule. This is one of seven such disagreements in the module.",
+           "confidence": "observed",
+           "source": "docs/modules/contracts/data-model.md",
+           "children": [
+            {
+             "name": "Weak FK — referential integrity hole",
+             "kind": "constraint",
+             "detail": "Because the column is untyped as far as the database is concerned, nothing stops it pointing at a row that no longer exists. A migration must decide an orphan-handling policy before it can trust the chain, and ASG Edge+ should model this — and the other six weak FKs in the module — as a real foreign key with an explicit policy for what happens when the target is missing.",
+             "confidence": "derived",
+             "source": "docs/modules/contracts/asg-edgeplus-mapping.md",
+             "children": []
+            }
+           ]
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "name": "L2 — Transaction markers",
+       "kind": "field-group",
+       "detail": "A transaction is money that has actually moved (or is booked to move): it carries a PostingDate and EffectiveDate and DueDate and CoverageBeginDate/EndDate simultaneously — four independent date axes on one row — plus GL account numbers and a counterparty. The single strongest tell that this layer is shared across all five families is SourceEntityTable: every posted row records which generator wrote it, so one physical table receives output from the rent generator, the percentage-rent generator, the usage generator and more, and still knows which one produced any given row.",
+       "confidence": "observed",
+       "source": "docs/modules/contracts/setup-schedule-transaction-pattern.md",
+       "children": [
+        {
+         "name": "CON-R-003",
+         "kind": "rule",
+         "detail": "Classifying any financial record: if it carries PostingDate and GL account slots and a counterparty FK, it is an L2 transaction.",
+         "confidence": "observed",
+         "source": "docs/modules/contracts/rules.md",
+         "children": []
+        },
+        {
+         "name": "CON-R-011",
+         "kind": "rule",
+         "detail": "An L2 row has left the system: a row carrying ExportBatchNumber, CheckNumber or CheckDate has been exported/settled — treat it as an immutability candidate, though enforcement is unverified.",
+         "confidence": "observed",
+         "source": "docs/modules/contracts/rules.md",
+         "children": []
+        },
+        {
+         "name": "CON-R-014",
+         "kind": "rule",
+         "detail": "An L2 row is written: every transaction records SourceEntityTable and CodeSourceEntityID — which generator produced it.",
+         "confidence": "observed",
+         "source": "docs/modules/contracts/rules.md",
+         "children": []
+        }
+       ]
+      },
+      {
+       "name": "L3 — Projection markers (the Virtual* objects)",
+       "kind": "field-group",
+       "detail": "The correction the module's own README makes to its first guess: this is a fourth layer, not reporting sugar bolted onto three. Every Virtual* object is computed at read time rather than authored by a person, which is why none of them carry RevNumber, ModifiedByID or any Firm-scope field — a tenant cannot customise a calculation the platform generates. IsActual distinguishes a period backed by real reported data from a pure forecast; IsPosted distinguishes what the engine recomputes now from what was actually posted to the ledger, which is the reconciliation pattern ASG Edge+ should copy explicitly.",
+       "confidence": "observed",
+       "source": "docs/modules/contracts/setup-schedule-transaction-pattern.md",
+       "children": [
+        {
+         "name": "CON-R-004",
+         "kind": "rule",
+         "detail": "Classifying any financial record by its object name and field set: if the name is prefixed Virtual and it has no RevNumber/ModifiedByID/Firm-scope field, it is an L3 projection.",
+         "confidence": "observed",
+         "source": "docs/modules/contracts/rules.md",
+         "children": []
+        },
+        {
+         "name": "CON-R-012",
+         "kind": "rule",
+         "detail": "Reading an L3 projection: projections are computed, not authored; a tenant cannot customise them because no Firm-scope fields exist on any Virtual* object.",
+         "confidence": "observed",
+         "source": "docs/modules/contracts/rules.md",
+         "children": []
+        },
+        {
+         "name": "Is the Virtual layer materialised, or computed at read time?",
+         "kind": "constraint",
+         "detail": "The sharpest unresolved contradiction in the whole corpus. One field-catalog note states plainly that Virtual entities are calculated projections generated at read time, never persisted — but seven of the eight Virtual objects do name a real Postgres table in the object-model export (only VirtualSalesPeriod's table cell is blank). The likely reconciliation is a materialised view or cache table, computed by the platform and never user-edited, which is consistent with the missing RevNumber/ModifiedByID/Firm fields — but it is not confirmed, and it decides whether ASG Edge+'s L3 needs its own persistence and invalidation logic or can just be a query.",
+         "confidence": "inferred",
+         "source": "docs/modules/contracts/setup-schedule-transaction-pattern.md",
+         "children": []
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "name": "The regeneration contract",
+     "kind": "capability",
+     "detail": "DELETE_PAYMENTS existing as the counterpart to GENERATE_RENT is the proof that L2 transactions are derived output, not source data: the supported way to fix a wrong rent schedule is to delete the generated transactions and regenerate them, not to edit them in place. ExpenseSchedule.ProcessedFlag/ProcessedDate is the guard against generating the same row twice, and ExportBatchNumber/CheckNumber on PaymentTransaction are the guards against deleting a row that has already left for accounts payable — assuming that guard is actually enforced, which is unconfirmed.",
+     "confidence": "derived",
+     "source": "docs/modules/contracts/setup-schedule-transaction-pattern.md",
+     "children": [
+      {
+       "name": "CON-R-007",
+       "kind": "rule",
+       "detail": "Operator invokes GENERATE_RENT (or a sibling): generate L2 transactions from every eligible L1 row where ProcessedFlag is false; set ProcessedFlag = true, ProcessedDate = now.",
+       "confidence": "derived",
+       "source": "docs/modules/contracts/rules.md",
+       "children": []
+      },
+      {
+       "name": "CON-R-010",
+       "kind": "rule",
+       "detail": "Correcting generated output: the supported path is DELETE_PAYMENTS then GENERATE_RENT, not editing a posted transaction in place.",
+       "confidence": "derived",
+       "source": "docs/modules/contracts/rules.md",
+       "children": []
+      },
+      {
+       "name": "Delete-then-regenerate vs. append-only ledger",
+       "kind": "constraint",
+       "detail": "ASG Edge+ has SOX/SOC 2 reasons to prefer an append-only ledger with explicit reversals over a delete-and-rebuild model, but which one Lucernex actually implements — does GENERATE_RENT run twice produce duplicates or is it idempotent, and does DELETE_PAYMENTS refuse a row that already carries an ExportBatchNumber — is not confirmed and should be checked in the live UI before committing to either design.",
+       "confidence": "derived",
+       "source": "docs/modules/contracts/asg-edgeplus-mapping.md",
+       "children": []
+      }
+     ]
+    },
+    {
+     "name": "The HoldFlag cascade",
+     "kind": "constraint",
+     "detail": "HoldFlag appears independently at every layer of the recurring-expense and accrual families — the clause, the schedule row, and the posted transaction can each be suspended on its own — and AlternateRentSchedule can flip several of these holds at once when a concession window opens. This is the one piece of the pattern most likely to be missed in a rebuild, because it is a genuine cross-cutting suppression mechanism rather than a single boolean on one object.",
+     "confidence": "observed",
+     "source": "docs/modules/contracts/setup-schedule-transaction-pattern.md",
+     "children": [
+      {
+       "name": "CON-R-009",
+       "kind": "rule",
+       "detail": "Generation is requested: any HoldFlag = true anywhere in the L0→L1→L2 chain suppresses the row — though whether it prevents generation or merely marks the generated row held is unconfirmed.",
+       "confidence": "observed",
+       "source": "docs/modules/contracts/rules.md",
+       "children": []
+      }
+     ]
+    },
+    {
+     "name": "The five instantiations",
+     "kind": "field-group",
+     "detail": "One generator pattern, applied to five different kinds of money. Two (recurring expense, accrual) can be materialised the moment the lease is signed because their amounts are known in advance; two (percentage rent, use-based rent) cannot, because they depend on facts — sales, usage — that have not happened yet, and so their schedule layer is computed rather than stored. The fifth (lease accounting) belongs to a different module and is noted here only for context.",
+     "confidence": "observed",
+     "source": "docs/modules/contracts/setup-schedule-transaction-pattern.md",
+     "children": [
+      {
+       "name": "Recurring expense / base rent",
+       "kind": "entity",
+       "detail": "The first and simplest of the five instantiations, and the one every other family is compared against: an analyst states a starting amount, an escalation rule and a date range in the Expense Setup Wizard, presses Generate, and the platform materialises the clause (ExpenseSetup), the full period schedule (ExpenseSchedule) and — once approved — the posted transactions (PaymentTransaction). This is the family that blocks ASG Edge+ component #21, Payment Processing, directly.",
+       "confidence": "observed",
+       "source": "docs/modules/contracts/setup-schedule-transaction-pattern.md",
+       "children": [
+        {
+         "name": "CON-R-030",
+         "kind": "rule",
+         "detail": "Authoring a recurring expense through the wizard: the wizard's start date, end date, starting amount, amount type and escalation settings materialise ExpenseSetup + ExpenseEscalation + the full ExpenseSchedule in one action.",
+         "confidence": "observed",
+         "source": "docs/modules/contracts/rules.md",
+         "children": []
+        },
+        {
+         "name": "CON-R-031",
+         "kind": "rule",
+         "detail": "The wizard's 'Find Starting Amount' checkbox is set: work backwards from a known later amount and the escalation rule to derive the starting amount — useful for abstracting a lease mid-term.",
+         "confidence": "inferred",
+         "source": "docs/modules/contracts/rules.md",
+         "children": []
+        },
+        {
+         "name": "CON-R-032",
+         "kind": "rule",
+         "detail": "Determining billing frequency: CodeFrequencyID, NumberOfPayments and PaymentDueDay drive the number and spacing of ExpenseSchedule rows.",
+         "confidence": "derived",
+         "source": "docs/modules/contracts/rules.md",
+         "children": []
+        },
+        {
+         "name": "CON-R-033",
+         "kind": "rule",
+         "detail": "The clause is flagged IsCustomPaymentCoverage: the same ExpenseSetup record supports annual, quarterly or semi-annual coverage without a schema change, via explicit month-and-day markers per frequency.",
+         "confidence": "observed",
+         "source": "docs/modules/contracts/rules.md",
+         "children": []
+        },
+        {
+         "name": "CON-R-034",
+         "kind": "rule",
+         "detail": "The clause is flagged IsPayArrears: payment is due after the coverage period rather than in advance.",
+         "confidence": "inferred",
+         "source": "docs/modules/contracts/rules.md",
+         "children": []
+        },
+        {
+         "name": "CON-R-035",
+         "kind": "rule",
+         "detail": "The clause is flagged IsDailyRent: the period amount is the daily rate multiplied by the day count in the period, rather than a fixed period amount.",
+         "confidence": "derived",
+         "source": "docs/modules/contracts/rules.md",
+         "children": []
+        },
+        {
+         "name": "CON-R-036",
+         "kind": "rule",
+         "detail": "A partial first or last period occurs: CodeProrationMethodID governs it, and the schedule's own FirstPaymentAmount / LastPaymentAmount carry the prorated stub amounts.",
+         "confidence": "observed",
+         "source": "docs/modules/contracts/rules.md",
+         "children": []
+        },
+        {
+         "name": "CON-R-037",
+         "kind": "rule",
+         "detail": "CalculateScheduleAmounts is invoked: the schedule's amounts are recomputed in place from the clause, its escalation and its tax configuration.",
+         "confidence": "observed",
+         "source": "docs/modules/contracts/rules.md",
+         "children": []
+        },
+        {
+         "name": "CON-R-038",
+         "kind": "rule",
+         "detail": "An expense is split across organizations: ExpenseAllocation apportions one clause across organizations by percentage.",
+         "confidence": "observed",
+         "source": "docs/modules/contracts/rules.md",
+         "children": []
+        },
+        {
+         "name": "CON-R-039",
+         "kind": "rule",
+         "detail": "An expense is split across vendors: ExpenseVendorAllocation apportions one clause's payments across vendors by percentage; CHANGE_EXPENSE_ALLOCATION_VENDOR rewrites it.",
+         "confidence": "observed",
+         "source": "docs/modules/contracts/rules.md",
+         "children": []
+        }
+       ]
+      },
+      {
+       "name": "Expense accrual",
+       "kind": "entity",
+       "detail": "The second instantiation: an expense the tenant owes but has not yet been billed for — property tax and insurance are the classic cases — so the obligation is recognised ahead of the invoice arriving. ExpenseAccrualSetup is the clause, ExpenseAccrualSchedule the periods, AccrualTransaction the posting. Structurally identical in shape to recurring expense, and it blocks ASG Edge+ component #23.",
+       "confidence": "observed",
+       "source": "docs/modules/contracts/setup-schedule-transaction-pattern.md",
+       "children": [
+        {
+         "name": "CON-R-119",
+         "kind": "rule",
+         "detail": "An accrual is posted: AccrualTransaction carries PeriodAmount, PeriodBeginDate/EndDate, PeriodNumber/Year and PostingDate, with its own GL slots, driven by GENERATE_ACCRUALS.",
+         "confidence": "observed",
+         "source": "docs/modules/contracts/rules.md",
+         "children": []
+        },
+        {
+         "name": "CON-R-120",
+         "kind": "rule",
+         "detail": "An accrual clause is configured: ExpenseAccrualSetup accrues an expense ahead of its billing, using CodeAccrualTypeID, CurrentAnnualExpense/CurrentPeriodExpense, and optionally IsDailyRent + RentableArea.",
+         "confidence": "observed",
+         "source": "docs/modules/contracts/rules.md",
+         "children": []
+        },
+        {
+         "name": "CON-R-121",
+         "kind": "rule",
+         "detail": "An accrual schedule is generated: period-by-period accrual amounts are produced from AccrualRate/DailyAccrualRate, with the same daily-rate support as recurring expense.",
+         "confidence": "observed",
+         "source": "docs/modules/contracts/rules.md",
+         "children": []
+        },
+        {
+         "name": "CON-R-122",
+         "kind": "rule",
+         "detail": "Accruals are forecast: ForecastCapPercent/ForecastGrowthPercent/ForecastAdjustment and their Plan* twins grow the accrual independently of the contract's own escalation.",
+         "confidence": "observed",
+         "source": "docs/modules/contracts/rules.md",
+         "children": []
+        },
+        {
+         "name": "CON-R-123",
+         "kind": "rule",
+         "detail": "Percentage-rent accrual is reconciled: VirtualPRAccrualPeriod's computed AccrualAmount{ThisPeriod,PriorPeriods,Total} is displayed next to the PostedAccrualAmount{...} that was actually posted, with IsPosted as the flag.",
+         "confidence": "observed",
+         "source": "docs/modules/contracts/rules.md",
+         "children": []
+        }
+       ]
+      },
+      {
+       "name": "Percentage rent",
+       "kind": "entity",
+       "detail": "The richest of the five instantiations, and the one that most rewards deep modelling: sales are reported on one clock and rent is billed on another, net sales are run through up to eight breakpoint tiers with a natural-vs-artificial choice on how the first tier's threshold is even derived, the tiered rent is clamped between a floor and a cap, reduced by offsets and by rent already paid, and only then posted. Every step below the clause itself lives in the Virtual (L3 projection) layer, because percentage rent cannot exist as a stored schedule before sales have actually happened.",
+       "confidence": "observed",
+       "source": "docs/modules/contracts/percentage-rent.md",
+       "children": [
+        {
+         "name": "PercentageRent — the clause",
+         "kind": "entity",
+         "detail": "45 fields describing the deal, not the arithmetic: which frequency sales are reported on versus which frequency rent is billed on, the cap and floor, whether the breakpoint is natural or artificial, whether the tenant reports cumulatively or period-by-period, and the rent-year start month. Three calendars are independently configurable here — RentYearStartMonth, SalesYearEndDate, and the portfolio's own fiscal calendar — so a rebuild that assumes rent year equals fiscal year equals calendar year will be wrong for most retail leases.",
+         "confidence": "observed",
+         "source": "docs/modules/contracts/percentage-rent.md",
+         "children": [
+          {
+           "name": "CodeReportingFrequencyID / CodeBillingFrequencyID",
+           "kind": "field-group",
+           "detail": "Two separate frequencies on the same clause: how often the tenant reports sales, and how often percentage rent is actually billed. They do not have to match, which is why the computed period below carries two independent date windows rather than one.",
+           "confidence": "observed",
+           "source": "docs/modules/contracts/percentage-rent.md",
+           "children": []
+          },
+          {
+           "name": "NaturalBreakpointFlag",
+           "kind": "field",
+           "detail": "Selects between an artificial breakpoint (the tenant typed a dollar threshold directly) and a natural breakpoint (the threshold is derived from the base rent — see the breakpoint entity below). A single checkbox controls which of two very different computations runs.",
+           "confidence": "observed",
+           "source": "docs/modules/contracts/percentage-rent.md",
+           "children": []
+          },
+          {
+           "name": "CON-R-069",
+           "kind": "rule",
+           "detail": "A percentage-rent clause is flagged ExtFinalPeriodToLeaseExpDt: the final period extends to lease expiry instead of truncating at the usual period boundary.",
+           "confidence": "observed",
+           "source": "docs/modules/contracts/rules.md",
+           "children": []
+          }
+         ]
+        },
+        {
+         "name": "PercentageRentBreakpoint — natural vs artificial",
+         "kind": "entity",
+         "detail": "The single most important modelling decision in this whole family: a natural breakpoint is not stored as a dollar amount at all. The table stores NaturalBreakpointRate — a rate — and the threshold amount is derived from the contract's base rent at calculation time. That only makes sense if the platform trusts the derivation enough to skip storing the number, and the audit trail for that trust is that the computed period later stores both the rate the analyst typed and the rate the engine actually used, side by side.",
+         "confidence": "observed",
+         "source": "docs/modules/contracts/percentage-rent.md",
+         "children": [
+          {
+           "name": "BreakpointAmount1..8 / BreakpointCount1..8 / BreakpointRate1..8",
+           "kind": "field-group",
+           "detail": "Eight parallel tiers, each with a threshold (as either a dollar amount or a unit count — chosen by UseCountBasedRate) and a rate. All sixteen threshold columns exist on every row regardless of which mode is active; only one set is meaningful for a given clause. Eight is an arbitrary platform limit — a ninth tier is unrepresentable — and ASG Edge+ should replace the fixed slots with a tier collection of unbounded length.",
+           "confidence": "observed",
+           "source": "docs/modules/contracts/percentage-rent.md",
+           "children": []
+          },
+          {
+           "name": "naturalBreakpoint = annualMinimumRent / NaturalBreakpointRate",
+           "kind": "rule",
+           "detail": "The formula implied by the schema for deriving a natural breakpoint's dollar threshold from the rate that is actually stored. This is the standard retail-lease definition of a natural breakpoint, and it is consistent with the schema storing a rate rather than an amount — but the exact source of annualMinimumRent (the contract's current base rent field, the sum of base-rent expense clauses, or the period's own schedule amount?) is not confirmed anywhere and changes every natural-breakpoint number in the system if wrong.",
+           "confidence": "inferred",
+           "source": "docs/modules/contracts/percentage-rent.md",
+           "children": [
+            {
+             "name": "Percentage (rate) — the value actually stored",
+             "kind": "type",
+             "detail": "NaturalBreakpointRate is typed Percentage, not Currency. The engine derives the dollar amount rather than accepting it as input, which is the strongest evidence for the natural-breakpoint reading above.",
+             "confidence": "observed",
+             "source": "docs/modules/contracts/data-model.md",
+             "children": [
+              {
+               "name": "The numerator is unconfirmed — highest-value thing to verify",
+               "kind": "constraint",
+               "detail": "Whether annualMinimumRent means Contract.CurrentAnnualBaseRent, the sum of base-rent ExpenseSetup rows, or ExpenseSchedule.AnnualAmount for the current period is genuinely unknown from the schema alone, and each choice produces a different dollar threshold for the same lease. Ranked open question #3 in percentage-rent.md.",
+               "confidence": "inferred",
+               "source": "docs/modules/contracts/percentage-rent.md",
+               "children": []
+              }
+             ]
+            }
+           ]
+          },
+          {
+           "name": "ConfiguredBreakpointRate1 vs BreakpointRate1",
+           "kind": "field-group",
+           "detail": "The audit trail for the natural-breakpoint derivation: VirtualPercentageRentPeriod stores both what the analyst configured and what the engine actually used for tier 1, side by side, so a discrepancy between the two is visible without recomputing anything.",
+           "confidence": "observed",
+           "source": "docs/modules/contracts/percentage-rent.md",
+           "children": []
+          }
+         ]
+        },
+        {
+         "name": "Sales exclusions and their caps",
+         "kind": "entity",
+         "detail": "Not every dollar a tenant reports as sales counts toward percentage rent — employee sales, online orders shipped from a different store, and similar categories are typically excluded by the lease. SalesExclusion states the rate at which a sales category is excluded; rows sharing an ExclusionGroupCapID are aggregated and clamped by SalesExclusionCap, which stores the clamp arithmetic explicitly enough that it needs no inference at all.",
+         "confidence": "observed",
+         "source": "docs/modules/contracts/percentage-rent.md",
+         "children": [
+          {
+           "name": "CON-R-052",
+           "kind": "rule",
+           "detail": "An exclusion applies: rawExcluded = salesOfType × SalesExclusion.ExclusionRate.",
+           "confidence": "derived",
+           "source": "docs/modules/contracts/rules.md",
+           "children": []
+          },
+          {
+           "name": "CON-R-053",
+           "kind": "rule",
+           "detail": "Exclusions share a cap group (ExclusionGroupCapID): PRPGrossExcludedAmount sums the raw excluded amounts within the group, before the cap.",
+           "confidence": "derived",
+           "source": "docs/modules/contracts/rules.md",
+           "children": []
+          },
+          {
+           "name": "CON-R-054",
+           "kind": "rule",
+           "detail": "A cap group is evaluated: PRPComputedCapAmount = min(CapAmount, PRPGrossSalesAmount × CapPercent) — the effective cap, whichever binds first.",
+           "confidence": "inferred",
+           "source": "docs/modules/contracts/rules.md",
+           "children": []
+          },
+          {
+           "name": "CON-R-055",
+           "kind": "rule",
+           "detail": "The cap is applied: PRPNetExcludedAmount = min(gross, cap); PRPExcessExcludedAmount = gross − net — and the platform stores both numbers, which is what makes the min() reading solid rather than speculative.",
+           "confidence": "derived",
+           "source": "docs/modules/contracts/rules.md",
+           "children": []
+          },
+          {
+           "name": "Are the Firm_*Sales* exclusion families on Contract documentary or functional?",
+           "kind": "constraint",
+           "detail": "The American Freight / ASG tenant does not actually populate SalesExclusion rows for its main exclusion catalogue. It uses five parallel families of Firm-scope custom fields on Contract instead (Firm_CustomerPOSSales, Firm_EmployeeSales, and three more), each with an Allowable/BeginDate/Cap/CapPercent/Document/Notes/Page/Section shape — a lease-abstract shape, not an engine-input shape. Whether these also drive the calculation or are purely documentary alongside real SalesExclusion rows is unresolved, and a migration that moves only SalesExclusion rows risks silently losing the tenant's actual exclusion rules.",
+           "confidence": "observed",
+           "source": "docs/modules/contracts/percentage-rent.md",
+           "children": []
+          }
+         ]
+        },
+        {
+         "name": "The Virtual layer — VirtualSalesPeriod / VirtualPercentageRentPeriod",
+         "kind": "entity",
+         "detail": "Percentage rent cannot be materialised the day the lease is signed the way a fixed rent schedule can, because it depends on sales that have not happened yet. So its L1 'schedule' is itself a Virtual object, computed from reported sales at read time rather than stored as a generated row — the deepest structural difference between the fixed-amount families and the variable-amount ones. This is where the two-bucket date model, the eight-tier arithmetic, and the cap/floor clamp all actually live.",
+         "confidence": "observed",
+         "source": "docs/modules/contracts/percentage-rent.md",
+         "children": [
+          {
+           "name": "Two independent buckets: Reporting and Billing",
+           "kind": "capability",
+           "detail": "VirtualSalesPeriod carries a full ReportingBucketBeginDate/EndDate/DueDate window and a separate BillingBucketBeginDate/EndDate/DueDate window for the same underlying period, because CodeReportingFrequencyID and CodeBillingFrequencyID can differ on the clause. The reporting bucket also keeps its own gross/net sales totals, distinct from the billing bucket's — two parallel truths about the same stretch of time.",
+           "confidence": "observed",
+           "source": "docs/modules/contracts/percentage-rent.md",
+           "children": [
+            {
+             "name": "CON-R-050",
+             "kind": "rule",
+             "detail": "A percentage-rent period is projected: two independent date windows are produced — ReportingBucket{Begin,End,Due}Date and BillingBucket{Begin,End,Due}Date.",
+             "confidence": "observed",
+             "source": "docs/modules/contracts/rules.md",
+             "children": []
+            }
+           ]
+          },
+          {
+           "name": "Rolling sales up into the rent period",
+           "kind": "capability",
+           "detail": "Gross sales are summed for the sales period, run through the exclusion engine to get net sales, then net sales across every sales period inside the billing bucket are summed into PRPSalesAmount — the figure that actually gets tiered. Three clause flags can modify this figure before tiering: a trailing-12-month view, full-year annualisation of a partial period, and year-to-date cumulative accumulation.",
+           "confidence": "observed",
+           "source": "docs/modules/contracts/percentage-rent.md",
+           "children": [
+            {
+             "name": "CON-R-051",
+             "kind": "rule",
+             "detail": "Sales are reported: GrossSalesPeriodAmount sums Sales.GrossSalesAmount over the sales period; GrossSalesPeriodCount does the same for unit counts.",
+             "confidence": "derived",
+             "source": "docs/modules/contracts/rules.md",
+             "children": []
+            },
+            {
+             "name": "CON-R-056",
+             "kind": "rule",
+             "detail": "Net sales are computed: NetSalesPeriodAmount = GrossSalesPeriodAmount − ExcludedSalesPeriodAmount.",
+             "confidence": "derived",
+             "source": "docs/modules/contracts/rules.md",
+             "children": []
+            },
+            {
+             "name": "CON-R-057",
+             "kind": "rule",
+             "detail": "Sales periods roll into a rent period: PRPSalesAmount sums NetSalesPeriodAmount over every sales period inside the billing bucket.",
+             "confidence": "derived",
+             "source": "docs/modules/contracts/rules.md",
+             "children": []
+            },
+            {
+             "name": "CON-R-066",
+             "kind": "rule",
+             "detail": "UseTrailing12MonthSales is set: replace the bucket sum with a rolling 12-month sum, scaled by TrailingSalesMultiplier for a partial history.",
+             "confidence": "inferred",
+             "source": "docs/modules/contracts/rules.md",
+             "children": []
+            },
+            {
+             "name": "CON-R-067",
+             "kind": "rule",
+             "detail": "AnnualizeRent is set: scale a partial period's sales up to a full year, tier it, then scale the resulting rent back down.",
+             "confidence": "inferred",
+             "source": "docs/modules/contracts/rules.md",
+             "children": []
+            },
+            {
+             "name": "CON-R-068",
+             "kind": "rule",
+             "detail": "CumulativeFlag is set: accumulate year-to-date sales and rent, crediting rent already billed, instead of treating each period independently.",
+             "confidence": "inferred",
+             "source": "docs/modules/contracts/rules.md",
+             "children": []
+            }
+           ]
+          },
+          {
+           "name": "The eight breakpoint tiers",
+           "kind": "capability",
+           "detail": "The actual tiering arithmetic: for each of the eight tiers, the portion of PRPSalesAmount falling in that tier is multiplied by that tier's rate, and the eight tier-rents are summed. This is the single highest-value thing to verify against a live tenant, because the field label permits two structurally different readings of the same number.",
+           "confidence": "observed",
+           "source": "docs/modules/contracts/percentage-rent.md",
+           "children": [
+            {
+             "name": "CON-R-058",
+             "kind": "rule",
+             "detail": "A percentage-rent period is tiered: PRPSalesPastBreakpoint_N is computed for each of 8 tiers from PRPBreakpointAmount1..8 (or BreakpointCount1..8 under UseCountBasedRate) — assumed to be a marginal band reading, though a simple-excess reading is also grammatically possible.",
+             "confidence": "inferred",
+             "source": "docs/modules/contracts/rules.md",
+             "children": [
+              {
+               "name": "PRPSalesPastBreakpoint1..8",
+               "kind": "field",
+               "detail": "Literally labelled 'Sales Past Breakpoint #N'. The wording alone supports two different formulas for the same field.",
+               "confidence": "observed",
+               "source": "docs/modules/contracts/percentage-rent.md",
+               "children": [
+                {
+                 "name": "Currency (8-way array)",
+                 "kind": "type",
+                 "detail": "Eight parallel currency columns, one per tier, rather than a variable-length collection — the same fixed-slot pattern seen throughout this module.",
+                 "confidence": "observed",
+                 "source": "docs/modules/contracts/data-model.md",
+                 "children": [
+                  {
+                   "name": "Marginal band vs. simple excess — the single highest-ranked open question in the module",
+                   "kind": "constraint",
+                   "detail": "Reading (a), assumed throughout: clamp(PRPSalesAmount, BP_N, BP_{N+1}) − BP_N, the standard tiered structure where rates are marginal and the tier rents simply sum. Reading (b): max(0, PRPSalesAmount − BP_N), which would double-count across tiers unless the rates are incremental deltas rather than the stated per-tier rates. Reading (a) is assumed because PRPBreakpointRent is a plain sum of the eight tier rents, which is only correct under (a) — but this is unverified against a live tenant and it is ranked the #1 rule to check before writing any percentage-rent code, because every percentage-rent number in a rebuilt system depends on it.",
+                   "confidence": "inferred",
+                   "source": "docs/modules/contracts/rules.md",
+                   "children": []
+                  }
+                 ]
+                }
+               ]
+              }
+             ]
+            },
+            {
+             "name": "CON-R-059",
+             "kind": "rule",
+             "detail": "Tier rent is computed: PRPBreakpointRentDue_N = past_N × rate_N; PRPBreakpointRent = the sum across all eight tiers.",
+             "confidence": "derived",
+             "source": "docs/modules/contracts/rules.md",
+             "children": []
+            }
+           ]
+          },
+          {
+           "name": "Cap and floor clamp",
+           "kind": "capability",
+           "detail": "The summed tier rent is clamped between a floor and a cap that belong to this specific billing bucket — the clause's own CapAmount/FloorAmount, scaled by CodeCapFrequencyID so that a monthly cap and an annual cap are genuinely different numbers even on the same lease.",
+           "confidence": "observed",
+           "source": "docs/modules/contracts/percentage-rent.md",
+           "children": [
+            {
+             "name": "CON-R-060",
+             "kind": "rule",
+             "detail": "Cap and floor are applied: PRPCapFloorAdjustedRent = clamp(PRPBreakpointRent, BillingBucketFloorAmount, BillingBucketCapAmount).",
+             "confidence": "derived",
+             "source": "docs/modules/contracts/rules.md",
+             "children": [
+              {
+               "name": "PRPCapFloorAdjustedRent",
+               "kind": "field",
+               "detail": "The clamped rent figure — the tiered result after the lease's own ceiling and floor have been applied, and the number that feeds the offset and credit steps next.",
+               "confidence": "observed",
+               "source": "docs/modules/contracts/percentage-rent.md",
+               "children": [
+                {
+                 "name": "MONEY (sTYPE_MONEY)",
+                 "kind": "type",
+                 "detail": "A currency amount. Like every other money field cross-mapped into the landed Postgres schema, this lands as TEXT once it leaves the application layer.",
+                 "confidence": "observed",
+                 "source": "docs/modules/contracts/data-model.md",
+                 "children": [
+                  {
+                   "name": "Stored as TEXT downstream — must be parsed defensively",
+                   "kind": "constraint",
+                   "detail": "This field is exactly the kind of system-calculated currency value that the Constitution's BigDecimal rule exists to protect: it is arithmetic output, not user input, and if the landed column is untyped text, a migration must parse and validate it rather than trust it.",
+                   "confidence": "derived",
+                   "source": "docs/modules/contracts/asg-edgeplus-mapping.md",
+                   "children": []
+                  }
+                 ]
+                }
+               ]
+              }
+             ]
+            }
+           ]
+          },
+          {
+           "name": "Offsets against the rent-year obligation",
+           "kind": "capability",
+           "detail": "VirtualPRPAggregate is where offsets land, at the rent-year level rather than the period level: a landlord credit or a CAM-based reduction is drawn down against CurrentRentObligation before arriving at CurrentRentDue.",
+           "confidence": "observed",
+           "source": "docs/modules/contracts/percentage-rent.md",
+           "children": [
+            {
+             "name": "CON-R-061",
+             "kind": "rule",
+             "detail": "Offsets are applied: VariableRentOffset and ScheduledOffset, applied via APPLY_OFFSETS, reduce the rent-year obligation.",
+             "confidence": "derived",
+             "source": "docs/modules/contracts/rules.md",
+             "children": []
+            }
+           ]
+          },
+          {
+           "name": "Rent due and posting",
+           "kind": "capability",
+           "detail": "The final steps: credit whatever has already been billed this period, arrive at the amount actually due, and post it as a PaymentTransaction carrying PercentageRentID. A separate Virtual object, VirtualPRAccrualPeriod, then reconciles what the engine recomputes as due against what was actually posted — the same computed-vs-posted pattern seen throughout the module's projection layer.",
+           "confidence": "observed",
+           "source": "docs/modules/contracts/percentage-rent.md",
+           "children": [
+            {
+             "name": "CON-R-062",
+             "kind": "rule",
+             "detail": "Rent already paid is credited: PRPRentDue = PRPTotalRent − SalesPeriodRentPaid − offsets.",
+             "confidence": "inferred",
+             "source": "docs/modules/contracts/rules.md",
+             "children": []
+            },
+            {
+             "name": "CON-R-063",
+             "kind": "rule",
+             "detail": "Percentage rent is billed: a PaymentTransaction carrying PercentageRentID is generated for PRPRentDue.",
+             "confidence": "derived",
+             "source": "docs/modules/contracts/rules.md",
+             "children": []
+            },
+            {
+             "name": "CON-R-064",
+             "kind": "rule",
+             "detail": "NaturalBreakpointFlag is set: naturalBreakpoint = annualMinimumRent / NaturalBreakpointRate — see the breakpoint entity above for why the numerator is unresolved.",
+             "confidence": "inferred",
+             "source": "docs/modules/contracts/rules.md",
+             "children": []
+            },
+            {
+             "name": "CON-R-065",
+             "kind": "rule",
+             "detail": "A natural breakpoint is derived: the configured rate and the effective rate are stored separately as the derivation's own audit trail.",
+             "confidence": "observed",
+             "source": "docs/modules/contracts/rules.md",
+             "children": []
+            }
+           ]
+          }
+         ]
+        },
+        {
+         "name": "Alternate rent — substituting the formula for a window",
+         "kind": "capability",
+         "detail": "AlternateRentSchedule lets a COVID-era or co-tenancy-triggered concession replace the normal percentage-rent (and fixed-rent) formula for a bounded window, and it can programmatically hold the normal expense schedule, hold percentage rent, and suspend straight-line accounting all at once — the HoldFlag cascade triggered from one place. Crucially it also records PreAltRentInvoiceAmount: what would have been invoiced without the concession, which is the audit artefact that makes concession reporting possible at all.",
+         "confidence": "observed",
+         "source": "docs/modules/contracts/percentage-rent.md",
+         "children": [
+          {
+           "name": "CON-R-070",
+           "kind": "rule",
+           "detail": "An AlternateRentSchedule window is active: a substitute rent formula (CodeAltRentMathID, PercentRentRate) replaces the normal one for the window.",
+           "confidence": "observed",
+           "source": "docs/modules/contracts/rules.md",
+           "children": []
+          },
+          {
+           "name": "CON-R-071",
+           "kind": "rule",
+           "detail": "Alternate rent begins: SetExpHoldFlag, SetPRHoldFlag and SuspendSL hold the expense schedule, hold percentage rent, and suspend straight-line accounting — though what releases the holds afterward is not observed.",
+           "confidence": "observed",
+           "source": "docs/modules/contracts/rules.md",
+           "children": []
+          },
+          {
+           "name": "CON-R-072",
+           "kind": "rule",
+           "detail": "A payment is generated under alternate rent: PreAltRentInvoiceAmount records what would have been invoiced without the concession.",
+           "confidence": "observed",
+           "source": "docs/modules/contracts/rules.md",
+           "children": []
+          },
+          {
+           "name": "CON-R-073",
+           "kind": "rule",
+           "detail": "Alternate rent applies: ExpenseReductionAmount / ExpenseReductionPercent reduce the fixed expense side as well as the variable side.",
+           "confidence": "observed",
+           "source": "docs/modules/contracts/rules.md",
+           "children": []
+          },
+          {
+           "name": "CON-R-074",
+           "kind": "rule",
+           "detail": "PRDeductExclusions is set: governs whether sales exclusions still apply under the alternate-rent formula.",
+           "confidence": "observed",
+           "source": "docs/modules/contracts/rules.md",
+           "children": []
+          },
+          {
+           "name": "CON-R-075",
+           "kind": "rule",
+           "detail": "A VariableRentOffset applies: percentage rent is reduced by amounts paid in a named expense group/type, subject to its own cap.",
+           "confidence": "derived",
+           "source": "docs/modules/contracts/rules.md",
+           "children": []
+          },
+          {
+           "name": "CON-R-076",
+           "kind": "rule",
+           "detail": "A ScheduledOffset is drawn down: a landlord credit (TotalAmount, CapAmountPerMonth) is drawn down over time against named expense group/types, via APPLY_OFFSETS.",
+           "confidence": "derived",
+           "source": "docs/modules/contracts/rules.md",
+           "children": []
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "name": "Use-based rent",
+       "kind": "entity",
+       "detail": "A field-for-field mirror of percentage rent with two substitutions — Sales becomes Usage, and the PRP prefix becomes UBRP — confirmed down to matching field names on both Virtual objects. The only real differences: the tier threshold is a unit cost rather than a percentage rate (there is no separate rate column, because the cost per unit is the rate), and unit rates carry six decimal places rather than the usual two, which is exactly where a naive double loses money against a large usage count. Because the engine is structurally identical to percentage rent, ASG Edge+ should build one generic tiered-rent engine parameterised by measure, not two separate ones.",
+       "confidence": "observed",
+       "source": "docs/modules/contracts/percentage-rent.md",
+       "children": [
+        {
+         "name": "CON-R-077",
+         "kind": "rule",
+         "detail": "Usage-based rent is computed: structurally identical to the percentage-rent tiering with Sales→Usage and PRP→UBRP; the tier value is a unit cost, not a percentage rate.",
+         "confidence": "derived",
+         "source": "docs/modules/contracts/rules.md",
+         "children": []
+        },
+        {
+         "name": "CON-R-078",
+         "kind": "rule",
+         "detail": "Unit rates are stored: usage unit costs carry 6 decimal places (sTYPE_NUMBER_FRACTION6DIGITS); usage counts carry 5 — precision loss here is a direct Constitution §4.4 violation if implemented with floating point.",
+         "confidence": "observed",
+         "source": "docs/modules/contracts/rules.md",
+         "children": []
+        },
+        {
+         "name": "CON-R-079",
+         "kind": "rule",
+         "detail": "A use-rent model is selected: CodeUseRentModelTypeID selects the variant; its members are unknown.",
+         "confidence": "observed",
+         "source": "docs/modules/contracts/rules.md",
+         "children": []
+        }
+       ]
+      },
+      {
+       "name": "Straight-line / ASC 842 / IFRS 16",
+       "kind": "entity",
+       "detail": "The fifth instantiation, included here only for completeness: ContractFinancialTest plus the contract's Accounting Assumptions form the clause, SLSummary → SLPeriod form the schedule, and posting happens in place rather than through a separate transaction object. Its internals — the classification tests, the opening balances, the roll-forward disclosure block — belong to the accounting module, not this one; this module only supplies its inputs (the expense-type bindings that choose which schedule type applies).",
+       "confidence": "observed",
+       "source": "docs/modules/contracts/setup-schedule-transaction-pattern.md",
+       "children": []
+      }
+     ]
+    },
+    {
+     "name": "Two near-misses that are not instances",
+     "kind": "constraint",
+     "detail": "Two families look at first glance like they should fit the pattern and do not — Allowance has a claim shape (request, then receive) rather than a generated schedule, and Expense Recovery has no schedule layer at all. Allowance is a minor miss; expense recovery is the major one, treated as its own top-level branch below because getting it wrong is, in this module's own words, the single most expensive modelling mistake available here.",
+     "confidence": "observed",
+     "source": "docs/modules/contracts/setup-schedule-transaction-pattern.md",
+     "children": [
+      {
+       "name": "Allowance — a claim, not a schedule",
+       "kind": "entity",
+       "detail": "Allowance (23 fields, the clause) is followed by AllowanceTransaction (20 fields) with no schedule layer between them. AllowanceTransaction carries RequestDate/RequestAmount and ReceiveDate/ReceiveAmount — a tenant-improvement-allowance claim being requested and then received, not a generated period schedule.",
+       "confidence": "observed",
+       "source": "docs/modules/contracts/setup-schedule-transaction-pattern.md",
+       "children": []
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "name": "Expense recovery / CAM — the outlier that must not be modelled as the pattern",
+   "kind": "capability",
+   "detail": "565 fields is not 565 concepts, and none of them is a schedule. Common Area Maintenance recovery is a reconciliation grid — a fixed set of columns holding nine parallel valuations of the same recovery period, each running an identical six-step waterfall — settled directly through the payment layer with no generated schedule in between. Treating CAM as a sixth instance of the Clause/Schedule/Transaction pattern is called out, in this module's own words, as the single most expensive modelling mistake available in this corpus.",
+   "confidence": "observed",
+   "source": "docs/modules/contracts/expense-recovery-cam.md",
+   "children": [
+    {
+     "name": "Why CAM does not instantiate the pattern",
+     "kind": "constraint",
+     "detail": "This is the point the module's own documentation calls out most forcefully: there is no ExpenseRecoverySchedule. ExpenseRecovery (the clause-like header) goes straight to ExpenseRecoveryItem (line detail, not dated periods) and is posted via a plain FK on PaymentTransaction — no generator materialises a schedule of period rows in between. Modelling CAM as a sixth instance of the Clause/Schedule/Transaction pattern would be the single most expensive mistake available in this module, because the actual shape is a reconciliation grid — one header per recovery period holding nine parallel valuation perspectives side by side — not a schedule at all.",
+     "confidence": "observed",
+     "source": "docs/modules/contracts/setup-schedule-transaction-pattern.md",
+     "children": []
+    },
+    {
+     "name": "ExpenseRecovery's 63 configuration fields",
+     "kind": "field-group",
+     "detail": "Strip away the 502-cell grid and what remains is a genuinely small clause: what kind of recovery this is, how the tenant's pro-rata share is computed, the base-year expense stop, a growing cap, the escrow true-up cycle, and — in stark contrast to percentage rent's structured SalesExclusion model — a single free-text field for exclusions.",
+     "confidence": "observed",
+     "source": "docs/modules/contracts/expense-recovery-cam.md",
+     "children": [
+      {
+       "name": "Classification and pro-rata share",
+       "kind": "field-group",
+       "detail": "CodeRecoveryTypeID, CodeCalculationMethodID and CodeExpRecBasedOnID select the recovery model; CodeProRataShareMethodID plus a computed OccupancyAdjustedThreshold ('Occupancy Factor') set the tenant's share. The tenant additionally built its own parallel share computation in Firm_ProRataShare custom fields — a signal it did not trust or could not configure the platform's own share logic.",
+       "confidence": "observed",
+       "source": "docs/modules/contracts/expense-recovery-cam.md",
+       "children": []
+      },
+      {
+       "name": "BaseYear — the expense stop",
+       "kind": "field",
+       "detail": "The year against which an expense stop is measured. Typed Text, not a year or a date — a modelling choice the module flags as a hazard in its own right, separate from where the base year actually enters the waterfall (see the constraint below).",
+       "confidence": "observed",
+       "source": "docs/modules/contracts/expense-recovery-cam.md",
+       "children": []
+      },
+      {
+       "name": "The growing cap",
+       "kind": "field-group",
+       "detail": "The cap is not one number: CapPercentage is a starting amount that escalates every period by either CapAmountChangePercent or CapAmountChangeValue, cumulatively or not depending on IsRecoveryCapEscalationNonCum, with MaximumValue/MinimumValue as the outer clamp.",
+       "confidence": "derived",
+       "source": "docs/modules/contracts/expense-recovery-cam.md",
+       "children": [
+        {
+         "name": "CON-R-093",
+         "kind": "rule",
+         "detail": "A recovery cap applies: the cap grows period over period by a percentage or a value, cumulatively or not.",
+         "confidence": "derived",
+         "source": "docs/modules/contracts/rules.md",
+         "children": []
+        }
+       ]
+      },
+      {
+       "name": "Escrow / estimated payments and true-up",
+       "kind": "field-group",
+       "detail": "The classic CAM escrow cycle: the tenant pays a monthly estimate (CurrentEscrowPayment), the landlord reconciles at year end, a new estimate is proposed (ProposedEscalationPayment), and any shortfall is caught up over N months (CatchUpNumberOfMonths, CatchUpPaymentAmount) via the UPDATE_ESCROW command.",
+       "confidence": "derived",
+       "source": "docs/modules/contracts/expense-recovery-cam.md",
+       "children": [
+        {
+         "name": "CON-R-097",
+         "kind": "rule",
+         "detail": "Escrow is trued up: reconcile the current escrow payment, propose a new estimate, and spread any shortfall over CatchUpNumberOfMonths.",
+         "confidence": "derived",
+         "source": "docs/modules/contracts/rules.md",
+         "children": []
+        }
+       ]
+      },
+      {
+       "name": "RecoveryExclusions — free text only",
+       "kind": "constraint",
+       "detail": "In stark contrast to percentage rent's structured SalesExclusion/SalesExclusionCap model, expense recovery has exactly one exclusion field, and it is a text area. There is no structured exclusion model for CAM at all — a genuine gap in Lucernex's own design that ASG Edge+ should not copy; the fix is to reuse the SalesExclusion shape as the template for a structured CAM exclusion model.",
+       "confidence": "observed",
+       "source": "docs/modules/contracts/expense-recovery-cam.md",
+       "children": [
+        {
+         "name": "CON-R-098",
+         "kind": "rule",
+         "detail": "Recovery exclusions are recorded: RecoveryExclusions is a free-text textarea; there is no structured exclusion model for expense recovery at all.",
+         "confidence": "observed",
+         "source": "docs/modules/contracts/rules.md",
+         "children": []
+        }
+       ]
+      },
+      {
+       "name": "Gross-up",
+       "kind": "field-group",
+       "detail": "GrossupRate and the computed OccupancyAdjustedThreshold ('Occupancy Factor') exist to correct variable expenses in an under-occupied building up to a notional full occupancy before the pro-rata share is applied — the standard CAM gross-up mechanic.",
+       "confidence": "inferred",
+       "source": "docs/modules/contracts/expense-recovery-cam.md",
+       "children": [
+        {
+         "name": "CON-R-096",
+         "kind": "rule",
+         "detail": "A gross-up applies: variable expenses are grossed up to a notional occupancy using GrossupRate and OccupancyAdjustedThreshold.",
+         "confidence": "inferred",
+         "source": "docs/modules/contracts/rules.md",
+         "children": []
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "name": "The Statement Audit reconciliation grid",
+     "kind": "capability",
+     "detail": "502 of ExpenseRecovery's 565 fields are not 502 concepts — they are a clean three-dimensional cross-product: 9 valuation perspectives times roughly 19 measures times a Gross/Net split. 63% of the whole object is typed as system-calculated (derived), not entered, which means Lucernex materialised the entire CAM audit worksheet as stored columns rather than as a query over line items — the reason ExpenseRecovery needed four physical part-tables just to fit.",
+     "confidence": "observed",
+     "source": "docs/modules/contracts/expense-recovery-cam.md",
+     "children": [
+      {
+       "name": "CON-R-087",
+       "kind": "rule",
+       "detail": "A recovery record is stored: 565 fields = 63 configuration fields + a 502-cell grid, where the grid is 9 perspectives × roughly 19 measures × {Gross, Net}.",
+       "confidence": "derived",
+       "source": "docs/modules/contracts/rules.md",
+       "children": []
+      },
+      {
+       "name": "Axis 1 — the 9 valuation perspectives",
+       "kind": "field-group",
+       "detail": "Reported (what the landlord's statement says), Approved (what the tenant agreed to after audit), Budgeted (what was escrowed), and a Prior-year twin of each of those three. Six further variance families compare pairs of these perspectives.",
+       "confidence": "observed",
+       "source": "docs/modules/contracts/expense-recovery-cam.md",
+       "children": [
+        {
+         "name": "CON-R-088",
+         "kind": "rule",
+         "detail": "A within-year variance is computed: RAVariance = Reported − Approved, for both Gross and Net, at 36 fields.",
+         "confidence": "derived",
+         "source": "docs/modules/contracts/rules.md",
+         "children": []
+        },
+        {
+         "name": "CON-R-089",
+         "kind": "rule",
+         "detail": "A within-year variance is computed: ABVariance = Approved − Budgeted, for both Gross and Net.",
+         "confidence": "derived",
+         "source": "docs/modules/contracts/rules.md",
+         "children": []
+        },
+        {
+         "name": "CON-R-090",
+         "kind": "rule",
+         "detail": "A year-over-year variance is computed: {P}PVariance = {P} − Prior{P} for Reported, Approved and Budgeted, each with a percentage sibling.",
+         "confidence": "derived",
+         "source": "docs/modules/contracts/rules.md",
+         "children": []
+        },
+        {
+         "name": "CON-R-091",
+         "kind": "rule",
+         "detail": "Variance families are enumerated: only the three year-over-year families carry a percentage sibling at the header; at the line-item level all five families carry both amount and percent — an asymmetry that says percentage swing year-over-year is the audit trigger, while percentage swing against the landlord's own claim only matters per line.",
+         "confidence": "observed",
+         "source": "docs/modules/contracts/rules.md",
+         "children": []
+        }
+       ]
+      },
+      {
+       "name": "Axis 2 — roughly 19 measures",
+       "kind": "field-group",
+       "detail": "The line items of a CAM reconciliation worksheet: Controllable and Non-Controllable expenses, Deductions, the six waterfall subtotals, admin fees, recoveries, the tenant's pro-rata share, prepaid escrow, and the two area figures (RentableArea, GLA) that compute the share.",
+       "confidence": "observed",
+       "source": "docs/modules/contracts/expense-recovery-cam.md",
+       "children": []
+      },
+      {
+       "name": "Axis 3 — Gross vs Net",
+       "kind": "field-group",
+       "detail": "Every measure exists twice, once before and once after contractual exclusions — the inferred reading, and not confirmed by any source, though it is consistent with the gross-up mechanism (GrossupRate, OccupancyAdjustedThreshold) that exists to correct for an under-occupied building.",
+       "confidence": "inferred",
+       "source": "docs/modules/contracts/expense-recovery-cam.md",
+       "children": [
+        {
+         "name": "What exactly Gross vs Net means is unconfirmed",
+         "kind": "constraint",
+         "detail": "Nothing in the corpus names the distinction directly — it must be read off the live UI's section headers on a populated recovery record.",
+         "confidence": "observed",
+         "source": "docs/modules/contracts/expense-recovery-cam.md",
+         "children": []
+        }
+       ]
+      },
+      {
+       "name": "NoZeroDef — nullable, not zero-defaulted",
+       "kind": "field-group",
+       "detail": "29 grid fields carry this suffix, read as 'no zero default': the field returns null rather than 0 when unset, so a genuine zero stays distinguishable from an unentered value and does not produce a spurious 100% variance. The pattern only appears on measures that participate in variance arithmetic, which supports the reading.",
+       "confidence": "inferred",
+       "source": "docs/modules/contracts/expense-recovery-cam.md",
+       "children": [
+        {
+         "name": "CON-R-092",
+         "kind": "rule",
+         "detail": "A measure is unset: fields suffixed NoZeroDef return null/blank rather than 0.",
+         "confidence": "inferred",
+         "source": "docs/modules/contracts/rules.md",
+         "children": []
+        },
+        {
+         "name": "CON-R-137",
+         "kind": "rule",
+         "detail": "Any recovery measure is unset: for the rebuild, model recovery measures as nullable BigDecimal, never zero-defaulted — a zero default silently produces spurious 100% variances.",
+         "confidence": "inferred",
+         "source": "docs/modules/contracts/asg-edgeplus-mapping.md",
+         "children": []
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "name": "The CAM waterfall — recovered exactly from field labels",
+     "kind": "capability",
+     "detail": "The highest-value single finding in the whole module: Lucernex encoded its own formula in the UI label of every computed field, so all six steps are recoverable with zero inference — 'Sub Total #1 (C+NC-D)', 'Pass-Through (ST1+AF%+AF+A)', and so on down to 'Revised Amount Due (Net+Adj)'. The same six steps run once for every one of the nine perspectives, which is why 502 fields collapse to six formulas repeated nine times over two bases.",
+     "confidence": "observed",
+     "source": "docs/modules/contracts/expense-recovery-cam.md",
+     "children": [
+      {
+       "name": "CON-R-080",
+       "kind": "rule",
+       "detail": "A recovery statement is valued: ST1 = C + NC − D — the recoverable pool, literally labelled 'Sub Total #1 (C+NC-D)'.",
+       "confidence": "observed",
+       "source": "docs/modules/contracts/rules.md",
+       "children": [
+        {
+         "name": "ControllableExpenses / NonControllableExpenses / Deductions",
+         "kind": "field-group",
+         "detail": "The three inputs to the first step: the landlord's controllable operating costs, its uncapped costs (taxes, insurance, utilities), and anything contractually excluded.",
+         "confidence": "observed",
+         "source": "docs/modules/contracts/expense-recovery-cam.md",
+         "children": []
+        }
+       ]
+      },
+      {
+       "name": "CON-R-081",
+       "kind": "rule",
+       "detail": "An admin-fee rate exists: AdminFeePercentageAmount = SubTotal1 × AdminFeePercentage.",
+       "confidence": "derived",
+       "source": "docs/modules/contracts/rules.md",
+       "children": []
+      },
+      {
+       "name": "CON-R-082",
+       "kind": "rule",
+       "detail": "Fees and additions are added: PassThrough = ST1 + AF%amt + AdministrationFees + Additions — labelled 'Pass-Through (ST1+AF%+AF+A)'.",
+       "confidence": "observed",
+       "source": "docs/modules/contracts/rules.md",
+       "children": []
+      },
+      {
+       "name": "CON-R-083",
+       "kind": "rule",
+       "detail": "Other recoveries are netted: SubTotal2 = PassThrough − Recoveries — labelled 'Sub Total #2 (PT-R)'.",
+       "confidence": "observed",
+       "source": "docs/modules/contracts/rules.md",
+       "children": []
+      },
+      {
+       "name": "CON-R-084",
+       "kind": "rule",
+       "detail": "The tenant's share is taken: NetPassThrough = SubTotal2 × ProRataShareRate — labelled 'Net Pass-Through (ST2*PRR)'.",
+       "confidence": "observed",
+       "source": "docs/modules/contracts/rules.md",
+       "children": []
+      },
+      {
+       "name": "CON-R-085",
+       "kind": "rule",
+       "detail": "Escrow already paid is credited: NetAmountDue = NetPassThrough − PrePaidAmount — labelled 'Net Amount Due (NPT-PP)'.",
+       "confidence": "observed",
+       "source": "docs/modules/contracts/rules.md",
+       "children": []
+      },
+      {
+       "name": "CON-R-086",
+       "kind": "rule",
+       "detail": "A manual adjustment is made: RevisedNetAmountDue = NetAmountDue + AdjustmentAmount — labelled 'Revised Amount Due (Net+Adj)', the final figure billed.",
+       "confidence": "observed",
+       "source": "docs/modules/contracts/rules.md",
+       "children": []
+      },
+      {
+       "name": "Where the cap actually clamps is not shown by the labels",
+       "kind": "constraint",
+       "detail": "None of the six labelled steps mention the cap at all — CapAmount sits alongside as a separate stored measure per perspective. The strong prior is that it clamps ControllableExpenses only, which is exactly why Controllable and Non-Controllable are kept as separate measures in the first place — but this is not observable from field names and materially changes every capped CAM figure if wrong. Ranked the #2 rule to verify in the whole module.",
+       "confidence": "inferred",
+       "source": "docs/modules/contracts/expense-recovery-cam.md",
+       "children": [
+        {
+         "name": "CON-R-094",
+         "kind": "rule",
+         "detail": "The cap is applied to the waterfall: where in the sequence the clamp lands is not observable; the strong prior is controllables only.",
+         "confidence": "inferred",
+         "source": "docs/modules/contracts/rules.md",
+         "children": [
+          {
+           "name": "CapAmount",
+           "kind": "field",
+           "detail": "The stored cap figure for this perspective — present per perspective (Reported/Approved/Budgeted) but with no field anywhere recording which waterfall step it was actually checked against.",
+           "confidence": "observed",
+           "source": "docs/modules/contracts/expense-recovery-cam.md",
+           "children": [
+            {
+             "name": "MONEY (sTYPE_MONEY)",
+             "kind": "type",
+             "detail": "A currency amount, growing period over period per the CapAmountChangePercent/Value mechanism in the clause configuration.",
+             "confidence": "observed",
+             "source": "docs/modules/contracts/expense-recovery-cam.md",
+             "children": [
+              {
+               "name": "The clamp point changes every capped CAM number — unverified",
+               "kind": "constraint",
+               "detail": "Ranked the #2 rule to verify in the whole module: enter a recovery record with a cap set below SubTotal1 and read which computed field actually moves. Until then, whether the cap binds on ControllableExpenses, SubTotal1, or NetAmountDue is a guess, and each answer produces a different final bill.",
+               "confidence": "inferred",
+               "source": "docs/modules/contracts/expense-recovery-cam.md",
+               "children": []
+              }
+             ]
+            }
+           ]
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "name": "Where the base year actually enters the waterfall is unshown",
+       "kind": "constraint",
+       "detail": "BaseYear/BaseYearAmount/CodeBaseYearAmountTypeID do not appear in any labelled step either. A base-year expense stop normally subtracts the base-year level before the share is applied, most likely modifying SubTotal1 or SubTotal2 — unconfirmed.",
+       "confidence": "inferred",
+       "source": "docs/modules/contracts/expense-recovery-cam.md",
+       "children": [
+        {
+         "name": "CON-R-095",
+         "kind": "rule",
+         "detail": "A base year applies: an expense stop subtracts the base-year level; where it enters the waterfall is unobserved.",
+         "confidence": "inferred",
+         "source": "docs/modules/contracts/rules.md",
+         "children": []
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "name": "ExpenseRecoveryItem — the line-item layer",
+     "kind": "entity",
+     "detail": "47 fields, one row per recovery line item (a single expense category on the landlord's statement), mirroring the header grid's shape at line-item cardinality. Crucially, the admin fee and cap are applied per line item as well as at the header — leases typically cap specific categories, not the whole statement, which is the correct place for them and strengthens the reading that the header cap applies to controllables only.",
+     "confidence": "observed",
+     "source": "docs/modules/contracts/expense-recovery-cam.md",
+     "children": [
+      {
+       "name": "CON-R-100",
+       "kind": "rule",
+       "detail": "A recovery line item is valued: the same Reported/Approved/Budgeted/Prior perspectives exist at line-item cardinality.",
+       "confidence": "observed",
+       "source": "docs/modules/contracts/rules.md",
+       "children": []
+      },
+      {
+       "name": "CON-R-101",
+       "kind": "rule",
+       "detail": "A line item's approved total is computed: ComputedApprovedTotalAmount applies its own admin fee and cap per line item, not only at the header.",
+       "confidence": "derived",
+       "source": "docs/modules/contracts/rules.md",
+       "children": []
+      },
+      {
+       "name": "CON-R-102",
+       "kind": "rule",
+       "detail": "A landlord statement is ingested: ExpenseRecoveryItemMapping maps a free-text statement line (InvoiceLineItemName, JSONConfigText) to a structured recovery item.",
+       "confidence": "inferred",
+       "source": "docs/modules/contracts/rules.md",
+       "children": []
+      }
+     ]
+    },
+    {
+     "name": "What the ASG tenant added on top: 91 Firm fields",
+     "kind": "constraint",
+     "detail": "Two entire Contract sub-groups — Common Area Maintenance (47 fields) and Real Estate Taxes (44 fields) — are 100% tenant custom, every field a Firm_* addition. Each follows the same repeating shape: a yes/no 'does the lease contain this provision', a value, a page/section citation to where the lease says so, and a status/comment. That is a lease-abstract schema, entirely distinct from the recovery engine's computation schema, and it exists because the platform has no first-class place for 'what the lease says' as opposed to 'what we are going to compute'. ASG Edge+ should model this as a first-class AbstractedProvision entity, separate from the computation configuration derived from it — the single biggest structural improvement available over Lucernex's own design.",
+     "confidence": "observed",
+     "source": "docs/modules/contracts/expense-recovery-cam.md",
+     "children": []
+    },
+    {
+     "name": "Reconciliation against payments",
+     "kind": "capability",
+     "detail": "There is no ExpenseRecoverySchedule. The recovery header settles through PaymentTransaction.ExpenseRecoveryID directly (a weak, Text-typed FK), while landlord invoices reconcile through the separate LinkLandlordInvPaymentTxn three-way match. The RECONCILE command drives settlement, and TenantSavingsAmount — what the audit saved the tenant — is the business KPI of the entire module.",
+     "confidence": "observed",
+     "source": "docs/modules/contracts/expense-recovery-cam.md",
+     "children": [
+      {
+       "name": "CON-R-099",
+       "kind": "rule",
+       "detail": "A recovery is settled: ReconciledFlag, ReconciledDate, TenantDueDate and TenantSavingsAmount record the audit outcome.",
+       "confidence": "observed",
+       "source": "docs/modules/contracts/rules.md",
+       "children": []
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "name": "The Contract aggregate and its hierarchy",
+   "kind": "entity",
+   "detail": "A Lucernex Contract is keyed by four outward FKs and one self-reference, with no vendor FK at all — that relationship lives one level down. 570 fields sit across four physical tables, nearly half of them tenant custom, and the master-lease/sublease hierarchy is a single unconstrained self-referencing column with no role flag, depth limit or cycle guard.",
+   "confidence": "observed",
+   "source": "docs/modules/contracts/contract-hierarchy.md",
+   "children": [
+    {
+     "name": "Contract's outward FKs",
+     "kind": "field-group",
+     "detail": "Four FKs and one self-reference key the contract to the rest of the world: FacilityID (the building), LocationID (the site), OrganizationID (the org whose accounts are debited — Lucernex's own definition explicitly ties this FK to GL routing), ProgramID (the portfolio — an internal-name-vs-label mismatch, since the object is Program but the UI calls it Portfolio), plus ComplexID and PrototypeID. There is no Vendor FK at all.",
+     "confidence": "observed",
+     "source": "docs/modules/contracts/contract-hierarchy.md",
+     "children": [
+      {
+       "name": "CON-R-015",
+       "kind": "rule",
+       "detail": "A contract is created: FacilityID, LocationID, OrganizationID and ProgramID key the contract to building, site, debiting org and portfolio.",
+       "confidence": "observed",
+       "source": "docs/modules/contracts/rules.md",
+       "children": []
+      },
+      {
+       "name": "CON-R-016",
+       "kind": "rule",
+       "detail": "A contract is created: OrganizationID is 'where payments should be debited' in Lucernex's own field definition — it determines the GL debit side.",
+       "confidence": "observed",
+       "source": "docs/modules/contracts/rules.md",
+       "children": []
+      },
+      {
+       "name": "CON-R-023",
+       "kind": "rule",
+       "detail": "Determining the fiscal calendar: the calendar is owned by Contract.ProgramID (the portfolio), not by the firm.",
+       "confidence": "observed",
+       "source": "docs/modules/contracts/rules.md",
+       "children": []
+      },
+      {
+       "name": "CON-R-024",
+       "kind": "rule",
+       "detail": "A retail fiscal period is used: periods may be 4 or 5 weeks (retail 4-5-4), not calendar months, per FiscalPeriod.Is4or5WeekPeriod.",
+       "confidence": "observed",
+       "source": "docs/modules/contracts/rules.md",
+       "children": []
+      },
+      {
+       "name": "CON-R-022",
+       "kind": "rule",
+       "detail": "Determining the discount rate: look up DiscountRate by accounting method + contract use + geography + a min/max-scheduled-months band, and stamp it onto Contract.DiscountRate.",
+       "confidence": "derived",
+       "source": "docs/modules/contracts/rules.md",
+       "children": []
+      }
+     ]
+    },
+    {
+     "name": "MasterContractID — the master-lease/sublease hierarchy",
+     "kind": "field",
+     "detail": "A plain self-referencing foreign key: Contract.MasterContractID points at another Contract. That single column is the entire master-lease/sublease mechanism — there is no role flag saying which side is the master, no depth limit, no cycle guard, and no allocation percentage recorded on the edge itself. Direction of money (are we the landlord or the subtenant here?) is carried separately, per clause and per transaction, which is exactly why one contract can be simultaneously payable to the true landlord and receivable from a subtenant.",
+     "confidence": "observed",
+     "source": "docs/modules/contracts/contract-hierarchy.md",
+     "children": [
+      {
+       "name": "Contract ID (self-reference)",
+       "kind": "type",
+       "detail": "Declared identically to any other Contract FK — nothing in the type system marks this edge as special or hierarchical.",
+       "confidence": "observed",
+       "source": "docs/modules/contracts/data-model.md",
+       "children": []
+      },
+      {
+       "name": "CON-R-017",
+       "kind": "rule",
+       "detail": "A sublease is created: MasterContractID points at the master lease's ContractID; null means not a sublease.",
+       "confidence": "observed",
+       "source": "docs/modules/contracts/rules.md",
+       "children": []
+      },
+      {
+       "name": "CON-R-018",
+       "kind": "rule",
+       "detail": "Traversing MasterContractID: no depth limit, no cycle guard, no role discriminator and no allocation percentage exist on the edge — the hierarchy is structurally unconstrained.",
+       "confidence": "observed",
+       "source": "docs/modules/contracts/rules.md",
+       "children": []
+      },
+      {
+       "name": "CON-R-019",
+       "kind": "rule",
+       "detail": "Determining payable vs receivable: direction is carried on ExpenseSetup.IsReceivable and PaymentTransaction.IsReceivable, not on the contract, so one contract can be both.",
+       "confidence": "observed",
+       "source": "docs/modules/contracts/rules.md",
+       "children": []
+      },
+      {
+       "name": "Nothing observed confirms whether the hierarchy drives any financial behaviour",
+       "kind": "constraint",
+       "detail": "Whether financial data actually rolls up from sublease to master, whether an ExpenseSetup on a master automatically allocates to its subleases, and whether the edge is used for anything beyond layout display are all unanswered by the schema — no aggregate field on Contract names a master or sublease scope. Given the contract schema freezes at Week 12, this is flagged as the single highest-priority live-UI check in the whole hierarchy document, because the answer determines whether ASG Edge+'s contract entity needs a hierarchy path, an edge allocation percentage, and a cycle guard.",
+       "confidence": "observed",
+       "source": "docs/modules/contracts/contract-hierarchy.md",
+       "children": []
+      }
+     ]
+    },
+    {
+     "name": "There is no Vendor FK on Contract — and that is deliberate",
+     "kind": "constraint",
+     "detail": "Contract itself carries no EmployerID, no VendorID, nothing. 'Vendor' throughout this module is a relabelled Employer — PaymentTransaction.VendorID is declared type Employer ID, not a distinct Vendor type — and every vendor relationship lives one level down, on the financial children: PaymentTransaction, ExpenseSetup, ExpenseVendorAllocation, ScheduledOffset, LandlordInvoice, SecurityDeposit. A contract's vendor set is therefore derived from its children, not stored, and it can differ per clause and per payment — which BRD-24's own vendor-setup step (PJ-12) assumes exists at the contract level. That gap is a genuine decision point for ASG Edge+, not a bug to fix by copying.",
+     "confidence": "observed",
+     "source": "docs/modules/contracts/contract-hierarchy.md",
+     "children": [
+      {
+       "name": "CON-R-020",
+       "kind": "rule",
+       "detail": "Resolving a contract's vendors: Contract has no vendor FK; the set is derived from PaymentTransaction.VendorID, ExpenseSetup.VendorID, ExpenseVendorAllocation.VendorID, ScheduledOffset.VendorID, LandlordInvoice.EmployerID and SecurityDeposit.PartyID.",
+       "confidence": "observed",
+       "source": "docs/modules/contracts/rules.md",
+       "children": []
+      },
+      {
+       "name": "CON-R-021",
+       "kind": "rule",
+       "detail": "Resolving a 'Vendor': VendorID's declared type is Employer ID — Vendor is a relabelled Employer, not a distinct entity.",
+       "confidence": "observed",
+       "source": "docs/modules/contracts/rules.md",
+       "children": []
+      }
+     ]
+    },
+    {
+     "name": "Physical shape: 570 fields, 4 tables, 45% tenant custom",
+     "kind": "field-group",
+     "detail": "Contract is split across contract_admin, contract_financial, contract_firm and contract_firm1 — a semantic split (administrative, financial, and two tables of tenant custom fields), unlike ExpenseRecovery's purely mechanical column-count split. 312 fields (55%) are platform Global fields; 258 (45%) are Firm_* tenant custom fields — the tenant custom surface on this one aggregate root grew large enough to need a second table of its own.",
+     "confidence": "observed",
+     "source": "docs/modules/contracts/contract-hierarchy.md",
+     "children": [
+      {
+       "name": "120 denormalised rent rollups",
+       "kind": "constraint",
+       "detail": "Four sub-groups of pre-computed Global money fields — Financial-Calendar, Financial-Calendar w/Tax, Financial-Fiscal, Financial-Fiscal w/Tax — cross a four-way shape (aggregate/current/next-year/... × base/total rent × calendar/fiscal × with/without tax) so a portfolio list can sort and filter without aggregating ExpenseSchedule live. They are a staleness and recomputation-cost problem: unlike SLSummary, which has an explicit NeedsRecalculation flag, Contract has no equivalent, so nothing marks these 120 numbers as stale after an underlying schedule changes. ASG Edge+ should build a materialised projection with an explicit refresh mechanism instead of copying the rollup columns.",
+       "confidence": "derived",
+       "source": "docs/modules/contracts/contract-hierarchy.md",
+       "children": [
+        {
+         "name": "CON-R-025",
+         "kind": "rule",
+         "detail": "Computing rent rollups: 120 denormalised sTYPE_MONEY fields on Contract cross {Calendar,Fiscal}×{Base,Total}×{with,without tax}×{period buckets}.",
+         "confidence": "observed",
+         "source": "docs/modules/contracts/rules.md",
+         "children": []
+        },
+        {
+         "name": "CON-R-026",
+         "kind": "rule",
+         "detail": "Any rollup is read: the rollups are denormalised and can be stale — Contract carries no recalculation flag equivalent to SLSummary's.",
+         "confidence": "derived",
+         "source": "docs/modules/contracts/rules.md",
+         "children": []
+        }
+       ]
+      },
+      {
+       "name": "Two sub-groups that are 100% Firm scope: CAM and RE Taxes",
+       "kind": "constraint",
+       "detail": "47 fields of Common Area Maintenance lease-abstract and 44 of Real Estate Tax lease-abstract exist purely because this tenant built them — 91 fields total, none of it platform functionality, covered in depth under the CAM branch of this map.",
+       "confidence": "observed",
+       "source": "docs/modules/contracts/contract-hierarchy.md",
+       "children": []
+      }
+     ]
+    },
+    {
+     "name": "Contract-level tax",
+     "kind": "field-group",
+     "detail": "Four parallel tax rate slots on the contract (ContractTaxRate1..4), each opted into per expense clause via its own ApplyTax1..4Flag — so one contract can charge tenant A one combination of the four components and tenant B a different combination, from the same rate table.",
+     "confidence": "observed",
+     "source": "docs/modules/contracts/data-model.md",
+     "children": [
+      {
+       "name": "CON-R-027",
+       "kind": "rule",
+       "detail": "Applying contract-level tax: four parallel tax components; each ExpenseSetup opts in per component, producing CalculatedTaxRate1..4 on the schedule.",
+       "confidence": "derived",
+       "source": "docs/modules/contracts/rules.md",
+       "children": []
+      }
+     ]
+    },
+    {
+     "name": "ContractTerm — option terms",
+     "kind": "entity",
+     "detail": "The Contract Terms Wizard generates N option-term rows from a stated term length and option count; each term individually opts in or out of the ASC 842 accrual scope via IncludeTermForAccruals, so a lease's later option periods do not have to be accrued the same way as its base term.",
+     "confidence": "observed",
+     "source": "docs/modules/contracts/data-model.md",
+     "children": [
+      {
+       "name": "CON-R-028",
+       "kind": "rule",
+       "detail": "A contract term option is created: the Terms Wizard generates N ContractTerm rows of a stated length from a stated start.",
+       "confidence": "observed",
+       "source": "docs/modules/contracts/rules.md",
+       "children": []
+      },
+      {
+       "name": "CON-R-029",
+       "kind": "rule",
+       "detail": "Accruing over an option term: only terms flagged IncludeTermForAccruals participate in accrual schedules.",
+       "confidence": "observed",
+       "source": "docs/modules/contracts/rules.md",
+       "children": []
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "name": "Contract lifecycle — two axes, not one",
+   "kind": "capability",
+   "detail": "Recently resolved, and the module's headline correction to BRD-24: lifecycle does not live in Contract Status Code, which holds only three platform values and none of BRD-24's five stages. It lives in a tenant-authored Client Drop Down called Lease Status, with nine values that expand BRD-24's five-stage model, sitting on the contract layout right beside the platform's own status field — both required on the ASG Contract Summary layout. Record state and operational lifecycle are genuinely different concepts that happen to share a layout, not one concept the platform models twice.",
+   "confidence": "observed",
+   "source": "docs/data-model/code-table-registry.md",
+   "children": [
+    {
+     "name": "Contract Status Code (2094) — 3 platform values",
+     "kind": "code-table",
+     "detail": "The platform's own record-state enum, captured live from the running tenant on 2026-09-10. Only three values exist, and none of them is a stage of the operational lifecycle BRD-24 describes (Open → Active → Possession → Paying Rent → Closed) — this table answers a completely different question: is this contract row live, retired, or machine-abstracted.",
+     "confidence": "observed",
+     "source": "docs/data-model/code-table-registry.md",
+     "children": [
+      {
+       "name": "AI Abstracted",
+       "kind": "code-value",
+       "detail": "A tenant-added status recording that a contract was abstracted by an automated process rather than a person. It is not in any reviewed BRD, and it means ASG's abstraction workflow already has a production automated path that the rebuild's Lease Admin Request 'Abstract Lease Document' step needs to represent as a first-class distinction, not fold into a status value.",
+       "confidence": "observed",
+       "source": "docs/data-model/code-table-registry.md",
+       "children": []
+      },
+      {
+       "name": "Active",
+       "kind": "code-value",
+       "detail": "The only one of the three values without a delete action available in the admin UI — the platform protects at least one seeded status as system-required. ASG Edge+ needs the same notion of an undeletable seeded value, and it bears directly on the D-07 / DeactivationPolicy question already on record for this module.",
+       "confidence": "observed",
+       "source": "docs/data-model/code-table-registry.md",
+       "children": [
+        {
+         "name": "CON-R-139",
+         "kind": "rule",
+         "detail": "A status value is deleted: Active carries no delete action — the platform protects at least one seeded value as system-required.",
+         "confidence": "observed",
+         "source": "docs/modules/contracts/rules.md",
+         "children": []
+        }
+       ]
+      },
+      {
+       "name": "Inactive",
+       "kind": "code-value",
+       "detail": "The retired state. Deletable, unlike Active.",
+       "confidence": "observed",
+       "source": "docs/data-model/code-table-registry.md",
+       "children": []
+      },
+      {
+       "name": "CON-R-138",
+       "kind": "rule",
+       "detail": "A contract's status is set: CodeContractStatusID resolves to exactly one of three values — AI Abstracted, Active, Inactive — and none is a BRD-24 lifecycle stage.",
+       "confidence": "observed",
+       "source": "docs/modules/contracts/rules.md",
+       "children": []
+      },
+      {
+       "name": "CON-R-140",
+       "kind": "rule",
+       "detail": "Recording how a contract was abstracted: provenance (AI-abstracted or not) is encoded as a state value, so a contract can be AI-abstracted and active at once — the two axes are conflated in this one field.",
+       "confidence": "observed",
+       "source": "docs/modules/contracts/rules.md",
+       "children": []
+      }
+     ]
+    },
+    {
+     "name": "Lease Status — the tenant's 9-value Client Drop Down",
+     "kind": "code-table",
+     "detail": "The real operational lifecycle, and it does not live where a rebuild would naturally look for it. The ASG Contract Summary layout requires both Contract Status and Lease Status side by side; Lease Status leads not to the platform's own Lease Status Code table (which holds a single value, Expired, and is used by an unrelated object with no ContractID column at all) but to a tenant-authored Client Drop Down of the same name, sitting beside the platform field in the identical Contract Info sub-group. This is BRD-24's five-stage lifecycle, expanded to nine, already live in production as customer-editable data rather than platform schema.",
+     "confidence": "observed",
+     "source": "docs/data-model/code-table-registry.md",
+     "children": [
+      {
+       "name": "Open",
+       "kind": "code-value",
+       "detail": "Deal signed, nothing occupied yet.",
+       "confidence": "observed",
+       "source": "docs/data-model/code-table-registry.md",
+       "children": []
+      },
+      {
+       "name": "Future Possession",
+       "kind": "code-value",
+       "detail": "Possession scheduled but not yet taken.",
+       "confidence": "observed",
+       "source": "docs/data-model/code-table-registry.md",
+       "children": []
+      },
+      {
+       "name": "Possession",
+       "kind": "code-value",
+       "detail": "Space is held; rent is not yet running.",
+       "confidence": "observed",
+       "source": "docs/data-model/code-table-registry.md",
+       "children": []
+      },
+      {
+       "name": "Possession - Paying Rent",
+       "kind": "code-value",
+       "detail": "Space held and rent running — distinguished from plain Possession by PaymentsBeginDate/PaymentsEndDate existing separately from CommenceDate/ExpireDate on Contract, which is exactly what makes this state representable at all.",
+       "confidence": "observed",
+       "source": "docs/data-model/code-table-registry.md",
+       "children": []
+      },
+      {
+       "name": "Active",
+       "kind": "code-value",
+       "detail": "The steady state.",
+       "confidence": "observed",
+       "source": "docs/data-model/code-table-registry.md",
+       "children": []
+      },
+      {
+       "name": "Closed - Active",
+       "kind": "code-value",
+       "detail": "Closed but still carrying activity — a state pair the BRD-24 lifecycle has no counterpart for, and whose name inverts the record-state vocabulary. What actually distinguishes it from plain Closed is an open question worth asking the business.",
+       "confidence": "observed",
+       "source": "docs/data-model/code-table-registry.md",
+       "children": []
+      },
+      {
+       "name": "Closed",
+       "kind": "code-value",
+       "detail": "Terminated.",
+       "confidence": "observed",
+       "source": "docs/data-model/code-table-registry.md",
+       "children": []
+      },
+      {
+       "name": "Accounting Purposes Only",
+       "kind": "code-value",
+       "detail": "No BRD-24 counterpart. Read as a contract carried for ASC 842 measurement while operationally dormant — which the accounting engine needs to treat differently, interacting with SLSummary.IsIncludeInRollForwardReport and Covenant.HoldAmountInSchedLiability.",
+       "confidence": "observed",
+       "source": "docs/data-model/code-table-registry.md",
+       "children": []
+      },
+      {
+       "name": "Accounting Purposes Only: Close…",
+       "kind": "code-value",
+       "detail": "A second accounting-only variant; the full label was truncated in the admin grid at capture time and has not yet been read in full.",
+       "confidence": "observed",
+       "source": "docs/data-model/code-table-registry.md",
+       "children": []
+      },
+      {
+       "name": "CON-R-144",
+       "kind": "rule",
+       "detail": "The tenant needs a lifecycle status: Contract.Firm_LeaseStatus (a Firm-scope custom code field, with a Firm_LeaseStatusNotes companion) is ASG's own answer, sitting in the same Contract Info sub-group as the platform's status field — not to be confused with the platform's own Lease Status Code (2043), which is used by exactly one unrelated object.",
+       "confidence": "observed",
+       "source": "docs/modules/contracts/rules.md",
+       "children": []
+      }
+     ]
+    },
+    {
+     "name": "Dates as evidence, not the state itself",
+     "kind": "capability",
+     "detail": "Lucernex does not store the lifecycle stage as a value the way it stores Lease Status — the stage is derivable from a set of date-pair fields that corroborate each Lease Status value: ActualStartDate/OpenYear for Open, PossessionBeginDate/EndDate for Possession, PaymentsBeginDate/EndDate for Paying Rent, ExpireDate/ActualEndDate/IsDead/Inactive for Closed. Today nothing links the dates to the drop-down value — an analyst can set Firm_LeaseStatus to 'Possession - Paying Rent' with PaymentsBeginDate empty and nothing objects, which is exactly the gap ASG Edge+'s recommended design (bind the assertion to its evidence, with an actor and a reason) is meant to close.",
+     "confidence": "derived",
+     "source": "docs/modules/contracts/contract-hierarchy.md",
+     "children": [
+      {
+       "name": "CON-R-141",
+       "kind": "rule",
+       "detail": "Determining a contract's lifecycle stage: the stage is derived from date fields (ActualStartDate/OpenYear, StatusEffectiveDate, PossessionBeginDate/EndDate, PaymentsBeginDate/EndDate, ExpireDate/ActualEndDate/IsDead/Inactive) rather than stored directly in any enum.",
+       "confidence": "derived",
+       "source": "docs/modules/contracts/rules.md",
+       "children": []
+      }
+     ]
+    },
+    {
+     "name": "A third, unconnected state machine: Project Phase Code + ProcessTimeline",
+     "kind": "capability",
+     "detail": "Underneath both status fields, Contract inherits a full milestone apparatus from the polymorphic ProjectEntity supertype: six named phases (Real Estate, Design, Construction, Possession, Operations, Completed) driven by ProcessTimelineTemplate, a linked list of milestone templates each declaring its own in-progress and completed display text, instantiated per contract as ProcessTimeline rows. Project Phase Code itself is not among the 207 tenant-editable Firm Drop Downs — the same pattern seen with Work Flow Status Code — so it is a platform-internal enumeration governing engine behaviour, not something a tenant can configure.",
+     "confidence": "observed",
+     "source": "docs/modules/contracts/contract-hierarchy.md",
+     "children": [
+      {
+       "name": "CON-R-142",
+       "kind": "rule",
+       "detail": "A contract advances through its process: ProcessTimelineTemplate forms a linked list of phase-bound milestone templates, instantiated per entity as ProcessTimeline rows with their own status/percent-complete/date-triple fields — the real state machine underneath the derived display text.",
+       "confidence": "observed",
+       "source": "docs/modules/contracts/rules.md",
+       "children": []
+      },
+      {
+       "name": "CON-R-143",
+       "kind": "rule",
+       "detail": "Resolving the phase enumeration: Project Phase Code is used by 11 objects but is not among the 207 Firm Drop Downs — an engine-governed enumeration, not a tenant-configurable one.",
+       "confidence": "observed",
+       "source": "docs/modules/contracts/rules.md",
+       "children": []
+      }
+     ]
+    },
+    {
+     "name": "Collapsing the two axes loses information ASG uses today",
+     "kind": "constraint",
+     "detail": "Three parallel notions of 'where is this contract up to' exist simultaneously and none is connected to the others: the 3-value platform record state, the 9-value tenant lifecycle drop-down, and the platform-internal process/milestone phase machine. A rebuild that merges Contract Status and Lease Status into a single field — the natural first instinct when facing two required status fields on one layout — would destroy a distinction ASG actively relies on: a contract can be simultaneously AI Abstracted (a provenance fact) and Active (an operational fact), and the two Accounting Purposes Only values describe contracts that are operationally dormant but still live for ASC 842 measurement, a state combination a single merged field cannot express. ASG Edge+'s own recommendation is to store both axes explicitly — ContractRecordState and ContractLifecycleState as two separate enums, plus an abstractionSource field carved out of what used to be the AI Abstracted status value — with a state-transition log carrying the evidencing date field, actor and reason for each change.",
+     "confidence": "derived",
+     "source": "docs/modules/contracts/asg-edgeplus-mapping.md",
+     "children": []
+    }
+   ]
+  },
+  {
+   "name": "Payment lifecycle",
+   "kind": "capability",
+   "detail": "PaymentTransaction is not a payment record — it is the platform's single money-movement ledger, serving every family in the module (payable and receivable, rent, recovery, tax and percentage rent alike), tenanted by ProjectEntityID and typed by which generator wrote each row. It carries four independent date axes, five state booleans, five different provenance FKs, and twenty GL account-number slots snapshotted from CodeExpenseType at posting time — a hard integration contract for whatever ERP export ASG Edge+ eventually builds.",
+   "confidence": "observed",
+   "source": "docs/modules/contracts/payment-lifecycle.md",
+   "children": [
+    {
+     "name": "Four independent date axes",
+     "kind": "field-group",
+     "detail": "PostingDate (which GL period it lands in), EffectiveDate (when it economically takes effect), DueDate (when cash is due) and CoverageBeginDate/EndDate (the service period it pays for) are all independently settable on the same row — plus InvoiceDate and CheckDate. A rebuild that collapses posting/effective/due into a single date loses the ability to post a March-coverage payment in April's GL period against a February invoice, which is the normal case, not an edge case.",
+     "confidence": "observed",
+     "source": "docs/modules/contracts/payment-lifecycle.md",
+     "children": [
+      {
+       "name": "CON-R-103",
+       "kind": "rule",
+       "detail": "A payment is posted: five independent date axes must be simultaneously representable: GL period, economic effect, cash due, service coverage, settlement.",
+       "confidence": "observed",
+       "source": "docs/modules/contracts/rules.md",
+       "children": []
+      }
+     ]
+    },
+    {
+     "name": "Amounts, and the sharpest typing hazard on the ledger",
+     "kind": "field-group",
+     "detail": "TotalAmount is the transaction's value; InvoiceAmount is what the landlord billed; four parallel TaxAmount1..4 slots plus a flag saying whether tax is included in TotalAmount or additional to it. Two of the money fields on this same object — AmountInvoiced and AmountReceived — are declared Text rather than Currency, sitting directly next to correctly typed siblings, which is the single sharpest instance of the module's typing hazard on its most central table.",
+     "confidence": "observed",
+     "source": "docs/modules/contracts/payment-lifecycle.md",
+     "children": [
+      {
+       "name": "AmountInvoiced / AmountReceived",
+       "kind": "field",
+       "detail": "Two money fields on the platform's central money-movement ledger, typed Text while InvoiceAmount right next to them is typed Currency.",
+       "confidence": "observed",
+       "source": "docs/modules/contracts/payment-lifecycle.md",
+       "children": [
+        {
+         "name": "Text — should be BigDecimal",
+         "kind": "type",
+         "detail": "A currency amount stored as an untyped string on the same object that otherwise types money correctly.",
+         "confidence": "observed",
+         "source": "docs/modules/contracts/payment-lifecycle.md",
+         "children": [
+          {
+           "name": "CON-R-132",
+           "kind": "rule",
+           "detail": "Migrating PaymentTransaction: parse AmountInvoiced and AmountReceived to BigDecimal and reconcile them against InvoiceAmount and PaymentReceipt.ReceivedAmount.",
+           "confidence": "observed",
+           "source": "docs/modules/contracts/asg-edgeplus-mapping.md",
+           "children": []
+          }
+         ]
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "name": "Two parallel aging ladders",
+     "kind": "field-group",
+     "detail": "0-30/31-60/61-90/90+ buckets computed twice — once from an unstated base date (Inferred to be invoice or effective date) and once explicitly from DueDate — so the same transaction can be read as either 'how overdue is this against when it was billed' or 'how overdue is this against when it was due', and both views are stored, not computed on demand.",
+     "confidence": "observed",
+     "source": "docs/modules/contracts/payment-lifecycle.md",
+     "children": [
+      {
+       "name": "CON-R-107",
+       "kind": "rule",
+       "detail": "Aging is computed: AgingAmountForMonth1..3 and AgingAmountRemainder bucket from the invoice/effective date — the base date itself is inferred, not confirmed.",
+       "confidence": "observed",
+       "source": "docs/modules/contracts/rules.md",
+       "children": []
+      },
+      {
+       "name": "CON-R-108",
+       "kind": "rule",
+       "detail": "Due-date aging is computed: DueDateAgingAmountForMonth1..3 and its remainder use the same buckets measured from DueDate.",
+       "confidence": "observed",
+       "source": "docs/modules/contracts/rules.md",
+       "children": []
+      }
+     ]
+    },
+    {
+     "name": "State booleans, direction, and the credit-memo model",
+     "kind": "field-group",
+     "detail": "IsReceivable is the field that makes this one ledger rather than two — it also exists on ExpenseSetup, so the clause declares direction and every transaction it generates inherits it. CreditFlag plus AppliedToPayTranID (a self-reference to the transaction being offset) is a complete credit-memo model on the same table as ordinary charges.",
+     "confidence": "observed",
+     "source": "docs/modules/contracts/payment-lifecycle.md",
+     "children": [
+      {
+       "name": "CON-R-104",
+       "kind": "rule",
+       "detail": "Direction is determined: IsReceivable lets one ledger serve both payables and receivables.",
+       "confidence": "observed",
+       "source": "docs/modules/contracts/rules.md",
+       "children": []
+      },
+      {
+       "name": "CON-R-105",
+       "kind": "rule",
+       "detail": "A credit is issued: CreditFlag plus AppliedToPayTranID points a credit transaction at the transaction it offsets.",
+       "confidence": "observed",
+       "source": "docs/modules/contracts/rules.md",
+       "children": []
+      },
+      {
+       "name": "CON-R-106",
+       "kind": "rule",
+       "detail": "Tax is applied: four parallel tax components, with TaxesIncludedFlag saying whether they sit inside TotalAmount or are additional to it.",
+       "confidence": "observed",
+       "source": "docs/modules/contracts/rules.md",
+       "children": []
+      }
+     ]
+    },
+    {
+     "name": "The GL export contract — CodeExpenseType's 20 account slots",
+     "kind": "field-group",
+     "detail": "CodeExpenseType is where the general-ledger account numbers actually live: six AP export slots, twelve accrual slots split across three accrual purposes (expense, percentage rent, real-estate tax), plus three FKs that choose the accounting treatment (ASC 842, IFRS 16, straight-line schedule type). Choosing an expense type therefore chooses both the GL coding and the lease-accounting treatment in one action, which is why CodeExpenseTypeID shows up on ten different objects across the module. Every one of the twenty account numbers is snapshotted onto the posted transaction row at posting time, not looked up again at export — so a later change to the expense type's account numbers does not retroactively change already-posted rows.",
+     "confidence": "observed",
+     "source": "docs/modules/contracts/payment-lifecycle.md",
+     "children": [
+      {
+       "name": "CON-R-109",
+       "kind": "rule",
+       "detail": "An expense type is chosen: CodeExpenseTypeID selects both the GL account set and the accounting treatment (CodeASC842ScheduleID, CodeIFRS16ScheduleID, CodeSLScheduleID) in one action.",
+       "confidence": "observed",
+       "source": "docs/modules/contracts/rules.md",
+       "children": []
+      },
+      {
+       "name": "CON-R-110",
+       "kind": "rule",
+       "detail": "A transaction is posted: all twenty account numbers from CodeExpenseType are snapshotted onto the transaction row, not looked up again at export time.",
+       "confidence": "derived",
+       "source": "docs/modules/contracts/rules.md",
+       "children": []
+      },
+      {
+       "name": "AccountNumber1..8 — the unresolved question",
+       "kind": "field",
+       "detail": "Present on PaymentTransaction and AccrualTransaction but absent from CodeExpenseType itself; Organization separately carries its own Account Number #1-8. Whether this is eight segments of one account number or eight parallel split-coding lines is genuinely unresolved and directly conflicting statements exist in the source documentation.",
+       "confidence": "observed",
+       "source": "docs/modules/contracts/payment-lifecycle.md",
+       "children": [
+        {
+         "name": "Text ×8 (parallel slots)",
+         "kind": "type",
+         "detail": "Eight fixed columns rather than a variable-length child table — the same fixed-slot pattern seen in the breakpoint and tax fields elsewhere in the module.",
+         "confidence": "observed",
+         "source": "docs/modules/contracts/data-model.md",
+         "children": [
+          {
+           "name": "Segments of one account, or eight split-coding lines? Ranked #6 to verify",
+           "kind": "constraint",
+           "detail": "One field-catalog note reads this as split coding — 'Lucernex models multi-line allocation as fixed parallel columns rather than a normalized child table' — while the presence of an identically-shaped Account Number #1-8 on Organization suggests segments of one structured account string instead. Both readings are plausible from the schema alone, and resolving this is the core of designing the GL export entity's shape and cardinality for ASG Edge+.",
+           "confidence": "inferred",
+           "source": "docs/modules/contracts/payment-lifecycle.md",
+           "children": []
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "name": "CON-R-111",
+       "kind": "rule",
+       "detail": "Eight-segment coding is applied: AccountNumber1..8 exists on PaymentTransaction/AccrualTransaction but not on CodeExpenseType; whether these are 8 segments of one account or 8 split-coding lines is unresolved.",
+       "confidence": "inferred",
+       "source": "docs/modules/contracts/rules.md",
+       "children": []
+      },
+      {
+       "name": "Export batching and settlement",
+       "kind": "field-group",
+       "detail": "ExportBatchNumber marks a row as having left for accounts payable; CheckNumber, CheckDate and CheckAmount record settlement, with CodeCheckCurrencyTypeID allowed to differ from the transaction's own currency — an FX exposure the schema acknowledges but carries no rate field for on this object (unlike SLPeriod, which has a full translation apparatus).",
+       "confidence": "observed",
+       "source": "docs/modules/contracts/payment-lifecycle.md",
+       "children": [
+        {
+         "name": "CON-R-112",
+         "kind": "rule",
+         "detail": "A batch is exported: ExportBatchNumber is set when the row leaves for AP.",
+         "confidence": "observed",
+         "source": "docs/modules/contracts/rules.md",
+         "children": []
+        },
+        {
+         "name": "CON-R-113",
+         "kind": "rule",
+         "detail": "AP settles a payment: CheckNumber/CheckDate/CheckAmount/CodeCheckCurrencyTypeID are written back — check currency may differ from transaction currency with no FX rate field to reconcile the two.",
+         "confidence": "observed",
+         "source": "docs/modules/contracts/rules.md",
+         "children": []
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "name": "PaymentReceipt — the inbound side, and a genuine schema gap",
+     "kind": "entity",
+     "detail": "21 fields, deliberately much thinner than PaymentTransaction: a received amount, an allocated/not-allocated split, and nothing else structural. There is no foreign key and no link table connecting a receipt to the transactions it settles — only matching AmountAllocated/AmountNotAllocated totals on each side, joined by the RECONCILE_RECEIPT command in a way the schema itself does not record. This is a real gap, not a modelling choice worth copying: ASG Edge+ should close it with an explicit allocation table shaped like LinkLandlordInvPaymentTxn below.",
+     "confidence": "observed",
+     "source": "docs/modules/contracts/payment-lifecycle.md",
+     "children": [
+      {
+       "name": "CON-R-118",
+       "kind": "rule",
+       "detail": "Money is received: there is no FK or link table from PaymentReceipt to PaymentTransaction — only allocated/unallocated totals on each side.",
+       "confidence": "observed",
+       "source": "docs/modules/contracts/rules.md",
+       "children": [
+        {
+         "name": "How a receipt is actually matched to transactions — ranked #7 to verify",
+         "kind": "constraint",
+         "detail": "Whether RECONCILE_RECEIPT joins on amount, date, or some UI-side matching not visible in the schema is unconfirmed, and it is the model of what ASG Edge+'s receipt-allocation table needs to replicate or improve on.",
+         "confidence": "observed",
+         "source": "docs/modules/contracts/payment-lifecycle.md",
+         "children": []
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "name": "LandlordInvoice / LandlordInvoiceItem — the extraction pattern",
+     "kind": "entity",
+     "detail": "LandlordInvoice carries ten denormalised Vendor*/Customer* text fields alongside a resolved EmployerID FK — the signature of document extraction: values scraped off the invoice PDF, kept as-received for audit, separate from the entity they were resolved to. LandlordInvoiceItem goes further, carrying seven PayTrans* fields that mirror the matched payment transaction's key attributes as denormalised text — including a money amount and a date, both stored as Text — purely so a reconciliation grid can render the invoice line and the payment side by side in one row.",
+     "confidence": "observed",
+     "source": "docs/modules/contracts/payment-lifecycle.md",
+     "children": [
+      {
+       "name": "CON-R-114",
+       "kind": "rule",
+       "detail": "A landlord invoice is imported: IMPORT_INVOICE extracts VendorName/Address/TaxID and CustomerName/Address/TaxID as text, kept alongside the resolved EmployerID.",
+       "confidence": "derived",
+       "source": "docs/modules/contracts/rules.md",
+       "children": []
+      },
+      {
+       "name": "The seven PayTrans* mirror fields",
+       "kind": "field-group",
+       "detail": "PayTransTotalAmount, PayTransEffectiveDate, PayTransIsReceivable and four others — denormalised copies of the matched payment's key attributes, every one of them typed Text regardless of its real type (money, date, boolean). ASG Edge+ should replace this denormalised mirror with a join.",
+       "confidence": "observed",
+       "source": "docs/modules/contracts/payment-lifecycle.md",
+       "children": [
+        {
+         "name": "CON-R-133",
+         "kind": "rule",
+         "detail": "Migrating LandlordInvoiceItem: money, date and boolean are all stored as text on this reconciliation grid; replace the seven PayTrans* mirror fields with a join.",
+         "confidence": "observed",
+         "source": "docs/modules/contracts/asg-edgeplus-mapping.md",
+         "children": []
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "name": "LinkLandlordInvPaymentTxn — the three-way match",
+     "kind": "entity",
+     "detail": "Called out as the best-designed object in the module: a many-to-many allocation between invoice line and payment transaction that carries the variance amount and its explanation directly on the join, not bolted on somewhere else. One payment can settle several invoice lines; one invoice line can be settled by several payments; and every discrepancy between what was billed and what was paid is recorded with a reason, right where the match itself lives. ASG Edge+ should copy this shape verbatim, and extend the same shape to the receipt side, which currently has no equivalent.",
+     "confidence": "observed",
+     "source": "docs/modules/contracts/payment-lifecycle.md",
+     "children": [
+      {
+       "name": "CON-R-115",
+       "kind": "rule",
+       "detail": "An invoice line is matched to a payment: LinkLandlordInvPaymentTxn allocates AllocationAmount/AllocationDate between LandlordInvoiceItemID and PaymentTransactionID.",
+       "confidence": "observed",
+       "source": "docs/modules/contracts/rules.md",
+       "children": []
+      },
+      {
+       "name": "CON-R-116",
+       "kind": "rule",
+       "detail": "A match has a difference: VarianceAmount and VarianceReason are stored on the join itself, alongside ReconciliationStatus.",
+       "confidence": "observed",
+       "source": "docs/modules/contracts/rules.md",
+       "children": []
+      },
+      {
+       "name": "CON-R-117",
+       "kind": "rule",
+       "detail": "A payment is fully matched: PaymentTransaction.IsInvoiceReconciled is set when the three-way match completes.",
+       "confidence": "observed",
+       "source": "docs/modules/contracts/rules.md",
+       "children": []
+      }
+     ]
+    },
+    {
+     "name": "Suppression and gating, cross-cutting",
+     "kind": "capability",
+     "detail": "Two shapes of gate recur across every layer of this module: negative gates (HoldFlag, Suspend*) that block a row from moving forward, and positive gates (ReadyForPayment*, Include*) that must be explicitly turned on before a row is generated or reported at all. Both are needed simultaneously — a clause can be both held and ready for payment, and one flag does not substitute for the other.",
+     "confidence": "observed",
+     "source": "docs/modules/contracts/payment-lifecycle.md",
+     "children": [
+      {
+       "name": "CON-R-008",
+       "kind": "rule",
+       "detail": "Generation is requested: both ExpenseSetup.ReadyForPaymentFlag and ExpenseSchedule.ReadyForPaymentFlag must be true for the row to generate — the fields are observed, the exact gate semantics are inferred.",
+       "confidence": "observed",
+       "source": "docs/modules/contracts/rules.md",
+       "children": []
+      },
+      {
+       "name": "CON-R-125",
+       "kind": "rule",
+       "detail": "Any generation or posting: HoldFlag on ExpenseSetup, ExpenseSchedule, ExpenseAccrualSetup, PaymentTransaction or AccrualTransaction is a negative gate at every layer.",
+       "confidence": "observed",
+       "source": "docs/modules/contracts/rules.md",
+       "children": []
+      },
+      {
+       "name": "CON-R-126",
+       "kind": "rule",
+       "detail": "Any generation: ReadyForPaymentFlag on ExpenseSetup and ExpenseSchedule is a positive gate — both must be true.",
+       "confidence": "observed",
+       "source": "docs/modules/contracts/rules.md",
+       "children": []
+      },
+      {
+       "name": "CON-R-127",
+       "kind": "rule",
+       "detail": "Forecast inclusion: only ExpenseSetup rows flagged IncludeInPlanForecast appear in VirtualExpenseForecastPeriod.",
+       "confidence": "observed",
+       "source": "docs/modules/contracts/rules.md",
+       "children": []
+      },
+      {
+       "name": "CON-R-128",
+       "kind": "rule",
+       "detail": "Accrual scope: only ContractTerm rows flagged IncludeTermForAccruals are accrued.",
+       "confidence": "observed",
+       "source": "docs/modules/contracts/rules.md",
+       "children": []
+      },
+      {
+       "name": "CON-R-129",
+       "kind": "rule",
+       "detail": "Liability scope: Covenant.HoldAmountInSchedLiability excludes a covenant amount from the ASC 842 scheduled liability.",
+       "confidence": "observed",
+       "source": "docs/modules/contracts/rules.md",
+       "children": []
+      },
+      {
+       "name": "CON-R-130",
+       "kind": "rule",
+       "detail": "Disclosure scope: SLSummary.IsIncludeInRollForwardReport controls inclusion in the roll-forward disclosure.",
+       "confidence": "observed",
+       "source": "docs/modules/contracts/rules.md",
+       "children": []
+      }
+     ]
+    },
+    {
+     "name": "PaymentTransactionFullImport — bulk import staging",
+     "kind": "entity",
+     "detail": "A 118-field, field-for-field mirror of PaymentTransaction with no Postgres table of its own — an import staging buffer for bulk payment loads. Its existence, not merely its shape, is the signal: bulk payment import is a first-class requirement for ASG Edge+ to design for from the start, not an afterthought bolted onto single-payment entry.",
+     "confidence": "observed",
+     "source": "docs/modules/contracts/payment-lifecycle.md",
+     "children": [
+      {
+       "name": "CON-R-124",
+       "kind": "rule",
+       "detail": "Bulk payments are imported: PaymentTransactionFullImport mirrors PaymentTransaction's 118 fields with no backing table of its own.",
+       "confidence": "observed",
+       "source": "docs/modules/contracts/rules.md",
+       "children": []
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "name": "Escalations",
+   "kind": "capability",
+   "detail": "A single object — ExpenseEscalation — with two mutually exclusive drivers (fixed or index-based) and a four-level collar stacked on top. Escalation is not a schedule generator in its own right; it is an input the ExpenseSchedule generator consumes, and the escalated step is materialised directly onto the schedule row rather than kept in a separate history.",
+   "confidence": "observed",
+   "source": "docs/modules/contracts/escalations.md",
+   "children": [
+    {
+     "name": "Fixed escalation",
+     "kind": "capability",
+     "detail": "The driver is a stated FixedAmount plus a free-text EscalationMethod that presumably chooses between adding a flat amount, adding a percentage, setting a new amount, or compounding — 'presumably' because EscalationMethod is typed Text rather than a code list, so its actual value space is unconstrained at the schema level. The result is materialised explicitly onto the schedule row as a three-value window (previous/current/next amount), which is the cleanest single idea in the whole engine and worth copying directly: an escalating schedule is a doubly-linked list of period rows, each of which knows its own amount and both neighbours'.",
+     "confidence": "observed",
+     "source": "docs/modules/contracts/escalations.md",
+     "children": [
+      {
+       "name": "CON-R-041",
+       "kind": "rule",
+       "detail": "The driver is fixed: new amount = f(base or current amount, FixedAmount, EscalationMethod) — but EscalationMethod is free text, so its value space is unknown.",
+       "confidence": "observed",
+       "source": "docs/modules/contracts/rules.md",
+       "children": []
+      },
+      {
+       "name": "EscalationMethod",
+       "kind": "field",
+       "detail": "The discriminator between add-flat, add-percentage, set-new-amount and compound — but stored as an unconstrained string rather than a code list.",
+       "confidence": "observed",
+       "source": "docs/modules/contracts/escalations.md",
+       "children": [
+        {
+         "name": "Text (unconstrained)",
+         "kind": "type",
+         "detail": "No code table backs this field; the UI may constrain it but the schema does not.",
+         "confidence": "observed",
+         "source": "docs/modules/contracts/escalations.md",
+         "children": [
+          {
+           "name": "Free-text behavioural discriminator — a hazard and an open question",
+           "kind": "constraint",
+           "detail": "A field that selects which formula runs should not be a string with an unknown value space. ASG Edge+ should type this as an enum once the actual values in use are read from the tenant.",
+           "confidence": "derived",
+           "source": "docs/modules/contracts/asg-edgeplus-mapping.md",
+           "children": []
+          }
+         ]
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "name": "Index-based escalation (CPI)",
+     "kind": "capability",
+     "detail": "EscalationIndex is a contract-agnostic, tenant-wide reference series — one row per published reading of an index like CPI, loaded in bulk by IMPORT_CPI_DATA and referenced by every escalation clause that needs it. Its own IndexAmount field is typed Percentage, which is unusual for what published indices normally are (a level, like 312.332, not a rate) and is the single fact that decides the whole CPI formula.",
+     "confidence": "observed",
+     "source": "docs/modules/contracts/escalations.md",
+     "children": [
+      {
+       "name": "EscalationIndex.IndexAmount",
+       "kind": "field",
+       "detail": "The published reading itself, for one month/year of one index series.",
+       "confidence": "observed",
+       "source": "docs/modules/contracts/escalations.md",
+       "children": [
+        {
+         "name": "Percentage — unexpected for what CPI normally is",
+         "kind": "type",
+         "detail": "CPI is normally published as an index level. Storing it as a Percentage type supports either of two readings: the field cosmetically holds a level despite its type name, or Lucernex genuinely stores the year-over-year change rate instead of the level.",
+         "confidence": "observed",
+         "source": "docs/modules/contracts/escalations.md",
+         "children": [
+          {
+           "name": "Level or rate? Ranked #1 open question in escalations",
+           "kind": "constraint",
+           "detail": "If IndexAmount is a level, the escalation formula is (IndexAmount / IndexBaseFactor) − 1; if it is already a rate, IndexBaseFactor is a dampening multiplier and the formula multiplies instead. This single fact must be confirmed — by loading two consecutive months of a known index and checking whether the values look like ~312/~313 (a level) or ~0.03 (a rate) — before any CPI code is written.",
+           "confidence": "inferred",
+           "source": "docs/modules/contracts/escalations.md",
+           "children": []
+          }
+         ]
+        }
+       ]
+      },
+      {
+       "name": "CON-R-042",
+       "kind": "rule",
+       "detail": "The driver is index-based: rawChange = (IndexAmount / IndexBaseFactor) − 1 — assumes IndexAmount is a level, which is unconfirmed.",
+       "confidence": "inferred",
+       "source": "docs/modules/contracts/rules.md",
+       "children": []
+      },
+      {
+       "name": "CON-R-043",
+       "kind": "rule",
+       "detail": "An index change is applied: applied = rawChange × ExpenseSetup.CPIMultiplier.",
+       "confidence": "inferred",
+       "source": "docs/modules/contracts/rules.md",
+       "children": []
+      },
+      {
+       "name": "CPI fields split across three objects",
+       "kind": "constraint",
+       "detail": "A single CPI clause is configured across ExpenseSetup (CodeCPIIndexID, CPIMultiplier, IsCPICompounding), ExpenseEscalation (EscalationIndexID, IndexBaseFactor) and ExpenseSchedule/VirtualExpenseForecastPeriod (an IsCPI flag carried down onto each generated row). CodeCPIIndexID and EscalationIndexID may be two different ways of naming the same index series, or may serve genuinely different purposes — unresolved.",
+       "confidence": "observed",
+       "source": "docs/modules/contracts/escalations.md",
+       "children": []
+      }
+     ]
+    },
+    {
+     "name": "The four-level collar",
+     "kind": "capability",
+     "detail": "Escalation is bounded independently at four levels that all coexist on the same clause: a per-step percentage min/max, a lifetime percentage min/max across the whole clause, an absolute currency or percentage ceiling, and an expense stop above which the cost transfers to the tenant rather than continuing to escalate. A separate, asymmetric pair of increase/decrease caps exists in parallel on ExpenseSetup itself, and their precedence against this collar is unspecified.",
+     "confidence": "observed",
+     "source": "docs/modules/contracts/escalations.md",
+     "children": [
+      {
+       "name": "CON-R-044",
+       "kind": "rule",
+       "detail": "A per-step collar exists: collared = clamp(applied, PeriodMinPercentage, PeriodMaxPercentage).",
+       "confidence": "derived",
+       "source": "docs/modules/contracts/rules.md",
+       "children": []
+      },
+      {
+       "name": "CON-R-045",
+       "kind": "rule",
+       "detail": "ExpenseSetup.IsCPICompounding is set: true escalates from the current amount; false escalates from BaseAmount.",
+       "confidence": "derived",
+       "source": "docs/modules/contracts/rules.md",
+       "children": []
+      },
+      {
+       "name": "CON-R-046",
+       "kind": "rule",
+       "detail": "A lifetime collar exists: cumulative change across all steps is clamped by LifetimeMinPercentage/LifetimeMaxPercentage.",
+       "confidence": "derived",
+       "source": "docs/modules/contracts/rules.md",
+       "children": []
+      },
+      {
+       "name": "CON-R-047",
+       "kind": "rule",
+       "detail": "An absolute ceiling exists: CapAmount/CapPercentage cap the escalated amount absolutely; order versus the collar above is unknown.",
+       "confidence": "observed",
+       "source": "docs/modules/contracts/rules.md",
+       "children": []
+      },
+      {
+       "name": "CON-R-048",
+       "kind": "rule",
+       "detail": "An expense stop exists: cost above StopAmount transfers to the tenant rather than continuing to escalate.",
+       "confidence": "inferred",
+       "source": "docs/modules/contracts/rules.md",
+       "children": []
+      },
+      {
+       "name": "CON-R-049",
+       "kind": "rule",
+       "detail": "Increase/decrease asymmetry: ExpenseSetup.AmountIncreaseCap/AmountDecreaseCap/PercentIncreaseCap/PercentDecreaseCap are a separate, parallel collar to ExpenseEscalation's own min/max, with unspecified precedence between the two.",
+       "confidence": "observed",
+       "source": "docs/modules/contracts/rules.md",
+       "children": []
+      },
+      {
+       "name": "CON-R-040",
+       "kind": "rule",
+       "detail": "An escalation step falls due: a step occurs every EscalationPeriod × CodeFrequencyID units inside the clause's BeginDate..EndDate window.",
+       "confidence": "derived",
+       "source": "docs/modules/contracts/rules.md",
+       "children": []
+      }
+     ]
+    },
+    {
+     "name": "Two unrelated escalation engines share no vocabulary",
+     "kind": "constraint",
+     "detail": "ExpenseEscalation escalates a fixed expense amount. ExpenseRecovery has its own, completely separate escalation fields (EscalationPercentage, CodeEscalationPaymentMethodID, CapAmountChangePercent) that escalate a recovery cap and its escrow payment instead. They share no fields and no FK. ASG Edge+ needs both mechanisms and should name them distinctly — AmountEscalation and CapEscalation — rather than trying to unify two genuinely different concepts.",
+     "confidence": "observed",
+     "source": "docs/modules/contracts/escalations.md",
+     "children": []
+    }
+   ]
+  },
+  {
+   "name": "Rebuild typing & integrity hazards (Constitution §4.4)",
+   "kind": "capability",
+   "detail": "Seven rules stated as requirements on ASG Edge+ rather than observations about Lucernex — derived directly from the hazards found while reading every other branch of this map. The headline fact: every one of the 1,194 leaf fields cross-mapped into the landed Postgres schema across 33 tables is TEXT except 31 primary keys — there is no numeric, date or boolean column anywhere in the landed data, including money.",
+   "confidence": "observed",
+   "source": "docs/modules/contracts/asg-edgeplus-mapping.md",
+   "children": [
+    {
+     "name": "CON-R-131",
+     "kind": "rule",
+     "detail": "Migrating any landed Postgres column: every column across 33 tables is TEXT except 31 VARCHAR(64) primary keys — no numeric, date or boolean column exists; every value must be parsed and validated on ingest.",
+     "confidence": "observed",
+     "source": "docs/modules/contracts/rules.md",
+     "children": []
+    },
+    {
+     "name": "CON-R-132",
+     "kind": "rule",
+     "detail": "Migrating PaymentTransaction: AmountInvoiced and AmountReceived are declared Text while their siblings are Currency; parse to BigDecimal and reconcile.",
+     "confidence": "observed",
+     "source": "docs/modules/contracts/rules.md",
+     "children": []
+    },
+    {
+     "name": "CON-R-133",
+     "kind": "rule",
+     "detail": "Migrating LandlordInvoiceItem: money, date and boolean all stored as text on the reconciliation grid; replace the seven PayTrans* mirror fields with a join.",
+     "confidence": "observed",
+     "source": "docs/modules/contracts/rules.md",
+     "children": []
+    },
+    {
+     "name": "CON-R-134",
+     "kind": "rule",
+     "detail": "Migrating any parent-child edge: seven FKs are declared Text rather than typed, though the target's proper FK type exists elsewhere in the same schema; model them as real FKs with an orphan-handling policy.",
+     "confidence": "observed",
+     "source": "docs/modules/contracts/rules.md",
+     "children": []
+    },
+    {
+     "name": "CON-R-135",
+     "kind": "rule",
+     "detail": "Any usage-based rent arithmetic: 6-decimal precision is required on unit rates; use BigDecimal with explicit scale and rounding mode, never a binary float.",
+     "confidence": "observed",
+     "source": "docs/modules/contracts/rules.md",
+     "children": []
+    },
+    {
+     "name": "CON-R-136",
+     "kind": "rule",
+     "detail": "Any percentage arithmetic: sTYPE_PERCENTAGE fields multiply money in the pro-rata, breakpoint and CPI paths; store as BigDecimal and fix the scale and rounding policy at every multiplication step.",
+     "confidence": "observed",
+     "source": "docs/modules/contracts/rules.md",
+     "children": []
+    },
+    {
+     "name": "CON-R-137",
+     "kind": "rule",
+     "detail": "Any recovery measure is unset: a zero default produces spurious 100% variances; model recovery measures as nullable BigDecimal instead.",
+     "confidence": "inferred",
+     "source": "docs/modules/contracts/rules.md",
+     "children": []
+    },
+    {
+     "name": "This is not precedent for §4.4's JSON-numerics-as-strings clause",
+     "kind": "constraint",
+     "detail": "The Constitution allows JSON numeric attributes to be stored as strings and parsed under a defined schema and validation discipline. Lucernex's landed schema looks superficially similar — everything is TEXT — but without any of that discipline: no schema, no validation, no distinction between a value that will deliberately be parsed as a decimal and one that is simply untyped. ASG Edge+ should read this hazard as the failure mode §4.4 exists to prevent, not as a precedent to follow.",
+     "confidence": "derived",
+     "source": "docs/modules/contracts/asg-edgeplus-mapping.md",
+     "children": []
+    }
+   ]
+  }
+ ]
+}
