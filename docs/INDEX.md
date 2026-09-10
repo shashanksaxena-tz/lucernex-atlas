@@ -69,7 +69,7 @@ The questions that drove this pass, and where each is settled.
 |---:|---|---|---|
 | 001 | Dashboard home | Captured | [Open](screens/001-dashboard-home.md) |
 | 002 | Help menu | Captured | *document not yet written* |
-| 003 | Main navigation panel | Pending | — |
+| **003** | **Main navigation — the whole product in four roots** | **Captured** | [Open](screens/003-main-navigation.md) |
 | 004 | System Administrator Dashboard | Captured | [Open](admin/004-company-administration.md) |
 | 005 | Manage Data Fields (Global + Firm) | Captured, read-only | [Open](admin/005-manage-data-fields.md) |
 | 006 | Manage Custom Lists | Captured, read-only | [Open](admin/006-manage-custom-lists.md) |
@@ -80,6 +80,22 @@ The questions that drove this pass, and where each is settled.
 | 011 | Manage Work Flows | Captured, read-only | folded into [forms-vs-pages-vs-layouts](modules/layouts-and-forms/forms-vs-pages-vs-layouts.md) and [modules/workflow](modules/workflow/) |
 | 012 | GraphQL Explorer | Captured, read-only | [data-model/graphql-api.md](data-model/graphql-api.md) |
 | 013 | Conditional Filter editor | Captured, read-only | [conditional-fields.md](modules/layouts-and-forms/conditional-fields.md) |
+| **014** | **A contract, as a user sees it** — Contract Summary and the ASC 842 Rent Schedule | **Captured, read-only** | [Open](screens/014-contract-record-end-user.md) |
+
+### The end-user application
+
+Screens 001–013 are administration. **003 and 014 are the first captures of the product as a user
+actually meets it**, and they change the shape of what is known:
+
+- The whole end-user surface is **four roots — Portfolio, Location, Facility, Contract — 24 groups
+  and 81 screens**. Contract alone carries 39 of them.
+- **56% of those screens are served by two files**, `PForm.jsp` (detail) and `PLForm.jsp` (list) —
+  the runtime face of the Edit Layout / List Layout split. The full routing table, every screen
+  mapped to its `PageLayoutID`, is in
+  [`data-model/screen-routing.md`](data-model/screen-routing.md) and
+  [`mindmap/navtree.json`](mindmap/navtree.json).
+- **`Generate Rent` and `Calculate Schedule` are buttons on a record**, not batch jobs. The
+  accounting engine is user-triggered.
 
 > **Note on 006, 008 and 009.** All three record a blocker they diagnosed as a popup/window-opener
 > problem. That diagnosis was **wrong** and is corrected in
@@ -122,6 +138,7 @@ catalogue and the foreign-key graph so the model stays whole, grouped under
 | [`data-model/type-system.md`](data-model/type-system.md) | The full type vocabulary by family |
 | [`data-model/graphql-api.md`](data-model/graphql-api.md) | The live API: 490 types, 617 queries, 3 mutations, and the canonical 10-value `FieldType` enum behind the 448 `sTYPE_*` codes |
 | [`data-model/rest-api.md`](data-model/rest-api.md) | The REST surface over all 223 record types. Record sets are `Base` / `CodeTables` / `Issues`; fields filter by required / editable / read-only. The endpoint shapes themselves did **not** render and remain uncaptured |
+| [`data-model/screen-routing.md`](data-model/screen-routing.md) | **All 81 end-user screens mapped to their `PageLayoutID` and JSP.** 17 renderers serve the lot; two of them serve 56%. Proves Forms and Work Flow are one screen, and that "Portfolio" is `Program` |
 | [`data-model/code-table-registry.md`](data-model/code-table-registry.md) | **All 207 Firm Drop Downs with their `TableType` IDs**, the 2000/3000 band split, captured values, and **the contract lifecycle, resolved** |
 
 ---

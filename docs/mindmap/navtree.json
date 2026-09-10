@@ -1,0 +1,771 @@
+{
+ "captured": "2026-09-10",
+ "route": "/en/dashboard/DashboardDispatch.jsp",
+ "component": "Lx.ui.MenuTree",
+ "count": 109,
+ "screens": [
+  {
+   "depth": 0,
+   "name": "Portfolio",
+   "pageLayoutId": 924,
+   "jsp": "",
+   "entityType": ""
+  },
+  {
+   "depth": 1,
+   "name": "Details",
+   "pageLayoutId": 935,
+   "jsp": "/en/pagebuilder/PForm.jsp",
+   "entityType": "Program"
+  },
+  {
+   "depth": 2,
+   "name": "Summary",
+   "pageLayoutId": 936,
+   "jsp": "/en/pagebuilder/PForm.jsp",
+   "entityType": "Program"
+  },
+  {
+   "depth": 2,
+   "name": "Members/Contacts",
+   "pageLayoutId": 938,
+   "jsp": "/en/project/MemberDirectory.jsp",
+   "entityType": "Program"
+  },
+  {
+   "depth": 2,
+   "name": "Forms",
+   "pageLayoutId": 939,
+   "jsp": "/en/issue/IssueList.jsp",
+   "entityType": "Program"
+  },
+  {
+   "depth": 2,
+   "name": "Work Flow",
+   "pageLayoutId": 2283,
+   "jsp": "/en/issue/IssueList.jsp?mode=WorkFlow",
+   "entityType": "Program"
+  },
+  {
+   "depth": 2,
+   "name": "Documents",
+   "pageLayoutId": 937,
+   "jsp": "/en/document/Index.jsp",
+   "entityType": "Program"
+  },
+  {
+   "depth": 2,
+   "name": "Binders",
+   "pageLayoutId": 931,
+   "jsp": "/en/CommitteeDocuments/PECommPkg.jsp",
+   "entityType": "Program"
+  },
+  {
+   "depth": 2,
+   "name": "Budget",
+   "pageLayoutId": 1109,
+   "jsp": "/en/budget/BudgetColumnEdit.jsp",
+   "entityType": "Program"
+  },
+  {
+   "depth": 1,
+   "name": "Demographics",
+   "pageLayoutId": 925,
+   "jsp": "/en/admin/DemographicReportEdit.jsp",
+   "entityType": "Program"
+  },
+  {
+   "depth": 2,
+   "name": "Criteria",
+   "pageLayoutId": 928,
+   "jsp": "/en/admin/DemographicReportEdit.jsp",
+   "entityType": "Program"
+  },
+  {
+   "depth": 2,
+   "name": "Study Areas",
+   "pageLayoutId": 927,
+   "jsp": "/en/admin/DemographicStudyAreaEdit.jsp",
+   "entityType": "Program"
+  },
+  {
+   "depth": 2,
+   "name": "Demographics",
+   "pageLayoutId": 926,
+   "jsp": "/en/admin/DemographicFactEditForm.jsp",
+   "entityType": "Program"
+  },
+  {
+   "depth": 1,
+   "name": "Org Chart",
+   "pageLayoutId": 933,
+   "jsp": "/en/admin/OrgChartEdit.jsp",
+   "entityType": "Program"
+  },
+  {
+   "depth": 2,
+   "name": "Org Chart",
+   "pageLayoutId": 934,
+   "jsp": "/en/admin/OrgChartEdit.jsp",
+   "entityType": "Program"
+  },
+  {
+   "depth": 1,
+   "name": "Facility / Store List",
+   "pageLayoutId": 4854,
+   "jsp": "/en/pagebuilder/PLForm.jsp",
+   "entityType": "Program"
+  },
+  {
+   "depth": 2,
+   "name": "Facility / Store List",
+   "pageLayoutId": 4862,
+   "jsp": "/en/pagebuilder/PLForm.jsp",
+   "entityType": "Program"
+  },
+  {
+   "depth": 1,
+   "name": "Equipment",
+   "pageLayoutId": 51793,
+   "jsp": "/en/pagebuilder/PLForm.jsp",
+   "entityType": "Program"
+  },
+  {
+   "depth": 2,
+   "name": "Equipment",
+   "pageLayoutId": 51809,
+   "jsp": "/en/pagebuilder/PLForm.jsp",
+   "entityType": "Program"
+  },
+  {
+   "depth": 1,
+   "name": "Reports",
+   "pageLayoutId": 3573,
+   "jsp": "/en/reports/SavedReportList.jsp",
+   "entityType": "Program"
+  },
+  {
+   "depth": 2,
+   "name": "Program Reports",
+   "pageLayoutId": 3574,
+   "jsp": "/en/reports/SavedReportList.jsp",
+   "entityType": "Program"
+  },
+  {
+   "depth": 0,
+   "name": "Location",
+   "pageLayoutId": 3535,
+   "jsp": "",
+   "entityType": ""
+  },
+  {
+   "depth": 1,
+   "name": "Details",
+   "pageLayoutId": 3536,
+   "jsp": "/en/pagebuilder/PForm.jsp",
+   "entityType": "Location"
+  },
+  {
+   "depth": 2,
+   "name": "Summary",
+   "pageLayoutId": 3537,
+   "jsp": "/en/pagebuilder/PForm.jsp",
+   "entityType": "Location"
+  },
+  {
+   "depth": 2,
+   "name": "Members/Contacts",
+   "pageLayoutId": 3542,
+   "jsp": "/en/project/MemberDirectory.jsp",
+   "entityType": "Location"
+  },
+  {
+   "depth": 2,
+   "name": "Forms",
+   "pageLayoutId": 3543,
+   "jsp": "/en/issue/IssueList.jsp",
+   "entityType": "Location"
+  },
+  {
+   "depth": 2,
+   "name": "Work Flow",
+   "pageLayoutId": 3544,
+   "jsp": "/en/issue/IssueList.jsp?mode=WorkFlow",
+   "entityType": "Location"
+  },
+  {
+   "depth": 2,
+   "name": "Documents",
+   "pageLayoutId": 3545,
+   "jsp": "/en/document/Index.jsp",
+   "entityType": "Location"
+  },
+  {
+   "depth": 2,
+   "name": "Binders",
+   "pageLayoutId": 3546,
+   "jsp": "/en/CommitteeDocuments/PECommPkg.jsp",
+   "entityType": "Location"
+  },
+  {
+   "depth": 2,
+   "name": "Schedule",
+   "pageLayoutId": 3547,
+   "jsp": "/en/reports/TaskGantt2.jsp",
+   "entityType": "Location"
+  },
+  {
+   "depth": 2,
+   "name": "Budget",
+   "pageLayoutId": 3548,
+   "jsp": "/en/budget/BudgetColumnEdit.jsp",
+   "entityType": "Location"
+  },
+  {
+   "depth": 1,
+   "name": "Complex/Center",
+   "pageLayoutId": 3549,
+   "jsp": "/en/pagebuilder/PForm.jsp",
+   "entityType": "Location"
+  },
+  {
+   "depth": 2,
+   "name": "Complex/Center Details",
+   "pageLayoutId": 3551,
+   "jsp": "/en/pagebuilder/PForm.jsp",
+   "entityType": "Location"
+  },
+  {
+   "depth": 1,
+   "name": "Equipment",
+   "pageLayoutId": 51796,
+   "jsp": "/en/pagebuilder/PLForm.jsp",
+   "entityType": "Location"
+  },
+  {
+   "depth": 2,
+   "name": "Equipment",
+   "pageLayoutId": 51810,
+   "jsp": "/en/pagebuilder/PLForm.jsp",
+   "entityType": "Location"
+  },
+  {
+   "depth": 2,
+   "name": "Work Orders",
+   "pageLayoutId": 51811,
+   "jsp": "/en/issue/WorkOrderList.jsp",
+   "entityType": "Location"
+  },
+  {
+   "depth": 1,
+   "name": "Reports",
+   "pageLayoutId": 3556,
+   "jsp": "/en/reports/SavedReportList.jsp",
+   "entityType": "Location"
+  },
+  {
+   "depth": 2,
+   "name": "Location Reports",
+   "pageLayoutId": 3557,
+   "jsp": "/en/reports/SavedReportList.jsp",
+   "entityType": "Location"
+  },
+  {
+   "depth": 0,
+   "name": "Facility",
+   "pageLayoutId": 1005,
+   "jsp": "",
+   "entityType": ""
+  },
+  {
+   "depth": 1,
+   "name": "Details",
+   "pageLayoutId": 1006,
+   "jsp": "/en/pagebuilder/PForm.jsp",
+   "entityType": "Facility"
+  },
+  {
+   "depth": 2,
+   "name": "Summary",
+   "pageLayoutId": 1007,
+   "jsp": "/en/pagebuilder/PForm.jsp",
+   "entityType": "Facility"
+  },
+  {
+   "depth": 2,
+   "name": "Members/Contacts",
+   "pageLayoutId": 1009,
+   "jsp": "/en/project/MemberDirectory.jsp",
+   "entityType": "Facility"
+  },
+  {
+   "depth": 2,
+   "name": "Forms",
+   "pageLayoutId": 1010,
+   "jsp": "/en/issue/IssueList.jsp",
+   "entityType": "Facility"
+  },
+  {
+   "depth": 2,
+   "name": "Work Flow",
+   "pageLayoutId": 2286,
+   "jsp": "/en/issue/IssueList.jsp?mode=WorkFlow",
+   "entityType": "Facility"
+  },
+  {
+   "depth": 2,
+   "name": "Documents",
+   "pageLayoutId": 1013,
+   "jsp": "/en/document/Index.jsp",
+   "entityType": "Facility"
+  },
+  {
+   "depth": 2,
+   "name": "Binders",
+   "pageLayoutId": 1030,
+   "jsp": "/en/CommitteeDocuments/PECommPkg.jsp",
+   "entityType": "Facility"
+  },
+  {
+   "depth": 2,
+   "name": "Schedule",
+   "pageLayoutId": 1008,
+   "jsp": "/en/reports/TaskGantt2.jsp",
+   "entityType": "Facility"
+  },
+  {
+   "depth": 2,
+   "name": "Budget",
+   "pageLayoutId": 1011,
+   "jsp": "/en/budget/BudgetColumnEdit.jsp",
+   "entityType": "Facility"
+  },
+  {
+   "depth": 1,
+   "name": "Demographics",
+   "pageLayoutId": 5420,
+   "jsp": "/en/project/ScoutDemographicInfo.jsp",
+   "entityType": "Facility"
+  },
+  {
+   "depth": 2,
+   "name": "Summary",
+   "pageLayoutId": 5431,
+   "jsp": "/en/project/ScoutDemographicInfo.jsp",
+   "entityType": "Facility"
+  },
+  {
+   "depth": 2,
+   "name": "Demographics Study",
+   "pageLayoutId": 5432,
+   "jsp": "/en/project/DemographicsStudy.jsp",
+   "entityType": "Facility"
+  },
+  {
+   "depth": 1,
+   "name": "Asset Management",
+   "pageLayoutId": 3525,
+   "jsp": "/en/pagebuilder/PLForm.jsp",
+   "entityType": "Facility"
+  },
+  {
+   "depth": 2,
+   "name": "Equipment (FF&E)",
+   "pageLayoutId": 1036,
+   "jsp": "/en/pagebuilder/PLForm.jsp",
+   "entityType": "Facility"
+  },
+  {
+   "depth": 2,
+   "name": "Service Requests / Work Orders",
+   "pageLayoutId": 3526,
+   "jsp": "/en/issue/WorkOrderList.jsp",
+   "entityType": "Facility"
+  },
+  {
+   "depth": 1,
+   "name": "Space Management",
+   "pageLayoutId": 3527,
+   "jsp": "/en/pagebuilder/PLForm.jsp",
+   "entityType": "Facility"
+  },
+  {
+   "depth": 2,
+   "name": "Space Management",
+   "pageLayoutId": 3528,
+   "jsp": "/en/pagebuilder/PLForm.jsp",
+   "entityType": "Facility"
+  },
+  {
+   "depth": 1,
+   "name": "Facility Expense",
+   "pageLayoutId": 13239,
+   "jsp": "/en/pagebuilder/PLForm.jsp",
+   "entityType": "Facility"
+  },
+  {
+   "depth": 2,
+   "name": "Facility Expense",
+   "pageLayoutId": 13240,
+   "jsp": "/en/pagebuilder/PLForm.jsp",
+   "entityType": "Facility"
+  },
+  {
+   "depth": 1,
+   "name": "Pro Forma Lease",
+   "pageLayoutId": 1014,
+   "jsp": "/en/pagebuilder/PForm.jsp",
+   "entityType": "Facility"
+  },
+  {
+   "depth": 2,
+   "name": "Pro Forma Lease",
+   "pageLayoutId": 5421,
+   "jsp": "/en/pagebuilder/PForm.jsp",
+   "entityType": "Facility"
+  },
+  {
+   "depth": 2,
+   "name": "Responsibilities",
+   "pageLayoutId": 1015,
+   "jsp": "/en/lease/LeaseMaintenanceEdit.jsp",
+   "entityType": "Facility"
+  },
+  {
+   "depth": 1,
+   "name": "Reports",
+   "pageLayoutId": 3533,
+   "jsp": "/en/reports/SavedReportList.jsp",
+   "entityType": "Facility"
+  },
+  {
+   "depth": 2,
+   "name": "Facility Reports",
+   "pageLayoutId": 3534,
+   "jsp": "/en/reports/SavedReportList.jsp",
+   "entityType": "Facility"
+  },
+  {
+   "depth": 0,
+   "name": "Contract",
+   "pageLayoutId": 3492,
+   "jsp": "",
+   "entityType": ""
+  },
+  {
+   "depth": 1,
+   "name": "Details",
+   "pageLayoutId": 3493,
+   "jsp": "/en/pagebuilder/PForm.jsp",
+   "entityType": "Contract"
+  },
+  {
+   "depth": 2,
+   "name": "Summary",
+   "pageLayoutId": 3494,
+   "jsp": "/en/pagebuilder/PForm.jsp",
+   "entityType": "Contract"
+  },
+  {
+   "depth": 2,
+   "name": "Members/Contacts",
+   "pageLayoutId": 3495,
+   "jsp": "/en/project/MemberDirectory.jsp",
+   "entityType": "Contract"
+  },
+  {
+   "depth": 2,
+   "name": "Forms",
+   "pageLayoutId": 3496,
+   "jsp": "/en/issue/IssueList.jsp",
+   "entityType": "Contract"
+  },
+  {
+   "depth": 2,
+   "name": "Work Flow",
+   "pageLayoutId": 3497,
+   "jsp": "/en/issue/IssueList.jsp?mode=WorkFlow",
+   "entityType": "Contract"
+  },
+  {
+   "depth": 2,
+   "name": "Documents",
+   "pageLayoutId": 3498,
+   "jsp": "/en/document/Index.jsp",
+   "entityType": "Contract"
+  },
+  {
+   "depth": 2,
+   "name": "Binders",
+   "pageLayoutId": 3499,
+   "jsp": "/en/CommitteeDocuments/PECommPkg.jsp",
+   "entityType": "Contract"
+  },
+  {
+   "depth": 2,
+   "name": "Schedule",
+   "pageLayoutId": 3500,
+   "jsp": "/en/reports/TaskGantt2.jsp",
+   "entityType": "Contract"
+  },
+  {
+   "depth": 1,
+   "name": "Abstract Info",
+   "pageLayoutId": 3502,
+   "jsp": "/en/pagebuilder/PForm.jsp",
+   "entityType": "Contract"
+  },
+  {
+   "depth": 2,
+   "name": "Abstract Details",
+   "pageLayoutId": 3503,
+   "jsp": "/en/pagebuilder/PForm.jsp",
+   "entityType": "Contract"
+  },
+  {
+   "depth": 2,
+   "name": "Terms",
+   "pageLayoutId": 3504,
+   "jsp": "/en/pagebuilder/PLForm.jsp",
+   "entityType": "Contract"
+  },
+  {
+   "depth": 2,
+   "name": "Amendments",
+   "pageLayoutId": 3505,
+   "jsp": "/en/pagebuilder/PLForm.jsp",
+   "entityType": "Contract"
+  },
+  {
+   "depth": 2,
+   "name": "Covenants",
+   "pageLayoutId": 3506,
+   "jsp": "/en/pagebuilder/PLForm.jsp",
+   "entityType": "Contract"
+  },
+  {
+   "depth": 2,
+   "name": "Key Dates",
+   "pageLayoutId": 3507,
+   "jsp": "/en/pagebuilder/PLForm.jsp",
+   "entityType": "Contract"
+  },
+  {
+   "depth": 2,
+   "name": "Responsibilities",
+   "pageLayoutId": 3508,
+   "jsp": "/en/pagebuilder/PLForm.jsp",
+   "entityType": "Contract"
+  },
+  {
+   "depth": 2,
+   "name": "Insurance",
+   "pageLayoutId": 3509,
+   "jsp": "/en/pagebuilder/PLForm.jsp",
+   "entityType": "Contract"
+  },
+  {
+   "depth": 2,
+   "name": "Co-Tenancy",
+   "pageLayoutId": 3510,
+   "jsp": "/en/pagebuilder/PLForm.jsp",
+   "entityType": "Contract"
+  },
+  {
+   "depth": 1,
+   "name": "Payment Info",
+   "pageLayoutId": 3512,
+   "jsp": "/en/pagebuilder/PForm.jsp",
+   "entityType": "Contract"
+  },
+  {
+   "depth": 2,
+   "name": "Payment Details",
+   "pageLayoutId": 3513,
+   "jsp": "/en/pagebuilder/PForm.jsp",
+   "entityType": "Contract"
+  },
+  {
+   "depth": 2,
+   "name": "Recurring Expenses",
+   "pageLayoutId": 3514,
+   "jsp": "/en/pagebuilder/PLForm.jsp",
+   "entityType": "Contract"
+  },
+  {
+   "depth": 2,
+   "name": "Alternate Rent",
+   "pageLayoutId": 15951,
+   "jsp": "/en/pagebuilder/PLForm.jsp",
+   "entityType": "Contract"
+  },
+  {
+   "depth": 2,
+   "name": "Transactions",
+   "pageLayoutId": 3518,
+   "jsp": "/en/pagebuilder/PLForm.jsp",
+   "entityType": "Contract"
+  },
+  {
+   "depth": 2,
+   "name": "Invoices",
+   "pageLayoutId": 108382,
+   "jsp": "/en/pagebuilder/PLForm.jsp",
+   "entityType": "Contract"
+  },
+  {
+   "depth": 2,
+   "name": "Receipts",
+   "pageLayoutId": 3519,
+   "jsp": "/en/pagebuilder/PLForm.jsp",
+   "entityType": "Contract"
+  },
+  {
+   "depth": 2,
+   "name": "Recoveries",
+   "pageLayoutId": 3516,
+   "jsp": "/en/pagebuilder/PLForm.jsp",
+   "entityType": "Contract"
+  },
+  {
+   "depth": 2,
+   "name": "Scheduled Offsets",
+   "pageLayoutId": 19844,
+   "jsp": "/en/pagebuilder/PLForm.jsp",
+   "entityType": "Contract"
+  },
+  {
+   "depth": 2,
+   "name": "Allowances",
+   "pageLayoutId": 3517,
+   "jsp": "/en/pagebuilder/PLForm.jsp",
+   "entityType": "Contract"
+  },
+  {
+   "depth": 2,
+   "name": "Security Deposit",
+   "pageLayoutId": 12444,
+   "jsp": "/en/pagebuilder/PLForm.jsp",
+   "entityType": "Contract"
+  },
+  {
+   "depth": 2,
+   "name": "Percentage Rent",
+   "pageLayoutId": 3515,
+   "jsp": "/en/pagebuilder/PLForm.jsp",
+   "entityType": "Contract"
+  },
+  {
+   "depth": 2,
+   "name": "Sales",
+   "pageLayoutId": 3520,
+   "jsp": "/en/pagebuilder/PLForm.jsp",
+   "entityType": "Contract"
+  },
+  {
+   "depth": 1,
+   "name": "Accounting Info",
+   "pageLayoutId": 12293,
+   "jsp": "/en/pagebuilder/PForm.jsp",
+   "entityType": "Contract"
+  },
+  {
+   "depth": 2,
+   "name": "Accounting Details",
+   "pageLayoutId": 45615,
+   "jsp": "/en/pagebuilder/PForm.jsp",
+   "entityType": "Contract"
+  },
+  {
+   "depth": 2,
+   "name": "Capital Lease Test",
+   "pageLayoutId": 12295,
+   "jsp": "/en/pagebuilder/PForm.jsp",
+   "entityType": "Contract"
+  },
+  {
+   "depth": 2,
+   "name": "Straight-Line Rent",
+   "pageLayoutId": 12445,
+   "jsp": "/en/pagebuilder/PLForm.jsp",
+   "entityType": "Contract"
+  },
+  {
+   "depth": 2,
+   "name": "Accounting Assumptions",
+   "pageLayoutId": 43784,
+   "jsp": "/en/pagebuilder/PLForm.jsp",
+   "entityType": "Contract"
+  },
+  {
+   "depth": 2,
+   "name": "ASC 842 Test",
+   "pageLayoutId": 41136,
+   "jsp": "/en/pagebuilder/PLForm.jsp",
+   "entityType": "Contract"
+  },
+  {
+   "depth": 2,
+   "name": "ASC 842 Rent Schedule",
+   "pageLayoutId": 43785,
+   "jsp": "/en/pagebuilder/PLForm.jsp",
+   "entityType": "Contract"
+  },
+  {
+   "depth": 2,
+   "name": "IFRS 16 Rent Schedule",
+   "pageLayoutId": 45609,
+   "jsp": "/en/pagebuilder/PLForm.jsp",
+   "entityType": "Contract"
+  },
+  {
+   "depth": 1,
+   "name": "Accrual Info",
+   "pageLayoutId": 45610,
+   "jsp": "/en/pagebuilder/PForm.jsp",
+   "entityType": "Contract"
+  },
+  {
+   "depth": 2,
+   "name": "Accrual Details",
+   "pageLayoutId": 12294,
+   "jsp": "/en/pagebuilder/PForm.jsp",
+   "entityType": "Contract"
+  },
+  {
+   "depth": 2,
+   "name": "Expense Accruals",
+   "pageLayoutId": 12297,
+   "jsp": "/en/pagebuilder/PLForm.jsp",
+   "entityType": "Contract"
+  },
+  {
+   "depth": 2,
+   "name": "Transactions",
+   "pageLayoutId": 12298,
+   "jsp": "/en/pagebuilder/PLForm.jsp",
+   "entityType": "Contract"
+  },
+  {
+   "depth": 2,
+   "name": "Percentage Rent Accruals",
+   "pageLayoutId": 12296,
+   "jsp": "/en/pagebuilder/PForm.jsp",
+   "entityType": "Contract"
+  },
+  {
+   "depth": 1,
+   "name": "Reports",
+   "pageLayoutId": 3521,
+   "jsp": "/en/reports/SavedReportList.jsp",
+   "entityType": "Contract"
+  },
+  {
+   "depth": 2,
+   "name": "Contract Reports",
+   "pageLayoutId": 3522,
+   "jsp": "/en/reports/SavedReportList.jsp",
+   "entityType": "Contract"
+  }
+ ]
+}
