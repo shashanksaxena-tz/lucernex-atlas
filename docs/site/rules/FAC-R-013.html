@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FAC-R-013 &middot; Lucernex Atlas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="../atlas.css">
+</head><body>
+<header><b>Lucernex Atlas</b>
+<nav><a href="../index.html">Overview</a><a href="../atlas.html">Interactive app</a>
+<a href="../entities/index.html">Record types</a><a href="../rules/index.html">Rules</a>
+<a href="../questions.html">Open questions</a></nav></header>
+<main><p class="crumb"><a href="../index.html">Atlas</a> &rsaquo; <a href="index.html">Rules</a> &rsaquo; FAC-R-013</p><h1 class="mono">FAC-R-013</h1><p class="sub">Facilities, Locations &amp; Sites &middot; The reverse of Contract → Facility is composed as a child grid, not a lookup</p><span class="tag obs">Observed</span><p>Effect: From `Facility`&#x27;s own Related Fields sidebar, `Contract` does not appear as a related lookup at all; instead the Facility Summary layout embeds an **&quot;ASG Contract List (One to Many List)&quot;** child grid. The relationship is asymmetric by cardinality and the UI reflects that asymmetry correctly on both sides. Confidence: Observed (009, screenshot `facility-summary-contracts-one-to-many-list.jpg`).</p><p style="font-size:11.5px;color:var(--faint);margin-top:18px">Source: modules/facilities-locations/rules.md</p></main></body></html>

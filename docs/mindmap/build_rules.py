@@ -23,6 +23,9 @@ MODULES = {
     "workflow": ("WF", "Workflow & Approvals"),
     "layouts-and-forms": ("LAY", "Configuration, Layouts, Forms & Reporting"),
     "reporting": ("RPT", "Configuration, Layouts, Forms & Reporting"),
+    "facilities-locations": ("FAC", "Facilities, Locations & Sites"),
+    "platform-tenancy": ("PLT", "Platform & Tenancy"),
+    "people-parties": ("PPL", "People & Parties"),
 }
 
 RULE_ID = re.compile(r"\b([A-Z]{2,4}-R-\d{2,4})\b")

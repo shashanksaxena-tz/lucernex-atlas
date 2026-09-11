@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FAC-R-010 &middot; Lucernex Atlas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="../atlas.css">
+</head><body>
+<header><b>Lucernex Atlas</b>
+<nav><a href="../index.html">Overview</a><a href="../atlas.html">Interactive app</a>
+<a href="../entities/index.html">Record types</a><a href="../rules/index.html">Rules</a>
+<a href="../questions.html">Open questions</a></nav></header>
+<main><p class="crumb"><a href="../index.html">Atlas</a> &rsaquo; <a href="index.html">Rules</a> &rsaquo; FAC-R-010</p><h1 class="mono">FAC-R-010</h1><p class="sub">Facilities, Locations &amp; Sites &middot; A Facility may defer its address to its parent Location</p><span class="tag inf">Inferred</span><p>Input: `Facility.UseLocationAddress` (Boolean, Required = Yes — the flag itself must always be set one way or the other). Effect: When true, the Facility is presumed to use `Location`&#x27;s address fields rather than its own `StreetAddress1..4`/`City`/`PostalCode`. Confidence: Inferred — plausible from the field name and the required-boolean pattern, not confirmed by any screen capture of the resulting render behaviour.</p><p style="font-size:11.5px;color:var(--faint);margin-top:18px">Source: modules/facilities-locations/rules.md</p></main></body></html>

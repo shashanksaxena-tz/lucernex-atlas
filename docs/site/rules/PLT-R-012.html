@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PLT-R-012 &middot; Lucernex Atlas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="../atlas.css">
+</head><body>
+<header><b>Lucernex Atlas</b>
+<nav><a href="../index.html">Overview</a><a href="../atlas.html">Interactive app</a>
+<a href="../entities/index.html">Record types</a><a href="../rules/index.html">Rules</a>
+<a href="../questions.html">Open questions</a></nav></header>
+<main><p class="crumb"><a href="../index.html">Atlas</a> &rsaquo; <a href="index.html">Rules</a> &rsaquo; PLT-R-012</p><h1 class="mono">PLT-R-012</h1><p class="sub">Platform &amp; Tenancy &middot; Two unreconciled audit mechanisms coexist</p><span class="tag der">Derived</span><p>- Trigger: Any change to a tracked field. - Input: `AuditColumn`/`AuditTable` (explicit change log, keyed to the field-registry tree via `GroupID`/`SubGroupID`) and inline `CreatedByID`/`ModifiedByID` stamps present on most objects. - Condition: 162 of 223 objects carry the inline stamps (161 `ModifiedByID`, only 79 `CreatedByID`); it is unknown which objects also emit `AuditColumn` rows. - Effect: A rebuild inherits the same open question ASG Edge+&#x27;s own unresolved ADR-0020 (in-transaction audit vs. the ADR-0012 outbox) poses — Lucernex appears to run a version of both, unreconciled. - Confidence: Derived — `../../data-model/object-catalog.md` open question 4.</p><p style="font-size:11.5px;color:var(--faint);margin-top:18px">Source: modules/platform-tenancy/rules.md</p></main></body></html>

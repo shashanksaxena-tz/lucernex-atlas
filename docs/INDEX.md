@@ -117,8 +117,9 @@ Each folder carries, at minimum, `README.md`, `data-model.md`, `rules.md` and
 | [**workflow**](modules/workflow/) | `WF-R-*` | Template/instance split, step actions, routing, and the **three nested state machines** |
 | [**layouts-and-forms**](modules/layouts-and-forms/) | `LAY-R-001…018` | Conditional fields, and the Forms/Pages/Layouts/Custom Lists reconciliation |
 | [**reporting**](modules/reporting/) | `RPT-R-*` | The shared field registry — **confirmed**, not hypothesised — and the admin tool inventory |
+| [**facilities-locations**](modules/facilities-locations/) | `FAC-R-001…020` | Facility/Location/Complex/Parcel/Prototype/Space/Tenant and the demographics/site-selection family. [`location-vs-facility-vs-site.md`](modules/facilities-locations/location-vs-facility-vs-site.md) settles the central naming question: **Location is the site/"Center", Facility is the building on it** |
 
-Scaffolded but not yet written: `facilities-locations`, `projects-capital`, `assets-equipment`,
+Scaffolded but not yet written: `projects-capital`, `assets-equipment`,
 `documents-folders`.
 
 **Out of scope by decision:** cost management, budgeting and bidding. Those objects remain in the
