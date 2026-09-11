@@ -188,6 +188,66 @@ do the same — it is a well-specified grammar with existing parsers.
 by Lucernex's internal `lxID` and by the customer's own `clientID`. That is what makes migration
 and integration tractable, and it is a design ASG Edge+ will need from day one.
 
+## A collection query without a filter silently hides most of the data
+
+**Observed, 2026-09-11, and this is the most dangerous behaviour found in the API.**
+
+```
+contracts(offset:0 limit:1){ total }                              ->   2
+contracts(fiql:"codeContractStatusID!=null" ...){ total }         -> 412
+contracts(fiql:"aggregateTotalRent=gt=0" ...){ total }            -> 383
+```
+
+The same collection returns **2** with no filter and **412** with a filter that excludes nothing
+meaningful. An integration that calls `contracts` the obvious way receives **2 of 412 records and no
+error, no warning, and no indication that anything was withheld.**
+
+**Inferred** as to cause: an implicit default scope — most plausibly a portfolio or
+default-view restriction applied when no explicit filter is supplied. The behaviour was *not*
+observed on every collection: `paymentTransactions` returned 11,426 bare against 10,771 filtered to
+a positive amount, which is the ordinary direction. So this appears to affect
+`ProjectEntity`-rooted collections rather than all of them.
+
+Three consequences:
+
+1. **Any migration that enumerates via unfiltered collection queries will silently under-read.**
+   Always pass a filter, and always reconcile the returned `total` against a known count.
+2. **`total` is not trustworthy as a record count** — it is the count of what this call was allowed
+   to see, which is exactly what makes the trap quiet.
+3. **ASG Edge+ should not reproduce it.** If a default scope is applied, say so in the response.
+   A silently filtered collection is a correctness bug waiting to become a data-loss incident.
+
+This was found by accident while looking for a contract with rent on it, which is the only reason it
+was found at all. **Treat every other collection in this API as suspect until its bare and filtered
+totals have been compared.**
+
+## What is actually in this tenant
+
+**Observed, 2026-09-11.** Useful for judging how much any behavioural finding can be trusted.
+
+| Collection | Rows |
+|---|---:|
+| `documents` | 11,905 |
+| `paymentTransactions` | 11,426 |
+| `expenseSchedules` | 3,009 |
+| `expenseSetups` | 1,357 |
+| `assets` | 605 |
+| `locations` | 406 |
+| `allowances` | 395 |
+| `contracts` | **412** *(2 unfiltered — see above)* |
+| `members` | 117 |
+| `facilities` | 36 |
+| `projects` | 0 |
+
+This is not a toy dataset. 412 contracts carry real amounts — the largest,
+`07820 - Kansas City ORDC MO`, has an aggregate total rent of **$7,755,430.66** — and 11,426 payment
+transactions have already been generated against them. Behavioural questions about the engines can
+therefore be answered **by reading existing output** rather than by invoking anything, which is how
+[`../modules/contracts/rent-generation.md`](../modules/contracts/rent-generation.md) was written.
+
+Note `projects` is empty: the capital-projects module has no data here, so nothing about it can be
+confirmed behaviourally.
+
 ## Example-query coverage
 
 The 177 examples are grouped by entity and by query pattern. Entities covered include Contract,

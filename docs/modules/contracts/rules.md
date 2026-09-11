@@ -1,6 +1,6 @@
 # Contract financial engine — rules
 
-**Stated up front.** 144 rules, numbered `CON-R-001` … `CON-R-144`, each stated so a rule engine can
+**Stated up front.** 152 rules, numbered `CON-R-001` … `CON-R-152`, each stated so a rule engine can
 consume it: **trigger**, **inputs**, **computation or condition**, **output**, **confidence**.
 Downstream modules (accounting, reporting, workflow) should cite these IDs rather than restating the
 logic.
@@ -315,3 +315,20 @@ Every one of these is `Inferred`, touches money, and changes results materially 
 | 5 | `CON-R-095` | Where `BaseYearAmount` enters the waterfall | Recovery record with a base-year stop |
 | 6 | `CON-R-111` | `AccountNumber1..8` — segments or split lines | One posted transaction vs its organization |
 | 7 | `CON-R-118` | How a `PaymentReceipt` is matched to transactions | The Reconcile Receipt screen |
+
+## §13 Rent generation
+
+`CON-R-145` … `CON-R-152` — established 2026-09-11 by opening the **Generate Payments** dialog and
+characterising the 11,426 payment transactions the engine had already produced. Full write-up in
+[`rent-generation.md`](rent-generation.md); the button itself was never pressed.
+
+| ID | Trigger | Inputs | Condition / computation | Effect | Confidence |
+|---|---|---|---|---|---|
+| **CON-R-145** | A user invokes `Generate Rent` | `ExpenseSchedule` rows for the contract | Generation reads the **Schedule** layer, not the **Setup** layer | A contract with Expense Setups but an empty Expense Schedule generates nothing | Derived |
+| **CON-R-146** | The Generate Payments dialog opens | Period (month + year), Posting Date, Batch Date | A batch number is minted as `RNT<yyyymmdd>-<sequence>` | The run is identified by that batch number | Observed |
+| **CON-R-147** | A user selects a generation scope | `Generate Option` | One of `Single Contract`, `Payables — All Contracts`, `Receivables — All Contracts`, `All Contracts` | Three of the four run across every contract in scope; payables and receivables are separately runnable | Observed |
+| **CON-R-148** | A transaction is generated | Expense type, period, proration method | Description is `<MNEMONIC> MM/YYYY`, or `<MNEMONIC> - PRS <from>-<to>` when prorated | The row records how it was computed. Mnemonics observed: `BRNT`, `RET`, `CAM - PRS`, `CAM - FIXED`, `INS`, `INS - PRS`, `ELEC`, `UTIL`, `WTR`, `MISC` | Observed |
+| **CON-R-149** | A transaction is generated | `invoiceAmount`, `primaryTax`, `APExportTax1..4Number` | `totalAmount` = `invoiceAmount` + tax | Up to four tax components are carried per transaction | Observed |
+| **CON-R-150** | A transaction is generated | — | In this tenant every generated row arrives `processedFlag = true` and approval status `Approved` | Whether that is tenant configuration or engine behaviour is **unresolved** | Observed / Inferred |
+| **CON-R-151** | A transaction is generated | `exportBatchNumber` | Generation does **not** set it — null on every row sampled | GL export is a separate, later stage from generation | Derived |
+| **CON-R-152** | An Expense Setup is generated from | `ExpenseVendorAllocation` rows, each with a `Payment Percentage` and its own begin/end dates | One setup fans out to one transaction per allocation | The vendor split can change mid-term | Observed |
