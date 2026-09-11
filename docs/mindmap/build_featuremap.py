@@ -109,9 +109,9 @@ def node(name, kind, detail, conf="observed", mod=None, key=None, src=None,
     return n
 
 
-def area(key, title, what, children, attach=None, conf="observed"):
+def area(key, title, what, children, attach=None, conf="observed", oos=False):
     """A level-1 feature. `key` ties it to the module id for hue + deep links."""
-    return {
+    n = {
         "name": title,
         "kind": "area",
         "detail": what,
@@ -122,13 +122,20 @@ def area(key, title, what, children, attach=None, conf="observed"):
         "children": children,
         "attach": attach,
     }
+    if oos:
+        n["oos"] = True
+    return n
 
 
-def cap(title, detail, conf="observed", src=None, children=None, attach=None, mod=None):
-    return {
+def cap(title, detail, conf="observed", src=None, children=None, attach=None, mod=None,
+        oos=False):
+    n = {
         "name": title, "kind": "capability", "detail": detail, "conf": conf,
         "src": src or None, "children": children, "attach": attach, "mod": mod,
     }
+    if oos:
+        n["oos"] = True
+    return n
 
 
 def fact(title, detail, conf="observed", mod=None, src=None):
@@ -270,6 +277,16 @@ TREE = [
          "rent and ASC 842 accounting all sit downstream of it, which is why its schema "
          "freeze gates them.",
          [
+             cap("Co-tenancy clauses",
+                 "A retail clause family with its own 26-field record: anchor name, "
+                 "co-tenancy group and type, occupancy percentage, rent reduction amount "
+                 "and percent, and a right-to-terminate flag, linked to the lease and to "
+                 "a covenant record, with two code tables governing clause kinds. The "
+                 "record is fully tabulated in the corpus; how Lucernex evaluates the "
+                 "clause - what triggers the occupancy test, how the reduction applies, "
+                 "what termination unlocks - is documented only in outline and stands as "
+                 "an open analysis item. ASG Edge+ BRD-29.",
+                 src="data-fields/co-tenancy.md, modules/contracts/percentage-rent.md"),
              cap("The 4-layer pattern",
                  "Every money flow is modelled as four layers: Clause (the negotiated "
                  "term), Schedule (the calculated run of amounts), Transaction (an "
@@ -326,6 +343,21 @@ TREE = [
                  "outside the recovery grid and the accounting tests - invoicing computes "
                  "its totals, it does not store them pre-summed.",
                  src="View Object Model, Math field list"),
+             cap("Allowances & offsets",
+                 "Tenant improvement and other allowances, offset against rent: the "
+                 "Allowance, Scheduled Offset and Variable Rent Offset records are "
+                 "tabulated field-by-field in the corpus. The posting and offsetting "
+                 "behavior - when an offset fires, what it nets against - is not yet "
+                 "written up as analysis. ASG Edge+ BRD-22.",
+                 conf="derived",
+                 src="data-fields/allowance.md, scheduled-offset.md, variable-rent-offset.md"),
+             cap("Accrual management",
+                 "Expense accruals: Accrual Transaction, Expense Accrual Setup and the "
+                 "virtual PR accrual period records are tabulated. Accrual runs, "
+                 "reversals and period-close behavior are not yet analyzed. ASG Edge+ "
+                 "BRD-23.",
+                 conf="derived",
+                 src="data-fields/accrual-transaction.md, expense-accrual-setup.md"),
          ],
          attach={"mention": "PaymentTransaction"}),
 
@@ -473,7 +505,9 @@ TREE = [
          attach={"prefix": "RPT"}),
 
     area("property-tax", "Property Tax",
-         "Property tax is modelled as a roll-up: a summary per parcel, assessments under "
+         "Out of scope - no approved BRD covers property tax, and ASG does not use this "
+         "Lucernex module. Kept in the corpus so the relationship graph stays whole. "
+         "The product models tax as a roll-up: a summary per parcel, assessments under "
          "it, then either a bill (with detail lines) or an appeal (with an award).",
          [
              cap("Assessment roll-up",
@@ -494,13 +528,16 @@ TREE = [
                  "must decide deliberately whether to keep it that way.",
                  conf="derived", src="docs/modules/property-tax/appeals.md"),
          ],
-         attach={"prefix": "TAX"}),
+         attach={"prefix": "TAX"},
+         oos=True),
 
     area("portfolio-transactions", "Site Selection & Deals",
-         "The pre-lease pipeline: portfolios hold deals, deals become sites, sites are "
-         "promoted into projects and then facilities. 'Portfolio' on the menu is one "
-         "record (Program), proved by the screen routing - and the deal pipeline hangs "
-         "beneath it: Site, deal attempts, and what-if scenarios.",
+         "Out of scope pending confirmation - no approved BRD covers the deal pipeline; "
+         "ASG's BRD-11 Portfolio describes the portfolio view, not site selection. The "
+         "pre-lease pipeline exists in the product: portfolios hold deals, deals become "
+         "sites, sites are promoted into projects and then facilities. 'Portfolio' on "
+         "the menu is one record (Program), proved by the screen routing. Confirm with "
+         "the business whether any of it is used before relying on it either way.",
          [
              cap("Promotion pipeline",
                  "The Site-to-Project-to-Facility promotion pipeline is named by two "
@@ -520,12 +557,13 @@ TREE = [
                   "plausibly because pipeline records are not layout-placeable "
                   "(inferred)."),
          ],
-         attach={"prefix": "POR"}),
+         attach={"prefix": "POR"},
+         oos=True),
 
     area("projects-capital", "Projects & Construction",
-         "Capital projects and construction: scheduling and the issue/RFI loop. The "
-         "scheduling data is one of the strangest findings in the product - three "
-         "byte-identical tables.",
+         "Out of scope - no approved BRD covers capital projects or construction. "
+         "Kept in the corpus for graph completeness. The scheduling data is one of the "
+         "strangest findings in the product - three byte-identical tables.",
          [
              cap("Identical tables",
                  "Task, TaskGroup and TaskItem are byte-identical tables, and every "
@@ -539,7 +577,8 @@ TREE = [
                  "duplicated per module.",
                  conf="derived", src="docs/modules/projects-capital/README.md"),
          ],
-         attach={"prefix": "PRJ"}),
+         attach={"prefix": "PRJ"},
+         oos=True),
 
     area("facilities-locations", "Properties & Facilities",
          "The real estate itself: sites, the buildings on them, and the geography "
@@ -597,10 +636,11 @@ TREE = [
          ],
          attach={"prefix": "PPL"}),
 
-    area("assets-equipment", "Equipment & Maintenance",
-         "Equipment assets and the maintenance loop around them: a service request "
-         "raises the problem, a work order performs the work - both are variants of the "
-         "same request record that backs forms.",
+    area("assets-equipment", "Equipment on Contracts",
+         "Equipment as a leased asset on a contract - in scope via ASG Edge+ BRD-13 "
+         "(Equipment Contracts) and BRD-16 (Contract Equipment Accounting). The "
+         "maintenance side of the module (service requests and work orders) has no BRD "
+         "and is out of scope.",
          [
              cap("Equipment on 842",
                  "Equipment leases run on the accounting engine: the classification, "
@@ -609,10 +649,11 @@ TREE = [
                  "engine as real estate.",
                  src="docs/modules/assets-equipment/equipment-leases.md"),
              cap("Request to WorkOrder",
-                 "The maintenance loop is the request pattern again: request, triage, "
-                 "work order, completion. A rebuild gets this nearly free if its request "
-                 "engine is as general as Lucernex's single ticket table.",
-                 conf="derived", src="docs/modules/assets-equipment/README.md"),
+                 "Out of scope - no BRD covers maintenance: the loop is request, triage, "
+                 "work order, completion, all variants of the same request record that "
+                 "backs forms. Kept here because it shares the module.",
+                 conf="derived", oos=True,
+                 src="docs/modules/assets-equipment/README.md"),
          ],
          attach={"prefix": "AST"}),
 
@@ -762,7 +803,9 @@ out = {
                   "Node names are short on purpose: click any node and the panel on the "
                   "right opens with the full explanation, the evidence label, and links "
                   "to the underlying documentation. Rule nodes sit in each feature's "
-                  "Rules folder and open the full numbered rule.",
+                  "Rules folder and open the full numbered rule. Areas ASG does not use "
+                  "- no approved BRD covers them - are drawn dashed, like the excluded "
+                  "cost and budgeting feature.",
         "conf": "observed",
         "src": "docs/modules/ corpus, captured from the live tenant 2026-09-10/11",
         "areas": len(root_children),
