@@ -126,8 +126,19 @@ Each folder carries, at minimum, `README.md`, `data-model.md`, `rules.md` and
 | [**portfolio-transactions**](modules/portfolio-transactions/) | `POR-R-001…016` | `Program` (the Portfolio) and the pre-lease deal pipeline `PotentialProject` ("Site") → `RETransaction` → `Scenario`. [`site-pipeline.md`](modules/portfolio-transactions/site-pipeline.md) — the two unique `Program` layout fields (`SiteToProjectSetupLayoutID`, `ProjectToFacilitySetupLayoutID`) that name the Site → Project → Facility promotion pipeline, and the one confirmed FK (`Project.FacilityID`) that closes half of it |
 | [**projects-capital**](modules/projects-capital/) | `PRJ-R-001…014` | Capital-project scheduling and the issue/RFI loop. [`scheduling.md`](modules/projects-capital/scheduling.md) — **`Task`, `TaskGroup`, and `TaskItem` are byte-identical tables, and every foreign key of that shape in the entire schema resolves to `TaskGroup` alone**; the WBS hierarchy and the CPM dependency network are two separate graphs over the same rows |
 
-Not yet scaffolded: `variable-rent`, `expense-recovery` (both named in
-[`modules.json`](mindmap/modules.json) but with no `docs/modules/` folder of their own yet).
+**Two modules have no folder of their own, but are documented.** `expense-recovery` (3 record types,
+618 fields) and `variable-rent` (17 record types, 472 fields) are named in
+[`modules.json`](mindmap/modules.json) with no `docs/modules/` directory, because the analysis
+naturally sat inside the contracts module and was written there:
+
+| Module in `modules.json` | Where it is documented |
+|---|---|
+| Expense Recovery (CAM / Reconciliation) | [`contracts/expense-recovery-cam.md`](modules/contracts/expense-recovery-cam.md) and [`contracts/cam-waterfall.md`](modules/contracts/cam-waterfall.md) — `ExpenseRecovery` *is* the CAM waterfall |
+| Variable Rent (Percentage / Use-Based) & Sales | [`contracts/percentage-rent.md`](modules/contracts/percentage-rent.md) |
+
+So **every in-scope record type has documentation** — 196 of 196, 6,875 of 6,875 fields — but the
+folder layout does not map one-to-one onto `modules.json`. Twelve of the fourteen in-scope modules
+have a dedicated directory; these two live under `contracts`.
 
 **Out of scope by decision:** cost management, budgeting and bidding. Those objects remain in the
 catalogue and the foreign-key graph so the model stays whole, grouped under
