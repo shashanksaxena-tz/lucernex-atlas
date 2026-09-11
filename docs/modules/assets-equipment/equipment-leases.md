@@ -76,7 +76,7 @@ now has a specific, concrete third input to add to that unresolved list.
 ## 3. `Asset`'s own date fields override the contract's, when populated
 
 **Observed**, vendor field definition text quoted directly in
-[`../accounting/asc-842.md`](../accounting/asc-842.md#12-what-drives-the-accounting-window)
+[`../accounting/asc-842.md`](../accounting/asc-842.md#accounting-dates)
 (cited here, not restated as new): *"[`Asset.AccountingBeginDate`/`AccountingEndDate`] change the
 dates that the test and rent schedules will be run for. If you do not enter override dates, the
 test and schedules will run based on the dates of the expense schedules for the asset."* The default

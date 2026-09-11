@@ -1,0 +1,24 @@
+# Capital Projects & Scheduling — rules
+
+`PRJ-R-001`…`PRJ-R-014`, each in trigger / input / effect / confidence form.
+
+| Rule | Trigger | Input | Effect | Confidence |
+|---|---|---|---|---|
+| **PRJ-R-001** | Any object needs to reference a schedule row | `Task/Group ID` FK type | Resolves to `TaskGroup` exclusively — every one of the 18 occurrences of this type across `projects-capital`, `portfolio-transactions`, and `workflow` points at `TaskGroup`. `Task` and `TaskItem` are never targeted, despite sharing an identical 37-field shape. Read `TaskGroup` as the one real schedule-row table. | **Derived** — see [`scheduling.md`](scheduling.md) §1 |
+| **PRJ-R-002** | An entity needs milestone/phase tracking (`CurrentMilestone`/`NextMilestone`/`PreviousMilestone` on the `ProjectEntity` union block) | `ProcessTimeline` → `ProcessTimelineTemplate` | Produces a flat, non-networked milestone list — no hierarchy, no dependency graph, no resource tracking. Deliberately simpler than `TaskGroup`. | **Observed** (field-list diff) |
+| **PRJ-R-003** | A tenant defines a new Form/Issue type | `CodeIssueType`, `TableType` 2035 | Carries the same 11 `IsValidFor*` entity-attachability flags as `VirtualTemplateSchedule` in this module and every template object in every other module. | **Observed** |
+| **PRJ-R-004** | The Manage Data Fields admin screen renders `Issue`'s configurable surface | `Issue` (56 raw fields) vs. `docs/data-fields/all-fields.csv` (4 rows) | Only 4 of 56 fields are tenant-admin-configurable; the remaining 52 are schema-only. | **Observed** |
+| **PRJ-R-005** | A task's dates need working-day calculation | `HolidaySchedule` → `HolidayDate`, `Program.DefaultHolidayScheduleID` (`portfolio-transactions`), `Program.DefaultWorkWeekends`, `TaskGroup.TaskEndsCodeDayOfWeekID` | The portfolio's default calendar and weekend policy feed every task's duration math, overridable per task via `TaskEndsCodeDayOfWeekID`. | **Derived** |
+| **PRJ-R-006** | A `TaskGroup` row's schedule position is computed | `ParentTaskID` (hierarchy) vs. `TaskPredecessor.PredecessorTaskID`/`SuccessorTaskID` (dependency network) | Two independent graphs. A task's WBS parent is not required to be, and generally is not, the same row as its schedule predecessor. | **Derived** — see [`scheduling.md`](scheduling.md) §2 |
+| **PRJ-R-007** | The Gantt engine (`TaskGantt2.jsp`) needs a task's critical-path status | `TaskGroup.OnCriticalPath`, `DaysAheadOfSchedule` | Plausibly computed by walking the `TaskPredecessor` graph; no formula or screen confirms the exact computation. | **Inferred** |
+| **PRJ-R-008** | A change is made against an active capital project's cost | `ChangeOrder.ApprovedChangeOrderAmount`, `OutstandingChangeOrderAmount`, `CostTrackingVariance`, `PurchaseOrderID` | Tracks approved vs. outstanding change amounts against a `PurchaseOrder` (out of scope by decision — cited, not analysed). | **Observed** |
+| **PRJ-R-009** | A part is consumed or ordered against a work-order `Issue` | `LinkIssuePart` (cost, labor hours, serial number) vs. `LinkIssuePartOrder` (quantity ordered/received, `CodePartOrderStatusID`) | Two distinct records — one for parts actually used, one for parts on order — both attached to the same `Issue` via `IssueID`. | **Observed** |
+| **PRJ-R-010** | A task needs an assignee, but not a named individual | `LinkTaskByCodeMember.CodeJobTitleID`, `OrgChartLevel` | Assigns by job title / org-chart level rather than by `Member`, matching the `AssigneeType` = `JOB_TITLE` routing option ([`graphql-api.md`](../../data-model/graphql-api.md)). | **Derived** |
+| **PRJ-R-011** | A task needs a named assignee | `LinkTaskMember.MemberID` | Assigns a specific `Member`, alongside `TaskGroup.Assignee_MemberID`'s own direct field — two mechanisms for the same concept exist side by side. | **Observed** |
+| **PRJ-R-012** | A workflow needs to be triggered by a schedule event | `WorkFlow.KickOffTaskID` → `TaskGroup` | Corroborates the GraphQL `KickOffMethod.TASK` enum value ([`graphql-api.md`](../../data-model/graphql-api.md)) — a task reaching some state can kick off a workflow. | **Derived** |
+| **PRJ-R-013** | A real-estate deal step needs its own schedule | `RETransaction.DealSchedule`/`ActiveDealStepTaskIDList`, `Scenario.DealSchedule`/`ActiveDealStepTaskIDList` (`portfolio-transactions`) | Both reuse `TaskGroup` directly — the deal pipeline has no schedule engine of its own. | **Observed** |
+| **PRJ-R-014** | `CodeProblem` or `CodeResponsibleParty` values are needed | *(no confirmed attachment point)* | Neither table shows an inbound or outbound edge in the 972-edge graph. May be referenced only via `Dropdown`-typed columns this corpus's edge-extraction does not model as graph edges — not confirmed either way. | **Observed** (absence); cause **not determined** |
+
+## Open questions
+
+See [`README.md`](README.md#open-questions) and [`scheduling.md`](scheduling.md#open-questions).

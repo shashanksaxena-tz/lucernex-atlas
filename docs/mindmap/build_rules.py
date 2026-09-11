@@ -26,6 +26,11 @@ MODULES = {
     "facilities-locations": ("FAC", "Facilities, Locations & Sites"),
     "platform-tenancy": ("PLT", "Platform & Tenancy"),
     "people-parties": ("PPL", "People & Parties"),
+    "assets-equipment": ("AST", "Assets, Equipment & Maintenance"),
+    "property-tax": ("TAX", "Property Tax"),
+    "documents-folders": ("DOC", "Documents, Folders & Correspondence"),
+    "portfolio-transactions": ("POR", "Portfolio & Real-Estate Transactions"),
+    "projects-capital": ("PRJ", "Capital Projects & Scheduling"),
 }
 
 RULE_ID = re.compile(r"\b([A-Z]{2,4}-R-\d{2,4})\b")

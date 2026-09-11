@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AST-R-001 &middot; Lucernex Atlas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="../atlas.css">
+</head><body>
+<header><b>Lucernex Atlas</b>
+<nav><a href="../index.html">Overview</a><a href="../atlas.html">Interactive app</a>
+<a href="../entities/index.html">Record types</a><a href="../rules/index.html">Rules</a>
+<a href="../questions.html">Open questions</a></nav></header>
+<main><p class="crumb"><a href="../index.html">Atlas</a> &rsaquo; <a href="index.html">Rules</a> &rsaquo; AST-R-001</p><h1 class="mono">AST-R-001</h1><p class="sub">Assets, Equipment &amp; Maintenance &middot; An Asset attaches to any `ProjectEntity`, not only to a Facility</p><span class="tag obs">Observed</span><p>Trigger: N/A (structural). Input: `Asset.ProjectEntityID`, the only entity-scoping column on `Asset`. Effect: There is no hard-typed `FacilityID`/`LocationID` column on `Asset` at all — the soft, universal `ProjectEntityID` is the sole attachment mechanism, so an Asset can in principle be scoped to a Facility, a Location, a Portfolio, or any other `ProjectEntity` subtype. Confidence: Observed (exhaustive field-list read, `_lucernex_objects_summary.txt`).</p><p style="font-size:11.5px;color:var(--faint);margin-top:18px">Source: modules/assets-equipment/rules.md</p></main></body></html>

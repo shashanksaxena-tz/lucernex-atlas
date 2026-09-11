@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TAX-R-006 &middot; Lucernex Atlas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="../atlas.css">
+</head><body>
+<header><b>Lucernex Atlas</b>
+<nav><a href="../index.html">Overview</a><a href="../atlas.html">Interactive app</a>
+<a href="../entities/index.html">Record types</a><a href="../rules/index.html">Rules</a>
+<a href="../questions.html">Open questions</a></nav></header>
+<main><p class="crumb"><a href="../index.html">Atlas</a> &rsaquo; <a href="index.html">Rules</a> &rsaquo; TAX-R-006</p><h1 class="mono">TAX-R-006</h1><p class="sub">Property Tax &middot; Every object in the family also carries a direct Parcel pointer, independent of the chain</p><span class="tag obs">Observed</span><p>Input: `ParcelID` on all six objects, `Required = Yes` on each. Effect: Every level is independently queryable by Parcel without walking the roll-up chain to `PropertyTaxSummary`; nothing in the schema enforces that this direct value agrees with the `ParcelID` reachable by walking the chain. Confidence: Observed (field presence, all six Data Fields catalogs); the consistency guarantee is Inferred/unconfirmed — see `data-model.md`.</p><p style="font-size:11.5px;color:var(--faint);margin-top:18px">Source: modules/property-tax/rules.md</p></main></body></html>

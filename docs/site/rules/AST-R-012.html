@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AST-R-012 &middot; Lucernex Atlas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="../atlas.css">
+</head><body>
+<header><b>Lucernex Atlas</b>
+<nav><a href="../index.html">Overview</a><a href="../atlas.html">Interactive app</a>
+<a href="../entities/index.html">Record types</a><a href="../rules/index.html">Rules</a>
+<a href="../questions.html">Open questions</a></nav></header>
+<main><p class="crumb"><a href="../index.html">Atlas</a> &rsaquo; <a href="index.html">Rules</a> &rsaquo; AST-R-012</p><h1 class="mono">AST-R-012</h1><p class="sub">Assets, Equipment &amp; Maintenance &middot; ServiceRequest and WorkOrder are each themselves `Issue` variants</p><span class="tag obs">Observed</span><p>Input: `ServiceRequest.IssueID` and `WorkOrder.IssueID`, both `Required = Yes`, field type `sTYPE_ISSUE`. Effect: Each row of `ServiceRequest`/`WorkOrder` is paired 1:1 with an underlying `Issue` record, exactly as `InvoiceIssue`/`BidderIssue` are documented to be in `../../data-model/code-table-registry.md` — without following that pattern&#x27;s naming convention. Confidence: Observed (both Data Fields catalogs); the schema export itself declares both columns type `Text`, not a typed FK — see `data-model.md` for the divergence this causes.</p><p style="font-size:11.5px;color:var(--faint);margin-top:18px">Source: modules/assets-equipment/rules.md</p></main></body></html>

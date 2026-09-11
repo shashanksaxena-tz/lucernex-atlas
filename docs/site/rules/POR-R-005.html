@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>POR-R-005 &middot; Lucernex Atlas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="../atlas.css">
+</head><body>
+<header><b>Lucernex Atlas</b>
+<nav><a href="../index.html">Overview</a><a href="../atlas.html">Interactive app</a>
+<a href="../entities/index.html">Record types</a><a href="../rules/index.html">Rules</a>
+<a href="../questions.html">Open questions</a></nav></header>
+<main><p class="crumb"><a href="../index.html">Atlas</a> &rsaquo; <a href="index.html">Rules</a> &rsaquo; POR-R-005</p><h1 class="mono">POR-R-005</h1><p class="sub">Portfolio &amp; Real-Estate Transactions &middot; </p><span class="tag obs">Observed</span><div class="wrapt"><table><tbody><tr><td>A `PotentialProject`, `Program`, `Scenario`, or `RETransaction` needs a deal classification</td></tr><tr><td>`PotentialProject.CodeDealTypeID` / `Program.CodeDealTypeID` → `Deal Type Code` (2024); `Scenario.CodeScenarioDealTypeID` / `RETransaction.PreferredScenarioCodeDealTypeID` → `Scenario Deal Type Code` (2059); `Scenario.CodeScenarioTypeID` → `Scenario Type Code` (2060); `RETransaction.CodeRETransactionStatusID` → `RE Transaction Status Code` (2057)</td></tr><tr><td>Four distinct code tables classify overlapping aspects of one pipeline. Row values were never captured from the live tenant.</td></tr><tr><td>Observed table existence and attachment; unconfirmed contents</td></tr></tbody></table></div><p style="font-size:11.5px;color:var(--faint);margin-top:18px">Source: modules/portfolio-transactions/rules.md</p></main></body></html>
