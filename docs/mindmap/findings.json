@@ -76,7 +76,17 @@
      "All Firm Drop Downs are values of a single TableType discriminator on one generic editor. TableType 2035 is Issue Type Code — which is why Manage Forms opens that same editor."]
   ],
   "people-parties": [
-    ["Member is the most-referenced record in the product", "derived",
-     "290 foreign keys point at it, more than ProjectEntity. Almost every record stores who created and modified it, and workflow routing resolves to members."]
+    ["Member is the most-referenced record, but mostly as an audit stamp", "derived",
+     "290 foreign keys point at it — more than ProjectEntity. But 240 of them, 83%, are just the universal CreatedByID / ModifiedByID pair. Only 50 are genuine business references: approvers, assignees, checkout locks, bid parties, brokers. Member is the schema's universal 'who did this' anchor far more than it is a business entity."],
+    ["The identity service sits on nearly every write path", "derived",
+     "Because 161 objects carry ModifiedByID and 79 carry CreatedByID, any write anywhere needs to resolve a member. That argues for a cross-cutting created-by / modified-by mechanism rather than each service reimplementing the stamp, and for identity being cheap to reach."],
+    ["There is a second supertype hiding in the schema", "derived",
+     "Person and NonMember are field-for-field identical — 37 fields, zero differences. Member is Person's 37 plus 44 login and authentication fields. All three share PersonID, typed as a plain Number rather than a declared foreign-key type. It is the same shared-key inheritance pattern ProjectEntity uses, applied to people, and nothing names it."],
+    ["The tenant key is not modelled as a relationship", "observed",
+     "FirmID is typed Text. It is not a declared foreign-key type anywhere in the schema. The one relationship every single row has is the one Lucernex's own type system declines to model — which is exactly why tenant isolation cannot be enforced by the schema."],
+    ["The org chart is a self-reference on Member", "observed",
+     "Member.SupervisorID points at Member. But workflow's REGION1, REGION2 and MARKET routing does not resolve through any Member column — it goes through ProjectEntity.RegionID / RootRegionID / SubRegionID and LinkRegionManager. Two different hierarchies, and routing uses the geographic one."],
+    ["Region is nearly empty and heavily referenced", "observed",
+     "Twelve objects reference Region across 34 columns, yet Region itself declares a single field. Whatever a region actually stores is not in the schema dump — a genuine gap that needs a targeted capture."]
   ]
 }

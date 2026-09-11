@@ -118,6 +118,8 @@ Each folder carries, at minimum, `README.md`, `data-model.md`, `rules.md` and
 | [**layouts-and-forms**](modules/layouts-and-forms/) | `LAY-R-001…018` | Conditional fields, and the Forms/Pages/Layouts/Custom Lists reconciliation |
 | [**reporting**](modules/reporting/) | `RPT-R-*` | The shared field registry — **confirmed**, not hypothesised — and the admin tool inventory |
 | [**facilities-locations**](modules/facilities-locations/) | `FAC-R-001…020` | Facility/Location/Complex/Parcel/Prototype/Space/Tenant and the demographics/site-selection family. [`location-vs-facility-vs-site.md`](modules/facilities-locations/location-vs-facility-vs-site.md) settles the central naming question: **Location is the site/"Center", Facility is the building on it** |
+| [**platform-tenancy**](modules/platform-tenancy/) | `PLT-R-001…016` | `Firm`, the entity spine's tenant boundary, security, geography, and the org-chart region hierarchy. [`tenancy-model.md`](modules/platform-tenancy/tenancy-model.md) — **`FirmID` is the tenant key, `ProjectEntityID` is not**, and what that does and doesn't settle about ASG Edge+'s two contradictory ADR-004s |
+| [**people-parties**](modules/people-parties/) | `PPL-R-001…013` | `Member`, `Person`, `Party`, `Employer`. [`member-vs-person-vs-party.md`](modules/people-parties/member-vs-person-vs-party.md) — **`Person` is a second supertype**, `Member`/`NonMember` its subtypes on a shared key, and why 290 of the schema's foreign keys point at `Member` (83% is just the universal audit-stamp pair) |
 
 Scaffolded but not yet written: `projects-capital`, `assets-equipment`,
 `documents-folders`.
