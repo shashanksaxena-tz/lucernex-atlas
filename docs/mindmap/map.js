@@ -9,7 +9,7 @@ function N(name,kind,opt){return Object.assign({id:++uid,name,kind,open:false,ki
 function fromCurated(c,mod){
   return N(c.name,c.kind||'capability',{mod:c.mod||mod,detail:c.detail||'',
     conf:c.confidence||'derived',src:c.source||'Hand-authored module analysis',
-    key:c.key,oos:!!c.oos,
+    key:c.key,rid:c.rid,oos:!!c.oos,
     curatedKids:c.children||[]});
 }
 
@@ -30,9 +30,9 @@ function childrenOf(n){
     const m=modOf(n.mod);
     (NOTES[m.id]||[]).forEach(([t,c,d])=>k.push(N(t,'finding',{mod:m.id,detail:d,conf:c,src:'Live capture, 2026-09-10'})));
     const cur=D.curated&&D.curated[m.id];
-    if(cur) k.push(N(cur.name,'walkthrough',{mod:m.id,curatedKids:cur.children||[],
+    if(cur) k.push(N('Analysis \u00b7 '+cur.name,'walkthrough',{mod:m.id,curatedKids:cur.children||[],
       conf:cur.confidence||'derived',src:cur.source||'Hand-authored module analysis',
-      detail:(cur.detail||'')+' This branch is written by hand: it organises the module by what it DOES, and carries the rules and constraints the schema alone cannot show.'}));
+      detail:(cur.detail||'')+' This is a hand-written analysis branch inside the schema map, kept distinct from the feature map: it organises this module by how it works internally, and carries the rules and constraints the schema alone cannot show.'}));
     if(m.dep&&m.dep.length) k.push(N('Depends on '+m.dep.length+' other module'+(m.dep.length>1?'s':''),'link-group',
       {mod:m.id,deps:m.dep,conf:'derived',src:'docs/mindmap/edges.json',
        detail:'Modules this one holds foreign keys into. Following these is how you find the blast radius of a schema change.'}));
@@ -90,9 +90,12 @@ function mightHaveKids(n){
 }
 
 const ROW=30,COLW=250,BOXH=24;
+/* Feature-map labels are names (<=24 chars), so depth-2+ boxes size to fit the
+   full name: 24 + 24*6.9 = 190 < 230, nothing clips. Schema-map field names
+   can still run long, so the cap stays. */
 function measure(n){const name=typeof n==='string'?n:n.name;const d=typeof n==='string'?3:(n._d||0);
-  return Math.min(d<=1?320:210, 24+name.length*6.9)}
-function labelCap(n){return (n._d||0)<=1?44:28}
+  return Math.min(d<=1?320:230, 24+name.length*6.9)}
+function labelCap(n){return (n._d||0)<=1?44:32}
 
 function layout(){
   laid=[];links=[];maxDepth=0;let y=0;
@@ -126,6 +129,7 @@ function drawMap(){
     if(n.kind==='module'){const mm=modOf(n.mod);if(mm&&!mm.scope)cls+=' oos'}
     if(n.oos)cls+=' oos';
     if(n.kind==='rule')cls+=' rule';
+    if(n.kind==='group')cls+=' rule';
     if(n.kind==='walkthrough'||n.kind==='area')cls+=' walkthrough';
     g.setAttribute('class',cls);
     g.setAttribute('transform',`translate(${n._x},${n._y-BOXH/2})`);
@@ -178,10 +182,10 @@ function selectNode(n){
   if(n.kind==='entity') deep=`<p><a class="btn" href="#/e/${encodeURIComponent(n.obj)}">Open the full record page &rarr;</a></p>`;
   if(n.kind==='field') deep=`<p><a class="btn" href="#/f/${encodeURIComponent(n.obj)}/${encodeURIComponent(n.name)}">Open the full field page &rarr;</a></p>`;
   if(n.kind==='module') deep=`<p><a class="btn" href="#/m/${encodeURIComponent(n.mod)}">Open the full module page &rarr;</a></p>`;
-  if(!deep&&n.mod&&(n.kind==='area'||n.kind==='capability'))
-    deep=`<p><a class="btn" href="#/m/${encodeURIComponent(n.mod)}">Open the module documentation &rarr;</a></p>`;
-  const rid=/\b([A-Z]{2,4}-R-\d{2,4})\b/.exec(n.name);
-  if(rid) deep=`<p><a class="btn" href="#/r/${rid[1]}">Open rule ${rid[1]} &rarr;</a></p>`;
+  /* feature-map rule nodes carry their ID in `rid`: the visible label is a short
+     name, so the ID is not in the node text to regex out */
+  const rid=n.rid||((/\b([A-Z]{2,4}-R-\d{2,4})\b/).exec(n.name)||[])[1];
+  if(rid) deep=`<p><a class="btn" href="#/r/${rid}">Open rule ${rid} &rarr;</a></p>`;
   el.innerHTML=`<h4>${esc(n.name)}</h4>
     <p style="font-size:11px;color:var(--muted)">${trail.map(esc).join(' \u203A ')}</p>
     ${n.conf?ctag(n.conf):''}<span class="tag">Level ${depthOf(n)}</span>
@@ -194,6 +198,9 @@ function selectNode(n){
 /* pointer: capture only after real movement, or clicks never reach a node */
 let dragging=false,dragMoved=false,dsx=0,dsy=0,ddx=0,ddy=0,dpid=null;
 function initMapEvents(){
+  /* mode switches rebuild the tree but NOT these listeners: #stage is one static
+     element, and wiring it twice doubles every pan and zoom step */
+  if(initMapEvents.done)return;initMapEvents.done=true;
   const stage=document.getElementById('stage');
   stage.addEventListener('pointerdown',e=>{
     if(e.button!==0)return;
@@ -223,9 +230,21 @@ function initMapEvents(){
     let p=base.parent;while(p){p.open=true;p=p.parent}
     drawMap();fitMap();});
   document.getElementById('mfit').onclick=fitMap;
-  document.getElementById('mreset').onclick=()=>{
-    ROOT.kids=null;ROOT.open=true;childrenOf(ROOT);sel=null;
-    document.getElementById('mapdet').classList.remove('on');drawMap();fitMap();};
+  document.getElementById('mreset').onclick=resetMap;
+  /* the view toggle lives on the map itself, so switching is one click and
+     always visible - no hunting through the sidebar */
+  const go=d=>{location.hash=d};
+  const bf=document.getElementById('mfeat'),bs=document.getElementById('mschema');
+  if(bf)bf.onclick=()=>go('/map?set=feature');
+  if(bs)bs.onclick=()=>go('/map');
+}
+
+function syncMapMode(){
+  const bf=document.getElementById('mfeat'),bs=document.getElementById('mschema');
+  if(bf)bf.classList.toggle('on',MODE==='feature');
+  if(bs)bs.classList.toggle('on',MODE!=='feature');
+  const mm=document.getElementById('mmode');
+  if(mm)mm.textContent=MODE==='feature'?'feature':'schema';
 }
 
 function fitMap(){
@@ -258,7 +277,9 @@ function ensureMap(){
     if(MODE==='feature'){
       ROOT=N(FM.meta.name,'product',{detail:FM.meta.detail,conf:FM.meta.conf,
         src:FM.meta.src,curatedKids:FM.root.children});
-      ROOT.open=true;childrenOf(ROOT);
+      /* every feature and its capabilities visible on arrival - the map opens
+         readable, not as one root box demanding a click per branch */
+      ROOT.open=true;childrenOf(ROOT).forEach(a=>{a.open=true;childrenOf(a)});
     } else {
       ROOT=N(D.meta.product,'product',{
         detail:`${D.meta.vendor}'s integrated workplace management system, as configured for the ${D.meta.tenant} tenant. Everything below was read out of the running application on ${D.meta.captured}.`,
@@ -285,4 +306,13 @@ function ensureMap(){
         drawMap();fitMap(); }
     }
   }
+  syncMapMode();
+}
+
+/* the feature map's natural resting state: root + areas open, capabilities
+   showing. Reset returns to it in either mode. */
+function resetMap(){
+  ROOT.kids=null;ROOT.open=true;childrenOf(ROOT);sel=null;
+  if(MODE==='feature')childrenOf(ROOT).forEach(a=>{a.open=true;childrenOf(a)});
+  document.getElementById('mapdet').classList.remove('on');drawMap();fitMap();
 }

@@ -17,16 +17,22 @@ source files available offline.
 ## The atlas
 
 [**`mindmap/lucernex-atlas.html`**](mindmap/lucernex-atlas.html) — the interactive app. It carries
-**two maps**:
+**two deliberately separate maps**, switched by a **Feature view / Schema view** toggle on the map
+itself:
 
-- **The feature map** (`#/map?set=feature`) — the product organised by *what it does*: 18 feature
-  areas, from Lease Accounting to Platform & Tenancy, each branch written by hand — capability by
-  capability, with observed facts and constraints, and all **519 numbered rules attached under the
-  area they belong to** (660 nodes, every one carrying an explanation). Deep-link an area with
-  `#/map?set=feature&f=<module id>`. Built by [`mindmap/build_featuremap.py`](mindmap/build_featuremap.py).
+- **The feature map** (`#/map?set=feature`) — the product organised by *what it does*, written in
+  product language: 18 features from ASC 842 Accounting to Admin & Tenancy, each opening onto its
+  capabilities with **every label a short name (≤24 characters) and the full explanation in the
+  panel that opens when the node is clicked**. The product's **519 numbered rules** sit in one
+  collapsed *Rules (N)* folder per feature; each rule's visible name is a short summary and its ID
+  lives in the panel, which links to the full rule page (676 nodes). It opens fully expanded to
+  feature → capability, so the shape of the product is visible with zero clicks. Deep-link a
+  feature with `#/map?set=feature&f=<module id>`. Built by
+  [`mindmap/build_featuremap.py`](mindmap/build_featuremap.py).
 - **The schema map** (`#/map`) — drills **Product → Module → Entity → Field group → Field → Type →
   the record that type points at**, and keeps going, because the foreign-key graph is cyclic. Every
-  node carries its confidence label and its source.
+  node carries its confidence label and its source. Three modules carry a hand-written **Analysis**
+  branch (tinted, named `Analysis · …`) — internal mechanics, kept out of the feature map.
 
 Both built by two re-runnable scripts: [`mindmap/build_graph.py`](mindmap/build_graph.py) (parses the
 schema dump into `objects.json` / `edges.json` / `modules.json`) and
@@ -38,10 +44,11 @@ schema dump into `objects.json` / `edges.json` / `modules.json`) and
 [`mindmap/build_mapdata.py`](mindmap/build_mapdata.py) (compacts them into `mapdata.json` for the
 page). Re-run both after any schema recapture, then rebuild the HTML.
 
-Three schema-map modules additionally carry a **hand-written walkthrough** branch, tinted so it
-reads as analysis rather than generated structure. These organise the module by what it *does* and
-carry the rules and constraints no schema dump can express — together **758 nodes, 277 of them rule
-nodes**. (The feature map generalises that idea to the whole product.)
+Three schema-map modules additionally carry a **hand-written Analysis** branch, tinted so it
+reads as analysis rather than generated structure. These explain how the module works *internally*
+and carry the rules and constraints no schema dump can express — together **758 nodes, 277 of them
+rule nodes**. They deliberately stay inside the schema map; the feature map tells the product
+story instead.
 
 | Tree | Nodes | Depth | Rule nodes |
 |---|---:|---:|---:|
