@@ -1,6 +1,6 @@
 # Contract financial engine — rules
 
-**Stated up front.** 152 rules, numbered `CON-R-001` … `CON-R-152`, each stated so a rule engine can
+**Stated up front.** 161 rules, numbered `CON-R-001` … `CON-R-161`, each stated so a rule engine can
 consume it: **trigger**, **inputs**, **computation or condition**, **output**, **confidence**.
 Downstream modules (accounting, reporting, workflow) should cite these IDs rather than restating the
 logic.
@@ -332,3 +332,22 @@ characterising the 11,426 payment transactions the engine had already produced. 
 | **CON-R-150** | A transaction is generated | — | In this tenant every generated row arrives `processedFlag = true` and approval status `Approved` | Whether that is tenant configuration or engine behaviour is **unresolved** | Observed / Inferred |
 | **CON-R-151** | A transaction is generated | `exportBatchNumber` | Generation does **not** set it — null on every row sampled | GL export is a separate, later stage from generation | Derived |
 | **CON-R-152** | An Expense Setup is generated from | `ExpenseVendorAllocation` rows, each with a `Payment Percentage` and its own begin/end dates | One setup fans out to one transaction per allocation | The vendor split can change mid-term | Observed |
+
+## §14 The CAM recovery waterfall
+
+`CON-R-153` … `CON-R-161` — established 2026-09-11 from the **View Object Model** tool
+(`/en/admin/ShowObjectDetails.jsp?sqlTableID=&limitFieldFilter=Math`), which lists every computed
+field in the product. Lucernex encodes the formulas directly in its UI labels, so these are
+**Observed**, not derived. Full write-up in [`cam-waterfall.md`](cam-waterfall.md).
+
+| ID | Trigger | Inputs | Computation / condition | Output | Confidence |
+|---|---|---|---|---|---|
+| **CON-R-153** | A recovery period is calculated | Controllable, Non-Controllable, Deductions | `Sub Total #1 = C + NC − D` | `SubTotal1{Gross,Net}` | Observed |
+| **CON-R-154** | Sub Total #1 is known | Admin Fee % amount, Admin Fee, Additions | `Pass-Through = ST1 + AF% + AF + A` | `PassThrough{Gross,Net}` | Observed |
+| **CON-R-155** | Pass-Through is known | Recoveries | `Sub Total #2 = PT − R` | `SubTotal2{Gross,Net}` | Observed |
+| **CON-R-156** | Sub Total #2 is known | Pro Rata Share Rate; Occupancy Factor | `Net Pass-Through = ST2 × PRR` on Budgeted/Reported/Prior, but `ST2 × PRS × Occ` on **Approved** — the gross-up provision | `NetPassThrough{Gross,Net}` | Observed |
+| **CON-R-157** | Net Pass-Through is known | Pre-Paid Amount | `Net Amount Due = NPT − PP` | `NetAmountDue{Gross,Net}` | Observed |
+| **CON-R-158** | Net Amount Due is known | Adjustments | `Revised Amount Due = Net + Adj` | `RevisedNetAmountDue{Gross,Net}` | Observed |
+| **CON-R-159** | Any recovery figure is stored | — | Four bases (Budgeted, Reported, Approved, Prior) × {Gross, Net}, with five pairwise variances (A-B, A-P, B-P, R-A, R-P) materialised as both amount and percentage for every waterfall line | ~379 stored columns | Observed |
+| **CON-R-160** | A prior-period measure is absent | `…NoZeroDef` columns | Prior measures are **nullable, never zero-defaulted** — a missing prior period is unknown, not zero, or every first-year reconciliation reports spurious 100% variances | Nullable `BigDecimal` | Observed |
+| **CON-R-161** | Classifying any field | View Object Model filters | Of 7,047 fields: 3,437 editable (49%), 1,804 non-math computed (26%), 422 math (6%). **90% of all formula fields live on `ExpenseRecovery`** | Field classification | Observed |
