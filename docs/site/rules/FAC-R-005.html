@@ -7,7 +7,8 @@
 <link rel="stylesheet" href="../atlas.css">
 </head><body>
 <header><b>Lucernex Atlas</b>
-<nav><a href="../index.html">Overview</a><a href="../atlas.html">Interactive app</a>
+<nav><a href="../index.html">Overview</a><a href="../atlas.html#/map?set=feature">Feature map</a>
+<a href="../atlas.html">Interactive app</a>
 <a href="../entities/index.html">Record types</a><a href="../rules/index.html">Rules</a>
 <a href="../questions.html">Open questions</a></nav></header>
 <main><p class="crumb"><a href="../index.html">Atlas</a> &rsaquo; <a href="index.html">Rules</a> &rsaquo; FAC-R-005</p><h1 class="mono">FAC-R-005</h1><p class="sub">Facilities, Locations &amp; Sites &middot; A Parcel&#x27;s mandatory containment parent is its Location, not its Facility</p><span class="tag obs">Observed</span><p>Input: `Parcel.LocationID` (Required = Yes) vs. `Parcel.FacilityID` (Required = No). Effect: A Parcel can exist under a Location with no building yet on it; a Facility on that Parcel is an optional refinement, added once construction identifies which building sits on which piece of land. Confidence: Observed (`../../data-fields/parcel.md`).</p><p style="font-size:11.5px;color:var(--faint);margin-top:18px">Source: modules/facilities-locations/rules.md</p></main></body></html>

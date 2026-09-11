@@ -7,7 +7,8 @@
 <link rel="stylesheet" href="../atlas.css">
 </head><body>
 <header><b>Lucernex Atlas</b>
-<nav><a href="../index.html">Overview</a><a href="../atlas.html">Interactive app</a>
+<nav><a href="../index.html">Overview</a><a href="../atlas.html#/map?set=feature">Feature map</a>
+<a href="../atlas.html">Interactive app</a>
 <a href="../entities/index.html">Record types</a><a href="../rules/index.html">Rules</a>
 <a href="../questions.html">Open questions</a></nav></header>
 <main><p class="crumb"><a href="../index.html">Atlas</a> &rsaquo; <a href="index.html">Rules</a> &rsaquo; PLT-R-014</p><h1 class="mono">PLT-R-014</h1><p class="sub">Platform &amp; Tenancy &middot; Single-field objects rely entirely on a join or virtual pattern for content</p><span class="tag der">Derived</span><p>- Trigger: Any attempt to fully specify `EntityTemplate`, `MapClientSchedule`&#x27;s peers, `Notify`, `ScratchPad`, `AuditTable`, `Region`, `LinkPEMemberCodeJobTitle`, or `LinkRegionManager` from this export alone. - Input: Each declares ≤1 stored field (`MapClientSchedule` is the exception at 10). - Condition: — - Effect: These are join/marker tables or the export is truncating them; either way, do not model them as one-column tables in the rebuild without a targeted schema-browser capture. - Confidence: Derived — `object-catalog.md`&#x27;s &quot;18 one-field objects&quot; note.</p><p style="font-size:11.5px;color:var(--faint);margin-top:18px">Source: modules/platform-tenancy/rules.md</p></main></body></html>

@@ -7,7 +7,8 @@
 <link rel="stylesheet" href="../atlas.css">
 </head><body>
 <header><b>Lucernex Atlas</b>
-<nav><a href="../index.html">Overview</a><a href="../atlas.html">Interactive app</a>
+<nav><a href="../index.html">Overview</a><a href="../atlas.html#/map?set=feature">Feature map</a>
+<a href="../atlas.html">Interactive app</a>
 <a href="../entities/index.html">Record types</a><a href="../rules/index.html">Rules</a>
 <a href="../questions.html">Open questions</a></nav></header>
 <main><p class="crumb"><a href="../index.html">Atlas</a> &rsaquo; <a href="index.html">Rules</a> &rsaquo; ACC-R-017</p><h1 class="mono">ACC-R-017</h1><p class="sub">Lease Accounting &amp; Payments &middot; Accounting date window</p><span class="tag obs">Observed</span><p class="lead">Begin date is the later of the firm&#x27;s adoption date and possession; end date includes likely options.</p><p>- Trigger: classification test creation. - Inputs: firm&#x27;s ASC 842 adoption date; `Contract.PossessionBeginDate`; likely options. - Computation: `Topic842BeginDate = max(adoption date, PossessionBeginDate)`; `Topic842EndDate` = end of accounting including likely options. - Output: `Topic842BeginDate`, `Topic842EndDate`. - Confidence: Observed — *&quot;This date is the date your organization is adopting ASC 842, or the Possession Begin Date, whichever is later.&quot;*</p><p style="font-size:11.5px;color:var(--faint);margin-top:18px">Source: modules/accounting/rules.md</p></main></body></html>

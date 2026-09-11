@@ -7,7 +7,8 @@
 <link rel="stylesheet" href="../atlas.css">
 </head><body>
 <header><b>Lucernex Atlas</b>
-<nav><a href="../index.html">Overview</a><a href="../atlas.html">Interactive app</a>
+<nav><a href="../index.html">Overview</a><a href="../atlas.html#/map?set=feature">Feature map</a>
+<a href="../atlas.html">Interactive app</a>
 <a href="../entities/index.html">Record types</a><a href="../rules/index.html">Rules</a>
 <a href="../questions.html">Open questions</a></nav></header>
 <main><p class="crumb"><a href="../index.html">Atlas</a> &rsaquo; <a href="index.html">Rules</a> &rsaquo; ACC-R-034</p><h1 class="mono">ACC-R-034</h1><p class="sub">Lease Accounting &amp; Payments &middot; Balance forward and its split</p><span class="tag obs">Observed</span><p class="lead">BalanceForward = InitialAssetBalance − InitialLiabilityBalance, and it equals RemeasurementBalanceForward + ProfitAndLossImpact.</p><p>- Trigger: schedule creation that carries balances from a prior schedule. - Computation: ``` BalanceForward = InitialAssetBalance − InitialLiabilityBalance BalanceForward = RemeasurementBalanceForward + ProfitAndLossImpact ``` - Output: `BalanceForward`, `RemeasurementBalanceForward` (label &quot;Balance Sheet Impact&quot;), `ProfitAndLossImpact`. - Confidence: Observed for the first identity (*&quot;The difference between the asset and liability balance at the start of your accounting schedule&quot;*); Derived for the split, from *&quot;the portion of the balance forward that does appear on the balance sheet going forward&quot;* and *&quot;the portion of the balance forward that will not persist on the balance sheet and is taken as a capital gain or loss.&quot;*</p><p style="font-size:11.5px;color:var(--faint);margin-top:18px">Source: modules/accounting/rules.md</p></main></body></html>

@@ -7,7 +7,8 @@
 <link rel="stylesheet" href="../atlas.css">
 </head><body>
 <header><b>Lucernex Atlas</b>
-<nav><a href="../index.html">Overview</a><a href="../atlas.html">Interactive app</a>
+<nav><a href="../index.html">Overview</a><a href="../atlas.html#/map?set=feature">Feature map</a>
+<a href="../atlas.html">Interactive app</a>
 <a href="../entities/index.html">Record types</a><a href="../rules/index.html">Rules</a>
 <a href="../questions.html">Open questions</a></nav></header>
 <main><p class="crumb"><a href="../index.html">Atlas</a> &rsaquo; <a href="index.html">Rules</a> &rsaquo; ACC-R-050</p><h1 class="mono">ACC-R-050</h1><p class="sub">Lease Accounting &amp; Payments &middot; Approval is irreversible ↑ upgraded</p><span class="tag obs">Observed</span><p class="lead">One-way, and it is the terminus of the workflow.</p><p>- Trigger: the ASC 842 Schedule Review/Approval workflow reaches its third step and the client approver accepts (see `ACC-R-060`). - Condition: `SLSummary.IsApproved := true`, and cannot be reversed through the application. - Confidence: Observed — *&quot;Once a schedule has been approved, it cannot be un-approved.&quot;* ⚠ Live capture upgrades this rule materially: `IsApproved` is not a checkbox a user ticks at will. It is the terminus of a three-step, three-approver workflow. A rebuild that models approval as a Boolean setter has modelled the wrong thing.</p><p style="font-size:11.5px;color:var(--faint);margin-top:18px">Source: modules/accounting/rules.md</p></main></body></html>

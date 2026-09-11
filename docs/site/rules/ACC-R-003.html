@@ -7,7 +7,8 @@
 <link rel="stylesheet" href="../atlas.css">
 </head><body>
 <header><b>Lucernex Atlas</b>
-<nav><a href="../index.html">Overview</a><a href="../atlas.html">Interactive app</a>
+<nav><a href="../index.html">Overview</a><a href="../atlas.html#/map?set=feature">Feature map</a>
+<a href="../atlas.html">Interactive app</a>
 <a href="../entities/index.html">Record types</a><a href="../rules/index.html">Rules</a>
 <a href="../questions.html">Open questions</a></nav></header>
 <main><p class="crumb"><a href="../index.html">Atlas</a> &rsaquo; <a href="index.html">Rules</a> &rsaquo; ACC-R-003</p><h1 class="mono">ACC-R-003</h1><p class="sub">Lease Accounting &amp; Payments &middot; Asset-level discount rate override</p><span class="tag obs">Observed</span><p class="lead">An equipment asset may carry its own rate, which supersedes both.</p><p>- Trigger: schedule generation for an equipment lease. - Inputs: `Asset.DiscountRateOverride` (`sTYPE_PERCENTAGE`). - Condition: if populated, it supersedes ACC-R-001/002 for that asset. - Output: the rate used in the asset&#x27;s schedule. - Confidence: Observed — *&quot;If this equipment uses a different discount rate, enter the discount rate in this field.&quot;*</p><p style="font-size:11.5px;color:var(--faint);margin-top:18px">Source: modules/accounting/rules.md</p></main></body></html>

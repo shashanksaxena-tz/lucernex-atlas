@@ -7,7 +7,8 @@
 <link rel="stylesheet" href="../atlas.css">
 </head><body>
 <header><b>Lucernex Atlas</b>
-<nav><a href="../index.html">Overview</a><a href="../atlas.html">Interactive app</a>
+<nav><a href="../index.html">Overview</a><a href="../atlas.html#/map?set=feature">Feature map</a>
+<a href="../atlas.html">Interactive app</a>
 <a href="../entities/index.html">Record types</a><a href="../rules/index.html">Rules</a>
 <a href="../questions.html">Open questions</a></nav></header>
 <main><p class="crumb"><a href="../index.html">Atlas</a> &rsaquo; <a href="index.html">Rules</a> &rsaquo; ACC-R-028</p><h1 class="mono">ACC-R-028</h1><p class="sub">Lease Accounting &amp; Payments &middot; Period row generation</p><span class="tag der">Derived</span><p class="lead">One period row per fiscal period between the schedule&#x27;s begin and end dates, taken from the portfolio&#x27;s fiscal calendar.</p><p>- Trigger: schedule generation. - Inputs: `FiscalPeriod` rows for the contract&#x27;s `ProgramID` covering `SLSummary.BeginDate` … `EndDate`. - Computation: one `SLPeriod` per fiscal period, carrying `BeginDate`, `EndDate`, `NumberDays`, `FiscalPeriod`, `FiscalPeriodYear`, `CumulativePeriodNumber`. - Output: N `SLPeriod` rows; `SLSummary.SLTermLength` = *&quot;The number of periods in the straight line schedule term.&quot;* - Confidence: Derived — `FiscalPeriod` is described in `docs/data-fields/INDEX.md` as *&quot;the calendar backbone that SLPeriod, ExpenseSchedule, and Sales fiscal-period fields reference&quot;*, and 12- or 13-period years are documented on `SLPeriod.FiscalPeriod`.</p><p style="font-size:11.5px;color:var(--faint);margin-top:18px">Source: modules/accounting/rules.md</p></main></body></html>

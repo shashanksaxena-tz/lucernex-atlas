@@ -7,7 +7,8 @@
 <link rel="stylesheet" href="../atlas.css">
 </head><body>
 <header><b>Lucernex Atlas</b>
-<nav><a href="../index.html">Overview</a><a href="../atlas.html">Interactive app</a>
+<nav><a href="../index.html">Overview</a><a href="../atlas.html#/map?set=feature">Feature map</a>
+<a href="../atlas.html">Interactive app</a>
 <a href="../entities/index.html">Record types</a><a href="../rules/index.html">Rules</a>
 <a href="../questions.html">Open questions</a></nav></header>
 <main><p class="crumb"><a href="../index.html">Atlas</a> &rsaquo; <a href="index.html">Rules</a> &rsaquo; ACC-R-018</p><h1 class="mono">ACC-R-018</h1><p class="sub">Lease Accounting &amp; Payments &middot; Asset-level accounting date override (equipment leases)</p><span class="tag obs">Observed</span><p class="lead">On an equipment lease, asset-level override dates set the window; if blank, the asset&#x27;s expense schedule dates do.</p><p>- Trigger: test or schedule run for an `Asset`. - Inputs: `Asset.AccountingBeginDate`, `Asset.AccountingEndDate`, the asset&#x27;s expense schedules. - Condition: if the override dates are populated they set the test/schedule window; otherwise the window comes from the expense schedule dates. - Confidence: Observed — *&quot;If you do not enter override dates, the test and schedules will run based on the dates of the expense schedules for the asset.&quot;*</p><p style="font-size:11.5px;color:var(--faint);margin-top:18px">Source: modules/accounting/rules.md</p></main></body></html>

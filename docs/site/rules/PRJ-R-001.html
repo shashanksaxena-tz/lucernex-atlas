@@ -7,7 +7,8 @@
 <link rel="stylesheet" href="../atlas.css">
 </head><body>
 <header><b>Lucernex Atlas</b>
-<nav><a href="../index.html">Overview</a><a href="../atlas.html">Interactive app</a>
+<nav><a href="../index.html">Overview</a><a href="../atlas.html#/map?set=feature">Feature map</a>
+<a href="../atlas.html">Interactive app</a>
 <a href="../entities/index.html">Record types</a><a href="../rules/index.html">Rules</a>
 <a href="../questions.html">Open questions</a></nav></header>
 <main><p class="crumb"><a href="../index.html">Atlas</a> &rsaquo; <a href="index.html">Rules</a> &rsaquo; PRJ-R-001</p><h1 class="mono">PRJ-R-001</h1><p class="sub">Capital Projects &amp; Scheduling &middot; </p><span class="tag der">Derived</span><div class="wrapt"><table><tbody><tr><td>Any object needs to reference a schedule row</td></tr><tr><td>`Task/Group ID` FK type</td></tr><tr><td>Resolves to `TaskGroup` exclusively — every one of the 18 occurrences of this type across `projects-capital`, `portfolio-transactions`, and `workflow` points at `TaskGroup`. `Task` and `TaskItem` are never targeted, despite sharing an identical 37-field shape. Read `TaskGroup` as the one real schedule-row table.</td></tr><tr><td>Derived — see `scheduling.md` §1</td></tr></tbody></table></div><p style="font-size:11.5px;color:var(--faint);margin-top:18px">Source: modules/projects-capital/rules.md</p></main></body></html>

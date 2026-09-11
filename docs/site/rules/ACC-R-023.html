@@ -7,7 +7,8 @@
 <link rel="stylesheet" href="../atlas.css">
 </head><body>
 <header><b>Lucernex Atlas</b>
-<nav><a href="../index.html">Overview</a><a href="../atlas.html">Interactive app</a>
+<nav><a href="../index.html">Overview</a><a href="../atlas.html#/map?set=feature">Feature map</a>
+<a href="../atlas.html">Interactive app</a>
 <a href="../entities/index.html">Record types</a><a href="../rules/index.html">Rules</a>
 <a href="../questions.html">Open questions</a></nav></header>
 <main><p class="crumb"><a href="../index.html">Atlas</a> &rsaquo; <a href="index.html">Rules</a> &rsaquo; ACC-R-023</p><h1 class="mono">ACC-R-023</h1><p class="sub">Lease Accounting &amp; Payments &middot; Recalculation audit trail</p><span class="tag obs">Observed</span><p class="lead">Raising the flag stamps the date, the last user, and appends to the member list.</p><p>- Trigger: `NeedsRecalculation` transitions to true. - Output: `RecalcTriggerDate := today`; `NeedsRecalcModifiedByLastMember := current member`; current member appended to `NeedsRecalcModifiedByMemberIDList`. - Confidence: Observed — *&quot;The date that the Recalc? flag was triggered&quot;*; *&quot;the last member whose action would have caused the Recalc? flag to change&quot;*; *&quot;all members who have made changes that would cause the Recalc? flag to change.&quot;*</p><p style="font-size:11.5px;color:var(--faint);margin-top:18px">Source: modules/accounting/rules.md</p></main></body></html>

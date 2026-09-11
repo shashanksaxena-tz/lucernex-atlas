@@ -127,6 +127,9 @@ dt{color:var(--muted);white-space:nowrap}dd{margin:0}
 .grp .gb{font-size:12.5px;color:var(--muted);margin:0 0 7px;max-width:70ch}
 .note{background:var(--surface2);border:1px solid var(--line2);border-radius:var(--r);
  padding:10px 13px;font-size:12.5px;color:var(--ink2);margin:0 0 18px}
+.btn{display:inline-block;font-size:12.5px;padding:7px 12px;background:var(--surface);
+ color:var(--ink2);border:1px solid var(--line);border-radius:var(--r);margin:0 6px 8px 0}
+.btn:hover{border-color:var(--accent);color:var(--ink);text-decoration:none}
 """
 
 
@@ -141,7 +144,8 @@ def page(title, body, depth=0, crumb=""):
 <link rel="stylesheet" href="{up}atlas.css">
 </head><body>
 <header><b>Lucernex Atlas</b>
-<nav><a href="{up}index.html">Overview</a><a href="{up}atlas.html">Interactive app</a>
+<nav><a href="{up}index.html">Overview</a><a href="{up}atlas.html#/map?set=feature">Feature map</a>
+<a href="{up}atlas.html">Interactive app</a>
 <a href="{up}entities/index.html">Record types</a><a href="{up}rules/index.html">Rules</a>
 <a href="{up}questions.html">Open questions</a></nav></header>
 <main>{crumb}{body}</main></body></html>"""
@@ -184,6 +188,10 @@ body = [f'<h1>Lucernex, as it actually runs</h1>',
         '<p class="lead">Everything here was read out of the live application and its own schema tools. '
         'Every claim carries an evidence label &mdash; <b>Observed</b> means somebody saw it, '
         '<b>Inferred</b> means nobody has yet.</p>',
+        '<p><a class="btn" href="atlas.html#/map?set=feature">Open the feature map '
+        '&mdash; the product by what it does &rarr;</a> '
+        '<a class="btn" href="atlas.html#/map">Open the schema map &mdash; every record, '
+        'field and key &rarr;</a></p>',
         '<div class="stats">' + "".join(
             f'<div><b class="mono">{v}</b><span>{k}</span></div>' for k, v in stats) + '</div>',
         '<h2>Modules</h2><div class="cards">' +
@@ -201,6 +209,8 @@ for m in modules:
          f'<h1>{e(m["title"])}</h1>',
          f'<p class="sub">{"In scope for the rebuild" if m["scope"] else "Out of scope by decision"}</p>',
          f'<p class="lead">{e(m["what"])}</p>',
+         f'<p><a class="btn" href="../atlas.html#/map?set=feature&amp;f={e(m["id"])}">'
+         f'Open this feature in the feature map &rarr;</a></p>',
          '<div class="stats">' + "".join(
              f'<div><b class="mono">{v}</b><span>{k}</span></div>' for k, v in
              [("Record types", m["oc"]), ("Fields", fmt(m["fc"])), ("Keys in", m["ei"]),

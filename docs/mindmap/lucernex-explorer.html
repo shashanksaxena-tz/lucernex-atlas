@@ -66,6 +66,11 @@ button.btn{font:inherit;font-size:12px;padding:6px 10px;cursor:pointer;backgroun
   color:var(--ink2);border:1px solid var(--line);border-radius:var(--r)}
 button.btn:hover{border-color:var(--accent);color:var(--ink)}
 button.btn.on{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+a.btn{display:inline-block;font-size:12.5px;padding:7px 12px;background:var(--surface);
+  color:var(--ink2);border:1px solid var(--line);border-radius:var(--r);cursor:pointer}
+a.btn:hover{border-color:var(--accent);color:var(--ink);text-decoration:none}
+a.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);font-weight:600}
+.herolinks{display:flex;gap:10px;flex-wrap:wrap;margin:4px 0 18px}
 
 /* -------------------------------------------------------------------- body */
 #body{display:grid;grid-template-columns:186px 1fr;min-height:0}
@@ -269,7 +274,7 @@ table.t tr:hover td{background:var(--surface)}
 <script>
 "use strict";
 const DATA = JSON.parse(document.getElementById('appdata').textContent);
-const D = DATA.map, RULES = DATA.rules, QS = DATA.questions;
+const D = DATA.map, RULES = DATA.rules, QS = DATA.questions, FM = DATA.feature;
 
 const fmt = n => (n===undefined||n===null) ? '' : n.toLocaleString('en-US');
 const esc = s => String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -358,7 +363,9 @@ window.go = go;
 function route(){
   const h = location.hash.replace(/^#/,'') || '/';
   curKey = h;
-  const p = h.split('/').filter(Boolean).map(decodeURIComponent);
+  const q = h.indexOf('?');
+  const path = q>=0 ? h.slice(0,q) : h;
+  const p = path.split('/').filter(Boolean).map(decodeURIComponent);
   const mapOn = p[0]==='map';
   document.getElementById('mapview').classList.toggle('on', mapOn);
   document.getElementById('view').style.display = mapOn ? 'none' : '';
@@ -394,6 +401,10 @@ function viewHome(){
   claim carries an evidence label &mdash; <b>Observed</b> means somebody saw it, <b>Inferred</b> means
   nobody has yet. Open any record type and keep following its foreign keys; the graph is cyclic, so
   there is no bottom.</p>
+  <div class="herolinks">
+    <a class="btn primary" href="#/map?set=feature">Open the feature map &mdash; the product by what it does &rarr;</a>
+    <a class="btn" href="#/map">Open the schema map &mdash; every record, field and key &rarr;</a>
+  </div>
   <div class="stats">
     ${[['Modules',m.modules],['Record types',m.objects],['Fields',fmt(m.fields)],
        ['Foreign keys',m.edges],['Rules',fmt(RULES.total)],['Open questions',fmt(QS.total)],
@@ -438,7 +449,8 @@ function viewModule(id){
        ['Rules',rules.length],['Depends on',(m.dep||[]).length]]
      .map(([l,v])=>`<div class="s"><b class="mono">${v}</b><span>${l}</span></div>`).join('')}
   </div>
-  ${cur?`<p><a class="btn" style="display:inline-block" href="#/map?m=${encodeURIComponent(id)}">Open the hand-written walkthrough in the map &rarr;</a></p>`:''}
+  ${cur?`<p><a class="btn" style="display:inline-block" href="#/map?m=${encodeURIComponent(id)}">Open the hand-written walkthrough in the schema map &rarr;</a></p>`:''}
+  <p><a class="btn primary" style="display:inline-block" href="#/map?set=feature&f=${encodeURIComponent(id)}">Open this feature in the feature map &rarr;</a></p>
   ${findings.length?`<h3 class="sec">What was found here</h3>
     ${findings.map(([t,c,d])=>`<div class="find"><h5>${esc(t)} ${ctag(c)}</h5><p>${esc(d)}</p></div>`).join('')}`:''}
   ${(m.dep||[]).length?`<h3 class="sec">Depends on</h3><div class="cards">
@@ -648,11 +660,15 @@ function wireView(){
 /* ------------------------------------------------------------------- nav */
 function buildNav(){
   const h=location.hash.replace(/^#/,'')||'/';
-  const item=(p,l,c)=>`<a href="#${p}" class="${h===p||(p!=='/'&&h.startsWith(p))?'on':''}">${l}${c!==undefined?`<i>${c}</i>`:''}</a>`;
+  const hp=h.split('?')[0];
+  const item=(p,l,c)=>{
+    const on = p.indexOf('?')>=0 ? h===p : (hp===p||(p!=='/'&&hp.startsWith(p)));
+    return `<a href="#${p}" class="${on?'on':''}">${l}${c!==undefined?`<i>${c}</i>`:''}</a>`;};
   document.getElementById('nav').innerHTML=`
     <h4>Atlas</h4>
     ${item('/','Overview')}
-    ${item('/map','Mind map')}
+    ${item('/map?set=feature','Feature map')}
+    ${item('/map','Schema map')}
     ${item('/entities','Record types',D.meta.objects)}
     ${item('/rules','Rules',fmt(RULES.total))}
     ${item('/questions','Open questions',fmt(QS.total))}

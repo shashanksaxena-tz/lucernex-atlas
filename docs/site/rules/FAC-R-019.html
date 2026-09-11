@@ -7,7 +7,8 @@
 <link rel="stylesheet" href="../atlas.css">
 </head><body>
 <header><b>Lucernex Atlas</b>
-<nav><a href="../index.html">Overview</a><a href="../atlas.html">Interactive app</a>
+<nav><a href="../index.html">Overview</a><a href="../atlas.html#/map?set=feature">Feature map</a>
+<a href="../atlas.html">Interactive app</a>
 <a href="../entities/index.html">Record types</a><a href="../rules/index.html">Rules</a>
 <a href="../questions.html">Open questions</a></nav></header>
 <main><p class="crumb"><a href="../index.html">Atlas</a> &rsaquo; <a href="index.html">Rules</a> &rsaquo; FAC-R-019</p><h1 class="mono">FAC-R-019</h1><p class="sub">Facilities, Locations &amp; Sites &middot; `Prototype`&#x27;s Location/Complex/DMA relationships exist in the schema but are not administrator-configurable</p><span class="tag obs">Observed</span><p>Input: `Prototype.LocationID`, `.ComplexID`, `.DemographicDMAID` are declared columns in `_lucernex_objects_summary.txt` but do not appear anywhere in `../../data-fields/prototype.md`&#x27;s 15-row catalog. Effect: Unlike the identical columns on `Facility`/`Location`/`Parcel`, these cannot be placed on a Prototype layout by a tenant administrator through the observed mechanism. Confidence: Derived (cross-referencing the two sources; see `data-model.md`). Whether this reflects a deliberate platform restriction or simply that ASG&#x27;s tenant never placed those fields is unresolved — see Open Questions there.</p><p style="font-size:11.5px;color:var(--faint);margin-top:18px">Source: modules/facilities-locations/rules.md</p></main></body></html>

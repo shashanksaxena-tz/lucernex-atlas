@@ -16,19 +16,32 @@ source files available offline.
 
 ## The atlas
 
-[**`mindmap/lucernex-atlas.html`**](mindmap/lucernex-atlas.html) — an interactive map of the whole
-product. Opens on 15 modules; drills **Product → Module → Entity → Field group → Field → Type → the
-record that type points at**, and keeps going, because the foreign-key graph is cyclic. Every node
-carries its confidence label and its source.
+[**`mindmap/lucernex-atlas.html`**](mindmap/lucernex-atlas.html) — the interactive app. It carries
+**two maps**:
+
+- **The feature map** (`#/map?set=feature`) — the product organised by *what it does*: 18 feature
+  areas, from Lease Accounting to Platform & Tenancy, each branch written by hand — capability by
+  capability, with observed facts and constraints, and all **519 numbered rules attached under the
+  area they belong to** (660 nodes, every one carrying an explanation). Deep-link an area with
+  `#/map?set=feature&f=<module id>`. Built by [`mindmap/build_featuremap.py`](mindmap/build_featuremap.py).
+- **The schema map** (`#/map`) — drills **Product → Module → Entity → Field group → Field → Type →
+  the record that type points at**, and keeps going, because the foreign-key graph is cyclic. Every
+  node carries its confidence label and its source.
+
+Both built by two re-runnable scripts: [`mindmap/build_graph.py`](mindmap/build_graph.py) (parses the
+schema dump into `objects.json` / `edges.json` / `modules.json`) and
+[`mindmap/build_mapdata.py`](mindmap/build_mapdata.py) (compacts them into `mapdata.json` for the
+page). Re-run both after any schema recapture, then rebuild the HTML.
 
 Built by two re-runnable scripts: [`mindmap/build_graph.py`](mindmap/build_graph.py) (parses the
 schema dump into `objects.json` / `edges.json` / `modules.json`) and
 [`mindmap/build_mapdata.py`](mindmap/build_mapdata.py) (compacts them into `mapdata.json` for the
 page). Re-run both after any schema recapture, then rebuild the HTML.
 
-Three modules additionally carry a **hand-written walkthrough** branch, tinted so it reads as
-analysis rather than generated structure. These organise the module by what it *does* and carry the
-rules and constraints no schema dump can express — together **758 nodes, 277 of them rule nodes**.
+Three schema-map modules additionally carry a **hand-written walkthrough** branch, tinted so it
+reads as analysis rather than generated structure. These organise the module by what it *does* and
+carry the rules and constraints no schema dump can express — together **758 nodes, 277 of them rule
+nodes**. (The feature map generalises that idea to the whole product.)
 
 | Tree | Nodes | Depth | Rule nodes |
 |---|---:|---:|---:|

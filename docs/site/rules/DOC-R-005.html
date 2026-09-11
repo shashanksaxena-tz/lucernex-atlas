@@ -7,7 +7,8 @@
 <link rel="stylesheet" href="../atlas.css">
 </head><body>
 <header><b>Lucernex Atlas</b>
-<nav><a href="../index.html">Overview</a><a href="../atlas.html">Interactive app</a>
+<nav><a href="../index.html">Overview</a><a href="../atlas.html#/map?set=feature">Feature map</a>
+<a href="../atlas.html">Interactive app</a>
 <a href="../entities/index.html">Record types</a><a href="../rules/index.html">Rules</a>
 <a href="../questions.html">Open questions</a></nav></header>
 <main><p class="crumb"><a href="../index.html">Atlas</a> &rsaquo; <a href="index.html">Rules</a> &rsaquo; DOC-R-005</p><h1 class="mono">DOC-R-005</h1><p class="sub">Documents, Folders &amp; Correspondence &middot; A Folder&#x27;s own history is modelled with an explicit self-reference; a Document&#x27;s is not</p><span class="tag der">Derived</span><p>Input: `Folder.PreviousFolderID` (typed `Folder`, self-referencing) exists; no equivalent `PriorVersionDocumentID`-style column exists on `Document` despite `Document.Version`/ `.IsLatestVersion` both being present. Effect: The schema is internally inconsistent about whether &quot;history of a record&quot; is an explicit link or an implicit one, in the same module. Confidence: Derived, exhaustive field-list comparison — `data-model.md`.</p><p style="font-size:11.5px;color:var(--faint);margin-top:18px">Source: modules/documents-folders/rules.md</p></main></body></html>

@@ -7,7 +7,8 @@
 <link rel="stylesheet" href="../atlas.css">
 </head><body>
 <header><b>Lucernex Atlas</b>
-<nav><a href="../index.html">Overview</a><a href="../atlas.html">Interactive app</a>
+<nav><a href="../index.html">Overview</a><a href="../atlas.html#/map?set=feature">Feature map</a>
+<a href="../atlas.html">Interactive app</a>
 <a href="../entities/index.html">Record types</a><a href="../rules/index.html">Rules</a>
 <a href="../questions.html">Open questions</a></nav></header>
 <main><p class="crumb"><a href="../index.html">Atlas</a> &rsaquo; <a href="index.html">Rules</a> &rsaquo; TAX-R-008</p><h1 class="mono">TAX-R-008</h1><p class="sub">Property Tax &middot; Property tax expenses route through the same Expense Type/Group mechanism as any other recoverable expense</p><span class="tag obs">Observed</span><p>Input: `PropertyTaxSummary.CodeExpenseGroupID`/`.CodeExpenseTypeID`, `PropertyTaxAppeal.CodeExpenseGroupID`/`.CodeExpenseTypeID`. Effect: Selecting an expense type/group on a property-tax record is a GL-routing decision, identical in mechanism to `CodeExpenseType`&#x27;s role documented in `../../data-model/code-table-registry.md`. Confidence: Observed (field presence).</p><p style="font-size:11.5px;color:var(--faint);margin-top:18px">Source: modules/property-tax/rules.md</p></main></body></html>

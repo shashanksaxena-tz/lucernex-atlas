@@ -7,7 +7,8 @@
 <link rel="stylesheet" href="../atlas.css">
 </head><body>
 <header><b>Lucernex Atlas</b>
-<nav><a href="../index.html">Overview</a><a href="../atlas.html">Interactive app</a>
+<nav><a href="../index.html">Overview</a><a href="../atlas.html#/map?set=feature">Feature map</a>
+<a href="../atlas.html">Interactive app</a>
 <a href="../entities/index.html">Record types</a><a href="../rules/index.html">Rules</a>
 <a href="../questions.html">Open questions</a></nav></header>
 <main><p class="crumb"><a href="../index.html">Atlas</a> &rsaquo; <a href="index.html">Rules</a> &rsaquo; WF-R-053</p><h1 class="mono">WF-R-053</h1><p class="sub">Workflow &amp; Approvals &middot; E. Approval decisions</p><span class="tag obs">Observed</span><p class="lead">Vendor definition of RequireAllApprovers: &quot;require all qualified approvers on the entity to take the same action on the work flow step for the work flow to progress.&quot; If qualified approvers choose different actions, the unanimity condition can never be satisfied. This is ASG&#x27;s loudest reported defect: &quot;if Dana takes one action, Jen takes another, and then Jess takes a third option, the workflow can&#x27;t move forward.&quot;</p><div class="wrapt"><table><tbody><tr><td>Approver acts</td></tr><tr><td>`WFTSA.RequireAllApprovers`, all `WFSAp` rows</td></tr><tr><td>true</td></tr><tr><td>The workflow advances only when all qualified approvers on the entity have taken the same action. If they choose different actions the condition is unsatisfiable and the step deadlocks with no recovery path</td></tr><tr><td>Observed (the rule) + Observed (the failure, feature list line 362)</td></tr></tbody></table></div><p style="font-size:11.5px;color:var(--faint);margin-top:18px">Source: modules/workflow/rules.md</p></main></body></html>

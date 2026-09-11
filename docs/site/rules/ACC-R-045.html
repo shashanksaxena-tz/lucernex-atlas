@@ -7,7 +7,8 @@
 <link rel="stylesheet" href="../atlas.css">
 </head><body>
 <header><b>Lucernex Atlas</b>
-<nav><a href="../index.html">Overview</a><a href="../atlas.html">Interactive app</a>
+<nav><a href="../index.html">Overview</a><a href="../atlas.html#/map?set=feature">Feature map</a>
+<a href="../atlas.html">Interactive app</a>
 <a href="../entities/index.html">Record types</a><a href="../rules/index.html">Rules</a>
 <a href="../questions.html">Open questions</a></nav></header>
 <main><p class="crumb"><a href="../index.html">Atlas</a> &rsaquo; <a href="index.html">Rules</a> &rsaquo; ACC-R-045</p><h1 class="mono">ACC-R-045</h1><p class="sub">Lease Accounting &amp; Payments &middot; Schedule supersession</p><span class="tag obs">Observed</span><p class="lead">Creating a replacement schedule links it to its predecessor, copies the posted cut-off date, computes four adjustment figures, and marks the predecessor inactive.</p><p>- Trigger: a replacement `SLSummary` is created for a contract. - Output: ``` new.PriorLastPostedPeriodID := old.SLSummaryID new.PostedEndDate := old.LastPostedEndDate new.PostedInitAssetAdj := new.InitialAssetBalance − old.AssetBalance(as of PostedEndDate) new.PostedInitLiabilityAdj := new.InitialLiabilityBalance − old.LiabilityBalance(as of PostedEndDate) new.PostedAssetAdjustment := new.AssetBalance − old.lastPostedAssetBalance new.PostedLiabilityAdjustment := new.LiabilityBalance − old.lastPostedLiabilityBalance old.Inactive := true old.InactiveDate := today ``` - Confidence: Observed for every one of the six field definitions; Derived that they occur together as one transaction.</p><p style="font-size:11.5px;color:var(--faint);margin-top:18px">Source: modules/accounting/rules.md</p></main></body></html>

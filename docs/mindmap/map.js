@@ -2,13 +2,14 @@
    the application costs nothing when nobody looks at it. */
 
 let uid=0, ROOT=null, laid=[], links=[], maxDepth=0, mapReady=false;
-let tx=90, ty=0, sc=1, sel=null;
+let tx=90, ty=0, sc=1, sel=null, MODE='schema';
 
 function N(name,kind,opt){return Object.assign({id:++uid,name,kind,open:false,kids:null,parent:null},opt||{})}
 
 function fromCurated(c,mod){
-  return N(c.name,c.kind||'capability',{mod,detail:c.detail||'',
+  return N(c.name,c.kind||'capability',{mod:c.mod||mod,detail:c.detail||'',
     conf:c.confidence||'derived',src:c.source||'Hand-authored module analysis',
+    key:c.key,oos:!!c.oos,
     curatedKids:c.children||[]});
 }
 
@@ -82,7 +83,8 @@ function childrenOf(n){
 function depthOf(n){let d=0,p=n;while(p.parent){d++;p=p.parent}return d}
 function mightHaveKids(n){
   if(n.curatedKids) return n.curatedKids.length>0;
-  if(n.kind==='unresolved'||n.kind==='code-table'||n.kind==='finding') return false;
+  if(n.kind==='unresolved'||n.kind==='code-table'||n.kind==='finding'
+     ||n.kind==='rule'||n.kind==='fact') return false;
   if(n.kind==='type') return n.fam==='fk'||n.fam==='dropdown';
   return true;
 }
@@ -122,8 +124,9 @@ function drawMap(){
     const w=measure(n),g=document.createElementNS(NS,'g');
     let cls='node'+(sel===n?' sel':'');
     if(n.kind==='module'){const mm=modOf(n.mod);if(mm&&!mm.scope)cls+=' oos'}
+    if(n.oos)cls+=' oos';
     if(n.kind==='rule')cls+=' rule';
-    if(n.kind==='walkthrough')cls+=' walkthrough';
+    if(n.kind==='walkthrough'||n.kind==='area')cls+=' walkthrough';
     g.setAttribute('class',cls);
     g.setAttribute('transform',`translate(${n._x},${n._y-BOXH/2})`);
     const r=document.createElementNS(NS,'rect');
@@ -175,6 +178,8 @@ function selectNode(n){
   if(n.kind==='entity') deep=`<p><a class="btn" href="#/e/${encodeURIComponent(n.obj)}">Open the full record page &rarr;</a></p>`;
   if(n.kind==='field') deep=`<p><a class="btn" href="#/f/${encodeURIComponent(n.obj)}/${encodeURIComponent(n.name)}">Open the full field page &rarr;</a></p>`;
   if(n.kind==='module') deep=`<p><a class="btn" href="#/m/${encodeURIComponent(n.mod)}">Open the full module page &rarr;</a></p>`;
+  if(!deep&&n.mod&&(n.kind==='area'||n.kind==='capability'))
+    deep=`<p><a class="btn" href="#/m/${encodeURIComponent(n.mod)}">Open the module documentation &rarr;</a></p>`;
   const rid=/\b([A-Z]{2,4}-R-\d{2,4})\b/.exec(n.name);
   if(rid) deep=`<p><a class="btn" href="#/r/${rid[1]}">Open rule ${rid[1]} &rarr;</a></p>`;
   el.innerHTML=`<h4>${esc(n.name)}</h4>
@@ -239,20 +244,45 @@ function fitMap(){
 }
 
 function ensureMap(){
+  const h=location.hash;
+  const setM=/[?&]set=([^&]+)/.exec(h);
+  const want=(setM&&decodeURIComponent(setM[1])==='feature')?'feature':'schema';
+  /* switching datasets rebuilds the tree; each mode keeps its own interactions */
+  if(mapReady&&want!==MODE){
+    mapReady=false;sel=null;ROOT=null;
+    const det=document.getElementById('mapdet');
+    det.classList.remove('on');det.innerHTML='';
+  }
   if(!mapReady){
-    ROOT=N(D.meta.product,'product',{
-      detail:`${D.meta.vendor}'s integrated workplace management system, as configured for the ${D.meta.tenant} tenant. Everything below was read out of the running application on ${D.meta.captured}.`,
-      conf:'observed',src:'Live application, build '+D.meta.build});
-    ROOT.open=true;childrenOf(ROOT);
+    MODE=want;
+    if(MODE==='feature'){
+      ROOT=N(FM.meta.name,'product',{detail:FM.meta.detail,conf:FM.meta.conf,
+        src:FM.meta.src,curatedKids:FM.root.children});
+      ROOT.open=true;childrenOf(ROOT);
+    } else {
+      ROOT=N(D.meta.product,'product',{
+        detail:`${D.meta.vendor}'s integrated workplace management system, as configured for the ${D.meta.tenant} tenant. Everything below was read out of the running application on ${D.meta.captured}.`,
+        conf:'observed',src:'Live application, build '+D.meta.build});
+      ROOT.open=true;childrenOf(ROOT);
+    }
     initMapEvents();mapReady=true;drawMap();fitMap();
   }
-  const m=/[?&]m=([^&]+)/.exec(location.hash);
-  if(m){
-    const id=decodeURIComponent(m[1]);
-    const node=childrenOf(ROOT).find(c=>c.mod===id);
-    if(node){ node.open=true;
-      const wt=childrenOf(node).find(c=>c.kind==='walkthrough');
-      if(wt){wt.open=true;childrenOf(wt);selectNode(wt);} else selectNode(node);
-      drawMap();fitMap(); }
+  if(MODE==='feature'){
+    const f=/[?&]f=([^&]+)/.exec(h);
+    if(f){
+      const id=decodeURIComponent(f[1]);
+      const node=childrenOf(ROOT).find(c=>c.key===id);
+      if(node){ node.open=true;childrenOf(node);selectNode(node);drawMap();fitMap(); }
+    }
+  } else {
+    const m=/[?&]m=([^&]+)/.exec(h);
+    if(m){
+      const id=decodeURIComponent(m[1]);
+      const node=childrenOf(ROOT).find(c=>c.mod===id);
+      if(node){ node.open=true;
+        const wt=childrenOf(node).find(c=>c.kind==='walkthrough');
+        if(wt){wt.open=true;childrenOf(wt);selectNode(wt);} else selectNode(node);
+        drawMap();fitMap(); }
+    }
   }
 }

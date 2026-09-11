@@ -7,7 +7,8 @@
 <link rel="stylesheet" href="../atlas.css">
 </head><body>
 <header><b>Lucernex Atlas</b>
-<nav><a href="../index.html">Overview</a><a href="../atlas.html">Interactive app</a>
+<nav><a href="../index.html">Overview</a><a href="../atlas.html#/map?set=feature">Feature map</a>
+<a href="../atlas.html">Interactive app</a>
 <a href="../entities/index.html">Record types</a><a href="../rules/index.html">Rules</a>
 <a href="../questions.html">Open questions</a></nav></header>
 <main><p class="crumb"><a href="../index.html">Atlas</a> &rsaquo; <a href="index.html">Rules</a> &rsaquo; CON-R-020</p><h1 class="mono">CON-R-020</h1><p class="sub">Contracts &amp; Leases &middot; 2. Contract identity and hierarchy</p><span class="tag der">Derived</span><p class="lead">Resolving a contract&#x27;s vendors: Contract has no vendor FK; the set is derived from PaymentTransaction.VendorID, ExpenseSetup.VendorID, ExpenseVendorAllocation.VendorID, ScheduledOffset.VendorID, LandlordInvoice.EmployerID and SecurityDeposit.PartyID.</p><div class="wrapt"><table><tbody><tr><td>Resolving a contract&#x27;s vendors</td></tr><tr><td>`PaymentTransaction.VendorID`, `ExpenseSetup.VendorID`, `ExpenseVendorAllocation.VendorID`, `ScheduledOffset.VendorID`, `LandlordInvoice.EmployerID`, `SecurityDeposit.PartyID`</td></tr><tr><td>`Contract` has no vendor FK; the set is derived from children</td></tr><tr><td>Derived vendor set</td></tr><tr><td>Observed</td></tr></tbody></table></div><p style="font-size:11.5px;color:var(--faint);margin-top:18px">Source: modules/contracts/rules.md</p></main></body></html>

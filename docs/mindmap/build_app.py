@@ -34,6 +34,7 @@ def text(name):
 
 bundle = {
     "map": load("mapdata.json"),
+    "feature": load("featuremap.json"),
     "rules": load("rules.json"),
     "questions": load("questions.json"),
 }
@@ -63,3 +64,5 @@ print(f"  modules={len(bundle['map']['modules'])} "
       f"edges={len(bundle['map']['edges'])}")
 print(f"  rules={bundle['rules']['total']} questions={bundle['questions']['total']} "
       f"curated={len(bundle['map'].get('curated', {}))}")
+print(f"  feature areas={bundle['feature']['meta']['areas']} "
+      f"nodes={bundle['feature']['meta']['nodes']}")

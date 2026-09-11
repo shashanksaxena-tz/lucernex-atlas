@@ -7,7 +7,8 @@
 <link rel="stylesheet" href="../atlas.css">
 </head><body>
 <header><b>Lucernex Atlas</b>
-<nav><a href="../index.html">Overview</a><a href="../atlas.html">Interactive app</a>
+<nav><a href="../index.html">Overview</a><a href="../atlas.html#/map?set=feature">Feature map</a>
+<a href="../atlas.html">Interactive app</a>
 <a href="../entities/index.html">Record types</a><a href="../rules/index.html">Rules</a>
 <a href="../questions.html">Open questions</a></nav></header>
 <main><p class="crumb"><a href="../index.html">Atlas</a> &rsaquo; <a href="index.html">Rules</a> &rsaquo; PLT-R-004</p><h1 class="mono">PLT-R-004</h1><p class="sub">Platform &amp; Tenancy &middot; A new `ProjectEntity` subtype requires a new `Firm` column</p><span class="tag obs">Observed</span><p>- Trigger: Onboarding a new kind of ownable entity (a 12th subtype beyond the 11 `IsValidFor*` categories). - Input: `Firm`&#x27;s eleven `*SetupPageLayoutID` columns. - Condition: The new subtype needs a default setup-page-layout assignment, the same way the existing eleven do. - Effect: `Firm` gains a twelfth column. There is no lookup table of (subtype, default layout) pairs — the enumeration is baked into the tenant record&#x27;s own schema. - Confidence: Observed field list (`data-model.md`), Derived conclusion.</p><p style="font-size:11.5px;color:var(--faint);margin-top:18px">Source: modules/platform-tenancy/rules.md</p></main></body></html>
