@@ -1,0 +1,1272 @@
+{
+ "firm": "(ASG)American Freight",
+ "firmID": 3158,
+ "build": "26.09.0.113",
+ "captured": "2026-09-13",
+ "source": "Ext.ComponentQuery.query('lxuimenutree')[0].getStore().getRoot() - same component/method as the BBW capture",
+ "rootCount": 4,
+ "rootNames": [
+  "Portfolio",
+  "Location",
+  "Facility",
+  "Contract"
+ ],
+ "totalNodes": 109,
+ "confirms": "AF has exactly 4 navigation roots and 109 total nodes. BBW has 5 roots (adds 'Equipment Contract'). Confirmed on the SAME build.",
+ "equipmentPresence": "AF is not equipment-free: it carries an 'Equipment' GROUP under Portfolio (menuPLID=51793) and under Location (menuPLID=51796). What AF lacks is only the top-level 'Equipment Contract' ROOT.",
+ "roots": [
+  {
+   "depth": 0,
+   "text": "Portfolio",
+   "menuPLID": "924",
+   "requestedProjectEntityType": "Program",
+   "href": "",
+   "id": "extModel79-1",
+   "children": [
+    {
+     "depth": 1,
+     "text": "Details",
+     "menuPLID": "935",
+     "href": "",
+     "id": "extModel79-5",
+     "children": [
+      {
+       "depth": 2,
+       "text": "Summary",
+       "menuPLID": "936",
+       "href": "",
+       "id": "extModel79-11"
+      },
+      {
+       "depth": 2,
+       "text": "Members/Contacts",
+       "menuPLID": "938",
+       "href": "",
+       "id": "extModel79-12"
+      },
+      {
+       "depth": 2,
+       "text": "Forms",
+       "menuPLID": "939",
+       "href": "",
+       "id": "extModel79-13"
+      },
+      {
+       "depth": 2,
+       "text": "Work Flow",
+       "menuPLID": "2283",
+       "href": "",
+       "id": "extModel79-14"
+      },
+      {
+       "depth": 2,
+       "text": "Documents",
+       "menuPLID": "937",
+       "href": "",
+       "id": "extModel79-15"
+      },
+      {
+       "depth": 2,
+       "text": "Binders",
+       "menuPLID": "931",
+       "href": "",
+       "id": "extModel79-16"
+      },
+      {
+       "depth": 2,
+       "text": "Budget",
+       "menuPLID": "1109",
+       "href": "",
+       "id": "extModel79-17"
+      }
+     ]
+    },
+    {
+     "depth": 1,
+     "text": "Demographics",
+     "menuPLID": "925",
+     "href": "",
+     "id": "extModel79-6",
+     "children": [
+      {
+       "depth": 2,
+       "text": "Criteria",
+       "menuPLID": "928",
+       "href": "",
+       "id": "extModel79-18"
+      },
+      {
+       "depth": 2,
+       "text": "Study Areas",
+       "menuPLID": "927",
+       "href": "",
+       "id": "extModel79-19"
+      },
+      {
+       "depth": 2,
+       "text": "Demographics",
+       "menuPLID": "926",
+       "href": "",
+       "id": "extModel79-20"
+      }
+     ]
+    },
+    {
+     "depth": 1,
+     "text": "Org Chart",
+     "menuPLID": "933",
+     "href": "",
+     "id": "extModel79-7",
+     "children": [
+      {
+       "depth": 2,
+       "text": "Org Chart",
+       "menuPLID": "934",
+       "href": "",
+       "id": "extModel79-21"
+      }
+     ]
+    },
+    {
+     "depth": 1,
+     "text": "Facility / Store List",
+     "menuPLID": "4854",
+     "href": "",
+     "id": "extModel79-8",
+     "children": [
+      {
+       "depth": 2,
+       "text": "Facility / Store List",
+       "menuPLID": "4862",
+       "href": "",
+       "id": "extModel79-22"
+      }
+     ]
+    },
+    {
+     "depth": 1,
+     "text": "Equipment",
+     "menuPLID": "51793",
+     "href": "",
+     "id": "extModel79-9",
+     "children": [
+      {
+       "depth": 2,
+       "text": "Equipment",
+       "menuPLID": "51809",
+       "href": "",
+       "id": "extModel79-23"
+      }
+     ]
+    },
+    {
+     "depth": 1,
+     "text": "Reports",
+     "menuPLID": "3573",
+     "href": "",
+     "id": "extModel79-10",
+     "children": [
+      {
+       "depth": 2,
+       "text": "Program Reports",
+       "menuPLID": "3574",
+       "href": "",
+       "id": "extModel79-24"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "depth": 0,
+   "text": "Location",
+   "menuPLID": "3535",
+   "requestedProjectEntityType": "Location",
+   "href": "",
+   "id": "extModel79-2",
+   "children": [
+    {
+     "depth": 1,
+     "text": "Details",
+     "menuPLID": "3536",
+     "href": "",
+     "id": "extModel79-25",
+     "children": [
+      {
+       "depth": 2,
+       "text": "Summary",
+       "menuPLID": "3537",
+       "href": "",
+       "id": "extModel79-29"
+      },
+      {
+       "depth": 2,
+       "text": "Members/Contacts",
+       "menuPLID": "3542",
+       "href": "",
+       "id": "extModel79-30"
+      },
+      {
+       "depth": 2,
+       "text": "Forms",
+       "menuPLID": "3543",
+       "href": "",
+       "id": "extModel79-31"
+      },
+      {
+       "depth": 2,
+       "text": "Work Flow",
+       "menuPLID": "3544",
+       "href": "",
+       "id": "extModel79-32"
+      },
+      {
+       "depth": 2,
+       "text": "Documents",
+       "menuPLID": "3545",
+       "href": "",
+       "id": "extModel79-33"
+      },
+      {
+       "depth": 2,
+       "text": "Binders",
+       "menuPLID": "3546",
+       "href": "",
+       "id": "extModel79-34"
+      },
+      {
+       "depth": 2,
+       "text": "Schedule",
+       "menuPLID": "3547",
+       "href": "",
+       "id": "extModel79-35"
+      },
+      {
+       "depth": 2,
+       "text": "Budget",
+       "menuPLID": "3548",
+       "href": "",
+       "id": "extModel79-36"
+      }
+     ]
+    },
+    {
+     "depth": 1,
+     "text": "Complex/Center",
+     "menuPLID": "3549",
+     "href": "",
+     "id": "extModel79-26",
+     "children": [
+      {
+       "depth": 2,
+       "text": "Complex/Center Details",
+       "menuPLID": "3551",
+       "href": "",
+       "id": "extModel79-37"
+      }
+     ]
+    },
+    {
+     "depth": 1,
+     "text": "Equipment",
+     "menuPLID": "51796",
+     "href": "",
+     "id": "extModel79-27",
+     "children": [
+      {
+       "depth": 2,
+       "text": "Equipment",
+       "menuPLID": "51810",
+       "href": "",
+       "id": "extModel79-38"
+      },
+      {
+       "depth": 2,
+       "text": "Work Orders",
+       "menuPLID": "51811",
+       "href": "",
+       "id": "extModel79-39"
+      }
+     ]
+    },
+    {
+     "depth": 1,
+     "text": "Reports",
+     "menuPLID": "3556",
+     "href": "",
+     "id": "extModel79-28",
+     "children": [
+      {
+       "depth": 2,
+       "text": "Location Reports",
+       "menuPLID": "3557",
+       "href": "",
+       "id": "extModel79-40"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "depth": 0,
+   "text": "Facility",
+   "menuPLID": "1005",
+   "requestedProjectEntityType": "Facility",
+   "href": "",
+   "id": "extModel79-3",
+   "children": [
+    {
+     "depth": 1,
+     "text": "Details",
+     "menuPLID": "1006",
+     "href": "",
+     "id": "extModel79-41",
+     "children": [
+      {
+       "depth": 2,
+       "text": "Summary",
+       "menuPLID": "1007",
+       "href": "",
+       "id": "extModel79-48"
+      },
+      {
+       "depth": 2,
+       "text": "Members/Contacts",
+       "menuPLID": "1009",
+       "href": "",
+       "id": "extModel79-49"
+      },
+      {
+       "depth": 2,
+       "text": "Forms",
+       "menuPLID": "1010",
+       "href": "",
+       "id": "extModel79-50"
+      },
+      {
+       "depth": 2,
+       "text": "Work Flow",
+       "menuPLID": "2286",
+       "href": "",
+       "id": "extModel79-51"
+      },
+      {
+       "depth": 2,
+       "text": "Documents",
+       "menuPLID": "1013",
+       "href": "",
+       "id": "extModel79-52"
+      },
+      {
+       "depth": 2,
+       "text": "Binders",
+       "menuPLID": "1030",
+       "href": "",
+       "id": "extModel79-53"
+      },
+      {
+       "depth": 2,
+       "text": "Schedule",
+       "menuPLID": "1008",
+       "href": "",
+       "id": "extModel79-54"
+      },
+      {
+       "depth": 2,
+       "text": "Budget",
+       "menuPLID": "1011",
+       "href": "",
+       "id": "extModel79-55"
+      }
+     ]
+    },
+    {
+     "depth": 1,
+     "text": "Demographics",
+     "menuPLID": "5420",
+     "href": "",
+     "id": "extModel79-42",
+     "children": [
+      {
+       "depth": 2,
+       "text": "Summary",
+       "menuPLID": "5431",
+       "href": "",
+       "id": "extModel79-56"
+      },
+      {
+       "depth": 2,
+       "text": "Demographics Study",
+       "menuPLID": "5432",
+       "href": "",
+       "id": "extModel79-57"
+      }
+     ]
+    },
+    {
+     "depth": 1,
+     "text": "Asset Management",
+     "menuPLID": "3525",
+     "href": "",
+     "id": "extModel79-43",
+     "children": [
+      {
+       "depth": 2,
+       "text": "Equipment (FF&E)",
+       "menuPLID": "1036",
+       "href": "",
+       "id": "extModel79-58"
+      },
+      {
+       "depth": 2,
+       "text": "Service Requests / Work Orders",
+       "menuPLID": "3526",
+       "href": "",
+       "id": "extModel79-59"
+      }
+     ]
+    },
+    {
+     "depth": 1,
+     "text": "Space Management",
+     "menuPLID": "3527",
+     "href": "",
+     "id": "extModel79-44",
+     "children": [
+      {
+       "depth": 2,
+       "text": "Space Management",
+       "menuPLID": "3528",
+       "href": "",
+       "id": "extModel79-60"
+      }
+     ]
+    },
+    {
+     "depth": 1,
+     "text": "Facility Expense",
+     "menuPLID": "13239",
+     "href": "",
+     "id": "extModel79-45",
+     "children": [
+      {
+       "depth": 2,
+       "text": "Facility Expense",
+       "menuPLID": "13240",
+       "href": "",
+       "id": "extModel79-61"
+      }
+     ]
+    },
+    {
+     "depth": 1,
+     "text": "Pro Forma Lease",
+     "menuPLID": "1014",
+     "href": "",
+     "id": "extModel79-46",
+     "children": [
+      {
+       "depth": 2,
+       "text": "Pro Forma Lease",
+       "menuPLID": "5421",
+       "href": "",
+       "id": "extModel79-62"
+      },
+      {
+       "depth": 2,
+       "text": "Responsibilities",
+       "menuPLID": "1015",
+       "href": "",
+       "id": "extModel79-63"
+      }
+     ]
+    },
+    {
+     "depth": 1,
+     "text": "Reports",
+     "menuPLID": "3533",
+     "href": "",
+     "id": "extModel79-47",
+     "children": [
+      {
+       "depth": 2,
+       "text": "Facility Reports",
+       "menuPLID": "3534",
+       "href": "",
+       "id": "extModel79-64"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "depth": 0,
+   "text": "Contract",
+   "menuPLID": "3492",
+   "requestedProjectEntityType": "Contract",
+   "href": "",
+   "id": "extModel79-4",
+   "children": [
+    {
+     "depth": 1,
+     "text": "Details",
+     "menuPLID": "3493",
+     "href": "",
+     "id": "extModel79-65",
+     "children": [
+      {
+       "depth": 2,
+       "text": "Summary",
+       "menuPLID": "3494",
+       "href": "",
+       "id": "extModel79-71"
+      },
+      {
+       "depth": 2,
+       "text": "Members/Contacts",
+       "menuPLID": "3495",
+       "href": "",
+       "id": "extModel79-72"
+      },
+      {
+       "depth": 2,
+       "text": "Forms",
+       "menuPLID": "3496",
+       "href": "",
+       "id": "extModel79-73"
+      },
+      {
+       "depth": 2,
+       "text": "Work Flow",
+       "menuPLID": "3497",
+       "href": "",
+       "id": "extModel79-74"
+      },
+      {
+       "depth": 2,
+       "text": "Documents",
+       "menuPLID": "3498",
+       "href": "",
+       "id": "extModel79-75"
+      },
+      {
+       "depth": 2,
+       "text": "Binders",
+       "menuPLID": "3499",
+       "href": "",
+       "id": "extModel79-76"
+      },
+      {
+       "depth": 2,
+       "text": "Schedule",
+       "menuPLID": "3500",
+       "href": "",
+       "id": "extModel79-77"
+      }
+     ]
+    },
+    {
+     "depth": 1,
+     "text": "Abstract Info",
+     "menuPLID": "3502",
+     "href": "",
+     "id": "extModel79-66",
+     "children": [
+      {
+       "depth": 2,
+       "text": "Abstract Details",
+       "menuPLID": "3503",
+       "href": "",
+       "id": "extModel79-78"
+      },
+      {
+       "depth": 2,
+       "text": "Terms",
+       "menuPLID": "3504",
+       "href": "",
+       "id": "extModel79-79"
+      },
+      {
+       "depth": 2,
+       "text": "Amendments",
+       "menuPLID": "3505",
+       "href": "",
+       "id": "extModel79-80"
+      },
+      {
+       "depth": 2,
+       "text": "Covenants",
+       "menuPLID": "3506",
+       "href": "",
+       "id": "extModel79-81"
+      },
+      {
+       "depth": 2,
+       "text": "Key Dates",
+       "menuPLID": "3507",
+       "href": "",
+       "id": "extModel79-82"
+      },
+      {
+       "depth": 2,
+       "text": "Responsibilities",
+       "menuPLID": "3508",
+       "href": "",
+       "id": "extModel79-83"
+      },
+      {
+       "depth": 2,
+       "text": "Insurance",
+       "menuPLID": "3509",
+       "href": "",
+       "id": "extModel79-84"
+      },
+      {
+       "depth": 2,
+       "text": "Co-Tenancy",
+       "menuPLID": "3510",
+       "href": "",
+       "id": "extModel79-85"
+      }
+     ]
+    },
+    {
+     "depth": 1,
+     "text": "Payment Info",
+     "menuPLID": "3512",
+     "href": "",
+     "id": "extModel79-67",
+     "children": [
+      {
+       "depth": 2,
+       "text": "Payment Details",
+       "menuPLID": "3513",
+       "href": "",
+       "id": "extModel79-86"
+      },
+      {
+       "depth": 2,
+       "text": "Recurring Expenses",
+       "menuPLID": "3514",
+       "href": "",
+       "id": "extModel79-87"
+      },
+      {
+       "depth": 2,
+       "text": "Alternate Rent",
+       "menuPLID": "15951",
+       "href": "",
+       "id": "extModel79-88"
+      },
+      {
+       "depth": 2,
+       "text": "Transactions",
+       "menuPLID": "3518",
+       "href": "",
+       "id": "extModel79-89"
+      },
+      {
+       "depth": 2,
+       "text": "Invoices",
+       "menuPLID": "108382",
+       "href": "",
+       "id": "extModel79-90"
+      },
+      {
+       "depth": 2,
+       "text": "Receipts",
+       "menuPLID": "3519",
+       "href": "",
+       "id": "extModel79-91"
+      },
+      {
+       "depth": 2,
+       "text": "Recoveries",
+       "menuPLID": "3516",
+       "href": "",
+       "id": "extModel79-92"
+      },
+      {
+       "depth": 2,
+       "text": "Scheduled Offsets",
+       "menuPLID": "19844",
+       "href": "",
+       "id": "extModel79-93"
+      },
+      {
+       "depth": 2,
+       "text": "Allowances",
+       "menuPLID": "3517",
+       "href": "",
+       "id": "extModel79-94"
+      },
+      {
+       "depth": 2,
+       "text": "Security Deposit",
+       "menuPLID": "12444",
+       "href": "",
+       "id": "extModel79-95"
+      },
+      {
+       "depth": 2,
+       "text": "Percentage Rent",
+       "menuPLID": "3515",
+       "href": "",
+       "id": "extModel79-96"
+      },
+      {
+       "depth": 2,
+       "text": "Sales",
+       "menuPLID": "3520",
+       "href": "",
+       "id": "extModel79-97"
+      }
+     ]
+    },
+    {
+     "depth": 1,
+     "text": "Accounting Info",
+     "menuPLID": "12293",
+     "href": "",
+     "id": "extModel79-68",
+     "children": [
+      {
+       "depth": 2,
+       "text": "Accounting Details",
+       "menuPLID": "45615",
+       "href": "",
+       "id": "extModel79-98"
+      },
+      {
+       "depth": 2,
+       "text": "Capital Lease Test",
+       "menuPLID": "12295",
+       "href": "",
+       "id": "extModel79-99"
+      },
+      {
+       "depth": 2,
+       "text": "Straight-Line Rent",
+       "menuPLID": "12445",
+       "href": "",
+       "id": "extModel79-100"
+      },
+      {
+       "depth": 2,
+       "text": "Accounting Assumptions",
+       "menuPLID": "43784",
+       "href": "",
+       "id": "extModel79-101"
+      },
+      {
+       "depth": 2,
+       "text": "ASC 842 Test",
+       "menuPLID": "41136",
+       "href": "",
+       "id": "extModel79-102"
+      },
+      {
+       "depth": 2,
+       "text": "ASC 842 Rent Schedule",
+       "menuPLID": "43785",
+       "href": "",
+       "id": "extModel79-103"
+      },
+      {
+       "depth": 2,
+       "text": "IFRS 16 Rent Schedule",
+       "menuPLID": "45609",
+       "href": "",
+       "id": "extModel79-104"
+      }
+     ]
+    },
+    {
+     "depth": 1,
+     "text": "Accrual Info",
+     "menuPLID": "45610",
+     "href": "",
+     "id": "extModel79-69",
+     "children": [
+      {
+       "depth": 2,
+       "text": "Accrual Details",
+       "menuPLID": "12294",
+       "href": "",
+       "id": "extModel79-105"
+      },
+      {
+       "depth": 2,
+       "text": "Expense Accruals",
+       "menuPLID": "12297",
+       "href": "",
+       "id": "extModel79-106"
+      },
+      {
+       "depth": 2,
+       "text": "Transactions",
+       "menuPLID": "12298",
+       "href": "",
+       "id": "extModel79-107"
+      },
+      {
+       "depth": 2,
+       "text": "Percentage Rent Accruals",
+       "menuPLID": "12296",
+       "href": "",
+       "id": "extModel79-108"
+      }
+     ]
+    },
+    {
+     "depth": 1,
+     "text": "Reports",
+     "menuPLID": "3521",
+     "href": "",
+     "id": "extModel79-70",
+     "children": [
+      {
+       "depth": 2,
+       "text": "Contract Reports",
+       "menuPLID": "3522",
+       "href": "",
+       "id": "extModel79-109"
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "topMenuAdmin": {
+  "source": "/en/admin/ManageTopMenu.jsp ('Menu Structure' treepanel), read via Ext",
+  "finding": "OBSERVED, and this is the most important result for Q-BBW-12: American Freight's Menu Structure admin contains **14 top-level menu structures**, including a complete **`Equipment Contract`** structure (id 41087, 5 groups, 64 nodes). AF therefore CARRIES the Equipment Contract menu tree - it simply does not render it in live navigation.",
+  "structureCount": 14,
+  "totalNodes": 892,
+  "structures": [
+   {
+    "text": "Portfolio",
+    "id": "924",
+    "groupCount": 9,
+    "nodeCount": 44,
+    "rendersInLiveNav": true
+   },
+   {
+    "text": "Program",
+    "id": "3851",
+    "groupCount": 4,
+    "nodeCount": 32,
+    "rendersInLiveNav": false
+   },
+   {
+    "text": "Prototype",
+    "id": "1041",
+    "groupCount": 2,
+    "nodeCount": 19,
+    "rendersInLiveNav": false
+   },
+   {
+    "text": "Site",
+    "id": "940",
+    "groupCount": 6,
+    "nodeCount": 48,
+    "rendersInLiveNav": false
+   },
+   {
+    "text": "Project",
+    "id": "969",
+    "groupCount": 7,
+    "nodeCount": 53,
+    "rendersInLiveNav": false
+   },
+   {
+    "text": "Location",
+    "id": "3535",
+    "groupCount": 5,
+    "nodeCount": 40,
+    "rendersInLiveNav": true
+   },
+   {
+    "text": "Parcel",
+    "id": "3558",
+    "groupCount": 4,
+    "nodeCount": 28,
+    "rendersInLiveNav": false
+   },
+   {
+    "text": "Facility",
+    "id": "1005",
+    "groupCount": 8,
+    "nodeCount": 55,
+    "rendersInLiveNav": true
+   },
+   {
+    "text": "Capital Project",
+    "id": "3865",
+    "groupCount": 4,
+    "nodeCount": 38,
+    "rendersInLiveNav": false
+   },
+   {
+    "text": "Contract",
+    "id": "3492",
+    "groupCount": 6,
+    "nodeCount": 130,
+    "rendersInLiveNav": true
+   },
+   {
+    "text": "Equipment Contract",
+    "id": "41087",
+    "groupCount": 5,
+    "nodeCount": 64,
+    "rendersInLiveNav": false
+   },
+   {
+    "text": "Administration",
+    "id": "1055",
+    "groupCount": 2,
+    "nodeCount": 336,
+    "rendersInLiveNav": false
+   },
+   {
+    "text": "Reports",
+    "id": "1051",
+    "groupCount": 2,
+    "nodeCount": 4,
+    "rendersInLiveNav": false
+   },
+   {
+    "text": "Sub-pages",
+    "id": "4329",
+    "groupCount": 0,
+    "nodeCount": 1,
+    "rendersInLiveNav": false
+   }
+  ],
+  "liveNavRendersOnly": [
+   "Portfolio",
+   "Location",
+   "Facility",
+   "Contract"
+  ],
+  "equipmentContractStructure": {
+   "text": "Equipment Contract",
+   "id": "41087",
+   "children": [
+    {
+     "text": "Details",
+     "id": "41094",
+     "children": [
+      {
+       "text": "Summary",
+       "id": "41095",
+       "children": [
+        {
+         "text": "Equipment Contract Summary (Global Item)",
+         "id": "41150"
+        }
+       ]
+      },
+      {
+       "text": "Members/Contacts",
+       "id": "41128"
+      },
+      {
+       "text": "Forms",
+       "id": "41129"
+      },
+      {
+       "text": "Work Flow",
+       "id": "41130"
+      },
+      {
+       "text": "Documents",
+       "id": "41131",
+       "children": [
+        {
+         "text": "Documents (Global Item)",
+         "id": "41163"
+        },
+        {
+         "text": "Email Log (Global Item)",
+         "id": "41164"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "text": "Abstract Info",
+     "id": "41090",
+     "children": [
+      {
+       "text": "Abstract Details",
+       "id": "41091",
+       "children": [
+        {
+         "text": "Equipment Contract Abstract Details (Global Item)",
+         "id": "41148"
+        }
+       ]
+      },
+      {
+       "text": "Terms",
+       "id": "41117",
+       "children": [
+        {
+         "text": "Equipment Contract Terms (Global Item)",
+         "id": "41143"
+        }
+       ]
+      },
+      {
+       "text": "Amendments",
+       "id": "41114",
+       "children": [
+        {
+         "text": "Equipment Contract Amendment (Global Item)",
+         "id": "41140"
+        },
+        {
+         "text": "Contract Amendments (Global Item)",
+         "id": "41132"
+        }
+       ]
+      },
+      {
+       "text": "Covenants",
+       "id": "41115",
+       "children": [
+        {
+         "text": "Equipment Contract Covenants (Global Item)",
+         "id": "41141"
+        }
+       ]
+      },
+      {
+       "text": "Key Dates",
+       "id": "41120",
+       "children": [
+        {
+         "text": "Contract Key Dates (Global Item)",
+         "id": "41155"
+        }
+       ]
+      },
+      {
+       "text": "Responsibilities",
+       "id": "41121",
+       "children": [
+        {
+         "text": "Contract Responsibilities (Global Item)",
+         "id": "41156"
+        }
+       ]
+      },
+      {
+       "text": "Insurance",
+       "id": "41122",
+       "children": [
+        {
+         "text": "Contract Insurance (Global Item)",
+         "id": "41157"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "text": "Payment Info",
+     "id": "41092",
+     "children": [
+      {
+       "text": "Payment Details",
+       "id": "41093",
+       "children": [
+        {
+         "text": "Equipment Contract Payment Details (Global Item)",
+         "id": "41149"
+        }
+       ]
+      },
+      {
+       "text": "Recurring Payments",
+       "id": "41116",
+       "children": [
+        {
+         "text": "Equipment Contract Payment Setup (Global Item)",
+         "id": "41142"
+        },
+        {
+         "text": "Equipment Payment Setup (Global Item)",
+         "id": "48941"
+        },
+        {
+         "text": "Payment Forecast (Global Item)",
+         "id": "41134"
+        }
+       ]
+      },
+      {
+       "text": "Transactions",
+       "id": "41123",
+       "children": [
+        {
+         "text": "Equipment Contract Payments (Global Item)",
+         "id": "41158"
+        },
+        {
+         "text": "Equipment Payments (Global Item)",
+         "id": "51806"
+        }
+       ]
+      },
+      {
+       "text": "Receipts",
+       "id": "41124",
+       "children": [
+        {
+         "text": "Contract Receipts (Global Item)",
+         "id": "41159"
+        }
+       ]
+      },
+      {
+       "text": "Scheduled Offsets",
+       "id": "41125",
+       "children": [
+        {
+         "text": "Scheduled Offset (Global Item)",
+         "id": "41160"
+        }
+       ]
+      },
+      {
+       "text": "Allowances",
+       "id": "41126",
+       "children": [
+        {
+         "text": "Equipment Contract Allowance (Global Item)",
+         "id": "48940"
+        },
+        {
+         "text": "Contract Allowance (Global Item)",
+         "id": "41161"
+        }
+       ]
+      },
+      {
+       "text": "Security Deposit",
+       "id": "41127",
+       "children": [
+        {
+         "text": "Contract Security Deposit (Global Item)",
+         "id": "41162"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "text": "Accounting Info",
+     "id": "41118",
+     "children": [
+      {
+       "text": "Accounting Details",
+       "id": "45607",
+       "children": [
+        {
+         "text": "Equipment Contract Accounting Details (Global Item)",
+         "id": "45613"
+        }
+       ]
+      },
+      {
+       "text": "Straight-Line Rent",
+       "id": "41153",
+       "children": [
+        {
+         "text": "Straight-Line Summary (Global Item)",
+         "id": "41167"
+        }
+       ]
+      },
+      {
+       "text": "Accounting Assumptions",
+       "id": "43781",
+       "children": [
+        {
+         "text": "ASC 842 Accounting Assumptions (Global Item)",
+         "id": "43788"
+        },
+        {
+         "text": "IFRS 16 Accounting Assumptions (Global Item)",
+         "id": "45605"
+        }
+       ]
+      },
+      {
+       "text": "ASC 842 Test",
+       "id": "41152",
+       "children": [
+        {
+         "text": "ASC 842 Test (Equipment Contract) (Global Item)",
+         "id": "51802"
+        },
+        {
+         "text": "Equipment Assumptions/ASC 842 Tests (Global Item)",
+         "id": "51805"
+        }
+       ]
+      },
+      {
+       "text": "ASC 842 Rent Schedule",
+       "id": "43782",
+       "children": [
+        {
+         "text": "ASC 842 Rent Schedule (Global Item)",
+         "id": "43789"
+        },
+        {
+         "text": "ASC 842 Equipment Schedules (Global Item)",
+         "id": "51804"
+        }
+       ]
+      },
+      {
+       "text": "IFRS 16 Rent Schedule",
+       "id": "41151",
+       "children": [
+        {
+         "text": "IFRS 16 Rent Schedule (Global Item)",
+         "id": "45606"
+        },
+        {
+         "text": "IFRS 16 Equipment Schedules (Global Item)",
+         "id": "51807"
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "text": "Reports",
+     "id": "41119",
+     "children": [
+      {
+       "text": "Equipment Contract Reports",
+       "id": "41154"
+      }
+     ]
+    }
+   ]
+  },
+  "shapeMatchesBBW": "The AF Equipment Contract structure matches every published BBW detail: 5 groups (Details / Abstract Info / Payment Info / Accounting Info / Reports); `Recurring Payments` in place of `Recurring Expenses`; NO `Capital Lease Test` under Accounting Info although `ASC 842 Test` is present; Reports renamed `Equipment Contract Reports`. Since AF has never rendered this root, that shape is platform-seeded, not a BBW customisation."
+ },
+ "q_bbw_12": {
+  "status": "ADVANCED, NOT CLOSED.",
+  "ruledOut": "The `Firm` record is NOT the gate, at least not by itself. `AllowEquipmentContractFunctionality` = **Yes** at AF, on the same build as BBW, with the full menu structure present - and the root still does not render. There is also no `Equipment Contract Setup Page` field on FirmEdit.jsp at all.",
+  "strongPattern": "The other 13 structures line up EXACTLY with the Firm `Allow X?` flags: Portfolio/Locations/Facilities/Contracts are all `Yes` and all four render; Program(Capital Programs)/Prototypes/Sites/Project(Opening Projects)/Parcels/Capital Project are all `No` and none render. So the Allow flags DO gate navigation roots - `Equipment Contract` is the single exception where the flag is Yes but the root is absent. A further condition exists.",
+  "leadNotVerified": "/en/admin/SecurityPageAccess.jsp carries a per-User-Class page-access matrix (No Access / View / Edit / Delete / Default) with a dedicated row for `Equipment Contract` (SecurityFieldId_99), alongside rows for Contract (_97), Portfolio (_106), Parcel (_105), Prototype (_109). User-class page access is therefore a plausible second gate. **I did NOT verify AF's actual values**: on first load, before any user class is selected, every row shows `NoAccess` checked - including Contract and Portfolio, which do render. That snapshot is the unselected default and is NOT evidence either way. Confirming it needs a user class to be selected in the UI, which is an interaction I did not perform under the read-only rule.",
+  "nextTest": "Select each user class on SecurityPageAccess.jsp at BOTH tenants and compare the `Equipment Contract` row, and compare BBW's Menu Structure admin (expect 14 structures there too). If BBW's differs from AF's only in page access, the gate is user-class security, not licensing."
+ }
+}

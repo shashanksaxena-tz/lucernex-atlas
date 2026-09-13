@@ -1,6 +1,6 @@
 # Bid Package Ancillary Tables
 
-These 6 tables (21 fields, all Global) are the line-item and alternate/breakout detail underneath the two large standalone bid entities, [BidPackage](bidpackage.md) (53 fields) and [BidPackageTemplate](bidpackagetemplate.md) (31 fields). Each pairs a 'definition' table (Breakout, Alternate) with a matching 'Value' table holding the bidder-submitted number against it — the same header/line-item pattern seen throughout the catalog, just at a smaller scale for the competitive-bid workflow specifically.
+These 6 tables (21 fields, all Global) are the line-item and alternate/breakout detail underneath the two large standalone bid entities, [BidPackage](bid-package.md) (53 fields) and [BidPackageTemplate](bid-package-template.md) (31 fields). Each pairs a 'definition' table (Breakout, Alternate) with a matching 'Value' table holding the bidder-submitted number against it — the same header/line-item pattern seen throughout the catalog, just at a smaller scale for the competitive-bid workflow specifically.
 
 **Entities in this file:** 6 &nbsp;·&nbsp; **Total fields:** 21 (Global: 21, Firm: 0)
 

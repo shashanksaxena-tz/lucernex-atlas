@@ -1,0 +1,126 @@
+{
+ "_purpose": "Catalogue-shaped rows for the six tables present in BBW but absent from docs/data-model/object-catalog.md. Directly insertable; not raw field dumps.",
+ "_firm": "(ASG)BBW  train-bbw.lucernex.com",
+ "_captured": "2026-09-13",
+ "_sourceFile": "docs/tenants/bbw-platform-tables.json",
+ "_CAVEAT_fieldCountsAreGlobalOnly": "fieldCount here is the GLOBAL field count. The source sweep passed showGlobal=true. These counts may rise after the showGlobal=false re-sweep, and ChangeManage/VirtualTemplateMember at 1 field each are the likeliest to grow. Do not publish these counts as final.",
+ "_columnMethodology": {
+  "outDegree": "COMPUTED AND VALIDATED. Rule: count fields whose type string ends in 'ID' and does NOT start with 'Dropdown (' - i.e. typed FKs to business objects, excluding code-table dropdowns. Validated against 12 objects the catalogue already scores (Allowance, AssetHistory, AuditTable, EntityTemplate, TaskPredecessor, AccrualTransaction, AlternateRentSchedule, AllowanceTransaction, Asset, BudgetLineItem, VirtualTemplateSchedule, VirtualTemplateFolder), spanning 1 to 122 fields: 12/12 exact match. A first attempt that included Dropdown types scored 5/12 and was discarded.",
+  "inDegree": "NOT SUPPLIED. The same approach scored only 4/9 against catalogue controls and under-counted badly (Asset 0 vs 13, TaskGroup 0 vs 11, BudgetTemplate 0 vs 14). The FK type vocabulary does not consistently name its target object, and the global-only capture is probably missing FK columns. Left null rather than published wrong - compute it from the existing FK graph in docs/mindmap/, which already has the edges.",
+  "physicalTable": "NOT OBSERVED. ShowObjectDetails.jsp gives the CamelCase object name, never the PG table name; the catalogue's Table(s) column comes from _lucernex_objects_summary.txt, which does not cover these six. physicalTable_conventional is a mechanical CamelCase-to-snake_case guess and MUST be verified before use.",
+  "spine": "Applied mechanically per the catalogue's own definition - entity_scoped if the object carries a ProjectEntityID FK, firm_global otherwise."
+ },
+ "_notableFinding": "The three PunchList child tables reference their parent through a column typed 'Text' (PunchListID / PunchListTaskID), not a typed object FK. Any FK-graph built by matching type strings will therefore show the Punch List family as four disconnected tables with no parent-child edges. That is a graph artefact, not the real shape.",
+ "rows": [
+  {
+   "object": "ChangeManage",
+   "sqlTableID": "2460",
+   "uiName": "Change Manage",
+   "physicalTable_conventional": "change_manage",
+   "physicalTable_observed": null,
+   "fields": 1,
+   "module": "unclassified",
+   "spine": "entity_scoped",
+   "outDegree": 1,
+   "outDegreeFields": [
+    "ProjectEntityID"
+   ],
+   "inDegree": null,
+   "purpose": "Single-field stub exposing only ProjectEntityID at the global layer; the object model viewer reveals no body, so its function cannot be determined from BBW.",
+   "purposeEvidence": "Inferred",
+   "outOfScopeReason": null
+  },
+  {
+   "object": "VirtualTemplateMember",
+   "sqlTableID": "3004",
+   "uiName": "Member Template",
+   "physicalTable_conventional": "virtual_template_member",
+   "physicalTable_observed": null,
+   "fields": 1,
+   "module": "platform-tenancy",
+   "spine": "entity_scoped",
+   "outDegree": 1,
+   "outDegreeFields": [
+    "ProjectEntityID"
+   ],
+   "inDegree": null,
+   "purpose": "The Virtual*Template read-only projection for member/committee templates, sibling to VirtualTemplateBudget, VirtualTemplateFolder and VirtualTemplateSchedule \u2014 but exposing only ProjectEntityID at the global layer, unlike those three which carry 16-17 fields.",
+   "purposeEvidence": "Inferred",
+   "outOfScopeReason": null
+  },
+  {
+   "object": "PunchList",
+   "sqlTableID": "3197",
+   "uiName": "Punch List",
+   "physicalTable_conventional": "punch_list",
+   "physicalTable_observed": null,
+   "fields": 10,
+   "module": "out-of-scope",
+   "spine": "entity_scoped",
+   "outDegree": 2,
+   "outDegreeFields": [
+    "AssigneeMemberIDList",
+    "ProjectEntityID"
+   ],
+   "inDegree": null,
+   "purpose": "A snagging/defect list raised against an entity \u2014 named list with status, due date, assignees, and a running completed-vs-total task count.",
+   "purposeEvidence": "Derived from the observed field list",
+   "outOfScopeReason": "Construction snagging. Zero coverage across all 38 approved BRDs (punch/snag/defect list/site survey all return zero files, grep verified against a control term). Two BRDs place construction management in the legacy ASG Edge product, which ASG Edge+ integrates with and migrates away from - so this is explicitly another product's scope, not merely unrequested. Corroborated independently by the field list itself - see _twoIndependentLinesOfEvidence."
+  },
+  {
+   "object": "PunchListAssignee",
+   "sqlTableID": "3198",
+   "uiName": "Punch List Assignee",
+   "physicalTable_conventional": "punch_list_assignee",
+   "physicalTable_observed": null,
+   "fields": 5,
+   "module": "out-of-scope",
+   "spine": "firm_global",
+   "outDegree": 1,
+   "outDegreeFields": [
+    "MemberID"
+   ],
+   "inDegree": null,
+   "purpose": "Assignment row attaching a Member, or a Job Title / User Class rule, to a PunchList.",
+   "purposeEvidence": "Derived from the observed field list",
+   "outOfScopeReason": "Construction snagging. Zero coverage across all 38 approved BRDs (punch/snag/defect list/site survey all return zero files, grep verified against a control term). Two BRDs place construction management in the legacy ASG Edge product, which ASG Edge+ integrates with and migrates away from - so this is explicitly another product's scope, not merely unrequested. Corroborated independently by the field list itself - see _twoIndependentLinesOfEvidence."
+  },
+  {
+   "object": "PunchListTask",
+   "sqlTableID": "3199",
+   "uiName": "Punch List Task",
+   "physicalTable_conventional": "punch_list_task",
+   "physicalTable_observed": null,
+   "fields": 13,
+   "module": "out-of-scope",
+   "spine": "firm_global",
+   "outDegree": 1,
+   "outDegreeFields": [
+    "AssigneeMemberIDList"
+   ],
+   "inDegree": null,
+   "purpose": "An individual defect item on a punch list \u2014 status, due date, notes, document attachments, and optional GPS latitude/longitude, i.e. a geotagged field-inspection item.",
+   "purposeEvidence": "Derived from the observed field list",
+   "outOfScopeReason": "Construction snagging. Zero coverage across all 38 approved BRDs (punch/snag/defect list/site survey all return zero files, grep verified against a control term). Two BRDs place construction management in the legacy ASG Edge product, which ASG Edge+ integrates with and migrates away from - so this is explicitly another product's scope, not merely unrequested. Corroborated independently by the field list itself - see _twoIndependentLinesOfEvidence."
+  },
+  {
+   "object": "PunchListTaskAssignee",
+   "sqlTableID": "3200",
+   "uiName": "Punch List Task Assignee",
+   "physicalTable_conventional": "punch_list_task_assignee",
+   "physicalTable_observed": null,
+   "fields": 5,
+   "module": "out-of-scope",
+   "spine": "firm_global",
+   "outDegree": 1,
+   "outDegreeFields": [
+    "MemberID"
+   ],
+   "inDegree": null,
+   "purpose": "Assignment row attaching a Member, or a Job Title / User Class rule, to a single PunchListTask.",
+   "purposeEvidence": "Derived from the observed field list",
+   "outOfScopeReason": "Construction snagging. Zero coverage across all 38 approved BRDs (punch/snag/defect list/site survey all return zero files, grep verified against a control term). Two BRDs place construction management in the legacy ASG Edge product, which ASG Edge+ integrates with and migrates away from - so this is explicitly another product's scope, not merely unrequested. Corroborated independently by the field list itself - see _twoIndependentLinesOfEvidence."
+  }
+ ],
+ "_twoIndependentLinesOfEvidence": "The out-of-scope call on the Punch List family rests on TWO independent lines of evidence that agree: (1) zero coverage across all 38 approved BRDs, with two BRDs placing construction management in the legacy ASG Edge product; and (2) the field list alone - PunchListTask carries LatitudeDegrees, LongitudeDegrees, HasLocationCoordinates and DocumentIDList, i.e. geotagged defect items with photo attachments, which is mobile field inspection. Neither argument depends on the other."
+}

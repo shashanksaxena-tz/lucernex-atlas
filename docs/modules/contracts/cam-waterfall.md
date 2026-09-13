@@ -37,7 +37,7 @@ The tool classifies every field in the product four ways. Run against **All Tabl
 **Derived:** computed fields total **2,226 — 32% of the product**. User-editable is 49%. The
 remaining ~19% is neither: keys, audit stamps and system columns.
 
-This **supersedes inference**. [`computed-vs-input-fields.md`](computed-vs-input-fields.md)
+This **supersedes inference**. [`computed-vs-input-fields.md`](../accounting/computed-vs-input-fields.md)
 classified 666 accounting fields INPUT/COMPUTED by reasoning from type names such as
 `sTYPE_MONEY_MATH_OPERATION`. That work was sound and its conclusions hold, but this tool is the
 vendor's own answer for **all 7,047 fields** and should be treated as authoritative wherever the two

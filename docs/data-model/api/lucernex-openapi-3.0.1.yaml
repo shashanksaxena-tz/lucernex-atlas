@@ -1,0 +1,5139 @@
+openapi: 3.0.1
+info:
+  title: Lucernex API
+  description: Lucernex Restfull API
+  version: 1.0.0
+servers:
+- url: https://train-bbw.lucernex.com/rest
+tags:
+- name: /adapter-config
+  description: "Admin: manage lease-abstraction adapter mapping config files"
+- name: /atlas-api
+  description: Fetch and import lease records from the Atlas (RocketClub) API
+- name: /audit
+  description: Audit trail queries
+- name: /businessObject
+  description: BusinessObject operations
+- name: /firm
+  description: Bulk record imports
+- name: /i18n
+  description: i18n resource bundle
+- name: /membership
+  description: membership resource bundle
+- name: /task
+  description: Task operations
+- name: /tasks
+  description: Tasks operations
+- name: /vendor-lease
+  description: Import vendor-abstracted lease data via the adapter transformation
+    pipeline
+- name: "/workFlowStep/{WorkFlowStepID}"
+  description: WorkFlowStep operations
+paths:
+  /adapter-config/{vendorId}/{fileName}:
+    get:
+      tags:
+      - /adapter-config
+      summary: Download the effective config file for a vendor entity
+      description: Returns the JSON content of the effective config file. External
+        filesystem override is served if present; otherwise the classpath default
+        is returned. Requires PS/LX admin.
+      operationId: getConfigFile
+      parameters:
+      - name: vendorId
+        in: path
+        description: "Vendor ID (e.g. atlas, inhouse)"
+        required: true
+        schema:
+          type: string
+      - name: fileName
+        in: path
+        description: Config file name (e.g. facility.json)
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: JSON config file content
+        "400":
+          description: Invalid vendorId or fileName
+        "403":
+          description: Insufficient privileges
+        "404":
+          description: Config file not found
+    put:
+      tags:
+      - /adapter-config
+      summary: Upload an external override for a vendor config file
+      description: "Saves the request body as an external filesystem override, which\
+        \ takes precedence over the classpath default on the next import without requiring\
+        \ a WAR redeployment. The body must be valid JSON. Requires PS/LX admin."
+      operationId: putConfigFile
+      parameters:
+      - name: vendorId
+        in: path
+        description: "Vendor ID (e.g. atlas, inhouse)"
+        required: true
+        schema:
+          type: string
+      - name: fileName
+        in: path
+        description: Config file name (e.g. facility.json)
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: string
+      responses:
+        "200":
+          description: Config file saved
+        "400":
+          description: "Invalid JSON, vendorId, or fileName"
+        "403":
+          description: Insufficient privileges
+        "409":
+          description: No external config directory configured (set iwms.adapter.config.dir
+            or LxConfigDir)
+    delete:
+      tags:
+      - /adapter-config
+      summary: "Remove an external config override, reverting to the classpath default"
+      description: Deletes the external filesystem override for the specified file.
+        After deletion the classpath default bundled in the WAR is used again. Requires
+        PS/LX admin.
+      operationId: deleteConfigFile
+      parameters:
+      - name: vendorId
+        in: path
+        description: "Vendor ID (e.g. atlas, inhouse)"
+        required: true
+        schema:
+          type: string
+      - name: fileName
+        in: path
+        description: Config file name (e.g. facility.json)
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: External override deleted
+        "400":
+          description: Invalid vendorId or fileName
+        "403":
+          description: Insufficient privileges
+        "404":
+          description: No external override exists for this file
+  /adapter-config/firms/{firmId}/{vendorId}/{fileName}:
+    get:
+      tags:
+      - /adapter-config
+      summary: Download the effective firm-specific config file
+      description: Returns the JSON content of the config file resolved for the given
+        tenant. Firm-specific external override is served first; then common external;
+        then classpath default. X-Config-Source header indicates which tier was used.
+        Requires PS/LX admin.
+      operationId: getFirmConfigFile
+      parameters:
+      - name: firmId
+        in: path
+        description: Firm ID (positive integer)
+        required: true
+        schema:
+          type: string
+      - name: vendorId
+        in: path
+        description: "Vendor ID (e.g. atlas, inhouse)"
+        required: true
+        schema:
+          type: string
+      - name: fileName
+        in: path
+        description: Config file name (e.g. facility.json)
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: JSON config file content
+        "400":
+          description: "Invalid firmId, vendorId, or fileName"
+        "403":
+          description: Insufficient privileges
+        "404":
+          description: Config file not found
+    put:
+      tags:
+      - /adapter-config
+      summary: Upload a firm-specific config override
+      description: Saves the request body as a firm-specific external filesystem override
+        that takes precedence over both the common external override and the classpath
+        default for the given tenant. The body must be valid JSON. Requires PS/LX
+        admin.
+      operationId: putFirmConfigFile
+      parameters:
+      - name: firmId
+        in: path
+        description: Firm ID (positive integer)
+        required: true
+        schema:
+          type: string
+      - name: vendorId
+        in: path
+        description: "Vendor ID (e.g. atlas, inhouse)"
+        required: true
+        schema:
+          type: string
+      - name: fileName
+        in: path
+        description: Config file name (e.g. facility.json)
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: string
+      responses:
+        "200":
+          description: Firm config file saved
+        "400":
+          description: "Invalid JSON, firmId, vendorId, or fileName"
+        "403":
+          description: Insufficient privileges
+        "409":
+          description: No external config directory configured
+    delete:
+      tags:
+      - /adapter-config
+      summary: Remove a firm-specific config override
+      description: Deletes the firm-specific external filesystem override for the
+        specified file. After deletion the common external override (if present) or
+        the classpath default is used for this tenant. Requires PS/LX admin.
+      operationId: deleteFirmConfigFile
+      parameters:
+      - name: firmId
+        in: path
+        description: Firm ID (positive integer)
+        required: true
+        schema:
+          type: string
+      - name: vendorId
+        in: path
+        description: "Vendor ID (e.g. atlas, inhouse)"
+        required: true
+        schema:
+          type: string
+      - name: fileName
+        in: path
+        description: Config file name (e.g. facility.json)
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Firm override deleted
+        "400":
+          description: "Invalid firmId, vendorId, or fileName"
+        "403":
+          description: Insufficient privileges
+        "404":
+          description: No firm override exists for this file
+  /adapter-config/{vendorId}/files:
+    get:
+      tags:
+      - /adapter-config
+      summary: List config files for a vendor
+      description: "Returns metadata for each expected config file, indicating whether\
+        \ an external filesystem override is active or the classpath default is in\
+        \ use. Requires PS/LX admin."
+      operationId: listFiles
+      parameters:
+      - name: vendorId
+        in: path
+        description: "Vendor ID (e.g. atlas, inhouse)"
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Array of file-metadata objects
+        "400":
+          description: Invalid vendorId
+        "403":
+          description: Insufficient privileges
+        "404":
+          description: Vendor not registered
+  /adapter-config/firms/{firmId}/{vendorId}/files:
+    get:
+      tags:
+      - /adapter-config
+      summary: List firm-specific config files for a vendor
+      description: "Returns metadata for each expected config file, indicating whether\
+        \ a firm-specific external override, a common external override, or the classpath\
+        \ default is in use for the given tenant. Requires PS/LX admin."
+      operationId: listFirmFiles
+      parameters:
+      - name: firmId
+        in: path
+        description: Firm ID (positive integer)
+        required: true
+        schema:
+          type: string
+      - name: vendorId
+        in: path
+        description: "Vendor ID (e.g. atlas, inhouse)"
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Array of file-metadata objects
+        "400":
+          description: Invalid firmId or vendorId
+        "403":
+          description: Insufficient privileges
+        "404":
+          description: Vendor not registered
+  /adapter-config/vendors:
+    get:
+      tags:
+      - /adapter-config
+      summary: List registered vendor adapter IDs
+      description: "Returns the vendor IDs of all adapters registered at startup (e.g.\
+        \ \"atlas\", \"inhouse\"). Requires PS/LX admin."
+      operationId: listVendors
+      responses:
+        "200":
+          description: Array of vendor ID strings
+          content:
+            application/json:
+              schema:
+                type: array
+                example:
+                - atlas
+                - inhouse
+        "403":
+          description: Insufficient privileges
+  /atlas-api/import/{leaseId}:
+    post:
+      tags:
+      - /atlas-api
+      summary: Fetch a single lease from the Atlas API and import it into iWMS
+      description: "Fetches one lease by its Atlas ID, transforms it, and persists\
+        \ it."
+      operationId: importOne
+      parameters:
+      - name: Authorization
+        in: header
+        description: Bearer <token> for the LX-IWMS API
+        required: true
+        schema:
+          type: string
+      - name: leaseId
+        in: path
+        description: Atlas lease integer ID
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: allowUpdate
+        in: query
+        schema:
+          type: boolean
+          default: true
+      - name: dryRun
+        in: query
+        schema:
+          type: boolean
+          default: false
+      responses:
+        "200":
+          description: "{ imported: 1, failed: 0, results: [...] }"
+        "400":
+          description: Missing or invalid Authorization header
+        "401":
+          description: Not authenticated to iWMS
+        "502":
+          description: Atlas API call failed
+  /atlas-api/import/{leaseId}/async:
+    post:
+      tags:
+      - /atlas-api
+      summary: Schedule asynchronous Atlas lease import
+      description: "Queues a background task that fetches, transforms, and persists\
+        \ one Atlas lease."
+      operationId: importOneAsync
+      parameters:
+      - name: Authorization
+        in: header
+        description: Bearer <token> for the LX-IWMS API
+        schema:
+          type: string
+      - name: leaseId
+        in: path
+        description: Atlas lease integer ID
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: createNew
+        in: query
+        schema:
+          type: boolean
+          default: true
+      - name: persist
+        in: query
+        schema:
+          type: boolean
+          default: true
+      - name: existingContractLxID
+        in: query
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: Task scheduled
+        "400":
+          description: Invalid request
+        "401":
+          description: Not authenticated
+  /atlas-api/contracts:
+    get:
+      tags:
+      - /atlas-api
+      summary: List active contracts for Atlas update-existing import
+      description: Returns active contracts visible to the current user for selecting
+        an existing contract during Atlas lease import.
+      operationId: listContracts
+      parameters:
+      - name: q
+        in: query
+        schema:
+          type: string
+      - name: start
+        in: query
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: limit
+        in: query
+        schema:
+          type: integer
+          format: int32
+          default: 50
+      - name: filter
+        in: query
+        schema:
+          type: string
+      - name: sort
+        in: query
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Accessible contract list
+        "401":
+          description: Not authenticated to iWMS
+        "403":
+          description: AI Lease Abstraction access not granted
+  /atlas-api/leases:
+    get:
+      tags:
+      - /atlas-api
+      summary: List all leases from the Atlas API
+      description: Proxies the Atlas lease list endpoint and returns the raw JSON
+        for display in the Your Leases grid. Requires AI Lease Abstraction access.
+      operationId: listLeases
+      responses:
+        "200":
+          description: Raw Atlas API lease list
+        "401":
+          description: Not authenticated to iWMS
+        "403":
+          description: AI Lease Abstraction access not granted
+        "502":
+          description: Atlas API call failed
+  /atlas-api/import/events/{taskName}:
+    get:
+      tags:
+      - /atlas-api
+      summary: Stream Atlas import progress events
+      description: SSE stream for Atlas lease import task updates.
+      operationId: streamImportEvents
+      parameters:
+      - name: taskName
+        in: path
+        description: Task name returned from async start endpoint
+        required: true
+        schema:
+          type: string
+      responses:
+        default:
+          description: default response
+          content:
+            text/event-stream: {}
+  /atlas-api/sync:
+    post:
+      tags:
+      - /atlas-api
+      summary: Fetch all leases from the Atlas API and import them into iWMS
+      description: "Calls the Atlas Lease Abstraction API, transforms each lease through\
+        \ the adapter pipeline, and persists the result. Requires an Atlas API bearer\
+        \ token in the Authorization header."
+      operationId: syncAll
+      parameters:
+      - name: Authorization
+        in: header
+        description: Bearer <token> for the LX-IWMS API
+        required: true
+        schema:
+          type: string
+      - name: allowUpdate
+        in: query
+        schema:
+          type: boolean
+          default: false
+      - name: dryRun
+        in: query
+        schema:
+          type: boolean
+          default: false
+      responses:
+        "200":
+          description: "{ imported: int, failed: int, results: [...] }"
+        "400":
+          description: Missing or invalid Authorization header
+        "401":
+          description: Not authenticated to iWMS
+        "502":
+          description: Atlas API call failed
+  /audit/auditInfo:
+    get:
+      tags:
+      - /audit
+      summary: Fetch audit information
+      operationId: fetchAuditInfo
+      parameters:
+      - name: loginName
+        in: query
+        schema:
+          type: string
+      - name: tableName
+        in: query
+        schema:
+          type: string
+      - name: objectID
+        in: query
+        schema:
+          type: integer
+          format: int32
+      - name: projectEntityID
+        in: query
+        schema:
+          type: integer
+          format: int32
+      - name: beginDate
+        in: query
+        schema:
+          type: string
+      - name: endDate
+        in: query
+        schema:
+          type: string
+      - name: accessorName
+        in: query
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Audit information retrieved successfully
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/AuditInfo"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuditInfo"
+        "404":
+          description: ProjectEntity not found
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/ExtResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExtResponse"
+        "500":
+          description: Internal server error
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/ExtResponse"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExtResponse"
+  /audit/{maxAuditTableID}:
+    get:
+      tags:
+      - /audit
+      summary: Query table audit trail
+      operationId: fetchChanges
+      parameters:
+      - name: maxAuditTableID
+        in: path
+        description: AuditTable max ID
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: sortAsc
+        in: query
+        description: Sort by time of change in ascending order
+        schema:
+          type: boolean
+          default: true
+      - name: synchronous
+        in: query
+        description: Execute query synchronous or via Quartz job
+        schema:
+          type: boolean
+          default: true
+      responses:
+        "200":
+          description: Audit trail report
+          content:
+            application/json:
+              schema:
+                type: string
+        "404":
+          description: Specified maxAuditTableID not found
+          content:
+            application/json:
+              schema:
+                type: string
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExtResponse"
+  /audit:
+    get:
+      tags:
+      - /audit
+      summary: Query table audit trail
+      operationId: fetchFieldChanges
+      parameters:
+      - name: objectType
+        in: query
+        description: Record type
+        required: true
+        schema:
+          type: string
+      - name: lxID
+        in: query
+        description: Primary Key
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: lastModified
+        in: query
+        description: Last modified timestamp
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Audit trail report
+          content:
+            application/json:
+              schema:
+                type: string
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExtResponse"
+  /audit/maxAuditTableID:
+    get:
+      tags:
+      - /audit
+      summary: Query max(AuditTableID)
+      operationId: fetchMaxAuditTrailID
+      responses:
+        "200":
+          description: Value of max(AuditTableID)
+          content:
+            application/json:
+              schema:
+                type: string
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExtResponse"
+  /audit/{peid}/{lastModified}:
+    get:
+      tags:
+      - /audit
+      summary: Query audit table for record groups and types that changed for an identified
+        ProjectEntity
+      operationId: fetchProjectEntityChangedRecords
+      parameters:
+      - name: peid
+        in: path
+        description: ProjectEntity ID
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: lastModified
+        in: path
+        description: Last modified timestamp n ISO 8601 format
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Audit trail report
+          content:
+            application/json:
+              schema:
+                type: string
+        "404":
+          description: ProjectEntity not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExtResponse"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExtResponse"
+  /boList:
+    get:
+      operationId: fetchRecords
+      parameters:
+      - name: showUpdateAssignment
+        in: query
+        schema:
+          type: boolean
+          default: true
+      - name: projectEntityID
+        in: query
+        schema:
+          type: integer
+          format: int32
+          default: -1
+      - name: inPanel
+        in: query
+        schema:
+          type: boolean
+          default: true
+      - name: ajaxList
+        in: query
+        schema:
+          type: boolean
+          default: true
+      - name: ajax
+        in: query
+        schema:
+          type: boolean
+          default: true
+      - name: popupList
+        in: query
+        schema:
+          type: boolean
+          default: true
+      - name: fdName
+        in: query
+        schema:
+          type: string
+          default: ""
+      - name: searchTextKey
+        in: query
+        schema:
+          type: string
+          default: ""
+      - name: BOType
+        in: query
+        schema:
+          type: string
+          default: ""
+      - name: volumnSearchText
+        in: query
+        schema:
+          type: string
+          default: ""
+      - name: page
+        in: query
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: start
+        in: query
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: limit
+        in: query
+        schema:
+          type: integer
+          format: int32
+          default: 10
+      - name: filter
+        in: query
+        schema:
+          type: string
+          default: ""
+      - name: sort
+        in: query
+        schema:
+          type: string
+          default: ""
+      responses:
+        default:
+          description: default response
+          content:
+            application/json: {}
+    post:
+      operationId: addAllMembers
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                fdName:
+                  type: string
+                searchTextkey:
+                  type: string
+                volumnSearchText:
+                  type: string
+                filter:
+                  type: string
+                BOType:
+                  type: string
+                start:
+                  type: string
+                limit:
+                  type: string
+      responses:
+        default:
+          description: default response
+          content:
+            application/json: {}
+  /budgetViewAssignments/{budgetViewID}:
+    get:
+      operationId: getBudgetViewAssignments
+      parameters:
+      - name: budgetViewID
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: sort
+        in: query
+        schema:
+          type: string
+      - name: start
+        in: query
+        schema:
+          type: integer
+          format: int32
+      - name: limit
+        in: query
+        schema:
+          type: integer
+          format: int32
+      responses:
+        default:
+          description: default response
+          content:
+            application/json: {}
+  /businessObject/{objectType}:
+    get:
+      tags:
+      - /businessObject
+      summary: Find set of BusinessObjectLinks
+      description: Find set of BusinessObjectLinks of the specified record type
+      operationId: fetchBusinessObjectLinks
+      parameters:
+      - name: maxAuditTableID
+        in: query
+        description: AuditTable ID
+        schema:
+          type: integer
+          format: int64
+      - name: lastModifiedValue
+        in: query
+        description: Last modified timestamp in ISO 8601 format
+        schema:
+          type: string
+      - name: fields
+        in: query
+        description: "Comma separated field names (href, lxid, name, objecttype)"
+        schema:
+          type: string
+      - name: datamart
+        in: query
+        description: Is query from datamart?
+        schema:
+          type: boolean
+          default: false
+      responses:
+        "200":
+          description: Found record(s)
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/BusinessObjectLinks"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BusinessObjectLinks"
+        "500":
+          description: Internal server error
+    put:
+      tags:
+      - /businessObject
+      summary: "Updates {objectType} record"
+      operationId: update
+      requestBody:
+        description: Record to update
+        content:
+          application/xml:
+            schema:
+              $ref: "#/components/schemas/BusinessObject"
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BusinessObject"
+        required: true
+      responses:
+        "200":
+          description: Record updated
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/ImportResults"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ImportResults"
+        "404":
+          description: Record not found
+        "500":
+          description: Internal server error
+    post:
+      tags:
+      - /businessObject
+      summary: "Creates/Updates {objectType} record"
+      operationId: create
+      parameters:
+      - name: allowUpdate
+        in: query
+        description: Allow update of existing record
+        schema:
+          type: boolean
+          default: false
+      requestBody:
+        description: Record to create
+        content:
+          application/xml:
+            schema:
+              $ref: "#/components/schemas/BusinessObject"
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BusinessObject"
+        required: true
+      responses:
+        "200":
+          description: Created/updated record
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/ImportResults"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ImportResults"
+        "400":
+          description: Bad request
+        "500":
+          description: Internal server error
+  /businessObject/{parentObjectType}/{parentID}:
+    post:
+      tags:
+      - /businessObject
+      operationId: createChild
+      parameters:
+      - name: parentObjectType
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: parentID
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/xml:
+            schema:
+              $ref: "#/components/schemas/BusinessObject"
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BusinessObject"
+      responses:
+        default:
+          description: default response
+          content:
+            application/xml: {}
+            application/json: {}
+  /businessObject/{objectType}/clientid/{clientID}:
+    get:
+      tags:
+      - /businessObject
+      summary: "Find {objectType} record by clientID"
+      description: "Finds the {objectType} record identified by the specified client\
+        \ defined identifier string"
+      operationId: findByClientID
+      parameters:
+      - name: clientID
+        in: path
+        description: Unique client ID
+        required: true
+        schema:
+          type: string
+      - name: deep
+        in: query
+        description: Deep/shallow serialization
+        schema:
+          type: boolean
+          default: false
+      - name: wantClientID
+        in: query
+        description: Want clientID attribute
+        schema:
+          type: boolean
+          default: true
+      - name: wantLxID
+        in: query
+        description: Want lxID attribute
+        schema:
+          type: boolean
+          default: false
+      - name: includes
+        in: query
+        description: Includes pattern
+        schema:
+          type: string
+      - name: excludes
+        in: query
+        description: Excludes pattern
+        schema:
+          type: string
+      - name: download
+        in: query
+        description: Download file
+        schema:
+          type: boolean
+          default: false
+      responses:
+        "200":
+          description: Found record
+        "404":
+          description: Record not found
+        "500":
+          description: Internal server error
+    delete:
+      tags:
+      - /businessObject
+      summary: "Delete {objectType} record by clientID"
+      description: "Deletes the {objectType} record identified by the specified client\
+        \ defined identifier string"
+      operationId: deleteByClientID
+      parameters:
+      - name: clientID
+        in: path
+        description: Primary Key
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Record deleted
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/ImportResults"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ImportResults"
+        "404":
+          description: Record not found
+        "500":
+          description: Internal server error
+  /businessObject/{objectType}/lxid/{lxID}:
+    get:
+      tags:
+      - /businessObject
+      summary: "Find {objectType} record by lxID"
+      description: "Finds the {objectType} record identified by the specified integer\
+        \ primary key value"
+      operationId: findByLxID
+      parameters:
+      - name: lxID
+        in: path
+        description: Primary Key
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: deep
+        in: query
+        description: Deep/shallow serialization
+        schema:
+          type: boolean
+          default: false
+      - name: wantClientID
+        in: query
+        description: Want clientID attribute
+        schema:
+          type: boolean
+          default: false
+      - name: wantLxID
+        in: query
+        description: Want lxID attribute
+        schema:
+          type: boolean
+          default: true
+      - name: includes
+        in: query
+        description: Includes pattern
+        schema:
+          type: string
+      - name: excludes
+        in: query
+        description: Excludes pattern
+        schema:
+          type: string
+      - name: download
+        in: query
+        description: Download file
+        schema:
+          type: boolean
+          default: false
+      responses:
+        "200":
+          description: Found record
+        "404":
+          description: Record not found
+        "500":
+          description: Internal server error
+    delete:
+      tags:
+      - /businessObject
+      summary: "Delete {objectType} record by lxID"
+      description: "Deletes the {objectType} record identified by the specified integer\
+        \ primary key value"
+      operationId: deleteByLxID
+      parameters:
+      - name: lxID
+        in: path
+        description: Primary Key
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: Record deleted
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/ImportResults"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ImportResults"
+        "404":
+          description: Record not found
+        "500":
+          description: Internal server error
+  /businessObject/{objectType}/details:
+    get:
+      tags:
+      - /businessObject
+      summary: "Find set of {objectType} records via FIQL"
+      description: "Find set of {objectType} records which satisfy the query criteria\
+        \ as specified by the 'fiql' argument. Additionally the set of fields provided\
+        \ in the response can be limited to those defined by the 'fields' argument."
+      operationId: fetchBusinessObjectDetails
+      parameters:
+      - name: fiql
+        in: query
+        description: Record filter
+        schema:
+          type: string
+      - name: fields
+        in: query
+        description: Comma separated field names
+        required: true
+        schema:
+          type: string
+      - name: $skip
+        in: query
+        description: Number of records to skip
+        schema:
+          type: integer
+          format: int32
+      - name: $top
+        in: query
+        description: Limit on number of records returned
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: Founds record
+        "400":
+          description: Bad request
+        "413":
+          description: Too many records returned
+        "500":
+          description: Internal server error
+  /cluster/asyncTasks:
+    get:
+      summary: Query async tasks
+      operationId: queryAsyncTasks
+      responses:
+        "200":
+          description: AsyncTask records
+        "400":
+          description: Hazelcast disabled
+        "500":
+          description: Internal server error
+    delete:
+      summary: Evict old async tasks
+      operationId: evictOldAsyncTasks
+      parameters:
+      - name: minutes
+        in: query
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: Old AsyncTask records evicted
+  /cluster/scheduledJob/id/{jobID}:
+    get:
+      summary: Query scheduled job state
+      description: Query scheduled job state by ID in the execution queue
+      operationId: fetchScheduledJobByID
+      parameters:
+      - name: jobID
+        in: path
+        description: Primary Key
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: Success
+        "400":
+          description: Cluster node is not the job scheduler
+        "404":
+          description: Specified job is not queued for execution
+        "500":
+          description: Internal server error
+  /cluster/scheduledJob/name/{name}:
+    get:
+      summary: Query scheduled job state
+      description: Query scheduled job state by name in the execution queue
+      operationId: fetchScheduledJobByName
+      parameters:
+      - name: name
+        in: path
+        description: Schedule Name
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Success
+        "400":
+          description: Cluster node is not the job scheduler
+        "404":
+          description: Specified job is not queued for execution
+        "500":
+          description: Internal server error
+  /cluster/scheduledJobs:
+    get:
+      operationId: fetchScheduledJobs
+      parameters:
+      - name: page
+        in: query
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: start
+        in: query
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: limit
+        in: query
+        schema:
+          type: integer
+          format: int32
+          default: 10
+      - name: filter
+        in: query
+        schema:
+          type: string
+          default: ""
+      - name: sort
+        in: query
+        schema:
+          type: string
+          default: ""
+      responses:
+        default:
+          description: default response
+          content:
+            application/json: {}
+            application/xml: {}
+  /cluster/members:
+    get:
+      summary: Finds all cluster member
+      description: Finds all hazelcast members
+      operationId: findMembers
+      responses:
+        "200":
+          description: Found members
+        "400":
+          description: Hazelcast disabled or has no members
+        "500":
+          description: Internal server error
+  /cluster/asyncTask/{name}:
+    get:
+      summary: Query async task
+      operationId: queryAsyncTask
+      parameters:
+      - name: name
+        in: path
+        description: Task identifier
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: AsyncTask record
+        "400":
+          description: Hazelcast not enabled
+        "404":
+          description: Task not found
+        "500":
+          description: Internal server error
+  /cluster/stats:
+    get:
+      summary: Query cluster statistics
+      description: Query cluster statistics
+      operationId: queryStats
+      responses:
+        "200":
+          description: Reported cluster stats
+        "400":
+          description: Hazelcast disabled
+        "500":
+          description: Internal server error
+  /cluster/rejoin:
+    get:
+      summary: Rejoin the hazelcast grid
+      description: Rejoin the hazelcast grid
+      operationId: rejoin
+      responses:
+        "200":
+          description: Rejoined the hazelcast grid
+        "400":
+          description: Hazelcast disabled or has no members
+        "500":
+          description: Internal server error
+  /cluster/reportBuilder:
+    post:
+      operationId: removeReportBuilder
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              type: object
+              properties:
+                RemoveByJobScheduledID:
+                  type: integer
+                  format: int32
+      responses:
+        default:
+          description: default response
+          content:
+            application/json: {}
+            application/xml: {}
+  /cluster/scheduledJob/{jobID}:
+    delete:
+      summary: Unschedule/cancel an identified job
+      operationId: unscheduleJob
+      parameters:
+      - name: jobID
+        in: path
+        description: Primary Key
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: cancel
+        in: query
+        description: should we just cancel the currently executing scheduled job vs
+          unschedule future executions
+        schema:
+          type: boolean
+          default: false
+      responses:
+        "200":
+          description: Success
+        "400":
+          description: Hazelcast clustering is disabled or not the job scheduler
+        "404":
+          description: Specified job is not queued for execution
+        "500":
+          description: Internal server error
+  /cluster/upload:
+    post:
+      operationId: uploadFile
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/MultipartBody"
+      responses:
+        default:
+          description: default response
+          content:
+            application/json: {}
+  /codeTableEntry:
+    put:
+      operationId: update_1
+      requestBody:
+        content:
+          application/xml:
+            schema:
+              $ref: "#/components/schemas/CodeTableEntry"
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CodeTableEntry"
+      responses:
+        default:
+          description: default response
+          content:
+            application/xml: {}
+            application/json: {}
+    post:
+      operationId: create_1
+      requestBody:
+        content:
+          application/xml:
+            schema:
+              $ref: "#/components/schemas/CodeTableEntry"
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CodeTableEntry"
+      responses:
+        default:
+          description: default response
+          content:
+            application/xml: {}
+            application/json: {}
+  /codeTableEntry/{bundleID}/{entryID}:
+    get:
+      operationId: findByPK
+      parameters:
+      - name: bundleID
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: entryID
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        default:
+          description: default response
+          content:
+            application/xml: {}
+            application/json: {}
+    delete:
+      operationId: delete
+      parameters:
+      - name: bundleID
+        in: path
+        description: Code Table Bundle ID
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: entryID
+        in: path
+        description: Code Table Entry ID
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        default:
+          description: default response
+          content:
+            application/xml: {}
+            application/json: {}
+  /deletions:
+    get:
+      operationId: findAll
+      parameters:
+      - name: maxAuditTableID
+        in: query
+        schema:
+          type: integer
+          format: int64
+          default: -1
+      responses:
+        default:
+          description: default response
+          content:
+            '*/*': {}
+  /documents/scheduletask/{taskID}:
+    post:
+      operationId: attachDocumentToScheduleTask
+      parameters:
+      - name: taskID
+        in: path
+        description: Task ID
+        required: true
+        schema:
+          type: integer
+          format: int32
+      requestBody:
+        description: Project Entity to update
+        content:
+          '*/*':
+            schema:
+              type: array
+              items:
+                $ref: "#/components/schemas/Document"
+        required: true
+      responses:
+        default:
+          description: default response
+          content:
+            application/json: {}
+            application/xml: {}
+  /documents/count:
+    get:
+      operationId: count
+      parameters:
+      - name: query
+        in: query
+        schema:
+          type: string
+          default: ""
+      - name: autoIndex
+        in: query
+        schema:
+          type: boolean
+      responses:
+        default:
+          description: default response
+          content:
+            application/json: {}
+            application/xml: {}
+  /documents/indexJob/{objectType}/clientid/{clientID}:
+    post:
+      operationId: createIndexJobForClientID
+      parameters:
+      - name: objectType
+        in: path
+        description: Record type
+        required: true
+        schema:
+          type: string
+      - name: clientID
+        in: path
+        description: Unique client ID
+        required: true
+        schema:
+          type: string
+      responses:
+        default:
+          description: default response
+          content:
+            application/json: {}
+            application/xml: {}
+  /documents/indexJob/{objectType}/lxid/{lxID}:
+    post:
+      operationId: createIndexJobForLxID
+      parameters:
+      - name: objectType
+        in: path
+        description: Record type
+        required: true
+        schema:
+          type: string
+      - name: lxID
+        in: path
+        description: Primary Key
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        default:
+          description: default response
+          content:
+            application/json: {}
+            application/xml: {}
+  /documents/indexJob/peid/{peID}:
+    post:
+      operationId: createIndexJobForPeID
+      parameters:
+      - name: peID
+        in: path
+        description: ProjectEntity ID
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        default:
+          description: default response
+          content:
+            application/json: {}
+            application/xml: {}
+  /documents/ocrJob/{objectType}/clientid/{clientID}:
+    post:
+      operationId: createOCRJobForClientID
+      parameters:
+      - name: objectType
+        in: path
+        description: Record type
+        required: true
+        schema:
+          type: string
+      - name: clientID
+        in: path
+        description: Unique client ID
+        required: true
+        schema:
+          type: string
+      responses:
+        default:
+          description: default response
+          content:
+            application/json: {}
+            application/xml: {}
+  /documents/ocrJob/{objectType}/lxid/{lxID}:
+    post:
+      operationId: createOCRJobForLxID
+      parameters:
+      - name: objectType
+        in: path
+        description: Record type
+        required: true
+        schema:
+          type: string
+      - name: lxID
+        in: path
+        description: Primary Key
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        default:
+          description: default response
+          content:
+            application/json: {}
+            application/xml: {}
+  /documents/ocrJob/peid/{peID}:
+    post:
+      operationId: createOCRJobForPeID
+      parameters:
+      - name: peID
+        in: path
+        description: ProjectEntity ID
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: memberUUID
+        in: path
+        description: Hazelcast member UUID
+        required: true
+        schema:
+          type: string
+      responses:
+        default:
+          description: default response
+          content:
+            application/json: {}
+            application/xml: {}
+  /documents/download/{documentID}:
+    get:
+      operationId: downloadDocument
+      parameters:
+      - name: documentID
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: fileName
+        in: query
+        schema:
+          type: string
+      responses:
+        default:
+          description: default response
+          content:
+            application/pdf: {}
+            application/vnd.ms-excel: {}
+            application/msword: {}
+            image/png: {}
+            image/jpg: {}
+            image/jpeg: {}
+            text/plain: {}
+            text/xml: {}
+  /documents/zipped:
+    post:
+      operationId: downloadDocuments
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: integer
+                format: int32
+      responses:
+        default:
+          description: default response
+          content:
+            application/zip: {}
+            text/plain: {}
+  /documents/expenseDropdowns:
+    get:
+      operationId: getExpenseDropdowns
+      responses:
+        default:
+          description: default response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseEntityObject"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/ResponseEntityObject"
+  /documents/portfolioExpenseDropdowns:
+    get:
+      operationId: getPortfolioExpenseDropdowns
+      parameters:
+      - name: programID
+        in: query
+        schema:
+          type: integer
+          format: int32
+      responses:
+        default:
+          description: default response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseEntityObject"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/ResponseEntityObject"
+  /documents/recoveryDropdowns:
+    get:
+      operationId: getRecoveryDropdowns
+      responses:
+        default:
+          description: default response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseEntityObject"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/ResponseEntityObject"
+  /documents/staleIndex/{objectType}/lxid/{lxID}:
+    get:
+      operationId: indexingNeeded
+      parameters:
+      - name: objectType
+        in: path
+        description: Record type
+        required: true
+        schema:
+          type: string
+      - name: lxID
+        in: path
+        description: Primary Key
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        default:
+          description: default response
+          content:
+            application/json: {}
+            application/xml: {}
+  /documents:
+    get:
+      summary: Search document fields
+      operationId: searchFieldsViaStandardQueryParser
+      parameters:
+      - name: offset
+        in: query
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: limit
+        in: query
+        schema:
+          type: integer
+          format: int32
+          default: 10
+      - name: fields
+        in: query
+        schema:
+          type: string
+          default: ""
+      - name: query
+        in: query
+        schema:
+          type: string
+          default: ""
+      - name: filter
+        in: query
+        schema:
+          type: string
+          default: ""
+      - name: sort
+        in: query
+        schema:
+          type: string
+          default: ""
+      - name: filename
+        in: query
+        schema:
+          type: string
+          default: ""
+      responses:
+        "200":
+          description: Performed requested query
+        "400":
+          description: SOLR search disabled
+        "500":
+          description: Internal server error
+    post:
+      operationId: queryFacet
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              type: object
+              properties:
+                q:
+                  type: string
+                json.facet:
+                  type: string
+      responses:
+        default:
+          description: default response
+          content:
+            application/json: {}
+            application/xml: {}
+  /documents/{objectType}/clientid/{clientID}:
+    get:
+      summary: Search documents via SOLR
+      operationId: searchByRecordTypeAndClientID
+      parameters:
+      - name: objectType
+        in: path
+        description: Record type
+        required: true
+        schema:
+          type: string
+      - name: clientID
+        in: path
+        description: Unique client ID
+        required: true
+        schema:
+          type: string
+      - name: offset
+        in: query
+        description: Record offset for page
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: limit
+        in: query
+        description: Number of record for page
+        schema:
+          type: integer
+          format: int32
+          default: 10
+      - name: fields
+        in: query
+        description: Desired field names
+        schema:
+          type: string
+          default: ""
+      - name: query
+        in: query
+        description: Record query
+        schema:
+          type: string
+          default: ""
+      - name: filter
+        in: query
+        description: Record filter
+        schema:
+          type: string
+          default: ""
+      - name: sort
+        in: query
+        description: Sort records by
+        schema:
+          type: string
+          default: ""
+      responses:
+        "200":
+          description: Performed requested query
+        "400":
+          description: SOLR search disabled
+        "404":
+          description: Unable to find identified ProjectEntity
+        "500":
+          description: Internal server error
+  /documents/{objectType}/lxid/{lxID}:
+    get:
+      summary: Search documents via SOLR
+      operationId: searchByRecordTypeAndLxID
+      parameters:
+      - name: objectType
+        in: path
+        description: Record type
+        required: true
+        schema:
+          type: string
+      - name: lxID
+        in: path
+        description: Primary Key
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: offset
+        in: query
+        description: Record offset for page
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: limit
+        in: query
+        description: Number of record for page
+        schema:
+          type: integer
+          format: int32
+          default: 10
+      - name: fields
+        in: query
+        description: Desired field names
+        schema:
+          type: string
+          default: ""
+      - name: query
+        in: query
+        description: Record query
+        schema:
+          type: string
+          default: ""
+      - name: filter
+        in: query
+        description: Record filter
+        schema:
+          type: string
+          default: ""
+      - name: sort
+        in: query
+        description: Sort records by
+        schema:
+          type: string
+          default: ""
+      responses:
+        "200":
+          description: Performed requested query
+        "400":
+          description: SOLR search disabled
+        "404":
+          description: Unable to find identified ProjectEntity
+        "500":
+          description: Internal server error
+  /documents/dismax:
+    get:
+      summary: Search document fields
+      operationId: searchFieldsViaDisMaxQueryParser
+      parameters:
+      - name: offset
+        in: query
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: limit
+        in: query
+        schema:
+          type: integer
+          format: int32
+          default: 10
+      - name: fields
+        in: query
+        schema:
+          type: string
+          default: ""
+      - name: query
+        in: query
+        schema:
+          type: string
+          default: ""
+      - name: filter
+        in: query
+        schema:
+          type: string
+          default: ""
+      - name: sort
+        in: query
+        schema:
+          type: string
+          default: ""
+      - name: qf
+        in: query
+        schema:
+          type: string
+          default: ""
+      - name: mm
+        in: query
+        schema:
+          type: string
+          default: ""
+      - name: pf
+        in: query
+        schema:
+          type: string
+          default: ""
+      - name: ps
+        in: query
+        schema:
+          type: string
+          default: ""
+      - name: qs
+        in: query
+        schema:
+          type: string
+          default: ""
+      - name: tie
+        in: query
+        schema:
+          type: string
+          default: ""
+      - name: bq
+        in: query
+        schema:
+          type: string
+          default: ""
+      - name: bf
+        in: query
+        schema:
+          type: string
+          default: ""
+      responses:
+        "200":
+          description: Performed requested query
+        "400":
+          description: SOLR search disabled
+        "500":
+          description: Internal server error
+  /entity/search/{searchText}:
+    get:
+      operationId: search
+      parameters:
+      - name: searchText
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: includeSites
+        in: query
+        schema:
+          type: boolean
+          default: true
+      - name: includeProjects
+        in: query
+        schema:
+          type: boolean
+          default: true
+      - name: includeCapProjects
+        in: query
+        schema:
+          type: boolean
+          default: true
+      - name: includeFacilities
+        in: query
+        schema:
+          type: boolean
+          default: true
+      - name: includeLocations
+        in: query
+        schema:
+          type: boolean
+          default: true
+      - name: includeParcels
+        in: query
+        schema:
+          type: boolean
+          default: true
+      - name: includeReContracts
+        in: query
+        schema:
+          type: boolean
+          default: true
+      - name: includeEquipContracts
+        in: query
+        schema:
+          type: boolean
+          default: true
+      - name: includePortfolios
+        in: query
+        schema:
+          type: boolean
+          default: true
+      - name: includeCapPrograms
+        in: query
+        schema:
+          type: boolean
+          default: true
+      - name: programID
+        in: query
+        schema:
+          type: array
+          items:
+            type: integer
+            format: int32
+      - name: regionID
+        in: query
+        schema:
+          type: array
+          items:
+            type: integer
+            format: int32
+      - name: marketID
+        in: query
+        schema:
+          type: array
+          items:
+            type: integer
+            format: int32
+      - name: stateID
+        in: query
+        schema:
+          type: array
+          items:
+            type: integer
+            format: int32
+      - name: country
+        in: query
+        schema:
+          type: array
+          items:
+            type: string
+      - name: city
+        in: query
+        schema:
+          type: array
+          items:
+            type: string
+      - name: postalCode
+        in: query
+        schema:
+          type: array
+          items:
+            type: string
+      responses:
+        default:
+          description: default response
+          content:
+            application/json: {}
+            application/xml: {}
+  /fieldGroup/fields:
+    get:
+      operationId: fetchFields
+      parameters:
+      - name: groupID
+        in: query
+        schema:
+          type: integer
+          format: int32
+      - name: wantGlobals
+        in: query
+        schema:
+          type: boolean
+          default: true
+      - name: wantUDFs
+        in: query
+        schema:
+          type: boolean
+          default: true
+      - name: page
+        in: query
+        schema:
+          type: integer
+          format: int32
+          default: 1
+      - name: start
+        in: query
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: limit
+        in: query
+        schema:
+          type: integer
+          format: int32
+          default: 40
+      - name: filter
+        in: query
+        schema:
+          type: string
+          default: ""
+      - name: sort
+        in: query
+        schema:
+          type: string
+          default: ""
+      responses:
+        default:
+          description: default response
+          content:
+            application/json: {}
+  /fieldGroup/groups:
+    get:
+      operationId: fetchGroups
+      parameters:
+      - name: wantOnlyGlobals
+        in: query
+        schema:
+          type: boolean
+          default: false
+      responses:
+        default:
+          description: default response
+          content:
+            application/json: {}
+  /firm/types:
+    get:
+      tags:
+      - /firm
+      summary: Returns a list of boTypes
+      operationId: getBOTypes
+      parameters:
+      - name: query
+        in: query
+        schema:
+          type: string
+          default: ""
+      - name: wantBase
+        in: query
+        schema:
+          type: boolean
+          default: true
+      - name: wantCodeTables
+        in: query
+        schema:
+          type: boolean
+          default: false
+      - name: wantIssues
+        in: query
+        schema:
+          type: boolean
+          default: false
+      - name: wantClientLists
+        in: query
+        schema:
+          type: boolean
+          default: false
+      responses:
+        "200":
+          description: List of matching boTypes
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/Types"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Types"
+  /firm/roots/cached/{firmID}:
+    get:
+      tags:
+      - /firm
+      summary: Return true if firm is cached
+      operationId: getIsCached
+      parameters:
+      - name: firmID
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        default:
+          description: default response
+          content:
+            application/json: {}
+  /firm/document:
+    post:
+      tags:
+      - /firm
+      summary: Import Document
+      description: Imports a document file to a specified project entity
+      operationId: importDocument
+      parameters:
+      - name: authoredByPersonID
+        in: query
+        schema:
+          type: integer
+          format: int32
+      - name: authorName
+        in: query
+        description: LxID of document author Person
+        schema:
+          type: string
+      - name: folderID
+        in: query
+        description: Name of document author
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: folderPath
+        in: query
+        description: LxID of Folder to receive document
+        schema:
+          type: string
+      - name: documentTypeID
+        in: query
+        description: Document folder path to receive document
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: documentType
+        in: query
+        description: LxID of CodeDocumentType record
+        schema:
+          type: string
+      - name: description
+        in: query
+        description: Short-name of CodeDocumentType record
+        schema:
+          type: string
+      - name: projectEntityID
+        in: query
+        description: Description of document file
+        schema:
+          type: integer
+          format: int32
+      - name: createDate
+        in: query
+        description: PeID of project entity to receive document
+        schema:
+          type: string
+          format: date-time
+      - name: autoCheckin
+        in: query
+        description: When was the document file created
+        schema:
+          type: boolean
+          default: false
+      - name: allowUpdate
+        in: query
+        description: Checkin the document file
+        schema:
+          type: boolean
+          default: true
+      - name: readyForRelease
+        in: query
+        description: Allow future updates to document?
+        schema:
+          type: boolean
+          default: true
+      requestBody:
+        description: Document is ready for release?
+        content:
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/MultipartBody"
+      responses:
+        "200":
+          description: Successful Import
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/DocumentImportResult"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DocumentImportResult"
+        "400":
+          description: Invalid Request
+          content:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/DocumentImportResult"
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DocumentImportResult"
+        "500":
+          description: Internal server error
+  /firm/signature:
+    post:
+      tags:
+      - /firm
+      operationId: importESignature
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/MultipartBody"
+      responses:
+        default:
+          description: default response
+          content:
+            application/json: {}
+  /firm:
+    post:
+      tags:
+      - /firm
+      summary: Import data
+      description: This is a FORM post which can be file upload ('file' form parameter)
+        or XML text ('xml' form parameter)
+      operationId: importFirm
+      parameters:
+      - name: synchronous
+        in: query
+        description: Block until import complete?
+        required: true
+        schema:
+          type: boolean
+          default: false
+      - name: stopOnError
+        in: query
+        description: Stop processing on the 1st error encountered
+        schema:
+          type: boolean
+      responses:
+        "200":
+          description: If synchronous == true
+        "202":
+          description: If synchronous == false
+        "500":
+          description: Internal server error
+  /firm/pin:
+    put:
+      tags:
+      - /firm
+      operationId: updateESignaturePin
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                pin:
+                  type: string
+                pinConfirm:
+                  type: string
+      responses:
+        default:
+          description: default response
+          content:
+            application/json: {}
+  /fiscalPeriod:
+    get:
+      operationId: calculateFiscalPeriod
+      parameters:
+      - name: programID
+        in: query
+        description: Limit to identified Program
+        schema:
+          type: integer
+          format: int32
+      - name: when
+        in: query
+        description: Date to check
+        required: true
+        schema:
+          type: string
+      responses:
+        default:
+          description: default response
+          content:
+            application/json: {}
+            application/xml: {}
+  /guardrails/override/disable:
+    post:
+      summary: Disable the guardrail emergency override (LxAdmin only)
+      operationId: disable
+      responses:
+        "200":
+          description: Override disabled
+        "403":
+          description: Caller is not LxAdmin
+  /guardrails/override/enable:
+    post:
+      summary: Enable the guardrail emergency override (LxAdmin only)
+      operationId: enable
+      parameters:
+      - name: reason
+        in: query
+        schema:
+          type: string
+      - name: durationHours
+        in: query
+        schema:
+          type: integer
+          format: int32
+          default: 4
+      responses:
+        "200":
+          description: Override enabled
+        "400":
+          description: Missing/invalid reason or duration
+        "403":
+          description: Caller is not LxAdmin
+  /guardrails/override/status:
+    get:
+      summary: Get emergency override status for the caller's firm
+      operationId: getStatus
+      responses:
+        "200":
+          description: Returned override status
+  /i18n/currency/{fromCurrency}/{toCurrency}/{value}:
+    get:
+      tags:
+      - /i18n
+      description: Performs currency conversion
+      operationId: convertCurrency
+      parameters:
+      - name: fromCurrency
+        in: path
+        description: Source currency code
+        required: true
+        schema:
+          type: string
+      - name: toCurrency
+        in: path
+        description: Target currency code
+        required: true
+        schema:
+          type: string
+      - name: value
+        in: path
+        description: Currency value to convert
+        required: true
+        schema:
+          $ref: "#/components/schemas/BigDecimalParameter"
+      - name: contractID
+        in: query
+        description: Use Contract exchange rate
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: Successful currency conversion
+          content:
+            text/plain:
+              schema:
+                type: string
+        "404":
+          description: Specified currency or contract not found
+          headers:
+            Content-Location:
+              description: URL of the background task
+              style: simple
+              schema:
+                type: string
+        "500":
+          description: Internal server error
+          content:
+            text/plain:
+              schema:
+                type: string
+  /i18n/currency/{value}:
+    get:
+      tags:
+      - /i18n
+      description: Returns formatted currency value
+      operationId: formatCurrency
+      parameters:
+      - name: value
+        in: path
+        description: Currency value to format
+        required: true
+        schema:
+          $ref: "#/components/schemas/BigDecimalParameter"
+      responses:
+        "200":
+          description: Successful currency formatting
+          content:
+            text/plain:
+              schema:
+                type: string
+        "500":
+          description: Internal server error
+          content:
+            text/plain:
+              schema:
+                type: string
+  /i18n/date/{value}:
+    get:
+      tags:
+      - /i18n
+      summary: Returns formatted date value
+      operationId: formatDate
+      parameters:
+      - name: value
+        in: path
+        description: Date value to format
+        required: true
+        schema:
+          $ref: "#/components/schemas/DateParameter"
+      responses:
+        "200":
+          description: Successful date formatting
+          content:
+            text/plain:
+              schema:
+                type: string
+        "500":
+          description: Internal server error
+          content:
+            text/plain:
+              schema:
+                type: string
+  /i18n/datetime/{value}:
+    get:
+      tags:
+      - /i18n
+      summary: Returns formatted date-time value
+      operationId: formatDateTime
+      parameters:
+      - name: value
+        in: path
+        description: Date-time value to format
+        required: true
+        schema:
+          $ref: "#/components/schemas/DateTimeParameter"
+      responses:
+        "200":
+          description: Successful date-time formatting
+          content:
+            text/plain:
+              schema:
+                type: string
+        "500":
+          description: Internal server error
+          content:
+            text/plain:
+              schema:
+                type: string
+  /i18n/{format}:
+    get:
+      tags:
+      - /i18n
+      description: Returns a translation of a specified phrase
+      operationId: translate
+      parameters:
+      - name: format
+        in: path
+        description: Message format string
+        required: true
+        schema:
+          type: string
+      - name: param
+        in: query
+        description: Optional parameters
+        schema:
+          type: array
+          items:
+            type: string
+      responses:
+        "200":
+          description: Successful translation
+          content:
+            text/plain:
+              schema:
+                type: string
+        "500":
+          description: Internal server error
+          content:
+            text/plain:
+              schema:
+                type: string
+  /jwt/crue/refresh:
+    post:
+      summary: Creates a Lease AI JWT refresh token
+      description: Creates a JWT token for Lease AI embedded auth exchange after validating
+        user permissions
+      operationId: createCrueRefreshJWT
+      parameters:
+      - name: target
+        in: query
+        schema:
+          type: string
+          default: abstraction
+      responses:
+        "200":
+          description: Returned JWT token in ExtResponse.data
+        "401":
+          description: Lucernex inactive session has expired
+        "403":
+          description: User is not authorized for requested Lease AI target
+        "500":
+          description: Unable to create JWT token
+  /jwt/help:
+    post:
+      summary: Creates a JWT security token
+      description: Creates a JWT security token based upon the currently authenticated
+        IWMS user for use with a microservice
+      operationId: createHelpJWT
+      responses:
+        "200":
+          description: Found members
+        "500":
+          description: Internal server error
+  /jwt/invoicesService:
+    post:
+      summary: Creates a JWT security token
+      description: Creates a JWT security token based upon the currently authenticated
+        IWMS user for use with a microservice
+      operationId: createInvoicesServiceJWT
+      responses:
+        "200":
+          description: Found members
+        "500":
+          description: Internal server error
+  /jwt:
+    post:
+      summary: Creates a JWT security token
+      description: Creates a JWT security token based upon the currently authenticated
+        IWMS user with an optional token expiration
+      operationId: createUserJWT
+      parameters:
+      - name: expiresOn
+        in: query
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Returned JWT token
+        "500":
+          description: Internal server error
+  /jwt/crue/touch:
+    post:
+      summary: Touches Lease AI host-page activity
+      description: Updates Lucernex last-page-viewed timestamps for Atlas embed host-page
+        interactions
+      operationId: touchCrueSession
+      parameters:
+      - name: target
+        in: query
+        schema:
+          type: string
+          default: abstraction
+      responses:
+        "200":
+          description: Session touched
+        "401":
+          description: Lucernex inactive session has expired
+        "403":
+          description: User is not authorized for requested Lease AI target
+  /loadlimits/config:
+    get:
+      summary: Query LoadLimit configuration
+      operationId: queryLoadLimitConfig
+      responses:
+        "200":
+          description: Returned LoadLimit configuration
+  /loadlimits:
+    get:
+      summary: Query LoadLimit metrics
+      operationId: queryLoadLimitMetrics
+      responses:
+        "200":
+          description: Returned LoadLimit metrics
+  /lookerapi/dashboards:
+    get:
+      operationId: getDashboards
+      responses:
+        default:
+          description: default response
+          content:
+            application/json: {}
+  /lookerapi/embedurl:
+    get:
+      operationId: getEmbedURL
+      parameters:
+      - name: objectType
+        in: query
+        schema:
+          type: string
+      - name: objectId
+        in: query
+        schema:
+          type: string
+      responses:
+        default:
+          description: default response
+          content:
+            application/json: {}
+  /lookerapi/explores:
+    get:
+      operationId: getExplores
+      responses:
+        default:
+          description: default response
+          content:
+            application/json: {}
+  /lookerapi/folders/{folderId}/dashboards:
+    get:
+      operationId: getFolderDashboards
+      parameters:
+      - name: folderId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        default:
+          description: default response
+          content:
+            application/json: {}
+  /lookerapi/folders/{folderId}/looks:
+    get:
+      operationId: getFolderLooks
+      parameters:
+      - name: folderId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        default:
+          description: default response
+          content:
+            application/json: {}
+  /lookerapi/folders:
+    get:
+      operationId: getFolders
+      responses:
+        default:
+          description: default response
+          content:
+            application/json: {}
+  /lookerapi/looks:
+    get:
+      operationId: getLooks
+      responses:
+        default:
+          description: default response
+          content:
+            application/json: {}
+  /lookerapi/treenodes:
+    get:
+      operationId: getTreeNodes
+      responses:
+        default:
+          description: default response
+          content:
+            application/json: {}
+  /lookerapi/dashboards/search:
+    get:
+      operationId: searchDashboards
+      responses:
+        default:
+          description: default response
+          content:
+            application/json: {}
+  /lookerapi/looks/search:
+    get:
+      operationId: searchLooks
+      responses:
+        default:
+          description: default response
+          content:
+            application/json: {}
+  /msproject/uploadTemplate:
+    post:
+      operationId: importMSProjectTemplate
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/MultipartBody"
+      responses:
+        default:
+          description: default response
+          content:
+            application/xml: {}
+            application/json: {}
+  /msproject:
+    get:
+      operationId: processUploadedMSProject
+      parameters:
+      - name: selectedIDs
+        in: query
+        schema:
+          type: string
+      - name: ignoreRelationships
+        in: query
+        schema:
+          type: boolean
+      responses:
+        default:
+          description: default response
+          content:
+            application/xml: {}
+            application/json: {}
+    post:
+      operationId: uploadMSProject
+      parameters:
+      - name: projectEntityID
+        in: query
+        schema:
+          type: integer
+          format: int32
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/MultipartBody"
+      responses:
+        default:
+          description: default response
+          content:
+            application/xml: {}
+            application/json: {}
+  /msproject/importTemplate:
+    post:
+      operationId: processUploadedMSProjectTemplate
+      parameters:
+      - name: selectedTaskNames
+        in: query
+        schema:
+          type: string
+      - name: Description
+        in: query
+        schema:
+          type: string
+      - name: IsValidForCapProgram
+        in: query
+        schema:
+          type: string
+      - name: IsValidForCapProject
+        in: query
+        schema:
+          type: string
+      - name: IsValidForContract
+        in: query
+        schema:
+          type: string
+      - name: IsValidForEquipContract
+        in: query
+        schema:
+          type: string
+      - name: IsValidForFacility
+        in: query
+        schema:
+          type: string
+      - name: IsValidForLocation
+        in: query
+        schema:
+          type: string
+      - name: IsValidForOpenProject
+        in: query
+        schema:
+          type: string
+      - name: IsValidForParcel
+        in: query
+        schema:
+          type: string
+      - name: IsValidForPortfolio
+        in: query
+        schema:
+          type: string
+      - name: IsValidForPotentialProject
+        in: query
+        schema:
+          type: string
+      - name: IsValidForPrototype
+        in: query
+        schema:
+          type: string
+      - name: TemplateName
+        in: query
+        schema:
+          type: string
+      responses:
+        default:
+          description: default response
+          content:
+            application/xml: {}
+            application/json: {}
+  /membership/projectEntity/{peid}:
+    get:
+      tags:
+      - /membership
+      summary: Query ProjectEntity members
+      operationId: fetchMembers
+      parameters:
+      - name: peid
+        in: path
+        description: ProjectEntity ID
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: wantClientID
+        in: query
+        description: Want clientID attribute
+        schema:
+          type: boolean
+          default: false
+      - name: wantLxID
+        in: query
+        description: Want lxID attribute
+        schema:
+          type: boolean
+          default: true
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: string
+            application/xml:
+              schema:
+                type: string
+        "404":
+          description: Project Entity not found
+          content:
+            text/plain:
+              schema:
+                type: string
+        "500":
+          description: Internal server error
+          content:
+            application/xml:
+              schema:
+                type: string
+            application/json:
+              schema:
+                type: string
+  /membership/member/{memberID}:
+    get:
+      tags:
+      - /membership
+      summary: Query ProjectEntities for the specified member
+      operationId: fetchProjectEntities
+      parameters:
+      - name: memberID
+        in: path
+        description: Member ID
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: wantClientID
+        in: query
+        description: Want clientID attribute
+        schema:
+          type: boolean
+          default: false
+      - name: wantLxID
+        in: query
+        description: Want lxID attribute
+        schema:
+          type: boolean
+          default: true
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: string
+            application/xml:
+              schema:
+                type: string
+        "404":
+          description: Member not found
+          content:
+            text/plain:
+              schema:
+                type: string
+        "500":
+          description: Internal server error
+          content:
+            application/xml:
+              schema:
+                type: string
+            application/json:
+              schema:
+                type: string
+  /membership/{objectType}/queueassignment:
+    post:
+      tags:
+      - /membership
+      summary: "Creates/Updates {objectType} record"
+      operationId: processQueueAssignment
+      parameters:
+      - name: objectType
+        in: path
+        description: Record type
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Project Entity to update
+        content:
+          application/xml:
+            schema:
+              $ref: "#/components/schemas/ProjectEntity"
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProjectEntity"
+        required: true
+      responses:
+        "204":
+          description: Process Queue Assignment
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ImportResults"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/ImportResults"
+        "500":
+          description: Internal server error
+          content:
+            application/xml:
+              schema:
+                type: string
+            application/json:
+              schema:
+                type: string
+  /mobilelayout/deletedfields:
+    get:
+      operationId: fetchDeletedFields
+      parameters:
+      - name: pageLayoutID
+        in: query
+        schema:
+          type: integer
+          format: int32
+      responses:
+        default:
+          description: default response
+          content:
+            application/json: {}
+  /mobilelayout/fields:
+    get:
+      operationId: fetchFields_1
+      parameters:
+      - name: pageLayoutID
+        in: query
+        schema:
+          type: integer
+          format: int32
+      - name: reset
+        in: query
+        schema:
+          type: string
+      responses:
+        default:
+          description: default response
+          content:
+            application/json: {}
+  /pagelayoutfield/securityaccess:
+    get:
+      operationId: getPageLayoutFieldSecurity
+      parameters:
+      - name: pageLayoutID
+        in: query
+        schema:
+          type: integer
+          format: int32
+      responses:
+        default:
+          description: default response
+          content:
+            application/json: {}
+  /pagelayoutfield:
+    get:
+      operationId: getPageLayoutFields
+      parameters:
+      - name: pageLayoutID
+        in: query
+        schema:
+          type: integer
+          format: int32
+      - name: layoutType
+        in: query
+        schema:
+          type: string
+      responses:
+        default:
+          description: default response
+          content:
+            application/json: {}
+  /pagelayoutfield/dropdownvalues:
+    post:
+      operationId: getSmartDropDownValues
+      parameters:
+      - name: lxFieldTypeID
+        in: query
+        schema:
+          type: integer
+          format: int32
+      responses:
+        default:
+          description: default response
+          content:
+            application/json: {}
+  /pageLayout/values/{pageLayoutID}:
+    get:
+      operationId: getPageLayoutValues
+      parameters:
+      - name: pageLayoutID
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: projectEntityID
+        in: query
+        schema:
+          type: integer
+          format: int32
+      responses:
+        default:
+          description: default response
+          content:
+            application/json: {}
+            application/xml: {}
+    post:
+      operationId: updatePageLayoutValues
+      parameters:
+      - name: pageLayoutID
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: projectEntityID
+        in: query
+        schema:
+          type: integer
+          format: int32
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                lxUFK:
+                  type: integer
+                  format: int32
+      responses:
+        default:
+          description: default response
+          content:
+            application/json: {}
+            application/xml: {}
+  /pageLayout/{pageLayoutType}:
+    get:
+      operationId: getPageLayouts
+      parameters:
+      - name: pageLayoutType
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: projectEntityID
+        in: query
+        schema:
+          type: integer
+          format: int32
+      - name: availableForMobile
+        in: query
+        schema:
+          type: boolean
+      responses:
+        default:
+          description: default response
+          content:
+            application/json: {}
+            application/xml: {}
+  /pageLayout/action/{actionType}:
+    post:
+      operationId: triggerCheckinCheckout
+      parameters:
+      - name: actionType
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        default:
+          description: default response
+          content:
+            application/json: {}
+            application/xml: {}
+  /payments/paymentTransactions:
+    get:
+      summary: Query payment transactions
+      description: "Retrieve payment transactions filtered by contract ID, effective\
+        \ date, and expense type"
+      operationId: queryPaymentTransactions
+      parameters:
+      - name: contractID
+        in: query
+        description: Contract ID
+        schema:
+          type: integer
+          format: int32
+      - name: expenseType
+        in: query
+        description: Expense type
+        schema:
+          type: string
+      - name: expenseGroup
+        in: query
+        description: Expense group
+        schema:
+          type: string
+      - name: expenseCategory
+        in: query
+        description: Expense category
+        schema:
+          type: string
+      - name: effBeginDate
+        in: query
+        description: Effective begin date (yyyy-MM-dd)
+        schema:
+          type: string
+      - name: effEndDate
+        in: query
+        description: Effective end date (yyyy-MM-dd)
+        schema:
+          type: string
+      - name: dueBeginDate
+        in: query
+        description: Due begin date (yyyy-MM-dd)
+        schema:
+          type: string
+      - name: dueEndDate
+        in: query
+        description: Due end date (yyyy-MM-dd)
+        schema:
+          type: string
+      - name: postingBeginDate
+        in: query
+        description: Posting begin date (yyyy-MM-dd)
+        schema:
+          type: string
+      - name: postingEndDate
+        in: query
+        description: Posting end date (yyyy-MM-dd)
+        schema:
+          type: string
+      - name: processedFlag
+        in: query
+        description: Processed flag
+        schema:
+          type: boolean
+      - name: vendorID
+        in: query
+        description: Vendor ID
+        schema:
+          type: integer
+          format: int32
+      - name: internalRefNumber
+        in: query
+        description: Internal reference number
+        schema:
+          type: string
+      - name: invoiceNumber
+        in: query
+        description: Invoice number
+        schema:
+          type: string
+      - name: checkNumber
+        in: query
+        description: Check number
+        schema:
+          type: string
+      - name: arOptions
+        in: query
+        description: AR options
+        schema:
+          type: string
+      - name: assetID
+        in: query
+        description: Asset ID
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: Successfully retrieved payment transactions
+        "400":
+          description: Invalid request parameters
+        "401":
+          description: Unauthorized access
+        "404":
+          description: No transactions found
+        "500":
+          description: Internal server error
+  /photo:
+    get:
+      operationId: downloadPhoto
+      parameters:
+      - name: projectEntityID
+        in: query
+        schema:
+          type: integer
+          format: int32
+      - name: codeSQLTableID
+        in: query
+        schema:
+          type: integer
+          format: int32
+      - name: objectID
+        in: query
+        schema:
+          type: integer
+          format: int32
+      - name: photoType
+        in: query
+        schema:
+          type: string
+      - name: baseName
+        in: query
+        schema:
+          type: string
+      - name: imageHeight
+        in: query
+        schema:
+          type: integer
+          format: int32
+      - name: imageWidth
+        in: query
+        schema:
+          type: integer
+          format: int32
+      responses:
+        default:
+          description: default response
+          content:
+            image/png: {}
+            image/jpg: {}
+            image/jpeg: {}
+            text/plain: {}
+            text/xml: {}
+    post:
+      operationId: importPhoto
+      parameters:
+      - name: projectEntityID
+        in: query
+        schema:
+          type: integer
+          format: int32
+      - name: codeSQLTableID
+        in: query
+        schema:
+          type: integer
+          format: int32
+      - name: objectID
+        in: query
+        schema:
+          type: integer
+          format: int32
+      - name: photoType
+        in: query
+        schema:
+          type: string
+      - name: baseName
+        in: query
+        schema:
+          type: string
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/MultipartBody"
+      responses:
+        default:
+          description: default response
+          content:
+            application/xml: {}
+            application/json: {}
+    delete:
+      operationId: removePhoto
+      parameters:
+      - name: projectEntityID
+        in: query
+        schema:
+          type: integer
+          format: int32
+      - name: codeSQLTableID
+        in: query
+        schema:
+          type: integer
+          format: int32
+      - name: objectID
+        in: query
+        schema:
+          type: integer
+          format: int32
+      - name: photoType
+        in: query
+        schema:
+          type: string
+      - name: baseName
+        in: query
+        schema:
+          type: string
+      responses:
+        default:
+          description: default response
+          content:
+            application/xml: {}
+            application/json: {}
+  /properties/azuremonitor:
+    get:
+      summary: Query Azure Monitor Properties
+      operationId: getAzureMonitorProperties
+      responses:
+        "200":
+          description: Returned properties for the azure monitor section
+  /properties:
+    get:
+      summary: Query Property Groups
+      operationId: queryGroups
+      responses:
+        "200":
+          description: Returned set of property groups
+  /properties/{group}:
+    get:
+      summary: Query Properties
+      operationId: queryProperties
+      parameters:
+      - name: group
+        in: path
+        description: Properties group
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Returned properties for the specified section
+    put:
+      summary: Updates a specified property
+      operationId: update_2
+      parameters:
+      - name: group
+        in: path
+        description: Properties group
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Desired property name-value
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Property"
+        required: true
+      responses:
+        "200":
+          description: Property updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ImportResults"
+        "404":
+          description: Unknown property
+        "500":
+          description: Internal server error
+  /reportBuilder/insert:
+    get:
+      operationId: Insert
+      parameters:
+      - name: BuilderHashCode
+        in: query
+        schema:
+          type: integer
+          format: int32
+      - name: name
+        in: query
+        schema:
+          type: string
+      - name: row
+        in: query
+        schema:
+          type: integer
+          format: int32
+      - name: col
+        in: query
+        schema:
+          type: integer
+          format: int32
+      responses:
+        default:
+          description: default response
+          content:
+            application/json: {}
+  /reportBuilder/addfield:
+    get:
+      operationId: addField
+      parameters:
+      - name: BuilderHashCode
+        in: query
+        schema:
+          type: integer
+          format: int32
+      - name: position
+        in: query
+        schema:
+          type: integer
+          format: int32
+      - name: row
+        in: query
+        schema:
+          type: integer
+          format: int32
+      - name: col
+        in: query
+        schema:
+          type: integer
+          format: int32
+      responses:
+        default:
+          description: default response
+          content:
+            application/json: {}
+  /reportBuilder/clearBuilderState:
+    get:
+      operationId: clearReportBuilderState
+      parameters:
+      - name: BuilderHashCode
+        in: query
+        schema:
+          type: integer
+          format: int32
+      - name: resetBuilder
+        in: query
+        schema:
+          type: boolean
+      - name: ScheduledJobID
+        in: query
+        schema:
+          type: integer
+          format: int32
+      responses:
+        default:
+          description: default response
+          content:
+            application/json: {}
+  /reportBuilder/deletefield:
+    get:
+      operationId: deleteField
+      parameters:
+      - name: BuilderHashCode
+        in: query
+        schema:
+          type: integer
+          format: int32
+      - name: name
+        in: query
+        schema:
+          type: string
+      - name: keepFiltered
+        in: query
+        schema:
+          type: string
+      responses:
+        default:
+          description: default response
+          content:
+            application/json: {}
+  /reportBuilder/columns:
+    get:
+      operationId: fetchColumns
+      parameters:
+      - name: BuilderHashCode
+        in: query
+        schema:
+          type: integer
+          format: int32
+      responses:
+        default:
+          description: default response
+          content:
+            application/json: {}
+  /reportBuilder/includedfields:
+    get:
+      operationId: getIncludedFields
+      parameters:
+      - name: BuilderHashCode
+        in: query
+        schema:
+          type: integer
+          format: int32
+      responses:
+        default:
+          description: default response
+          content:
+            application/json: {}
+  /reportBuilder/builderState:
+    get:
+      operationId: getReportBuilderState
+      parameters:
+      - name: BuilderHashCode
+        in: query
+        schema:
+          type: integer
+          format: int32
+      responses:
+        default:
+          description: default response
+          content:
+            application/json: {}
+  /reportBuilder/movefield:
+    get:
+      operationId: moveField
+      parameters:
+      - name: BuilderHashCode
+        in: query
+        schema:
+          type: integer
+          format: int32
+      - name: name
+        in: query
+        schema:
+          type: string
+      - name: position
+        in: query
+        schema:
+          type: integer
+          format: int32
+      responses:
+        default:
+          description: default response
+          content:
+            application/json: {}
+  /reportBuilder/restoreBuilderState:
+    get:
+      operationId: restoreReportBuilderState
+      parameters:
+      - name: CurrentBuilderHashCode
+        in: query
+        schema:
+          type: integer
+          format: int32
+      - name: OriginaldBuilderHashCode
+        in: query
+        schema:
+          type: integer
+          format: int32
+      responses:
+        default:
+          description: default response
+          content:
+            application/json: {}
+  /reportBuilder/savefiltersettings:
+    post:
+      operationId: saveFilterSettings
+      parameters:
+      - name: BuilderHashCode
+        in: query
+        schema:
+          type: integer
+          format: int32
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              type: object
+              properties:
+                matchAllFilters:
+                  type: boolean
+      responses:
+        default:
+          description: default response
+          content:
+            application/json: {}
+  /reportBuilder/save:
+    get:
+      operationId: saveReport
+      parameters:
+      - name: BuilderHashCode
+        in: query
+        schema:
+          type: integer
+          format: int32
+      responses:
+        default:
+          description: default response
+          content:
+            application/json: {}
+  /reportBuilder/setAlignment:
+    get:
+      operationId: setColumnAlignment
+      parameters:
+      - name: BuilderHashCode
+        in: query
+        schema:
+          type: integer
+          format: int32
+      - name: fieldName
+        in: query
+        schema:
+          type: string
+      - name: alignment
+        in: query
+        schema:
+          type: string
+      responses:
+        default:
+          description: default response
+          content:
+            application/json: {}
+  /reportBuilder/setcriteria:
+    get:
+      operationId: setCriteria
+      parameters:
+      - name: BuilderHashCode
+        in: query
+        schema:
+          type: integer
+          format: int32
+      - name: fieldName
+        in: query
+        schema:
+          type: string
+      - name: specified
+        in: query
+        schema:
+          type: boolean
+      responses:
+        default:
+          description: default response
+          content:
+            application/json: {}
+  /reportBuilder/setsort:
+    get:
+      operationId: setSortFilter
+      parameters:
+      - name: BuilderHashCode
+        in: query
+        schema:
+          type: integer
+          format: int32
+      - name: fieldName
+        in: query
+        schema:
+          type: string
+      - name: dir
+        in: query
+        schema:
+          type: string
+      responses:
+        default:
+          description: default response
+          content:
+            application/json: {}
+  /reportBuilder/updateSpan:
+    get:
+      operationId: updateSpan
+      parameters:
+      - name: BuilderHashCode
+        in: query
+        schema:
+          type: integer
+          format: int32
+      - name: widthOrHeight
+        in: query
+        schema:
+          type: string
+      - name: direction
+        in: query
+        schema:
+          type: string
+      - name: name
+        in: query
+        schema:
+          type: string
+      responses:
+        default:
+          description: default response
+          content:
+            application/json: {}
+  /scheduleNotification/notification/{ProjectEntityID}:
+    post:
+      operationId: createNotification
+      parameters:
+      - name: ProjectEntityID
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: taskID
+        in: query
+        schema:
+          type: integer
+          format: int32
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ScheduleNotificationBean"
+          application/xml:
+            schema:
+              $ref: "#/components/schemas/ScheduleNotificationBean"
+      responses:
+        default:
+          description: default response
+          content:
+            application/json: {}
+            application/xml: {}
+  /scheduleNotification/notifications/lxid/{lxID}:
+    get:
+      operationId: getNotification
+      parameters:
+      - name: lxID
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: taskID
+        in: query
+        schema:
+          type: integer
+          format: int32
+      responses:
+        default:
+          description: default response
+          content:
+            application/json: {}
+            application/xml: {}
+  /scheduleNotification/notifications/{ProjectEntityID}:
+    get:
+      operationId: getNotifications
+      parameters:
+      - name: ProjectEntityID
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: taskID
+        in: query
+        schema:
+          type: integer
+          format: int32
+      responses:
+        default:
+          description: default response
+          content:
+            application/json: {}
+            application/xml: {}
+  /scheduleNotification/notification/{lxid}:
+    put:
+      operationId: updateNotification
+      parameters:
+      - name: lxid
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: taskID
+        in: query
+        schema:
+          type: integer
+          format: int32
+      - name: ProjectEntityID
+        in: query
+        schema:
+          type: integer
+          format: int32
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ScheduleNotificationBean"
+          application/xml:
+            schema:
+              $ref: "#/components/schemas/ScheduleNotificationBean"
+      responses:
+        default:
+          description: default response
+          content:
+            application/json: {}
+            application/xml: {}
+  /scheduletask/securityaccess:
+    get:
+      operationId: getSecurityAccess
+      parameters:
+      - name: projectEntityID
+        in: query
+        schema:
+          type: integer
+          format: int32
+      responses:
+        default:
+          description: default response
+          content:
+            application/json: {}
+  /script:
+    get:
+      operationId: queryNames
+      responses:
+        default:
+          description: default response
+          content:
+            '*/*': {}
+  /script/{name}:
+    get:
+      operationId: queryScript
+      parameters:
+      - name: name
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        default:
+          description: default response
+          content:
+            '*/*': {}
+  /task/{name}:
+    get:
+      tags:
+      - /task
+      summary: Find identified Task
+      description: Finds the Task identified by name
+      operationId: findByName
+      parameters:
+      - name: name
+        in: path
+        description: Task name
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Task found
+          content:
+            application/json:
+              schema:
+                type: string
+            application/xml:
+              schema:
+                type: string
+    delete:
+      tags:
+      - /task
+      summary: Cancels identified Task
+      description: Cancels the previously scheduled task if found.
+      operationId: cancelByName
+      parameters:
+      - name: name
+        in: path
+        description: Task name
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Task"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/Task"
+  /task/downloadJobFile/{filename}:
+    get:
+      tags:
+      - /task
+      summary: Downloads job log
+      description: Downloads the specified ScheduledJob's log/input file
+      operationId: downloadJobFile
+      parameters:
+      - name: filename
+        in: path
+        description: Name of desired log/input file
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Success
+          content:
+            text/html:
+              schema:
+                type: string
+  /task/download/{name}:
+    get:
+      tags:
+      - /task
+      summary: Downloads the Task's generated file
+      description: …
+      operationId: downloadResults
+      parameters:
+      - name: name
+        in: path
+        description: Task name
+        required: true
+        schema:
+          type: string
+      - name: gzip
+        in: query
+        description: Want GZIP compression?
+        required: true
+        schema:
+          type: boolean
+          default: false
+      responses:
+        "200":
+          description: Success
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+  /task/state/{name}:
+    get:
+      tags:
+      - /task
+      summary: Fetches the Task state
+      description: "Returns the state of the specified task: [Waiting, Executing,\
+        \ Canceled, Finished, Failed]"
+      operationId: fetchState
+      parameters:
+      - name: name
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: string
+            application/xml:
+              schema:
+                type: string
+  /task/mine:
+    get:
+      tags:
+      - /task
+      summary: Find user's latest Task
+      description: Finds the latest Task owned by the authenticated user
+      operationId: findLatestByOwner
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Task"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/Task"
+  /task/ping:
+    get:
+      tags:
+      - /task
+      summary: Returns 'hello'
+      description: Very light weight test of RESTful web-service accessibility
+      operationId: ping
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: string
+            application/xml:
+              schema:
+                type: string
+  /task:
+    post:
+      tags:
+      - /task
+      summary: Creates Task
+      description: Creates and schedules a Task for execution
+      operationId: schedule
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                jobClass:
+                  type: string
+                  description: Name of job class
+                encodedObject:
+                  type: string
+                  description: Optional base64 encoded job object
+                jobArgument:
+                  type: string
+                  description: Optional job argument
+                trigger:
+                  type: string
+                  description: Type of job trigger
+                  enum:
+                  - Immediate
+                  - Delayed
+                  - Cron
+                  default: Immediate
+                delay:
+                  type: integer
+                  description: Delay in seconds (trigger == Delayed
+                  format: int32
+                cron:
+                  type: string
+                  description: UNIX cron tab style schedule (trigger == Cron
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Task"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/Task"
+  /task/sleep/{seconds}:
+    get:
+      tags:
+      - /task
+      summary: Sleep for a specified number of seconds
+      description: Blocks call for a specified number of seconds
+      operationId: sleep
+      parameters:
+      - name: seconds
+        in: path
+        description: Number of seconds to sleep
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: Slept for X seconds
+          content:
+            text/html:
+              schema:
+                type: string
+  /vendor-lease/{vendorId}/import:
+    post:
+      tags:
+      - /vendor-lease
+      summary: Import a lease abstract from a vendor-specific JSON payload
+      description: Transforms the vendor JSON through the registered adapter and persists
+        the canonical result via the BusinessObject pipeline. The caller's firmID
+        is used for firm-specific adapter config overrides. When dryRun=true the payload
+        is validated only — nothing is persisted.
+      operationId: importVendorLease
+      parameters:
+      - name: vendorId
+        in: path
+        description: "Registered adapter vendor ID (e.g. inhouse, atlas)"
+        required: true
+        schema:
+          type: string
+      - name: allowUpdate
+        in: query
+        description: Update existing records matched by clientID/lxID; default false
+        schema:
+          type: boolean
+          default: false
+      - name: dryRun
+        in: query
+        description: Validate only — nothing is persisted; default false
+        schema:
+          type: boolean
+          default: false
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: string
+      responses:
+        "200":
+          description: "Success: { importSuccesses: [...], importErrors: [...] };\
+            \ or for dryRun: { valid: boolean, findings: [...] }"
+        "400":
+          description: Invalid vendorId or empty request body
+        "401":
+          description: Not authenticated
+        "404":
+          description: No adapter registered for the given vendorId
+        "422":
+          description: Adapter transform failed — vendor JSON did not map cleanly
+  /virtual/{virtualBOType}:
+    get:
+      summary: Query virtual records for a Contract
+      operationId: fetchVirtualRecordsForContract
+      parameters:
+      - name: virtualBOType
+        in: path
+        description: Last modified timestamp n ISO 8601 format
+        required: true
+        schema:
+          type: string
+      - name: contractID
+        in: query
+        description: Parent Contract ID
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: Audit trail report
+        "400":
+          description: Invalid virtual record type
+        "500":
+          description: Internal server error
+components:
+  schemas:
+    BusinessObjectLink:
+      type: object
+      properties:
+        lxID:
+          type: integer
+          description: Lucernex primary key
+          format: int32
+          xml:
+            attribute: true
+        objectType:
+          type: string
+          description: Record type
+          xml:
+            attribute: true
+        name:
+          type: string
+          description: Unique name if the record is a project entity
+          xml:
+            attribute: true
+        href:
+          type: string
+          description: REST URL which returns details of this record
+          xml:
+            attribute: true
+      description: List of BusinessObjectLink instances
+      xml:
+        name: businessObjectLink
+    BusinessObjectLinks:
+      type: object
+      properties:
+        businessObjectLinks:
+          type: array
+          description: List of BusinessObjectLink instances
+          xml:
+            name: businessObjectLink
+          items:
+            $ref: "#/components/schemas/BusinessObjectLink"
+      xml:
+        name: businessObjectLinks
+    AuditInfo:
+      type: object
+      properties:
+        createdBy:
+          type: string
+        createdDate:
+          type: string
+          format: date-time
+        action:
+          type: string
+          enum:
+          - Add
+          - Update
+          - Delete
+        entityName:
+          type: string
+        entityID:
+          type: integer
+          format: int32
+        tableName:
+          type: string
+        fieldName:
+          type: string
+        oldValue:
+          type: string
+        newValue:
+          type: string
+        udf:
+          type: boolean
+      xml:
+        name: AuditInfo
+    ExtResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          xml:
+            attribute: true
+        message:
+          type: string
+          xml:
+            attribute: true
+        data:
+          type: object
+      description: Generic response wrapper
+      xml:
+        name: ext_response
+    ImportError:
+      title: error
+      type: object
+      properties:
+        objectType:
+          type: string
+          xml:
+            attribute: true
+        clientID:
+          type: string
+          xml:
+            attribute: true
+        lxID:
+          type: string
+          xml:
+            attribute: true
+        entityUniqueID:
+          type: string
+          xml:
+            attribute: true
+        projectEntityID:
+          type: string
+          xml:
+            attribute: true
+        entityName:
+          type: string
+          xml:
+            attribute: true
+        lookup:
+          type: boolean
+          xml:
+            attribute: true
+        fatal:
+          type: boolean
+          xml:
+            attribute: true
+        message:
+          type: string
+        position:
+          type: integer
+          format: int32
+      description: Failed persistence operation
+      xml:
+        name: error
+    ImportResults:
+      title: results
+      type: object
+      properties:
+        successes:
+          type: array
+          xml:
+            name: success
+          items:
+            $ref: "#/components/schemas/ImportSuccess"
+        errors:
+          type: array
+          xml:
+            name: error
+          items:
+            $ref: "#/components/schemas/ImportError"
+      description: Results of persistence operation
+      xml:
+        name: results
+    ImportSuccess:
+      title: success
+      type: object
+      properties:
+        objectType:
+          type: string
+          xml:
+            attribute: true
+        clientID:
+          type: string
+          xml:
+            attribute: true
+        lxID:
+          type: string
+          xml:
+            attribute: true
+        entityUniqueID:
+          type: string
+          xml:
+            attribute: true
+        projectEntityID:
+          type: string
+          xml:
+            attribute: true
+        entityName:
+          type: string
+          xml:
+            attribute: true
+        create:
+          type: boolean
+          xml:
+            attribute: true
+        delete:
+          type: boolean
+          xml:
+            attribute: true
+        update:
+          type: boolean
+          xml:
+            attribute: true
+      description: Successful persistence operation
+      xml:
+        name: success
+    BusinessObject:
+      required:
+      - botype
+      type: object
+      properties:
+        href:
+          type: string
+          description: REST URL of this resource instance
+        match:
+          type: string
+          description: match employer only by clientID
+        clientID:
+          type: string
+          description: Client provided record identifier
+        projectEntityName:
+          type: string
+          description: Project entity name
+        modifiedByID:
+          type: integer
+          description: Identifies last user who modified business object
+          format: int32
+        modified:
+          type: string
+          description: Specifies when business object was last modified
+          format: date-time
+        children:
+          type: array
+          description: Associated business objects
+          items:
+            $ref: "#/components/schemas/BusinessObject"
+        fields:
+          type: array
+          description: Record's set of fields
+          items:
+            $ref: "#/components/schemas/Field"
+        botype:
+          type: string
+          description: Record type
+        uuid:
+          type: string
+        updateOnly:
+          type: boolean
+        extSubFields:
+          type: array
+          description: Client extension sub-fields
+          items:
+            $ref: "#/components/schemas/Field"
+    Field:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Field name
+          xml:
+            attribute: true
+        value:
+          type: string
+          description: Field value
+      description: Client extension sub-fields
+      xml:
+        name: field
+    IDField:
+      type: object
+      description: An individual ID field
+      xml:
+        name: IDField
+      allOf:
+      - $ref: "#/components/schemas/Field"
+      - type: object
+        properties:
+          href:
+            type: string
+            description: REST URL of this resource instance
+          clientID:
+            type: string
+            description: User defined primary key
+          lxID:
+            type: integer
+            description: Database provided sequence ID
+            format: int32
+          attributes:
+            type: object
+            additionalProperties:
+              type: string
+            writeOnly: true
+          UUID:
+            type: string
+            description: Unique identifier
+    CodeTableEntry:
+      type: object
+      properties:
+        bundleID:
+          type: integer
+          format: int32
+          xml:
+            attribute: true
+        id:
+          type: integer
+          format: int32
+          xml:
+            attribute: true
+        href:
+          type: string
+          xml:
+            attribute: true
+        inactive:
+          type: boolean
+          xml:
+            attribute: true
+        shortName:
+          type: string
+          xml:
+            attribute: true
+        longName:
+          type: string
+          xml:
+            attribute: true
+        parentBundleID:
+          type: integer
+          format: int32
+          xml:
+            attribute: true
+        parentID:
+          type: integer
+          format: int32
+          xml:
+            attribute: true
+      xml:
+        name: codeTableEntry
+    Document:
+      type: object
+      properties:
+        author_name:
+          type: string
+        base_name:
+          type: string
+        content:
+          type: string
+        content_type:
+          type: string
+        file_created_date:
+          type: string
+          format: date-time
+        folder:
+          type: string
+        id:
+          type: string
+        description:
+          type: string
+        code_document_type:
+          type: string
+        version:
+          type: integer
+          format: int32
+        last_modified:
+          type: string
+          format: date-time
+        pe_id:
+          type: integer
+          format: int32
+        pe_name:
+          type: string
+        pe_type:
+          type: string
+        category:
+          type: string
+        title:
+          type: array
+          items:
+            type: string
+            xml:
+              name: title
+      xml:
+        name: document
+    BOType:
+      type: object
+      properties:
+        category:
+          type: string
+          enum:
+          - Base
+          - CodeTable
+          - Issue
+          - ClientList
+        weight:
+          type: integer
+          format: int32
+        name:
+          type: string
+      xml:
+        name: boType
+    Types:
+      type: object
+      properties:
+        types:
+          type: array
+          xml:
+            name: type
+          items:
+            $ref: "#/components/schemas/BOType"
+      xml:
+        name: types
+    DocumentImportResult:
+      type: object
+      properties:
+        message:
+          type: string
+          xml:
+            attribute: true
+        documentID:
+          type: integer
+          format: int32
+          xml:
+            attribute: true
+        folderID:
+          type: integer
+          format: int32
+          xml:
+            attribute: true
+      xml:
+        name: DocumentImportResult
+    BigDecimalParameter:
+      type: object
+      properties:
+        bigDecimal:
+          type: number
+    DateParameter:
+      type: object
+      properties:
+        date:
+          type: string
+          format: date-time
+    DateTimeParameter:
+      type: object
+      properties:
+        date:
+          type: string
+          format: date-time
+    ProjectEntity:
+      type: object
+      properties:
+        lxID:
+          type: integer
+          format: int32
+        clientID:
+          type: string
+        entityName:
+          type: string
+        projectEntityID:
+          type: integer
+          format: int32
+      xml:
+        name: ProjectEntity
+    Property:
+      type: object
+      properties:
+        key:
+          type: string
+        value:
+          type: object
+      xml:
+        name: property
+    ScheduleNotificationBean:
+      type: object
+      properties:
+        notificationName:
+          type: string
+        alertType:
+          type: integer
+          format: int32
+        notificationDays:
+          type: integer
+          format: int32
+        sendEmailToMembers:
+          type: boolean
+        sendAlertToMembers:
+          type: boolean
+        notificationMembersList:
+          type: array
+          items:
+            type: integer
+            format: int32
+        notificationMessage:
+          type: string
+      xml:
+        name: ScheduleNotificationBean
+    ImportCounts:
+      type: object
+      properties:
+        boType:
+          type: string
+          xml:
+            attribute: true
+        creates:
+          type: integer
+          format: int32
+          xml:
+            attribute: true
+        deletes:
+          type: integer
+          format: int32
+          xml:
+            attribute: true
+        updates:
+          type: integer
+          format: int32
+          xml:
+            attribute: true
+        warnings:
+          type: integer
+          format: int32
+          xml:
+            attribute: true
+        failures:
+          type: integer
+          format: int32
+          xml:
+            attribute: true
+        processed:
+          type: integer
+          format: int32
+      xml:
+        name: counts
+    Options:
+      title: Options
+      type: object
+      properties:
+        includes:
+          uniqueItems: true
+          type: array
+          description: Set of ANT like include patterns
+          xml:
+            name: include
+          items:
+            type: string
+            description: Set of ANT like include patterns
+            xml:
+              name: include
+        excludes:
+          uniqueItems: true
+          type: array
+          description: Set of ANT like excludes patterns
+          xml:
+            name: exclude
+          items:
+            type: string
+            description: Set of ANT like excludes patterns
+            xml:
+              name: exclude
+        deep:
+          type: boolean
+          description: Do we produce a deep object tree or shallow?
+        stopOn1st:
+          type: boolean
+          description: Stop processing input file on 1st error?
+          xml:
+            attribute: true
+        renderFirmDefinedFields:
+          type: boolean
+          description: Should the firm defined fields be included?
+        renderClientID:
+          type: boolean
+          description: Should the clientID field be rendered to XML?
+        renderLxID:
+          type: boolean
+          description: Should the LxID field be rendered to XML?
+        renderViewOnlyFields:
+          type: boolean
+          description: Should the XML include the view only fields?
+        exportDependencies:
+          type: boolean
+          description: Flag to determine if dependencies should be exported
+        publicKey:
+          type: string
+          description: PGP public key to be used when encrypting the response
+        datamart:
+          type: boolean
+          description: Are we rendering for a datamart use case?
+        includeReferencedRootItems:
+          type: boolean
+          description: Export related items (old-style default is true for datamart)?
+        batchID:
+          type: string
+        maxAuditTableID:
+          type: integer
+          description: Last PK for Audit table (fetch all records modified after/on)
+          format: int64
+          xml:
+            attribute: true
+        mostRecentModifiedDate:
+          type: string
+          description: Modified Date (fetch all records modified after/on)
+          format: date-time
+          xml:
+            attribute: true
+        exportDependenciesBldr:
+          $ref: "#/components/schemas/Options"
+      description: "Processing options for schema generation, import, and export operations."
+      xml:
+        name: options
+    Task:
+      title: Task
+      required:
+      - name
+      type: object
+      properties:
+        name:
+          type: string
+          description: Unique task identifying name
+          xml:
+            attribute: true
+        href:
+          type: string
+          description: REST URL of this resource instance
+          xml:
+            attribute: true
+        firmName:
+          type: string
+          description: Name of firm which owns this task
+        createdBy:
+          type: string
+          description: Username who created the task
+          xml:
+            attribute: true
+        created:
+          type: string
+          description: When was the task created
+          format: date-time
+          xml:
+            attribute: true
+        started:
+          type: string
+          description: When did the task start execution
+          format: date-time
+          xml:
+            attribute: true
+        finished:
+          type: string
+          description: When did the task finish execution
+          format: date-time
+          xml:
+            attribute: true
+        triggerType:
+          type: string
+          description: Scheduling trigger type
+          xml:
+            attribute: true
+          enum:
+          - Immediate
+          - Delayed
+          - Cron
+        delaySeconds:
+          type: integer
+          description: "If triggerType is Delayed, then this specifies how long before\
+            \ starting"
+          format: int32
+          xml:
+            attribute: true
+        cronExpression:
+          type: string
+          description: "If triggerType is Cron, then this specifies the cron scheduling\
+            \ expression"
+          xml:
+            attribute: true
+        state:
+          type: string
+          description: Task state
+          xml:
+            attribute: true
+          enum:
+          - Waiting
+          - Executing
+          - Canceled
+          - Finished
+          - Failed
+        totalRecordCount:
+          type: integer
+          description: Total count of records to process
+          format: int32
+          xml:
+            attribute: true
+        processedRecordCount:
+          type: integer
+          description: Count of records processed so far
+          format: int32
+          xml:
+            attribute: true
+        jobClass:
+          type: string
+          description: Classname of job which implements this task
+          xml:
+            attribute: true
+        jobArgument:
+          type: string
+          description: Job execution argument which can be most anything
+        options:
+          $ref: "#/components/schemas/Options"
+        encodedObject:
+          type: string
+          description: Optional encoded object to process.
+          xml:
+            name: object
+        inputFile:
+          type: string
+          description: Input file to process if there is one
+          xml:
+            attribute: true
+        inputFormat:
+          type: string
+          description: Input file format
+          xml:
+            attribute: true
+          enum:
+          - "xml,xls"
+        outputFile:
+          type: string
+          description: Generated output file if there is one
+          xml:
+            attribute: true
+        runTime:
+          type: integer
+          description: Number of milliseconds task ran before finishing
+          format: int64
+          xml:
+            attribute: true
+        successCount:
+          type: integer
+          description: Number of successes encountered executing job
+          format: int32
+        warningCount:
+          type: integer
+          description: Number of warnings encountered executing job
+          format: int32
+        errorCount:
+          type: integer
+          description: Number of errors encountered executing job
+          format: int32
+        importResults:
+          $ref: "#/components/schemas/ImportResults"
+        exceptionStack:
+          type: string
+          description: Execution exception stack if one was thrown
+        resultsSummary:
+          type: string
+          description: Summary of processing results.
+        rawPayloadJson:
+          type: string
+          description: Raw JSON payload from Atlas API
+        transformedJson:
+          type: string
+          description: Transformed canonical JSON after processing
+        importCounts:
+          type: object
+          additionalProperties:
+            $ref: "#/components/schemas/ImportCounts"
+        percentProcessed:
+          type: integer
+          format: int32
+          xml:
+            attribute: true
+        runAsDifferentUser:
+          type: boolean
+        criticalImportBusinessHoursAlertSent:
+          type: boolean
+          writeOnly: true
+      description: Represents an asynchronous task
+      xml:
+        name: task
+    IDListField:
+      type: object
+      properties:
+        idFields:
+          type: array
+          description: List of IDField elements
+          items:
+            $ref: "#/components/schemas/IDField"
+      description: List of IDField elements

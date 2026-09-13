@@ -1,6 +1,6 @@
 # Budget Ancillary Tables
 
-These 4 tables (36 fields, all Global) round out the capital-budgeting model beneath the standalone [BudgetColumn](budgetcolumn.md), [BudgetColumnType](budgetcolumntype.md), and [BudgetLineItem](budgetlineitem.md) entities — saved grid views (`BudgetView`), selectable column alternatives (`BudgetOption`), and cost-escalation indexing (`BudgetIndex`/`BudgetIndexValue`).
+These 4 tables (36 fields, all Global) round out the capital-budgeting model beneath the standalone [BudgetColumn](budget-column.md), [BudgetColumnType](budget-column-type.md), and [BudgetLineItem](budget-line-item.md) entities — saved grid views (`BudgetView`), selectable column alternatives (`BudgetOption`), and cost-escalation indexing (`BudgetIndex`/`BudgetIndexValue`).
 
 **Entities in this file:** 4 &nbsp;·&nbsp; **Total fields:** 36 (Global: 36, Firm: 0)
 

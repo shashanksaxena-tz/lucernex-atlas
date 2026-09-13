@@ -1,6 +1,6 @@
 # Workflow & Notification Ancillary Tables
 
-These 6 tables (49 fields, all Global) sit beneath the large standalone workflow entities ([WorkFlow](workflow.md), [WorkFlowStep](workflowstep.md), [WorkFlowTemplateStep](workflowtemplatestep.md), [WorkFlowStepApprover](workflowstepapprover.md)) and handle the assignee (as opposed to approver) side of a running step, template-time member targeting, and the separate email/dashboard notification subsystem that workflow steps can trigger. `Notify` itself is a single-field stub, included here rather than dropped so every distinct TableAssociation value stays accounted for.
+These 6 tables (49 fields, all Global) sit beneath the large standalone workflow entities ([WorkFlow](work-flow.md), [WorkFlowStep](work-flow-step.md), [WorkFlowTemplateStep](work-flow-template-step.md), [WorkFlowStepApprover](work-flow-step-approver.md)) and handle the assignee (as opposed to approver) side of a running step, template-time member targeting, and the separate email/dashboard notification subsystem that workflow steps can trigger. `Notify` itself is a single-field stub, included here rather than dropped so every distinct TableAssociation value stays accounted for.
 
 **Entities in this file:** 6 &nbsp;·&nbsp; **Total fields:** 49 (Global: 49, Firm: 0)
 

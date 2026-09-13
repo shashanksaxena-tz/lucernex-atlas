@@ -1,0 +1,4017 @@
+{
+ "_source": "GET /rest/api-docs/swagger on train-bbw.lucernex.com, build 26.09.0.113",
+ "_captured": "2026-09-13",
+ "_evidence": "Observed. Spec fetched live; no operation was invoked with a write verb.",
+ "openapi": "3.0.1",
+ "title": "Lucernex API",
+ "version": "1.0.0",
+ "servers": [
+  "https://train-bbw.lucernex.com/rest"
+ ],
+ "totals": {
+  "paths": 141,
+  "operations": 160,
+  "verbs": {
+   "GET": 104,
+   "PUT": 7,
+   "DELETE": 9,
+   "POST": 40
+  },
+  "schemas": 25
+ },
+ "operations": [
+  {
+   "method": "GET",
+   "path": "/adapter-config/firms/{firmId}/{vendorId}/files",
+   "summary": "List firm-specific config files for a vendor",
+   "params": [
+    {
+     "name": "firmId",
+     "in": "path",
+     "required": true
+    },
+    {
+     "name": "vendorId",
+     "in": "path",
+     "required": true
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "200",
+    "400",
+    "403",
+    "404"
+   ]
+  },
+  {
+   "method": "DELETE",
+   "path": "/adapter-config/firms/{firmId}/{vendorId}/{fileName}",
+   "summary": "Remove a firm-specific config override",
+   "params": [
+    {
+     "name": "firmId",
+     "in": "path",
+     "required": true
+    },
+    {
+     "name": "vendorId",
+     "in": "path",
+     "required": true
+    },
+    {
+     "name": "fileName",
+     "in": "path",
+     "required": true
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "200",
+    "400",
+    "403",
+    "404"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/adapter-config/firms/{firmId}/{vendorId}/{fileName}",
+   "summary": "Download the effective firm-specific config file",
+   "params": [
+    {
+     "name": "firmId",
+     "in": "path",
+     "required": true
+    },
+    {
+     "name": "vendorId",
+     "in": "path",
+     "required": true
+    },
+    {
+     "name": "fileName",
+     "in": "path",
+     "required": true
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "200",
+    "400",
+    "403",
+    "404"
+   ]
+  },
+  {
+   "method": "PUT",
+   "path": "/adapter-config/firms/{firmId}/{vendorId}/{fileName}",
+   "summary": "Upload a firm-specific config override",
+   "params": [
+    {
+     "name": "firmId",
+     "in": "path",
+     "required": true
+    },
+    {
+     "name": "vendorId",
+     "in": "path",
+     "required": true
+    },
+    {
+     "name": "fileName",
+     "in": "path",
+     "required": true
+    }
+   ],
+   "hasBody": true,
+   "responses": [
+    "200",
+    "400",
+    "403",
+    "409"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/adapter-config/vendors",
+   "summary": "List registered vendor adapter IDs",
+   "params": [],
+   "hasBody": false,
+   "responses": [
+    "200",
+    "403"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/adapter-config/{vendorId}/files",
+   "summary": "List config files for a vendor",
+   "params": [
+    {
+     "name": "vendorId",
+     "in": "path",
+     "required": true
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "200",
+    "400",
+    "403",
+    "404"
+   ]
+  },
+  {
+   "method": "DELETE",
+   "path": "/adapter-config/{vendorId}/{fileName}",
+   "summary": "Remove an external config override, reverting to the classpath default",
+   "params": [
+    {
+     "name": "vendorId",
+     "in": "path",
+     "required": true
+    },
+    {
+     "name": "fileName",
+     "in": "path",
+     "required": true
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "200",
+    "400",
+    "403",
+    "404"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/adapter-config/{vendorId}/{fileName}",
+   "summary": "Download the effective config file for a vendor entity",
+   "params": [
+    {
+     "name": "vendorId",
+     "in": "path",
+     "required": true
+    },
+    {
+     "name": "fileName",
+     "in": "path",
+     "required": true
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "200",
+    "400",
+    "403",
+    "404"
+   ]
+  },
+  {
+   "method": "PUT",
+   "path": "/adapter-config/{vendorId}/{fileName}",
+   "summary": "Upload an external override for a vendor config file",
+   "params": [
+    {
+     "name": "vendorId",
+     "in": "path",
+     "required": true
+    },
+    {
+     "name": "fileName",
+     "in": "path",
+     "required": true
+    }
+   ],
+   "hasBody": true,
+   "responses": [
+    "200",
+    "400",
+    "403",
+    "409"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/atlas-api/contracts",
+   "summary": "List active contracts for Atlas update-existing import",
+   "params": [
+    {
+     "name": "q",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "start",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "limit",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "filter",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "sort",
+     "in": "query",
+     "required": false
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "200",
+    "401",
+    "403"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/atlas-api/import/events/{taskName}",
+   "summary": "Stream Atlas import progress events",
+   "params": [
+    {
+     "name": "taskName",
+     "in": "path",
+     "required": true
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "default"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/atlas-api/import/{leaseId}",
+   "summary": "Fetch a single lease from the Atlas API and import it into iWMS",
+   "params": [
+    {
+     "name": "Authorization",
+     "in": "header",
+     "required": true
+    },
+    {
+     "name": "leaseId",
+     "in": "path",
+     "required": true
+    },
+    {
+     "name": "allowUpdate",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "dryRun",
+     "in": "query",
+     "required": false
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "200",
+    "400",
+    "401",
+    "502"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/atlas-api/import/{leaseId}/async",
+   "summary": "Schedule asynchronous Atlas lease import",
+   "params": [
+    {
+     "name": "Authorization",
+     "in": "header",
+     "required": false
+    },
+    {
+     "name": "leaseId",
+     "in": "path",
+     "required": true
+    },
+    {
+     "name": "createNew",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "persist",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "existingContractLxID",
+     "in": "query",
+     "required": false
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "200",
+    "400",
+    "401"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/atlas-api/leases",
+   "summary": "List all leases from the Atlas API",
+   "params": [],
+   "hasBody": false,
+   "responses": [
+    "200",
+    "401",
+    "403",
+    "502"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/atlas-api/sync",
+   "summary": "Fetch all leases from the Atlas API and import them into iWMS",
+   "params": [
+    {
+     "name": "Authorization",
+     "in": "header",
+     "required": true
+    },
+    {
+     "name": "allowUpdate",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "dryRun",
+     "in": "query",
+     "required": false
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "200",
+    "400",
+    "401",
+    "502"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/audit",
+   "summary": "Query table audit trail",
+   "params": [
+    {
+     "name": "objectType",
+     "in": "query",
+     "required": true
+    },
+    {
+     "name": "lxID",
+     "in": "query",
+     "required": true
+    },
+    {
+     "name": "lastModified",
+     "in": "query",
+     "required": false
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "200",
+    "500"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/audit/auditInfo",
+   "summary": "Fetch audit information",
+   "params": [
+    {
+     "name": "loginName",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "tableName",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "objectID",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "projectEntityID",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "beginDate",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "endDate",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "accessorName",
+     "in": "query",
+     "required": false
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "200",
+    "404",
+    "500"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/audit/maxAuditTableID",
+   "summary": "Query max(AuditTableID)",
+   "params": [],
+   "hasBody": false,
+   "responses": [
+    "200",
+    "500"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/audit/{maxAuditTableID}",
+   "summary": "Query table audit trail",
+   "params": [
+    {
+     "name": "maxAuditTableID",
+     "in": "path",
+     "required": true
+    },
+    {
+     "name": "sortAsc",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "synchronous",
+     "in": "query",
+     "required": false
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "200",
+    "404",
+    "500"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/audit/{peid}/{lastModified}",
+   "summary": "Query audit table for record groups and types that changed for an identified ProjectEntity",
+   "params": [
+    {
+     "name": "peid",
+     "in": "path",
+     "required": true
+    },
+    {
+     "name": "lastModified",
+     "in": "path",
+     "required": true
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "200",
+    "404",
+    "500"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/boList",
+   "summary": "",
+   "params": [
+    {
+     "name": "showUpdateAssignment",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "projectEntityID",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "inPanel",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "ajaxList",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "ajax",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "popupList",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "fdName",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "searchTextKey",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "BOType",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "volumnSearchText",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "page",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "start",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "limit",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "filter",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "sort",
+     "in": "query",
+     "required": false
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "default"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/boList",
+   "summary": "",
+   "params": [],
+   "hasBody": true,
+   "responses": [
+    "default"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/budgetViewAssignments/{budgetViewID}",
+   "summary": "",
+   "params": [
+    {
+     "name": "budgetViewID",
+     "in": "path",
+     "required": true
+    },
+    {
+     "name": "sort",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "start",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "limit",
+     "in": "query",
+     "required": false
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "default"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/businessObject/{objectType}",
+   "summary": "Find set of BusinessObjectLinks",
+   "params": [
+    {
+     "name": "maxAuditTableID",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "lastModifiedValue",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "fields",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "datamart",
+     "in": "query",
+     "required": false
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "200",
+    "500"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/businessObject/{objectType}",
+   "summary": "Creates/Updates {objectType} record",
+   "params": [
+    {
+     "name": "allowUpdate",
+     "in": "query",
+     "required": false
+    }
+   ],
+   "hasBody": true,
+   "responses": [
+    "200",
+    "400",
+    "500"
+   ]
+  },
+  {
+   "method": "PUT",
+   "path": "/businessObject/{objectType}",
+   "summary": "Updates {objectType} record",
+   "params": [],
+   "hasBody": true,
+   "responses": [
+    "200",
+    "404",
+    "500"
+   ]
+  },
+  {
+   "method": "DELETE",
+   "path": "/businessObject/{objectType}/clientid/{clientID}",
+   "summary": "Delete {objectType} record by clientID",
+   "params": [
+    {
+     "name": "clientID",
+     "in": "path",
+     "required": true
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "200",
+    "404",
+    "500"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/businessObject/{objectType}/clientid/{clientID}",
+   "summary": "Find {objectType} record by clientID",
+   "params": [
+    {
+     "name": "clientID",
+     "in": "path",
+     "required": true
+    },
+    {
+     "name": "deep",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "wantClientID",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "wantLxID",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "includes",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "excludes",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "download",
+     "in": "query",
+     "required": false
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "200",
+    "404",
+    "500"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/businessObject/{objectType}/details",
+   "summary": "Find set of {objectType} records via FIQL",
+   "params": [
+    {
+     "name": "fiql",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "fields",
+     "in": "query",
+     "required": true
+    },
+    {
+     "name": "$skip",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "$top",
+     "in": "query",
+     "required": false
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "200",
+    "400",
+    "413",
+    "500"
+   ]
+  },
+  {
+   "method": "DELETE",
+   "path": "/businessObject/{objectType}/lxid/{lxID}",
+   "summary": "Delete {objectType} record by lxID",
+   "params": [
+    {
+     "name": "lxID",
+     "in": "path",
+     "required": true
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "200",
+    "404",
+    "500"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/businessObject/{objectType}/lxid/{lxID}",
+   "summary": "Find {objectType} record by lxID",
+   "params": [
+    {
+     "name": "lxID",
+     "in": "path",
+     "required": true
+    },
+    {
+     "name": "deep",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "wantClientID",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "wantLxID",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "includes",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "excludes",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "download",
+     "in": "query",
+     "required": false
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "200",
+    "404",
+    "500"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/businessObject/{parentObjectType}/{parentID}",
+   "summary": "",
+   "params": [
+    {
+     "name": "parentObjectType",
+     "in": "path",
+     "required": true
+    },
+    {
+     "name": "parentID",
+     "in": "path",
+     "required": true
+    }
+   ],
+   "hasBody": true,
+   "responses": [
+    "default"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/cluster/asyncTask/{name}",
+   "summary": "Query async task",
+   "params": [
+    {
+     "name": "name",
+     "in": "path",
+     "required": true
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "200",
+    "400",
+    "404",
+    "500"
+   ]
+  },
+  {
+   "method": "DELETE",
+   "path": "/cluster/asyncTasks",
+   "summary": "Evict old async tasks",
+   "params": [
+    {
+     "name": "minutes",
+     "in": "query",
+     "required": false
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "200"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/cluster/asyncTasks",
+   "summary": "Query async tasks",
+   "params": [],
+   "hasBody": false,
+   "responses": [
+    "200",
+    "400",
+    "500"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/cluster/members",
+   "summary": "Finds all cluster member",
+   "params": [],
+   "hasBody": false,
+   "responses": [
+    "200",
+    "400",
+    "500"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/cluster/rejoin",
+   "summary": "Rejoin the hazelcast grid",
+   "params": [],
+   "hasBody": false,
+   "responses": [
+    "200",
+    "400",
+    "500"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/cluster/reportBuilder",
+   "summary": "",
+   "params": [],
+   "hasBody": true,
+   "responses": [
+    "default"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/cluster/scheduledJob/id/{jobID}",
+   "summary": "Query scheduled job state",
+   "params": [
+    {
+     "name": "jobID",
+     "in": "path",
+     "required": true
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "200",
+    "400",
+    "404",
+    "500"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/cluster/scheduledJob/name/{name}",
+   "summary": "Query scheduled job state",
+   "params": [
+    {
+     "name": "name",
+     "in": "path",
+     "required": true
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "200",
+    "400",
+    "404",
+    "500"
+   ]
+  },
+  {
+   "method": "DELETE",
+   "path": "/cluster/scheduledJob/{jobID}",
+   "summary": "Unschedule/cancel an identified job",
+   "params": [
+    {
+     "name": "jobID",
+     "in": "path",
+     "required": true
+    },
+    {
+     "name": "cancel",
+     "in": "query",
+     "required": false
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "200",
+    "400",
+    "404",
+    "500"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/cluster/scheduledJobs",
+   "summary": "",
+   "params": [
+    {
+     "name": "page",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "start",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "limit",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "filter",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "sort",
+     "in": "query",
+     "required": false
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "default"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/cluster/stats",
+   "summary": "Query cluster statistics",
+   "params": [],
+   "hasBody": false,
+   "responses": [
+    "200",
+    "400",
+    "500"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/cluster/upload",
+   "summary": "",
+   "params": [],
+   "hasBody": true,
+   "responses": [
+    "default"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/codeTableEntry",
+   "summary": "",
+   "params": [],
+   "hasBody": true,
+   "responses": [
+    "default"
+   ]
+  },
+  {
+   "method": "PUT",
+   "path": "/codeTableEntry",
+   "summary": "",
+   "params": [],
+   "hasBody": true,
+   "responses": [
+    "default"
+   ]
+  },
+  {
+   "method": "DELETE",
+   "path": "/codeTableEntry/{bundleID}/{entryID}",
+   "summary": "",
+   "params": [
+    {
+     "name": "bundleID",
+     "in": "path",
+     "required": true
+    },
+    {
+     "name": "entryID",
+     "in": "path",
+     "required": true
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "default"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/codeTableEntry/{bundleID}/{entryID}",
+   "summary": "",
+   "params": [
+    {
+     "name": "bundleID",
+     "in": "path",
+     "required": true
+    },
+    {
+     "name": "entryID",
+     "in": "path",
+     "required": true
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "default"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/deletions",
+   "summary": "",
+   "params": [
+    {
+     "name": "maxAuditTableID",
+     "in": "query",
+     "required": false
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "default"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/documents",
+   "summary": "Search document fields",
+   "params": [
+    {
+     "name": "offset",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "limit",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "fields",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "query",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "filter",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "sort",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "filename",
+     "in": "query",
+     "required": false
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "200",
+    "400",
+    "500"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/documents",
+   "summary": "",
+   "params": [],
+   "hasBody": true,
+   "responses": [
+    "default"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/documents/count",
+   "summary": "",
+   "params": [
+    {
+     "name": "query",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "autoIndex",
+     "in": "query",
+     "required": false
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "default"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/documents/dismax",
+   "summary": "Search document fields",
+   "params": [
+    {
+     "name": "offset",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "limit",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "fields",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "query",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "filter",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "sort",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "qf",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "mm",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "pf",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "ps",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "qs",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "tie",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "bq",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "bf",
+     "in": "query",
+     "required": false
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "200",
+    "400",
+    "500"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/documents/download/{documentID}",
+   "summary": "",
+   "params": [
+    {
+     "name": "documentID",
+     "in": "path",
+     "required": true
+    },
+    {
+     "name": "fileName",
+     "in": "query",
+     "required": false
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "default"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/documents/expenseDropdowns",
+   "summary": "",
+   "params": [],
+   "hasBody": false,
+   "responses": [
+    "default"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/documents/indexJob/peid/{peID}",
+   "summary": "",
+   "params": [
+    {
+     "name": "peID",
+     "in": "path",
+     "required": true
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "default"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/documents/indexJob/{objectType}/clientid/{clientID}",
+   "summary": "",
+   "params": [
+    {
+     "name": "objectType",
+     "in": "path",
+     "required": true
+    },
+    {
+     "name": "clientID",
+     "in": "path",
+     "required": true
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "default"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/documents/indexJob/{objectType}/lxid/{lxID}",
+   "summary": "",
+   "params": [
+    {
+     "name": "objectType",
+     "in": "path",
+     "required": true
+    },
+    {
+     "name": "lxID",
+     "in": "path",
+     "required": true
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "default"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/documents/ocrJob/peid/{peID}",
+   "summary": "",
+   "params": [
+    {
+     "name": "peID",
+     "in": "path",
+     "required": true
+    },
+    {
+     "name": "memberUUID",
+     "in": "path",
+     "required": true
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "default"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/documents/ocrJob/{objectType}/clientid/{clientID}",
+   "summary": "",
+   "params": [
+    {
+     "name": "objectType",
+     "in": "path",
+     "required": true
+    },
+    {
+     "name": "clientID",
+     "in": "path",
+     "required": true
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "default"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/documents/ocrJob/{objectType}/lxid/{lxID}",
+   "summary": "",
+   "params": [
+    {
+     "name": "objectType",
+     "in": "path",
+     "required": true
+    },
+    {
+     "name": "lxID",
+     "in": "path",
+     "required": true
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "default"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/documents/portfolioExpenseDropdowns",
+   "summary": "",
+   "params": [
+    {
+     "name": "programID",
+     "in": "query",
+     "required": false
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "default"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/documents/recoveryDropdowns",
+   "summary": "",
+   "params": [],
+   "hasBody": false,
+   "responses": [
+    "default"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/documents/scheduletask/{taskID}",
+   "summary": "",
+   "params": [
+    {
+     "name": "taskID",
+     "in": "path",
+     "required": true
+    }
+   ],
+   "hasBody": true,
+   "responses": [
+    "default"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/documents/staleIndex/{objectType}/lxid/{lxID}",
+   "summary": "",
+   "params": [
+    {
+     "name": "objectType",
+     "in": "path",
+     "required": true
+    },
+    {
+     "name": "lxID",
+     "in": "path",
+     "required": true
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "default"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/documents/zipped",
+   "summary": "",
+   "params": [],
+   "hasBody": true,
+   "responses": [
+    "default"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/documents/{objectType}/clientid/{clientID}",
+   "summary": "Search documents via SOLR",
+   "params": [
+    {
+     "name": "objectType",
+     "in": "path",
+     "required": true
+    },
+    {
+     "name": "clientID",
+     "in": "path",
+     "required": true
+    },
+    {
+     "name": "offset",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "limit",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "fields",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "query",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "filter",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "sort",
+     "in": "query",
+     "required": false
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "200",
+    "400",
+    "404",
+    "500"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/documents/{objectType}/lxid/{lxID}",
+   "summary": "Search documents via SOLR",
+   "params": [
+    {
+     "name": "objectType",
+     "in": "path",
+     "required": true
+    },
+    {
+     "name": "lxID",
+     "in": "path",
+     "required": true
+    },
+    {
+     "name": "offset",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "limit",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "fields",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "query",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "filter",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "sort",
+     "in": "query",
+     "required": false
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "200",
+    "400",
+    "404",
+    "500"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/entity/search/{searchText}",
+   "summary": "",
+   "params": [
+    {
+     "name": "searchText",
+     "in": "path",
+     "required": true
+    },
+    {
+     "name": "includeSites",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "includeProjects",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "includeCapProjects",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "includeFacilities",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "includeLocations",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "includeParcels",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "includeReContracts",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "includeEquipContracts",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "includePortfolios",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "includeCapPrograms",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "programID",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "regionID",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "marketID",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "stateID",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "country",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "city",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "postalCode",
+     "in": "query",
+     "required": false
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "default"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/fieldGroup/fields",
+   "summary": "",
+   "params": [
+    {
+     "name": "groupID",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "wantGlobals",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "wantUDFs",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "page",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "start",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "limit",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "filter",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "sort",
+     "in": "query",
+     "required": false
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "default"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/fieldGroup/groups",
+   "summary": "",
+   "params": [
+    {
+     "name": "wantOnlyGlobals",
+     "in": "query",
+     "required": false
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "default"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/firm",
+   "summary": "Import data",
+   "params": [
+    {
+     "name": "synchronous",
+     "in": "query",
+     "required": true
+    },
+    {
+     "name": "stopOnError",
+     "in": "query",
+     "required": false
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "200",
+    "202",
+    "500"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/firm/document",
+   "summary": "Import Document",
+   "params": [
+    {
+     "name": "authoredByPersonID",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "authorName",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "folderID",
+     "in": "query",
+     "required": true
+    },
+    {
+     "name": "folderPath",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "documentTypeID",
+     "in": "query",
+     "required": true
+    },
+    {
+     "name": "documentType",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "description",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "projectEntityID",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "createDate",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "autoCheckin",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "allowUpdate",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "readyForRelease",
+     "in": "query",
+     "required": false
+    }
+   ],
+   "hasBody": true,
+   "responses": [
+    "200",
+    "400",
+    "500"
+   ]
+  },
+  {
+   "method": "PUT",
+   "path": "/firm/pin",
+   "summary": "",
+   "params": [],
+   "hasBody": true,
+   "responses": [
+    "default"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/firm/roots/cached/{firmID}",
+   "summary": "Return true if firm is cached",
+   "params": [
+    {
+     "name": "firmID",
+     "in": "path",
+     "required": true
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "default"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/firm/signature",
+   "summary": "",
+   "params": [],
+   "hasBody": true,
+   "responses": [
+    "default"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/firm/types",
+   "summary": "Returns a list of boTypes",
+   "params": [
+    {
+     "name": "query",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "wantBase",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "wantCodeTables",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "wantIssues",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "wantClientLists",
+     "in": "query",
+     "required": false
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "200"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/fiscalPeriod",
+   "summary": "",
+   "params": [
+    {
+     "name": "programID",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "when",
+     "in": "query",
+     "required": true
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "default"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/guardrails/override/disable",
+   "summary": "Disable the guardrail emergency override (LxAdmin only)",
+   "params": [],
+   "hasBody": false,
+   "responses": [
+    "200",
+    "403"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/guardrails/override/enable",
+   "summary": "Enable the guardrail emergency override (LxAdmin only)",
+   "params": [
+    {
+     "name": "reason",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "durationHours",
+     "in": "query",
+     "required": false
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "200",
+    "400",
+    "403"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/guardrails/override/status",
+   "summary": "Get emergency override status for the caller's firm",
+   "params": [],
+   "hasBody": false,
+   "responses": [
+    "200"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/i18n/currency/{fromCurrency}/{toCurrency}/{value}",
+   "summary": "",
+   "params": [
+    {
+     "name": "fromCurrency",
+     "in": "path",
+     "required": true
+    },
+    {
+     "name": "toCurrency",
+     "in": "path",
+     "required": true
+    },
+    {
+     "name": "value",
+     "in": "path",
+     "required": true
+    },
+    {
+     "name": "contractID",
+     "in": "query",
+     "required": false
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "200",
+    "404",
+    "500"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/i18n/currency/{value}",
+   "summary": "",
+   "params": [
+    {
+     "name": "value",
+     "in": "path",
+     "required": true
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "200",
+    "500"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/i18n/date/{value}",
+   "summary": "Returns formatted date value",
+   "params": [
+    {
+     "name": "value",
+     "in": "path",
+     "required": true
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "200",
+    "500"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/i18n/datetime/{value}",
+   "summary": "Returns formatted date-time value",
+   "params": [
+    {
+     "name": "value",
+     "in": "path",
+     "required": true
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "200",
+    "500"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/i18n/{format}",
+   "summary": "",
+   "params": [
+    {
+     "name": "format",
+     "in": "path",
+     "required": true
+    },
+    {
+     "name": "param",
+     "in": "query",
+     "required": false
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "200",
+    "500"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/jwt",
+   "summary": "Creates a JWT security token",
+   "params": [
+    {
+     "name": "expiresOn",
+     "in": "query",
+     "required": false
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "200",
+    "500"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/jwt/crue/refresh",
+   "summary": "Creates a Lease AI JWT refresh token",
+   "params": [
+    {
+     "name": "target",
+     "in": "query",
+     "required": false
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "200",
+    "401",
+    "403",
+    "500"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/jwt/crue/touch",
+   "summary": "Touches Lease AI host-page activity",
+   "params": [
+    {
+     "name": "target",
+     "in": "query",
+     "required": false
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "200",
+    "401",
+    "403"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/jwt/help",
+   "summary": "Creates a JWT security token",
+   "params": [],
+   "hasBody": false,
+   "responses": [
+    "200",
+    "500"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/jwt/invoicesService",
+   "summary": "Creates a JWT security token",
+   "params": [],
+   "hasBody": false,
+   "responses": [
+    "200",
+    "500"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/loadlimits",
+   "summary": "Query LoadLimit metrics",
+   "params": [],
+   "hasBody": false,
+   "responses": [
+    "200"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/loadlimits/config",
+   "summary": "Query LoadLimit configuration",
+   "params": [],
+   "hasBody": false,
+   "responses": [
+    "200"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/lookerapi/dashboards",
+   "summary": "",
+   "params": [],
+   "hasBody": false,
+   "responses": [
+    "default"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/lookerapi/dashboards/search",
+   "summary": "",
+   "params": [],
+   "hasBody": false,
+   "responses": [
+    "default"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/lookerapi/embedurl",
+   "summary": "",
+   "params": [
+    {
+     "name": "objectType",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "objectId",
+     "in": "query",
+     "required": false
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "default"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/lookerapi/explores",
+   "summary": "",
+   "params": [],
+   "hasBody": false,
+   "responses": [
+    "default"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/lookerapi/folders",
+   "summary": "",
+   "params": [],
+   "hasBody": false,
+   "responses": [
+    "default"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/lookerapi/folders/{folderId}/dashboards",
+   "summary": "",
+   "params": [
+    {
+     "name": "folderId",
+     "in": "path",
+     "required": true
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "default"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/lookerapi/folders/{folderId}/looks",
+   "summary": "",
+   "params": [
+    {
+     "name": "folderId",
+     "in": "path",
+     "required": true
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "default"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/lookerapi/looks",
+   "summary": "",
+   "params": [],
+   "hasBody": false,
+   "responses": [
+    "default"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/lookerapi/looks/search",
+   "summary": "",
+   "params": [],
+   "hasBody": false,
+   "responses": [
+    "default"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/lookerapi/treenodes",
+   "summary": "",
+   "params": [],
+   "hasBody": false,
+   "responses": [
+    "default"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/membership/member/{memberID}",
+   "summary": "Query ProjectEntities for the specified member",
+   "params": [
+    {
+     "name": "memberID",
+     "in": "path",
+     "required": true
+    },
+    {
+     "name": "wantClientID",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "wantLxID",
+     "in": "query",
+     "required": false
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "200",
+    "404",
+    "500"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/membership/projectEntity/{peid}",
+   "summary": "Query ProjectEntity members",
+   "params": [
+    {
+     "name": "peid",
+     "in": "path",
+     "required": true
+    },
+    {
+     "name": "wantClientID",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "wantLxID",
+     "in": "query",
+     "required": false
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "200",
+    "404",
+    "500"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/membership/{objectType}/queueassignment",
+   "summary": "Creates/Updates {objectType} record",
+   "params": [
+    {
+     "name": "objectType",
+     "in": "path",
+     "required": true
+    }
+   ],
+   "hasBody": true,
+   "responses": [
+    "204",
+    "500"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/mobilelayout/deletedfields",
+   "summary": "",
+   "params": [
+    {
+     "name": "pageLayoutID",
+     "in": "query",
+     "required": false
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "default"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/mobilelayout/fields",
+   "summary": "",
+   "params": [
+    {
+     "name": "pageLayoutID",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "reset",
+     "in": "query",
+     "required": false
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "default"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/msproject",
+   "summary": "",
+   "params": [
+    {
+     "name": "selectedIDs",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "ignoreRelationships",
+     "in": "query",
+     "required": false
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "default"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/msproject",
+   "summary": "",
+   "params": [
+    {
+     "name": "projectEntityID",
+     "in": "query",
+     "required": false
+    }
+   ],
+   "hasBody": true,
+   "responses": [
+    "default"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/msproject/importTemplate",
+   "summary": "",
+   "params": [
+    {
+     "name": "selectedTaskNames",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "Description",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "IsValidForCapProgram",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "IsValidForCapProject",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "IsValidForContract",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "IsValidForEquipContract",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "IsValidForFacility",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "IsValidForLocation",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "IsValidForOpenProject",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "IsValidForParcel",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "IsValidForPortfolio",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "IsValidForPotentialProject",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "IsValidForPrototype",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "TemplateName",
+     "in": "query",
+     "required": false
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "default"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/msproject/uploadTemplate",
+   "summary": "",
+   "params": [],
+   "hasBody": true,
+   "responses": [
+    "default"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/pageLayout/action/{actionType}",
+   "summary": "",
+   "params": [
+    {
+     "name": "actionType",
+     "in": "path",
+     "required": true
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "default"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/pageLayout/values/{pageLayoutID}",
+   "summary": "",
+   "params": [
+    {
+     "name": "pageLayoutID",
+     "in": "path",
+     "required": true
+    },
+    {
+     "name": "projectEntityID",
+     "in": "query",
+     "required": false
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "default"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/pageLayout/values/{pageLayoutID}",
+   "summary": "",
+   "params": [
+    {
+     "name": "pageLayoutID",
+     "in": "path",
+     "required": true
+    },
+    {
+     "name": "projectEntityID",
+     "in": "query",
+     "required": false
+    }
+   ],
+   "hasBody": true,
+   "responses": [
+    "default"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/pageLayout/{pageLayoutType}",
+   "summary": "",
+   "params": [
+    {
+     "name": "pageLayoutType",
+     "in": "path",
+     "required": true
+    },
+    {
+     "name": "projectEntityID",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "availableForMobile",
+     "in": "query",
+     "required": false
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "default"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/pagelayoutfield",
+   "summary": "",
+   "params": [
+    {
+     "name": "pageLayoutID",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "layoutType",
+     "in": "query",
+     "required": false
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "default"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/pagelayoutfield/dropdownvalues",
+   "summary": "",
+   "params": [
+    {
+     "name": "lxFieldTypeID",
+     "in": "query",
+     "required": false
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "default"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/pagelayoutfield/securityaccess",
+   "summary": "",
+   "params": [
+    {
+     "name": "pageLayoutID",
+     "in": "query",
+     "required": false
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "default"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/payments/paymentTransactions",
+   "summary": "Query payment transactions",
+   "params": [
+    {
+     "name": "contractID",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "expenseType",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "expenseGroup",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "expenseCategory",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "effBeginDate",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "effEndDate",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "dueBeginDate",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "dueEndDate",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "postingBeginDate",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "postingEndDate",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "processedFlag",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "vendorID",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "internalRefNumber",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "invoiceNumber",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "checkNumber",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "arOptions",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "assetID",
+     "in": "query",
+     "required": false
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "200",
+    "400",
+    "401",
+    "404",
+    "500"
+   ]
+  },
+  {
+   "method": "DELETE",
+   "path": "/photo",
+   "summary": "",
+   "params": [
+    {
+     "name": "projectEntityID",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "codeSQLTableID",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "objectID",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "photoType",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "baseName",
+     "in": "query",
+     "required": false
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "default"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/photo",
+   "summary": "",
+   "params": [
+    {
+     "name": "projectEntityID",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "codeSQLTableID",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "objectID",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "photoType",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "baseName",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "imageHeight",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "imageWidth",
+     "in": "query",
+     "required": false
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "default"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/photo",
+   "summary": "",
+   "params": [
+    {
+     "name": "projectEntityID",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "codeSQLTableID",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "objectID",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "photoType",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "baseName",
+     "in": "query",
+     "required": false
+    }
+   ],
+   "hasBody": true,
+   "responses": [
+    "default"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/properties",
+   "summary": "Query Property Groups",
+   "params": [],
+   "hasBody": false,
+   "responses": [
+    "200"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/properties/azuremonitor",
+   "summary": "Query Azure Monitor Properties",
+   "params": [],
+   "hasBody": false,
+   "responses": [
+    "200"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/properties/{group}",
+   "summary": "Query Properties",
+   "params": [
+    {
+     "name": "group",
+     "in": "path",
+     "required": true
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "200"
+   ]
+  },
+  {
+   "method": "PUT",
+   "path": "/properties/{group}",
+   "summary": "Updates a specified property",
+   "params": [
+    {
+     "name": "group",
+     "in": "path",
+     "required": true
+    }
+   ],
+   "hasBody": true,
+   "responses": [
+    "200",
+    "404",
+    "500"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/reportBuilder/addfield",
+   "summary": "",
+   "params": [
+    {
+     "name": "BuilderHashCode",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "position",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "row",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "col",
+     "in": "query",
+     "required": false
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "default"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/reportBuilder/builderState",
+   "summary": "",
+   "params": [
+    {
+     "name": "BuilderHashCode",
+     "in": "query",
+     "required": false
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "default"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/reportBuilder/clearBuilderState",
+   "summary": "",
+   "params": [
+    {
+     "name": "BuilderHashCode",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "resetBuilder",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "ScheduledJobID",
+     "in": "query",
+     "required": false
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "default"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/reportBuilder/columns",
+   "summary": "",
+   "params": [
+    {
+     "name": "BuilderHashCode",
+     "in": "query",
+     "required": false
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "default"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/reportBuilder/deletefield",
+   "summary": "",
+   "params": [
+    {
+     "name": "BuilderHashCode",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "name",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "keepFiltered",
+     "in": "query",
+     "required": false
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "default"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/reportBuilder/includedfields",
+   "summary": "",
+   "params": [
+    {
+     "name": "BuilderHashCode",
+     "in": "query",
+     "required": false
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "default"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/reportBuilder/insert",
+   "summary": "",
+   "params": [
+    {
+     "name": "BuilderHashCode",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "name",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "row",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "col",
+     "in": "query",
+     "required": false
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "default"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/reportBuilder/movefield",
+   "summary": "",
+   "params": [
+    {
+     "name": "BuilderHashCode",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "name",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "position",
+     "in": "query",
+     "required": false
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "default"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/reportBuilder/restoreBuilderState",
+   "summary": "",
+   "params": [
+    {
+     "name": "CurrentBuilderHashCode",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "OriginaldBuilderHashCode",
+     "in": "query",
+     "required": false
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "default"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/reportBuilder/save",
+   "summary": "",
+   "params": [
+    {
+     "name": "BuilderHashCode",
+     "in": "query",
+     "required": false
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "default"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/reportBuilder/savefiltersettings",
+   "summary": "",
+   "params": [
+    {
+     "name": "BuilderHashCode",
+     "in": "query",
+     "required": false
+    }
+   ],
+   "hasBody": true,
+   "responses": [
+    "default"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/reportBuilder/setAlignment",
+   "summary": "",
+   "params": [
+    {
+     "name": "BuilderHashCode",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "fieldName",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "alignment",
+     "in": "query",
+     "required": false
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "default"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/reportBuilder/setcriteria",
+   "summary": "",
+   "params": [
+    {
+     "name": "BuilderHashCode",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "fieldName",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "specified",
+     "in": "query",
+     "required": false
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "default"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/reportBuilder/setsort",
+   "summary": "",
+   "params": [
+    {
+     "name": "BuilderHashCode",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "fieldName",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "dir",
+     "in": "query",
+     "required": false
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "default"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/reportBuilder/updateSpan",
+   "summary": "",
+   "params": [
+    {
+     "name": "BuilderHashCode",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "widthOrHeight",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "direction",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "name",
+     "in": "query",
+     "required": false
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "default"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/scheduleNotification/notification/{ProjectEntityID}",
+   "summary": "",
+   "params": [
+    {
+     "name": "ProjectEntityID",
+     "in": "path",
+     "required": true
+    },
+    {
+     "name": "taskID",
+     "in": "query",
+     "required": false
+    }
+   ],
+   "hasBody": true,
+   "responses": [
+    "default"
+   ]
+  },
+  {
+   "method": "PUT",
+   "path": "/scheduleNotification/notification/{lxid}",
+   "summary": "",
+   "params": [
+    {
+     "name": "lxid",
+     "in": "path",
+     "required": true
+    },
+    {
+     "name": "taskID",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "ProjectEntityID",
+     "in": "query",
+     "required": false
+    }
+   ],
+   "hasBody": true,
+   "responses": [
+    "default"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/scheduleNotification/notifications/lxid/{lxID}",
+   "summary": "",
+   "params": [
+    {
+     "name": "lxID",
+     "in": "path",
+     "required": true
+    },
+    {
+     "name": "taskID",
+     "in": "query",
+     "required": false
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "default"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/scheduleNotification/notifications/{ProjectEntityID}",
+   "summary": "",
+   "params": [
+    {
+     "name": "ProjectEntityID",
+     "in": "path",
+     "required": true
+    },
+    {
+     "name": "taskID",
+     "in": "query",
+     "required": false
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "default"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/scheduletask/securityaccess",
+   "summary": "",
+   "params": [
+    {
+     "name": "projectEntityID",
+     "in": "query",
+     "required": false
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "default"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/script",
+   "summary": "",
+   "params": [],
+   "hasBody": false,
+   "responses": [
+    "default"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/script/{name}",
+   "summary": "",
+   "params": [
+    {
+     "name": "name",
+     "in": "path",
+     "required": true
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "default"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/task",
+   "summary": "Creates Task",
+   "params": [],
+   "hasBody": true,
+   "responses": [
+    "200"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/task/download/{name}",
+   "summary": "Downloads the Task's generated file",
+   "params": [
+    {
+     "name": "name",
+     "in": "path",
+     "required": true
+    },
+    {
+     "name": "gzip",
+     "in": "query",
+     "required": true
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "200"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/task/downloadJobFile/{filename}",
+   "summary": "Downloads job log",
+   "params": [
+    {
+     "name": "filename",
+     "in": "path",
+     "required": true
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "200"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/task/mine",
+   "summary": "Find user's latest Task",
+   "params": [],
+   "hasBody": false,
+   "responses": [
+    "200"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/task/ping",
+   "summary": "Returns 'hello'",
+   "params": [],
+   "hasBody": false,
+   "responses": [
+    "200"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/task/sleep/{seconds}",
+   "summary": "Sleep for a specified number of seconds",
+   "params": [
+    {
+     "name": "seconds",
+     "in": "path",
+     "required": true
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "200"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/task/state/{name}",
+   "summary": "Fetches the Task state",
+   "params": [
+    {
+     "name": "name",
+     "in": "path",
+     "required": true
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "200"
+   ]
+  },
+  {
+   "method": "DELETE",
+   "path": "/task/{name}",
+   "summary": "Cancels identified Task",
+   "params": [
+    {
+     "name": "name",
+     "in": "path",
+     "required": true
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "200"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/task/{name}",
+   "summary": "Find identified Task",
+   "params": [
+    {
+     "name": "name",
+     "in": "path",
+     "required": true
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "200"
+   ]
+  },
+  {
+   "method": "POST",
+   "path": "/vendor-lease/{vendorId}/import",
+   "summary": "Import a lease abstract from a vendor-specific JSON payload",
+   "params": [
+    {
+     "name": "vendorId",
+     "in": "path",
+     "required": true
+    },
+    {
+     "name": "allowUpdate",
+     "in": "query",
+     "required": false
+    },
+    {
+     "name": "dryRun",
+     "in": "query",
+     "required": false
+    }
+   ],
+   "hasBody": true,
+   "responses": [
+    "200",
+    "400",
+    "401",
+    "404",
+    "422"
+   ]
+  },
+  {
+   "method": "GET",
+   "path": "/virtual/{virtualBOType}",
+   "summary": "Query virtual records for a Contract",
+   "params": [
+    {
+     "name": "virtualBOType",
+     "in": "path",
+     "required": true
+    },
+    {
+     "name": "contractID",
+     "in": "query",
+     "required": false
+    }
+   ],
+   "hasBody": false,
+   "responses": [
+    "200",
+    "400",
+    "500"
+   ]
+  }
+ ],
+ "schemas": {
+  "BusinessObjectLink": {
+   "required": null,
+   "properties": [
+    "href",
+    "lxID",
+    "name",
+    "objectType"
+   ]
+  },
+  "BusinessObjectLinks": {
+   "required": null,
+   "properties": [
+    "businessObjectLinks"
+   ]
+  },
+  "AuditInfo": {
+   "required": null,
+   "properties": [
+    "action",
+    "createdBy",
+    "createdDate",
+    "entityID",
+    "entityName",
+    "fieldName",
+    "newValue",
+    "oldValue",
+    "tableName",
+    "udf"
+   ]
+  },
+  "ExtResponse": {
+   "required": null,
+   "properties": [
+    "data",
+    "message",
+    "success"
+   ]
+  },
+  "ImportError": {
+   "required": null,
+   "properties": [
+    "clientID",
+    "entityName",
+    "entityUniqueID",
+    "fatal",
+    "lookup",
+    "lxID",
+    "message",
+    "objectType",
+    "position",
+    "projectEntityID"
+   ]
+  },
+  "ImportResults": {
+   "required": null,
+   "properties": [
+    "errors",
+    "successes"
+   ]
+  },
+  "ImportSuccess": {
+   "required": null,
+   "properties": [
+    "clientID",
+    "create",
+    "delete",
+    "entityName",
+    "entityUniqueID",
+    "lxID",
+    "objectType",
+    "projectEntityID",
+    "update"
+   ]
+  },
+  "BusinessObject": {
+   "required": [
+    "botype"
+   ],
+   "properties": [
+    "botype",
+    "children",
+    "clientID",
+    "extSubFields",
+    "fields",
+    "href",
+    "match",
+    "modified",
+    "modifiedByID",
+    "projectEntityName",
+    "updateOnly",
+    "uuid"
+   ]
+  },
+  "Field": {
+   "required": null,
+   "properties": [
+    "name",
+    "value"
+   ]
+  },
+  "IDField": {
+   "required": null,
+   "properties": []
+  },
+  "CodeTableEntry": {
+   "required": null,
+   "properties": [
+    "bundleID",
+    "href",
+    "id",
+    "inactive",
+    "longName",
+    "parentBundleID",
+    "parentID",
+    "shortName"
+   ]
+  },
+  "Document": {
+   "required": null,
+   "properties": [
+    "author_name",
+    "base_name",
+    "category",
+    "code_document_type",
+    "content",
+    "content_type",
+    "description",
+    "file_created_date",
+    "folder",
+    "id",
+    "last_modified",
+    "pe_id",
+    "pe_name",
+    "pe_type",
+    "title",
+    "version"
+   ]
+  },
+  "BOType": {
+   "required": null,
+   "properties": [
+    "category",
+    "name",
+    "weight"
+   ]
+  },
+  "Types": {
+   "required": null,
+   "properties": [
+    "types"
+   ]
+  },
+  "DocumentImportResult": {
+   "required": null,
+   "properties": [
+    "documentID",
+    "folderID",
+    "message"
+   ]
+  },
+  "BigDecimalParameter": {
+   "required": null,
+   "properties": [
+    "bigDecimal"
+   ]
+  },
+  "DateParameter": {
+   "required": null,
+   "properties": [
+    "date"
+   ]
+  },
+  "DateTimeParameter": {
+   "required": null,
+   "properties": [
+    "date"
+   ]
+  },
+  "ProjectEntity": {
+   "required": null,
+   "properties": [
+    "clientID",
+    "entityName",
+    "lxID",
+    "projectEntityID"
+   ]
+  },
+  "Property": {
+   "required": null,
+   "properties": [
+    "key",
+    "value"
+   ]
+  },
+  "ScheduleNotificationBean": {
+   "required": null,
+   "properties": [
+    "alertType",
+    "notificationDays",
+    "notificationMembersList",
+    "notificationMessage",
+    "notificationName",
+    "sendAlertToMembers",
+    "sendEmailToMembers"
+   ]
+  },
+  "ImportCounts": {
+   "required": null,
+   "properties": [
+    "boType",
+    "creates",
+    "deletes",
+    "failures",
+    "processed",
+    "updates",
+    "warnings"
+   ]
+  },
+  "Options": {
+   "required": null,
+   "properties": [
+    "batchID",
+    "datamart",
+    "deep",
+    "excludes",
+    "exportDependencies",
+    "exportDependenciesBldr",
+    "includeReferencedRootItems",
+    "includes",
+    "maxAuditTableID",
+    "mostRecentModifiedDate",
+    "publicKey",
+    "renderClientID",
+    "renderFirmDefinedFields",
+    "renderLxID",
+    "renderViewOnlyFields",
+    "stopOn1st"
+   ]
+  },
+  "Task": {
+   "required": [
+    "name"
+   ],
+   "properties": [
+    "created",
+    "createdBy",
+    "criticalImportBusinessHoursAlertSent",
+    "cronExpression",
+    "delaySeconds",
+    "encodedObject",
+    "errorCount",
+    "exceptionStack",
+    "finished",
+    "firmName",
+    "href",
+    "importCounts",
+    "importResults",
+    "inputFile",
+    "inputFormat",
+    "jobArgument",
+    "jobClass",
+    "name",
+    "options",
+    "outputFile",
+    "percentProcessed",
+    "processedRecordCount",
+    "rawPayloadJson",
+    "resultsSummary",
+    "runAsDifferentUser",
+    "runTime",
+    "started",
+    "state",
+    "successCount",
+    "totalRecordCount",
+    "transformedJson",
+    "triggerType",
+    "warningCount"
+   ]
+  },
+  "IDListField": {
+   "required": null,
+   "properties": [
+    "idFields"
+   ]
+  }
+ }
+}

@@ -27,6 +27,35 @@ Captured 2026-09-10, tenant `(ASG)American Freight`, build `26.08.0.46`, from th
 `Lx.ui.MenuTree` component. Read-only. Machine-readable at
 [`../mindmap/navtree.json`](../mindmap/navtree.json). Confidence: **Observed** throughout.
 
+## A route is not the same as an addressable URL
+
+> **Qualification added 2026-09-13, and it matters for migration.** This document maps every screen
+> to a JSP route. **A route existing does not mean the screen is deep-linkable.** Driving all 46
+> Contract nav nodes in a real browser gives:
+
+| Outcome | Nodes |
+|---|---:|
+| **Renders standalone** — a real, bookmarkable URL | **14** |
+| **Client-side redirect to the shell** — server returns 37–40KB of HTML, then the page's own script bounces to `EntityInfo.jsp` and renders the default Summary | **22** |
+| `AccessDenied` | 8 |
+| Bounced server-side | 2 |
+
+Source: [`../tenants/bbw-contract-screens.json`](../tenants/bbw-contract-screens.json), `(ASG)BBW`.
+
+**Derived — and this is a methodological warning as much as a finding.** Classifying the same 46
+routes by raw `fetch` reported **36** addressable. Only a real browser revealed the other 22.
+**A fetch-based route audit of this application overstates deep-linkability by more than 2×**,
+because a `200` with a plausible body proves the server answered and nothing about what renders. The
+same failure produced this corpus's retracted conditional-fields false negative; the general rule is
+in [`../CONVENTIONS.md`](../CONVENTIONS.md).
+
+**Derived.** `Equipment Contract` behaves differently again: **not deep-linkable at all** — only group
+heads resolve, and they render their first leaf. So a blanket statement misleads in both directions.
+
+**Consequence for migration.** Roughly **a third of Contract's saved links would survive** a move,
+and **none of Equipment Contract's would**. Any migration plan that assumes bookmark parity from this
+routing table is wrong.
+
 ## What the two page-builder routes prove
 
 `PForm.jsp` and `PLForm.jsp` are the *same page builder* in two modes: **P**age **Form** and

@@ -10,5 +10,6 @@
 <nav><a href="../index.html">Overview</a><a href="../atlas.html#/map?set=feature">Feature map</a>
 <a href="../atlas.html">Interactive app</a>
 <a href="../entities/index.html">Record types</a><a href="../rules/index.html">Rules</a>
+<a href="../research/index.html">Research</a>
 <a href="../questions.html">Open questions</a></nav></header>
 <main><p class="crumb"><a href="../index.html">Atlas</a> &rsaquo; <a href="index.html">Rules</a> &rsaquo; ACC-R-002</p><h1 class="mono">ACC-R-002</h1><p class="sub">Lease Accounting &amp; Payments &middot; Contract-level discount rate override</p><span class="tag inf">Inferred</span><p class="lead">A rate typed directly on the contract is used ahead of the resolved default. The precedence is not stated by the vendor.</p><p>- Trigger: schedule generation or classification test. - Inputs: `Contract.DiscountRate` (INPUT), `Contract.ComputedSLDiscountRate` (COMPUTED). - Condition: if `Contract.DiscountRate` is populated it is the rate used; otherwise `ComputedSLDiscountRate`. - Output: `SLSummary.DiscountRate`, `ContractFinancialTest.DiscountRate`. - Confidence: Inferred — the two fields coexist and `ComputedSLDiscountRate` is explicitly the *default*, but no vendor text states the precedence.</p><p style="font-size:11.5px;color:var(--faint);margin-top:18px">Source: modules/accounting/rules.md</p></main></body></html>

@@ -43,9 +43,21 @@ level, and it does not contradict a shared-schema-with-`FirmID`-discriminator re
 schema where `FirmID` still does the real isolation work. The static schema export
 (`_lucernex_objects_summary.txt`) cannot distinguish the two — it shows one set of table definitions,
 which is exactly what you'd see in *either* architecture (one schema replicated per tenant database,
-or one schema shared and discriminated by `FirmID`). **This is the single open question this
-document cannot close**, and it is exactly the question the ASG estate's own two contradictory
+or one schema shared and discriminated by `FirmID`). **This document cannot close that question from
+the schema shape alone**, and it is exactly the question the ASG estate's own two contradictory
 ADR-004s disagree on.
+
+> **Update, 2026-09-13 — it can be closed, from a different direction.** Firm custom fields are not
+> an EAV bag or a JSON column: they are **ordinary physical columns named `Firm_<Name>` on the base
+> table**. The census carries **359 of them across 20 objects, 258 on `Contract` alone** — 258 of
+> that table's 570 columns. Adding a firm field is therefore a **DDL change against the tenant's
+> table**, and 258 tenant-specific columns on a shared `Contract` cannot coexist with other tenants'
+> columns in one database without either a union-of-all-tenants table or per-tenant schemas — and the
+> incumbent chose neither. That is direct evidence **for** database-per-tenant and **against** the
+> shared-database reading. It also explains why `Manage Data Fields` is read-only to a firm in both
+> tenants: **you cannot self-service a DDL**. Full analysis in
+> [`../../features/data-fields/`](../../features/data-fields/); recorded independently as §16 of
+> [`../../tenants/bbw-vs-american-freight.md`](../../tenants/bbw-vs-american-freight.md).
 
 ## What Lucernex's data model settles, independent of that question
 

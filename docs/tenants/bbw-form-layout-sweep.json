@@ -1,0 +1,2160 @@
+{
+ "_firm": "(ASG)BBW  train-bbw.lucernex.com",
+ "_captured": "2026-09-13",
+ "_evidence": "Observed unless marked otherwise.",
+ "_headline": "CONTRADICTS the prior finding that every conditionalFieldsConfig is empty. 8 of 135 layouts carry populated conditional-field rules: 2 LIST page layouts and 6 Issue/Form layouts. 33 raw json.conditionalFieldsConfig values were captured verbatim.",
+ "howFormLayoutsAreEnumerated": {
+  "step1": "GET /en/admin/FirmCodeList.jsp?ajaxList=true&ajax=true&popupList=true&BOType=CodeIssueType&start=0&limit=5000 -> the code-table directory (207 entries); the row 'Issue Type Code' carries TableType=2035.",
+  "step2": "GET /en/admin/FirmCodeEdit.jsp?popupList=true&includeType=Manage&TableType=2035&ajaxList=true&ajax=true&start=0&limit=5000 -> the 6 Issue Types. Each topic's expandedHtml embeds its form-layout table.",
+  "step3": "Each row of that table links: LayoutEditorAJAX.jsp?PageLayoutID={id}&formSubmit=editBO&popupEdit=true&buildLayout=true&layoutMode=form&CodeIssueTypeID={issueTypeId}",
+  "note": "mode=ISSUE and mode=FORM on SummaryEntityPageLayoutEdit.jsp are NOT valid - they silently fall back to mode=SEP and return the same 15 summary layouts. Form layouts are reachable only through the Issue Type."
+ },
+ "sweepVector": {
+  "endpoint": "GET /en/pagebuilder/ConditionalFieldsForLayout.jsp?showID={pageLayoutID}",
+  "why": "One cheap GET per layout renders a 'Field | Rule | Criteria' table, or the sentinel text 'There are no conditional fields in this layout.' Far cheaper than driving ConditionFilterEx per field. Works for SEP/SUB/LIST and form layouts alike.",
+  "semanticNote": "The page states verbatim: 'Conditions affect the edit layout and NOT the list layout.' So a condition attached to a LIST layout governs the edit form reached from that list, not the grid itself."
+ },
+ "rawConfigVector": {
+  "endpoint": "GET /en/pagebuilder/ConditionFilterEx.jsp?&fieldKey={rgafID}&ajax=true&pageLayoutID={plid}&IsIssueLayout=true",
+  "finding": "CustomObjectDelID is NOT required - fieldKey + pageLayoutID is sufficient. Verified by fetching the same field with and without the hash and getting byte-identical config. This removes the need to render the builder just to mint a per-session cell hash (the builder is still needed to learn which rgafIDs a layout contains).",
+  "extract": "regex on the response: name='json.conditionalFieldsConfig' value='({...})'  - the same JSON is repeated in an Ext.onReady block as 'var jsonConfig = {...}'.",
+  "builderConstraint": "Derived: only ONE LayoutEditorAJAX builder can be open per session. Eight iframes loaded concurrently all collided and only one produced a populated DOM. Renders must be serialised."
+ },
+ "conditionalFieldsConfigSchema": {
+  "_evidence": "Derived from 33 observed values plus the observed select vocabularies on ConditionFilterEx.jsp.",
+  "shape": {
+   "allAny": "all | any",
+   "showHide": "show | showAndRequire | hide",
+   "criteriaFields": [
+    {
+     "scriptName": "data-field script name of the DRIVING field, e.g. Issue.LAR_RequestType",
+     "crtOpt1": "operator code, string",
+     "crtVal1": [
+      "one or more code values, by display string not id"
+     ],
+     "isCheckBox": "boolean"
+    }
+   ]
+  },
+  "operatorCodesObserved": {
+   "2": "in (rendered as '<field> id in <values>')",
+   "17": "not in (rendered as '<field> id not in <values>')"
+  },
+  "note": "Only crtOpt1/crtVal1 were ever populated in BBW; the '1' suffix implies the engine supports a second operand slot (crtOpt2/crtVal2) that this tenant never uses. Inferred.",
+  "valuesAreLabels": "crtVal1 holds display strings ('Estoppel', 'New Lease', 'Yes', 'Vendor Change'), not numeric code ids. Observed."
+ },
+ "totals": {
+  "layoutsSwept": 135,
+  "layoutsReadable": 134,
+  "unreadable401": 1,
+  "pageLayouts": 93,
+  "formLayouts": 42,
+  "layoutsWithConditions": 8,
+  "conditionalFieldRecords": 50,
+  "criteriaClausesTotal": 54
+ },
+ "issueTypes": [
+  {
+   "issueTypeID": "6339",
+   "name": "ASC 842 Tracking",
+   "formLayoutCount": 3
+  },
+  {
+   "issueTypeID": "6331",
+   "name": "Change Request",
+   "formLayoutCount": 6
+  },
+  {
+   "issueTypeID": "6314",
+   "name": "Lease Admin Request",
+   "formLayoutCount": 27
+  },
+  {
+   "issueTypeID": "6330",
+   "name": "QC Request",
+   "formLayoutCount": 1
+  },
+  {
+   "issueTypeID": "6315",
+   "name": "User Request",
+   "formLayoutCount": 2
+  },
+  {
+   "issueTypeID": "6325",
+   "name": "Vendor Changes (Integration)",
+   "formLayoutCount": 3
+  }
+ ],
+ "populatedLayouts": [
+  {
+   "pageLayoutID": 98946,
+   "kind": "FORM",
+   "name": "LAR Submit Lease Admin Request",
+   "issueType": "Lease Admin Request",
+   "fieldCount": 43,
+   "conditionCount": 19,
+   "conditions": [
+    {
+     "pageLayoutFieldID": 2746099,
+     "displayLabel": "Client Notes",
+     "dataField": "LAR_ClientNotes",
+     "conditionalFieldsConfig": {
+      "allAny": "all",
+      "criteriaFields": [
+       {
+        "crtOpt1": "17",
+        "crtVal1": [
+         "Vendor Change"
+        ],
+        "isCheckBox": false,
+        "scriptName": "Issue.LAR_RequestType"
+       }
+      ],
+      "showHide": "show"
+     }
+    },
+    {
+     "pageLayoutFieldID": 2746101,
+     "displayLabel": "Store Location(s)",
+     "dataField": "LAR_StoreLocation",
+     "conditionalFieldsConfig": {
+      "allAny": "all",
+      "criteriaFields": [
+       {
+        "crtOpt1": "2",
+        "crtVal1": [
+         "New Lease"
+        ],
+        "isCheckBox": false,
+        "scriptName": "Issue.LAR_RequestType"
+       }
+      ],
+      "showHide": "show"
+     }
+    },
+    {
+     "pageLayoutFieldID": 2746102,
+     "displayLabel": "Store Number(s)",
+     "dataField": "LAR_StoreNumber",
+     "conditionalFieldsConfig": {
+      "allAny": "all",
+      "criteriaFields": [
+       {
+        "crtOpt1": "2",
+        "crtVal1": [
+         "New Lease"
+        ],
+        "isCheckBox": false,
+        "scriptName": "Issue.LAR_RequestType"
+       }
+      ],
+      "showHide": "show"
+     }
+    },
+    {
+     "pageLayoutFieldID": 2746111,
+     "displayLabel": "Lease Admin Notes",
+     "dataField": "LAR_LeaseAdminNotes",
+     "conditionalFieldsConfig": {
+      "allAny": "all",
+      "criteriaFields": [
+       {
+        "crtOpt1": "17",
+        "crtVal1": [
+         "Vendor Change"
+        ],
+        "isCheckBox": false,
+        "scriptName": "Issue.LAR_RequestType"
+       }
+      ],
+      "showHide": "show"
+     }
+    },
+    {
+     "pageLayoutFieldID": 2746116,
+     "displayLabel": "<font color=\"red\">If request is for a new lease, please provide a Store Number and Store Location.</font>",
+     "dataField": "StaticText",
+     "conditionalFieldsConfig": {
+      "allAny": "all",
+      "criteriaFields": [
+       {
+        "crtOpt1": "2",
+        "crtVal1": [
+         "New Lease"
+        ],
+        "isCheckBox": false,
+        "scriptName": "Issue.LAR_RequestType"
+       }
+      ],
+      "showHide": "show"
+     }
+    },
+    {
+     "pageLayoutFieldID": 2832381,
+     "displayLabel": "Lease ID",
+     "dataField": "LAR_LeaseID",
+     "conditionalFieldsConfig": {
+      "allAny": "all",
+      "criteriaFields": [
+       {
+        "crtOpt1": "2",
+        "crtVal1": [
+         "New Lease"
+        ],
+        "isCheckBox": false,
+        "scriptName": "Issue.LAR_RequestType"
+       }
+      ],
+      "showHide": "show"
+     }
+    },
+    {
+     "pageLayoutFieldID": 2847752,
+     "displayLabel": "Are there any co-tenancy violations?",
+     "dataField": "LAR_EstoppelCotenancyViolations",
+     "conditionalFieldsConfig": {
+      "allAny": "all",
+      "criteriaFields": [
+       {
+        "crtOpt1": "2",
+        "crtVal1": [
+         "Estoppel"
+        ],
+        "isCheckBox": false,
+        "scriptName": "Issue.LAR_RequestType"
+       }
+      ],
+      "showHide": "show"
+     }
+    },
+    {
+     "pageLayoutFieldID": 2847753,
+     "displayLabel": "Other Issues",
+     "dataField": "LAR_EstoppelOtherIssues",
+     "conditionalFieldsConfig": {
+      "allAny": "all",
+      "criteriaFields": [
+       {
+        "crtOpt1": "2",
+        "crtVal1": [
+         "Estoppel"
+        ],
+        "isCheckBox": false,
+        "scriptName": "Issue.LAR_RequestType"
+       }
+      ],
+      "showHide": "show"
+     }
+    },
+    {
+     "pageLayoutFieldID": 2847754,
+     "displayLabel": "If yes, explain:",
+     "dataField": "LAR_EstoppelCotenancyViolationsExplanation",
+     "conditionalFieldsConfig": {
+      "allAny": "all",
+      "criteriaFields": [
+       {
+        "crtOpt1": "2",
+        "crtVal1": [
+         "Estoppel"
+        ],
+        "isCheckBox": false,
+        "scriptName": "Issue.LAR_RequestType"
+       },
+       {
+        "crtOpt1": "2",
+        "crtVal1": [
+         "Yes"
+        ],
+        "isCheckBox": false,
+        "scriptName": "Issue.LAR_EstoppelCotenancyViolations"
+       }
+      ],
+      "showHide": "show"
+     }
+    },
+    {
+     "pageLayoutFieldID": 2847755,
+     "displayLabel": "Date rent is paid through",
+     "dataField": "LAR_EstoppelRentThrough",
+     "conditionalFieldsConfig": {
+      "allAny": "all",
+      "criteriaFields": [
+       {
+        "crtOpt1": "2",
+        "crtVal1": [
+         "Estoppel"
+        ],
+        "isCheckBox": false,
+        "scriptName": "Issue.LAR_RequestType"
+       }
+      ],
+      "showHide": "show"
+     }
+    },
+    {
+     "pageLayoutFieldID": 2847756,
+     "displayLabel": "If yes, explain:",
+     "dataField": "LAR_EstoppelRentClaimExplanation",
+     "conditionalFieldsConfig": {
+      "allAny": "all",
+      "criteriaFields": [
+       {
+        "crtOpt1": "2",
+        "crtVal1": [
+         "Estoppel"
+        ],
+        "isCheckBox": false,
+        "scriptName": "Issue.LAR_RequestType"
+       },
+       {
+        "crtOpt1": "2",
+        "crtVal1": [
+         "Yes"
+        ],
+        "isCheckBox": false,
+        "scriptName": "Issue.LAR_EstoppelRentClaim"
+       }
+      ],
+      "showHide": "show"
+     }
+    },
+    {
+     "pageLayoutFieldID": 2847757,
+     "displayLabel": "Are there construction issues/chargebacks owed and considering an offset to rent?",
+     "dataField": "LAR_EstoppelOffsetRent",
+     "conditionalFieldsConfig": {
+      "allAny": "all",
+      "criteriaFields": [
+       {
+        "crtOpt1": "2",
+        "crtVal1": [
+         "Estoppel"
+        ],
+        "isCheckBox": false,
+        "scriptName": "Issue.LAR_RequestType"
+       }
+      ],
+      "showHide": "show"
+     }
+    },
+    {
+     "pageLayoutFieldID": 2847758,
+     "displayLabel": "Are there any monthly offset amounts? (Specify Amount)",
+     "dataField": "LAR_EstoppelOffSetAmount",
+     "conditionalFieldsConfig": {
+      "allAny": "all",
+      "criteriaFields": [
+       {
+        "crtOpt1": "2",
+        "crtVal1": [
+         "Estoppel"
+        ],
+        "isCheckBox": false,
+        "scriptName": "Issue.LAR_RequestType"
+       }
+      ],
+      "showHide": "show"
+     }
+    },
+    {
+     "pageLayoutFieldID": 2847759,
+     "displayLabel": "Are there any outstanding rent claims?",
+     "dataField": "LAR_EstoppelRentClaim",
+     "conditionalFieldsConfig": {
+      "allAny": "all",
+      "criteriaFields": [
+       {
+        "crtOpt1": "2",
+        "crtVal1": [
+         "Estoppel"
+        ],
+        "isCheckBox": false,
+        "scriptName": "Issue.LAR_RequestType"
+       }
+      ],
+      "showHide": "show"
+     }
+    },
+    {
+     "pageLayoutFieldID": 2847760,
+     "displayLabel": "What Rent Type is paid? (IE Base/Min Rent (include monthly amount), Alt Rent (co-tenancy violation), Percent Rent)",
+     "dataField": "LAR_EstoppelRentType",
+     "conditionalFieldsConfig": {
+      "allAny": "all",
+      "criteriaFields": [
+       {
+        "crtOpt1": "2",
+        "crtVal1": [
+         "Estoppel"
+        ],
+        "isCheckBox": false,
+        "scriptName": "Issue.LAR_RequestType"
+       }
+      ],
+      "showHide": "show"
+     }
+    },
+    {
+     "pageLayoutFieldID": 2847761,
+     "displayLabel": "Are there any outstanding amounts due from Landlord for CAM, RET, Insurance, etc.?",
+     "dataField": "LAR_EstoppelOutstandingAmounts",
+     "conditionalFieldsConfig": {
+      "allAny": "all",
+      "criteriaFields": [
+       {
+        "crtOpt1": "2",
+        "crtVal1": [
+         "Estoppel"
+        ],
+        "isCheckBox": false,
+        "scriptName": "Issue.LAR_RequestType"
+       }
+      ],
+      "showHide": "show"
+     }
+    },
+    {
+     "pageLayoutFieldID": 2847762,
+     "displayLabel": "If yes, explain:",
+     "dataField": "LAR_EstoppelOffsetRentExplanation",
+     "conditionalFieldsConfig": {
+      "allAny": "all",
+      "criteriaFields": [
+       {
+        "crtOpt1": "2",
+        "crtVal1": [
+         "Estoppel"
+        ],
+        "isCheckBox": false,
+        "scriptName": "Issue.LAR_RequestType"
+       },
+       {
+        "crtOpt1": "2",
+        "crtVal1": [
+         "Yes"
+        ],
+        "isCheckBox": false,
+        "scriptName": "Issue.LAR_EstoppelOffsetRent"
+       }
+      ],
+      "showHide": "show"
+     }
+    },
+    {
+     "pageLayoutFieldID": 2847763,
+     "displayLabel": "If yes, explain:",
+     "dataField": "LAR_EstoppelOutstandingAmountsExplanation",
+     "conditionalFieldsConfig": {
+      "allAny": "all",
+      "criteriaFields": [
+       {
+        "crtOpt1": "2",
+        "crtVal1": [
+         "Estoppel"
+        ],
+        "isCheckBox": false,
+        "scriptName": "Issue.LAR_RequestType"
+       },
+       {
+        "crtOpt1": "2",
+        "crtVal1": [
+         "Yes"
+        ],
+        "isCheckBox": false,
+        "scriptName": "Issue.LAR_EstoppelOutstandingAmounts"
+       }
+      ],
+      "showHide": "show"
+     }
+    },
+    {
+     "pageLayoutFieldID": 3023309,
+     "displayLabel": "<font color=\"red\"><b>This is the incorrect workflow for Vendor Changes.</b></font><br />\n\nPlease close this window and complete the following steps using the Add Form/Workflow widget.<br />\n\n1. Entity Type is RE Contract<br />\n2. Name is the contract name<br />\n3. Click Add Work Flow<br />\n4. Select VCN Submit Vendor Change (Notice) from the list",
+     "dataField": "StaticText",
+     "conditionalFieldsConfig": {
+      "allAny": "all",
+      "criteriaFields": [
+       {
+        "crtOpt1": "2",
+        "crtVal1": [
+         "Vendor Change"
+        ],
+        "isCheckBox": false,
+        "scriptName": "Issue.LAR_RequestType"
+       }
+      ],
+      "showHide": "show"
+     }
+    }
+   ]
+  },
+  {
+   "pageLayoutID": 98944,
+   "kind": "FORM",
+   "name": "LAR Initial Review of Lease Admin Request",
+   "issueType": "Lease Admin Request",
+   "fieldCount": 48,
+   "conditionCount": 16,
+   "conditions": [
+    {
+     "pageLayoutFieldID": 2746045,
+     "displayLabel": "Store Location",
+     "dataField": "LAR_StoreLocation",
+     "conditionalFieldsConfig": {
+      "allAny": "all",
+      "criteriaFields": [
+       {
+        "crtOpt1": "2",
+        "crtVal1": [
+         "New Lease"
+        ],
+        "isCheckBox": false,
+        "scriptName": "Issue.LAR_RequestType"
+       }
+      ],
+      "showHide": "show"
+     }
+    },
+    {
+     "pageLayoutFieldID": 2746047,
+     "displayLabel": "Store Number",
+     "dataField": "LAR_StoreNumber",
+     "conditionalFieldsConfig": {
+      "allAny": "all",
+      "criteriaFields": [
+       {
+        "crtOpt1": "2",
+        "crtVal1": [
+         "New Lease"
+        ],
+        "isCheckBox": false,
+        "scriptName": "Issue.LAR_RequestType"
+       }
+      ],
+      "showHide": "show"
+     }
+    },
+    {
+     "pageLayoutFieldID": 2746061,
+     "displayLabel": "Lease Abstract Notes",
+     "dataField": "LAR_LeaseAbstractNotes",
+     "conditionalFieldsConfig": {
+      "allAny": "all",
+      "criteriaFields": [
+       {
+        "crtOpt1": "2",
+        "crtVal1": [
+         "Amendment",
+         "New Lease"
+        ],
+        "isCheckBox": false,
+        "scriptName": "Issue.LAR_RequestType"
+       }
+      ],
+      "showHide": "show"
+     }
+    },
+    {
+     "pageLayoutFieldID": 2832420,
+     "displayLabel": "Lease ID",
+     "dataField": "LAR_LeaseID",
+     "conditionalFieldsConfig": {
+      "allAny": "all",
+      "criteriaFields": [
+       {
+        "crtOpt1": "2",
+        "crtVal1": [
+         "New Lease"
+        ],
+        "isCheckBox": false,
+        "scriptName": "Issue.LAR_RequestType"
+       }
+      ],
+      "showHide": "show"
+     }
+    },
+    {
+     "pageLayoutFieldID": 2852158,
+     "displayLabel": "Are there any co-tenancy violations?",
+     "dataField": "LAR_EstoppelCotenancyViolations",
+     "conditionalFieldsConfig": {
+      "allAny": "all",
+      "criteriaFields": [
+       {
+        "crtOpt1": "2",
+        "crtVal1": [
+         "Estoppel"
+        ],
+        "isCheckBox": false,
+        "scriptName": "Issue.LAR_RequestType"
+       }
+      ],
+      "showHide": "show"
+     }
+    },
+    {
+     "pageLayoutFieldID": 2852159,
+     "displayLabel": "Estoppel Other Issues",
+     "dataField": "LAR_EstoppelOtherIssues",
+     "conditionalFieldsConfig": {
+      "allAny": "all",
+      "criteriaFields": [
+       {
+        "crtOpt1": "2",
+        "crtVal1": [
+         "Estoppel"
+        ],
+        "isCheckBox": false,
+        "scriptName": "Issue.LAR_RequestType"
+       }
+      ],
+      "showHide": "show"
+     }
+    },
+    {
+     "pageLayoutFieldID": 2852160,
+     "displayLabel": "Estoppel Cotenancy Violations Explanation",
+     "dataField": "LAR_EstoppelCotenancyViolationsExplanation",
+     "conditionalFieldsConfig": {
+      "allAny": "all",
+      "criteriaFields": [
+       {
+        "crtOpt1": "2",
+        "crtVal1": [
+         "Yes"
+        ],
+        "isCheckBox": false,
+        "scriptName": "Issue.LAR_EstoppelCotenancyViolations"
+       }
+      ],
+      "showHide": "show"
+     }
+    },
+    {
+     "pageLayoutFieldID": 2852161,
+     "displayLabel": "Date rent is paid through",
+     "dataField": "LAR_EstoppelRentThrough",
+     "conditionalFieldsConfig": {
+      "allAny": "all",
+      "criteriaFields": [
+       {
+        "crtOpt1": "2",
+        "crtVal1": [
+         "Estoppel"
+        ],
+        "isCheckBox": false,
+        "scriptName": "Issue.LAR_RequestType"
+       }
+      ],
+      "showHide": "show"
+     }
+    },
+    {
+     "pageLayoutFieldID": 2852162,
+     "displayLabel": "If yes, explain:",
+     "dataField": "LAR_EstoppelRentClaimExplanation",
+     "conditionalFieldsConfig": {
+      "allAny": "all",
+      "criteriaFields": [
+       {
+        "crtOpt1": "2",
+        "crtVal1": [
+         "Yes"
+        ],
+        "isCheckBox": false,
+        "scriptName": "Issue.LAR_EstoppelRentClaim"
+       }
+      ],
+      "showHide": "show"
+     }
+    },
+    {
+     "pageLayoutFieldID": 2852163,
+     "displayLabel": "Are there construction issues/charge backs owed and considered an offset to rent?",
+     "dataField": "LAR_EstoppelOffsetRent",
+     "conditionalFieldsConfig": {
+      "allAny": "all",
+      "criteriaFields": [
+       {
+        "crtOpt1": "2",
+        "crtVal1": [
+         "Estoppel"
+        ],
+        "isCheckBox": false,
+        "scriptName": "Issue.LAR_RequestType"
+       }
+      ],
+      "showHide": "show"
+     }
+    },
+    {
+     "pageLayoutFieldID": 2852164,
+     "displayLabel": "Are there any monthly offset amounts? (Specify Amount)",
+     "dataField": "LAR_EstoppelOffSetAmount",
+     "conditionalFieldsConfig": {
+      "allAny": "all",
+      "criteriaFields": [
+       {
+        "crtOpt1": "2",
+        "crtVal1": [
+         "Estoppel"
+        ],
+        "isCheckBox": false,
+        "scriptName": "Issue.LAR_RequestType"
+       }
+      ],
+      "showHide": "show"
+     }
+    },
+    {
+     "pageLayoutFieldID": 2852165,
+     "displayLabel": "Are there any outstanding rent claims?",
+     "dataField": "LAR_EstoppelRentClaim",
+     "conditionalFieldsConfig": {
+      "allAny": "all",
+      "criteriaFields": [
+       {
+        "crtOpt1": "2",
+        "crtVal1": [
+         "Estoppel"
+        ],
+        "isCheckBox": false,
+        "scriptName": "Issue.LAR_RequestType"
+       }
+      ],
+      "showHide": "show"
+     }
+    },
+    {
+     "pageLayoutFieldID": 2852166,
+     "displayLabel": "What Rent Type is paid? (IE Base/Min Rent (including monthly amount), Alt Rent (co-tenancy violation), Percent Rent)",
+     "dataField": "LAR_EstoppelRentType",
+     "conditionalFieldsConfig": {
+      "allAny": "all",
+      "criteriaFields": [
+       {
+        "crtOpt1": "2",
+        "crtVal1": [
+         "Estoppel"
+        ],
+        "isCheckBox": false,
+        "scriptName": "Issue.LAR_RequestType"
+       }
+      ],
+      "showHide": "show"
+     }
+    },
+    {
+     "pageLayoutFieldID": 2852167,
+     "displayLabel": "Are there any outstanding amounts due from Landlord for CAM, RET, Insurance, etc..?",
+     "dataField": "LAR_EstoppelOutstandingAmounts",
+     "conditionalFieldsConfig": {
+      "allAny": "all",
+      "criteriaFields": [
+       {
+        "crtOpt1": "2",
+        "crtVal1": [
+         "Estoppel"
+        ],
+        "isCheckBox": false,
+        "scriptName": "Issue.LAR_RequestType"
+       }
+      ],
+      "showHide": "show"
+     }
+    },
+    {
+     "pageLayoutFieldID": 2852168,
+     "displayLabel": "If yes, explain:",
+     "dataField": "LAR_EstoppelOffsetRentExplanation",
+     "conditionalFieldsConfig": {
+      "allAny": "all",
+      "criteriaFields": [
+       {
+        "crtOpt1": "2",
+        "crtVal1": [
+         "Yes"
+        ],
+        "isCheckBox": false,
+        "scriptName": "Issue.LAR_EstoppelOffsetRent"
+       }
+      ],
+      "showHide": "show"
+     }
+    },
+    {
+     "pageLayoutFieldID": 2852169,
+     "displayLabel": "If yes, explain:",
+     "dataField": "LAR_EstoppelOutstandingAmountsExplanation",
+     "conditionalFieldsConfig": {
+      "allAny": "all",
+      "criteriaFields": [
+       {
+        "crtOpt1": "2",
+        "crtVal1": [
+         "Yes"
+        ],
+        "isCheckBox": false,
+        "scriptName": "Issue.LAR_EstoppelOutstandingAmounts"
+       }
+      ],
+      "showHide": "show"
+     }
+    }
+   ]
+  },
+  {
+   "pageLayoutID": 98938,
+   "kind": "FORM",
+   "name": "LAR ASG Review of Lease Abstract",
+   "issueType": "Lease Admin Request",
+   "fieldCount": 36,
+   "conditionCount": 4,
+   "conditions": [
+    {
+     "pageLayoutFieldID": 2745901,
+     "displayLabel": "Store Location",
+     "dataField": "LAR_StoreLocation",
+     "conditionalFieldsConfig": {
+      "allAny": "all",
+      "criteriaFields": [
+       {
+        "crtOpt1": "2",
+        "crtVal1": [
+         "New Lease"
+        ],
+        "isCheckBox": false,
+        "scriptName": "Issue.LAR_RequestType"
+       }
+      ],
+      "showHide": "show"
+     }
+    },
+    {
+     "pageLayoutFieldID": 2745903,
+     "displayLabel": "Store Number",
+     "dataField": "LAR_StoreNumber",
+     "conditionalFieldsConfig": {
+      "allAny": "all",
+      "criteriaFields": [
+       {
+        "crtOpt1": "2",
+        "crtVal1": [
+         "New Lease"
+        ],
+        "isCheckBox": false,
+        "scriptName": "Issue.LAR_RequestType"
+       }
+      ],
+      "showHide": "show"
+     }
+    },
+    {
+     "pageLayoutFieldID": 2745917,
+     "displayLabel": "Lease Abstract Notes",
+     "dataField": "LAR_LeaseAbstractNotes",
+     "conditionalFieldsConfig": {
+      "allAny": "all",
+      "criteriaFields": [
+       {
+        "crtOpt1": "2",
+        "crtVal1": [
+         "Amendment",
+         "New Lease"
+        ],
+        "isCheckBox": false,
+        "scriptName": "Issue.LAR_RequestType"
+       }
+      ],
+      "showHide": "show"
+     }
+    },
+    {
+     "pageLayoutFieldID": 2832383,
+     "displayLabel": "Lease ID",
+     "dataField": "LAR_LeaseID",
+     "conditionalFieldsConfig": {
+      "allAny": "all",
+      "criteriaFields": [
+       {
+        "crtOpt1": "2",
+        "crtVal1": [
+         "New Lease"
+        ],
+        "isCheckBox": false,
+        "scriptName": "Issue.LAR_RequestType"
+       }
+      ],
+      "showHide": "show"
+     }
+    }
+   ]
+  },
+  {
+   "pageLayoutID": 98940,
+   "kind": "FORM",
+   "name": "LAR Client Review of Lease Abstract",
+   "issueType": "Lease Admin Request",
+   "fieldCount": 27,
+   "conditionCount": 3,
+   "conditions": [
+    {
+     "pageLayoutFieldID": 2745957,
+     "displayLabel": "Store Location(s)",
+     "dataField": "LAR_StoreLocation",
+     "conditionalFieldsConfig": {
+      "allAny": "all",
+      "criteriaFields": [
+       {
+        "crtOpt1": "2",
+        "crtVal1": [
+         "New Lease"
+        ],
+        "isCheckBox": false,
+        "scriptName": "Issue.LAR_RequestType"
+       }
+      ],
+      "showHide": "show"
+     }
+    },
+    {
+     "pageLayoutFieldID": 2745958,
+     "displayLabel": "Store Number(s)",
+     "dataField": "LAR_StoreNumber",
+     "conditionalFieldsConfig": {
+      "allAny": "all",
+      "criteriaFields": [
+       {
+        "crtOpt1": "17",
+        "crtVal1": [
+         "New Lease"
+        ],
+        "isCheckBox": false,
+        "scriptName": "Issue.LAR_RequestType"
+       }
+      ],
+      "showHide": "show"
+     }
+    },
+    {
+     "pageLayoutFieldID": 2832387,
+     "displayLabel": "Lease ID",
+     "dataField": "LAR_LeaseID",
+     "conditionalFieldsConfig": {
+      "allAny": "all",
+      "criteriaFields": [
+       {
+        "crtOpt1": "2",
+        "crtVal1": [
+         "New Lease"
+        ],
+        "isCheckBox": false,
+        "scriptName": "Issue.LAR_RequestType"
+       }
+      ],
+      "showHide": "show"
+     }
+    }
+   ]
+  },
+  {
+   "pageLayoutID": 98941,
+   "kind": "FORM",
+   "name": "LAR Complete Lease Admin Request",
+   "issueType": "Lease Admin Request",
+   "fieldCount": 31,
+   "conditionCount": 3,
+   "conditions": [
+    {
+     "pageLayoutFieldID": 2745978,
+     "displayLabel": "Store Location",
+     "dataField": "LAR_StoreLocation",
+     "conditionalFieldsConfig": {
+      "allAny": "all",
+      "criteriaFields": [
+       {
+        "crtOpt1": "2",
+        "crtVal1": [
+         "New Lease"
+        ],
+        "isCheckBox": false,
+        "scriptName": "Issue.LAR_RequestType"
+       }
+      ],
+      "showHide": "show"
+     }
+    },
+    {
+     "pageLayoutFieldID": 2745980,
+     "displayLabel": "Store Number",
+     "dataField": "LAR_StoreNumber",
+     "conditionalFieldsConfig": {
+      "allAny": "all",
+      "criteriaFields": [
+       {
+        "crtOpt1": "2",
+        "crtVal1": [
+         "New Lease"
+        ],
+        "isCheckBox": false,
+        "scriptName": "Issue.LAR_RequestType"
+       }
+      ],
+      "showHide": "show"
+     }
+    },
+    {
+     "pageLayoutFieldID": 2832415,
+     "displayLabel": "Lease ID",
+     "dataField": "LAR_LeaseID",
+     "conditionalFieldsConfig": {
+      "allAny": "all",
+      "criteriaFields": [
+       {
+        "crtOpt1": "2",
+        "crtVal1": [
+         "New Lease"
+        ],
+        "isCheckBox": false,
+        "scriptName": "Issue.LAR_RequestType"
+       }
+      ],
+      "showHide": "show"
+     }
+    }
+   ]
+  },
+  {
+   "pageLayoutID": 98942,
+   "kind": "FORM",
+   "name": "LAR Finalize Lease Admin Request",
+   "issueType": "Lease Admin Request",
+   "fieldCount": 26,
+   "conditionCount": 3,
+   "conditions": [
+    {
+     "pageLayoutFieldID": 2746008,
+     "displayLabel": "Store Location(s)",
+     "dataField": "LAR_StoreLocation",
+     "conditionalFieldsConfig": {
+      "allAny": "all",
+      "criteriaFields": [
+       {
+        "crtOpt1": "2",
+        "crtVal1": [
+         "New Lease"
+        ],
+        "isCheckBox": false,
+        "scriptName": "Issue.LAR_RequestType"
+       }
+      ],
+      "showHide": "show"
+     }
+    },
+    {
+     "pageLayoutFieldID": 2746009,
+     "displayLabel": "Store Number(s)",
+     "dataField": "LAR_StoreNumber",
+     "conditionalFieldsConfig": {
+      "allAny": "all",
+      "criteriaFields": [
+       {
+        "crtOpt1": "2",
+        "crtVal1": [
+         "New Lease"
+        ],
+        "isCheckBox": false,
+        "scriptName": "Issue.LAR_RequestType"
+       }
+      ],
+      "showHide": "show"
+     }
+    },
+    {
+     "pageLayoutFieldID": 2832417,
+     "displayLabel": "Lease ID",
+     "dataField": "LAR_LeaseID",
+     "conditionalFieldsConfig": {
+      "allAny": "all",
+      "criteriaFields": [
+       {
+        "crtOpt1": "2",
+        "crtVal1": [
+         "New Lease"
+        ],
+        "isCheckBox": false,
+        "scriptName": "Issue.LAR_RequestType"
+       }
+      ],
+      "showHide": "show"
+     }
+    }
+   ]
+  },
+  {
+   "pageLayoutID": 98864,
+   "kind": "LIST",
+   "name": "ASG Contract Covenants",
+   "issueType": null,
+   "fieldCount": 48,
+   "conditionCount": 1,
+   "conditions": [
+    {
+     "pageLayoutFieldID": 2797393,
+     "displayLabel": "Hours of Operation",
+     "dataField": "SubEditForm",
+     "conditionalFieldsConfig": {
+      "allAny": "all",
+      "criteriaFields": [
+       {
+        "crtOpt1": "2",
+        "crtVal1": [
+         "Lease Clauses : Operating Requirement"
+        ],
+        "isCheckBox": false,
+        "scriptName": "Covenant.CodeCovenantTypeID"
+       }
+      ],
+      "showHide": "show"
+     }
+    }
+   ]
+  },
+  {
+   "pageLayoutID": 102250,
+   "kind": "LIST",
+   "name": "ASG Lease Abstract - Covenants",
+   "issueType": null,
+   "fieldCount": 48,
+   "conditionCount": 1,
+   "conditions": [
+    {
+     "pageLayoutFieldID": 2840725,
+     "displayLabel": "Hours of Operation",
+     "dataField": "SubEditForm",
+     "conditionalFieldsConfig": {
+      "allAny": "all",
+      "criteriaFields": [
+       {
+        "crtOpt1": "2",
+        "crtVal1": [
+         "Lease Clauses : Operating Requirement"
+        ],
+        "isCheckBox": false,
+        "scriptName": "Covenant.CodeCovenantTypeID"
+       }
+      ],
+      "showHide": "show"
+     }
+    }
+   ]
+  }
+ ],
+ "rawConfigs": {
+  "_note": "The 33 values captured earlier via ConditionFilterEx.jsp are retained below as independent corroboration; they are byte-identical in content to the REST-sourced configs under populatedLayouts, which are authoritative and complete (all 50).",
+  "viaConditionFilterEx": [
+   {
+    "pageLayoutID": 98944,
+    "fieldKey": "120403",
+    "fieldLabel": "Store Location",
+    "rawConditionalFieldsConfig": "{\"allAny\":\"all\",\"criteriaFields\":[{\"crtOpt1\":\"2\",\"crtVal1\":[\"New Lease\"],\"isCheckBox\":false,\"scriptName\":\"Issue.LAR_RequestType\"}],\"showHide\":\"show\"}"
+   },
+   {
+    "pageLayoutID": 98944,
+    "fieldKey": "120405",
+    "fieldLabel": "Store Number",
+    "rawConditionalFieldsConfig": "{\"allAny\":\"all\",\"criteriaFields\":[{\"crtOpt1\":\"2\",\"crtVal1\":[\"New Lease\"],\"isCheckBox\":false,\"scriptName\":\"Issue.LAR_RequestType\"}],\"showHide\":\"show\"}"
+   },
+   {
+    "pageLayoutID": 98944,
+    "fieldKey": "120409",
+    "fieldLabel": "Lease Abstract Notes",
+    "rawConditionalFieldsConfig": "{\"allAny\":\"all\",\"criteriaFields\":[{\"crtOpt1\":\"2\",\"crtVal1\":[\"Amendment\",\"New Lease\"],\"isCheckBox\":false,\"scriptName\":\"Issue.LAR_RequestType\"}],\"showHide\":\"show\"}"
+   },
+   {
+    "pageLayoutID": 98944,
+    "fieldKey": "121228",
+    "fieldLabel": "Lease ID",
+    "rawConditionalFieldsConfig": "{\"allAny\":\"all\",\"criteriaFields\":[{\"crtOpt1\":\"2\",\"crtVal1\":[\"New Lease\"],\"isCheckBox\":false,\"scriptName\":\"Issue.LAR_RequestType\"}],\"showHide\":\"show\"}"
+   },
+   {
+    "pageLayoutID": 98944,
+    "fieldKey": "121541",
+    "fieldLabel": "What Rent Type is paid? (IE Base/Min Rent (including monthly amount), Alt Rent (co-tenancy violation), Percent Rent)",
+    "rawConditionalFieldsConfig": "{\"allAny\":\"all\",\"criteriaFields\":[{\"crtOpt1\":\"2\",\"crtVal1\":[\"Estoppel\"],\"isCheckBox\":false,\"scriptName\":\"Issue.LAR_RequestType\"}],\"showHide\":\"show\"}"
+   },
+   {
+    "pageLayoutID": 98944,
+    "fieldKey": "121542",
+    "fieldLabel": "Are there any outstanding rent claims?",
+    "rawConditionalFieldsConfig": "{\"allAny\":\"all\",\"criteriaFields\":[{\"crtOpt1\":\"2\",\"crtVal1\":[\"Estoppel\"],\"isCheckBox\":false,\"scriptName\":\"Issue.LAR_RequestType\"}],\"showHide\":\"show\"}"
+   },
+   {
+    "pageLayoutID": 98944,
+    "fieldKey": "121543",
+    "fieldLabel": "If yes, explain:",
+    "rawConditionalFieldsConfig": "{\"allAny\":\"all\",\"criteriaFields\":[{\"crtOpt1\":\"2\",\"crtVal1\":[\"Yes\"],\"isCheckBox\":false,\"scriptName\":\"Issue.LAR_EstoppelRentClaim\"}],\"showHide\":\"show\"}"
+   },
+   {
+    "pageLayoutID": 98944,
+    "fieldKey": "121544",
+    "fieldLabel": "Date rent is paid through",
+    "rawConditionalFieldsConfig": "{\"allAny\":\"all\",\"criteriaFields\":[{\"crtOpt1\":\"2\",\"crtVal1\":[\"Estoppel\"],\"isCheckBox\":false,\"scriptName\":\"Issue.LAR_RequestType\"}],\"showHide\":\"show\"}"
+   },
+   {
+    "pageLayoutID": 98944,
+    "fieldKey": "121545",
+    "fieldLabel": "Are there any monthly offset amounts? (Specify Amount)",
+    "rawConditionalFieldsConfig": "{\"allAny\":\"all\",\"criteriaFields\":[{\"crtOpt1\":\"2\",\"crtVal1\":[\"Estoppel\"],\"isCheckBox\":false,\"scriptName\":\"Issue.LAR_RequestType\"}],\"showHide\":\"show\"}"
+   },
+   {
+    "pageLayoutID": 98944,
+    "fieldKey": "121546",
+    "fieldLabel": "Are there construction issues/charge backs owed and considered an offset to rent?",
+    "rawConditionalFieldsConfig": "{\"allAny\":\"all\",\"criteriaFields\":[{\"crtOpt1\":\"2\",\"crtVal1\":[\"Estoppel\"],\"isCheckBox\":false,\"scriptName\":\"Issue.LAR_RequestType\"}],\"showHide\":\"show\"}"
+   },
+   {
+    "pageLayoutID": 98944,
+    "fieldKey": "121547",
+    "fieldLabel": "If yes, explain:",
+    "rawConditionalFieldsConfig": "{\"allAny\":\"all\",\"criteriaFields\":[{\"crtOpt1\":\"2\",\"crtVal1\":[\"Yes\"],\"isCheckBox\":false,\"scriptName\":\"Issue.LAR_EstoppelOffsetRent\"}],\"showHide\":\"show\"}"
+   },
+   {
+    "pageLayoutID": 98944,
+    "fieldKey": "121548",
+    "fieldLabel": "Are there any outstanding amounts due from Landlord for CAM, RET, Insurance, etc..?",
+    "rawConditionalFieldsConfig": "{\"allAny\":\"all\",\"criteriaFields\":[{\"crtOpt1\":\"2\",\"crtVal1\":[\"Estoppel\"],\"isCheckBox\":false,\"scriptName\":\"Issue.LAR_RequestType\"}],\"showHide\":\"show\"}"
+   },
+   {
+    "pageLayoutID": 98944,
+    "fieldKey": "121549",
+    "fieldLabel": "If yes, explain:",
+    "rawConditionalFieldsConfig": "{\"allAny\":\"all\",\"criteriaFields\":[{\"crtOpt1\":\"2\",\"crtVal1\":[\"Yes\"],\"isCheckBox\":false,\"scriptName\":\"Issue.LAR_EstoppelOutstandingAmounts\"}],\"showHide\":\"show\"}"
+   },
+   {
+    "pageLayoutID": 98944,
+    "fieldKey": "121550",
+    "fieldLabel": "Estoppel Other Issues",
+    "rawConditionalFieldsConfig": "{\"allAny\":\"all\",\"criteriaFields\":[{\"crtOpt1\":\"2\",\"crtVal1\":[\"Estoppel\"],\"isCheckBox\":false,\"scriptName\":\"Issue.LAR_RequestType\"}],\"showHide\":\"show\"}"
+   },
+   {
+    "pageLayoutID": 98944,
+    "fieldKey": "121551",
+    "fieldLabel": "Are there any co-tenancy violations?",
+    "rawConditionalFieldsConfig": "{\"allAny\":\"all\",\"criteriaFields\":[{\"crtOpt1\":\"2\",\"crtVal1\":[\"Estoppel\"],\"isCheckBox\":false,\"scriptName\":\"Issue.LAR_RequestType\"}],\"showHide\":\"show\"}"
+   },
+   {
+    "pageLayoutID": 98944,
+    "fieldKey": "121552",
+    "fieldLabel": "Estoppel Cotenancy Violations Explanation",
+    "rawConditionalFieldsConfig": "{\"allAny\":\"all\",\"criteriaFields\":[{\"crtOpt1\":\"2\",\"crtVal1\":[\"Yes\"],\"isCheckBox\":false,\"scriptName\":\"Issue.LAR_EstoppelCotenancyViolations\"}],\"showHide\":\"show\"}"
+   },
+   {
+    "pageLayoutID": 98946,
+    "fieldKey": "120399",
+    "fieldLabel": "Client Notes",
+    "rawConditionalFieldsConfig": "{\"allAny\":\"all\",\"criteriaFields\":[{\"crtOpt1\":\"17\",\"crtVal1\":[\"Vendor Change\"],\"isCheckBox\":false,\"scriptName\":\"Issue.LAR_RequestType\"}],\"showHide\":\"show\"}"
+   },
+   {
+    "pageLayoutID": 98946,
+    "fieldKey": "120402",
+    "fieldLabel": "Lease Admin Notes",
+    "rawConditionalFieldsConfig": "{\"allAny\":\"all\",\"criteriaFields\":[{\"crtOpt1\":\"17\",\"crtVal1\":[\"Vendor Change\"],\"isCheckBox\":false,\"scriptName\":\"Issue.LAR_RequestType\"}],\"showHide\":\"show\"}"
+   },
+   {
+    "pageLayoutID": 98946,
+    "fieldKey": "120403",
+    "fieldLabel": "Store Location(s)",
+    "rawConditionalFieldsConfig": "{\"allAny\":\"all\",\"criteriaFields\":[{\"crtOpt1\":\"2\",\"crtVal1\":[\"New Lease\"],\"isCheckBox\":false,\"scriptName\":\"Issue.LAR_RequestType\"}],\"showHide\":\"show\"}"
+   },
+   {
+    "pageLayoutID": 98946,
+    "fieldKey": "120405",
+    "fieldLabel": "Store Number(s)",
+    "rawConditionalFieldsConfig": "{\"allAny\":\"all\",\"criteriaFields\":[{\"crtOpt1\":\"2\",\"crtVal1\":[\"New Lease\"],\"isCheckBox\":false,\"scriptName\":\"Issue.LAR_RequestType\"}],\"showHide\":\"show\"}"
+   },
+   {
+    "pageLayoutID": 98946,
+    "fieldKey": "121228",
+    "fieldLabel": "Lease ID",
+    "rawConditionalFieldsConfig": "{\"allAny\":\"all\",\"criteriaFields\":[{\"crtOpt1\":\"2\",\"crtVal1\":[\"New Lease\"],\"isCheckBox\":false,\"scriptName\":\"Issue.LAR_RequestType\"}],\"showHide\":\"show\"}"
+   },
+   {
+    "pageLayoutID": 98946,
+    "fieldKey": "121541",
+    "fieldLabel": "What Rent Type is paid? (IE Base/Min Rent (include monthly amount), Alt Rent (co-tenancy violation), Percent Rent)",
+    "rawConditionalFieldsConfig": "{\"allAny\":\"all\",\"criteriaFields\":[{\"crtOpt1\":\"2\",\"crtVal1\":[\"Estoppel\"],\"isCheckBox\":false,\"scriptName\":\"Issue.LAR_RequestType\"}],\"showHide\":\"show\"}"
+   },
+   {
+    "pageLayoutID": 98946,
+    "fieldKey": "121542",
+    "fieldLabel": "Are there any outstanding rent claims?",
+    "rawConditionalFieldsConfig": "{\"allAny\":\"all\",\"criteriaFields\":[{\"crtOpt1\":\"2\",\"crtVal1\":[\"Estoppel\"],\"isCheckBox\":false,\"scriptName\":\"Issue.LAR_RequestType\"}],\"showHide\":\"show\"}"
+   },
+   {
+    "pageLayoutID": 98946,
+    "fieldKey": "121543",
+    "fieldLabel": "If yes, explain:",
+    "rawConditionalFieldsConfig": "{\"allAny\":\"all\",\"criteriaFields\":[{\"crtOpt1\":\"2\",\"crtVal1\":[\"Estoppel\"],\"isCheckBox\":false,\"scriptName\":\"Issue.LAR_RequestType\"},{\"crtOpt1\":\"2\",\"crtVal1\":[\"Yes\"],\"isCheckBox\":false,\"scriptName\":\"Issue.LAR_EstoppelRentClaim\"}],\"showHide\":\"show\"}"
+   },
+   {
+    "pageLayoutID": 98946,
+    "fieldKey": "121544",
+    "fieldLabel": "Date rent is paid through",
+    "rawConditionalFieldsConfig": "{\"allAny\":\"all\",\"criteriaFields\":[{\"crtOpt1\":\"2\",\"crtVal1\":[\"Estoppel\"],\"isCheckBox\":false,\"scriptName\":\"Issue.LAR_RequestType\"}],\"showHide\":\"show\"}"
+   },
+   {
+    "pageLayoutID": 98946,
+    "fieldKey": "121545",
+    "fieldLabel": "Are there any monthly offset amounts? (Specify Amount)",
+    "rawConditionalFieldsConfig": "{\"allAny\":\"all\",\"criteriaFields\":[{\"crtOpt1\":\"2\",\"crtVal1\":[\"Estoppel\"],\"isCheckBox\":false,\"scriptName\":\"Issue.LAR_RequestType\"}],\"showHide\":\"show\"}"
+   },
+   {
+    "pageLayoutID": 98946,
+    "fieldKey": "121546",
+    "fieldLabel": "Are there construction issues/chargebacks owed and considering an offset to rent?",
+    "rawConditionalFieldsConfig": "{\"allAny\":\"all\",\"criteriaFields\":[{\"crtOpt1\":\"2\",\"crtVal1\":[\"Estoppel\"],\"isCheckBox\":false,\"scriptName\":\"Issue.LAR_RequestType\"}],\"showHide\":\"show\"}"
+   },
+   {
+    "pageLayoutID": 98946,
+    "fieldKey": "121547",
+    "fieldLabel": "If yes, explain:",
+    "rawConditionalFieldsConfig": "{\"allAny\":\"all\",\"criteriaFields\":[{\"crtOpt1\":\"2\",\"crtVal1\":[\"Estoppel\"],\"isCheckBox\":false,\"scriptName\":\"Issue.LAR_RequestType\"},{\"crtOpt1\":\"2\",\"crtVal1\":[\"Yes\"],\"isCheckBox\":false,\"scriptName\":\"Issue.LAR_EstoppelOffsetRent\"}],\"showHide\":\"show\"}"
+   },
+   {
+    "pageLayoutID": 98946,
+    "fieldKey": "121548",
+    "fieldLabel": "Are there any outstanding amounts due from Landlord for CAM, RET, Insurance, etc.?",
+    "rawConditionalFieldsConfig": "{\"allAny\":\"all\",\"criteriaFields\":[{\"crtOpt1\":\"2\",\"crtVal1\":[\"Estoppel\"],\"isCheckBox\":false,\"scriptName\":\"Issue.LAR_RequestType\"}],\"showHide\":\"show\"}"
+   },
+   {
+    "pageLayoutID": 98946,
+    "fieldKey": "121549",
+    "fieldLabel": "If yes, explain:",
+    "rawConditionalFieldsConfig": "{\"allAny\":\"all\",\"criteriaFields\":[{\"crtOpt1\":\"2\",\"crtVal1\":[\"Estoppel\"],\"isCheckBox\":false,\"scriptName\":\"Issue.LAR_RequestType\"},{\"crtOpt1\":\"2\",\"crtVal1\":[\"Yes\"],\"isCheckBox\":false,\"scriptName\":\"Issue.LAR_EstoppelOutstandingAmounts\"}],\"showHide\":\"show\"}"
+   },
+   {
+    "pageLayoutID": 98946,
+    "fieldKey": "121550",
+    "fieldLabel": "Other Issues",
+    "rawConditionalFieldsConfig": "{\"allAny\":\"all\",\"criteriaFields\":[{\"crtOpt1\":\"2\",\"crtVal1\":[\"Estoppel\"],\"isCheckBox\":false,\"scriptName\":\"Issue.LAR_RequestType\"}],\"showHide\":\"show\"}"
+   },
+   {
+    "pageLayoutID": 98946,
+    "fieldKey": "121551",
+    "fieldLabel": "Are there any co-tenancy violations?",
+    "rawConditionalFieldsConfig": "{\"allAny\":\"all\",\"criteriaFields\":[{\"crtOpt1\":\"2\",\"crtVal1\":[\"Estoppel\"],\"isCheckBox\":false,\"scriptName\":\"Issue.LAR_RequestType\"}],\"showHide\":\"show\"}"
+   },
+   {
+    "pageLayoutID": 98946,
+    "fieldKey": "121552",
+    "fieldLabel": "If yes, explain:",
+    "rawConditionalFieldsConfig": "{\"allAny\":\"all\",\"criteriaFields\":[{\"crtOpt1\":\"2\",\"crtVal1\":[\"Estoppel\"],\"isCheckBox\":false,\"scriptName\":\"Issue.LAR_RequestType\"},{\"crtOpt1\":\"2\",\"crtVal1\":[\"Yes\"],\"isCheckBox\":false,\"scriptName\":\"Issue.LAR_EstoppelCotenancyViolations\"}],\"showHide\":\"show\"}"
+   }
+  ]
+ },
+ "emptyLayouts": [
+  {
+   "pageLayoutID": 98921,
+   "kind": "SEP",
+   "name": "ASG Breakpoint Schedule",
+   "issueType": null
+  },
+  {
+   "pageLayoutID": 98924,
+   "kind": "SEP",
+   "name": "ASG Common Area Maintenance",
+   "issueType": null
+  },
+  {
+   "pageLayoutID": 98925,
+   "kind": "SEP",
+   "name": "ASG Contract Abstract Details",
+   "issueType": null
+  },
+  {
+   "pageLayoutID": 98926,
+   "kind": "SEP",
+   "name": "ASG Contract Payment Details",
+   "issueType": null
+  },
+  {
+   "pageLayoutID": 98927,
+   "kind": "SEP",
+   "name": "ASG Contract Summary",
+   "issueType": null
+  },
+  {
+   "pageLayoutID": 98923,
+   "kind": "SEP",
+   "name": "ASG Cotenancy Language",
+   "issueType": null
+  },
+  {
+   "pageLayoutID": 98928,
+   "kind": "SEP",
+   "name": "ASG Delivery Requirements",
+   "issueType": null
+  },
+  {
+   "pageLayoutID": 98929,
+   "kind": "SEP",
+   "name": "ASG Facility Summary",
+   "issueType": null
+  },
+  {
+   "pageLayoutID": 98930,
+   "kind": "SEP",
+   "name": "ASG Funds and Expenses",
+   "issueType": null
+  },
+  {
+   "pageLayoutID": 98931,
+   "kind": "SEP",
+   "name": "ASG Last Deferred SL Entry",
+   "issueType": null
+  },
+  {
+   "pageLayoutID": 98932,
+   "kind": "SEP",
+   "name": "ASG Lease Logs",
+   "issueType": null
+  },
+  {
+   "pageLayoutID": 98933,
+   "kind": "SEP",
+   "name": "ASG Location Summary",
+   "issueType": null
+  },
+  {
+   "pageLayoutID": 98934,
+   "kind": "SEP",
+   "name": "ASG Percent Rent Schedule",
+   "issueType": null
+  },
+  {
+   "pageLayoutID": 98935,
+   "kind": "SEP",
+   "name": "ASG Portfolio Summary",
+   "issueType": null
+  },
+  {
+   "pageLayoutID": 99140,
+   "kind": "SEP",
+   "name": "ASG Real Estate Taxes",
+   "issueType": null
+  },
+  {
+   "pageLayoutID": 98858,
+   "kind": "SUB",
+   "name": "ASG Accounting Schedule Details",
+   "issueType": null
+  },
+  {
+   "pageLayoutID": 98874,
+   "kind": "SUB",
+   "name": "ASG Co Tenancy",
+   "issueType": null
+  },
+  {
+   "pageLayoutID": 98875,
+   "kind": "SUB",
+   "name": "ASG Common Area Maintenance",
+   "issueType": null
+  },
+  {
+   "pageLayoutID": 98876,
+   "kind": "SUB",
+   "name": "ASG Contract Critical Dates",
+   "issueType": null
+  },
+  {
+   "pageLayoutID": 98877,
+   "kind": "SUB",
+   "name": "ASG Contract Facility Information",
+   "issueType": null
+  },
+  {
+   "pageLayoutID": 98878,
+   "kind": "SUB",
+   "name": "ASG Contract Firm Information",
+   "issueType": null
+  },
+  {
+   "pageLayoutID": 98879,
+   "kind": "SUB",
+   "name": "ASG Contract Header",
+   "issueType": null
+  },
+  {
+   "pageLayoutID": 98880,
+   "kind": "SUB",
+   "name": "ASG Contract Location Information",
+   "issueType": null
+  },
+  {
+   "pageLayoutID": 98881,
+   "kind": "SUB",
+   "name": "ASG Contract Log Header",
+   "issueType": null
+  },
+  {
+   "pageLayoutID": 98882,
+   "kind": "SUB",
+   "name": "ASG Contract Space Information",
+   "issueType": null
+  },
+  {
+   "pageLayoutID": 98883,
+   "kind": "SUB",
+   "name": "ASG Contract Wizard",
+   "issueType": null
+  },
+  {
+   "pageLayoutID": 98884,
+   "kind": "SUB",
+   "name": "ASG Contract Wizard Step 2",
+   "issueType": null
+  },
+  {
+   "pageLayoutID": 98885,
+   "kind": "SUB",
+   "name": "ASG Contract Wizard Step 3",
+   "issueType": null
+  },
+  {
+   "pageLayoutID": 98886,
+   "kind": "SUB",
+   "name": "ASG Contract Wizard Step 4",
+   "issueType": null
+  },
+  {
+   "pageLayoutID": 98887,
+   "kind": "SUB",
+   "name": "ASG Contract Wizard Step 5",
+   "issueType": null
+  },
+  {
+   "pageLayoutID": 98891,
+   "kind": "SUB",
+   "name": "ASG Delivery Requirements",
+   "issueType": null
+  },
+  {
+   "pageLayoutID": 98936,
+   "kind": "SUB",
+   "name": "ASG Documents Form Field",
+   "issueType": null
+  },
+  {
+   "pageLayoutID": 98895,
+   "kind": "SUB",
+   "name": "ASG Facility Address",
+   "issueType": null
+  },
+  {
+   "pageLayoutID": 98896,
+   "kind": "SUB",
+   "name": "ASG Facility Header",
+   "issueType": null
+  },
+  {
+   "pageLayoutID": 98898,
+   "kind": "SUB",
+   "name": "ASG Facility Location Information",
+   "issueType": null
+  },
+  {
+   "pageLayoutID": 98897,
+   "kind": "SUB",
+   "name": "ASG Facility Space Information",
+   "issueType": null
+  },
+  {
+   "pageLayoutID": 99141,
+   "kind": "SUB",
+   "name": "ASG Facility Wizard",
+   "issueType": null
+  },
+  {
+   "pageLayoutID": 98894,
+   "kind": "SUB",
+   "name": "ASG Funds and Expenses",
+   "issueType": null
+  },
+  {
+   "pageLayoutID": 100867,
+   "kind": "SUB",
+   "name": "ASG Hours of Operation",
+   "issueType": null
+  },
+  {
+   "pageLayoutID": 102629,
+   "kind": "SUB",
+   "name": "ASG Lease Abstract - Funds and Expenses",
+   "issueType": null
+  },
+  {
+   "pageLayoutID": 98903,
+   "kind": "SUB",
+   "name": "ASG Location Address",
+   "issueType": null
+  },
+  {
+   "pageLayoutID": 98904,
+   "kind": "SUB",
+   "name": "ASG Location Area Information",
+   "issueType": null
+  },
+  {
+   "pageLayoutID": 98905,
+   "kind": "SUB",
+   "name": "ASG Location Financial Information",
+   "issueType": null
+  },
+  {
+   "pageLayoutID": 98902,
+   "kind": "SUB",
+   "name": "ASG Location Header",
+   "issueType": null
+  },
+  {
+   "pageLayoutID": 99142,
+   "kind": "SUB",
+   "name": "ASG Location Wizard",
+   "issueType": null
+  },
+  {
+   "pageLayoutID": 98890,
+   "kind": "SUB",
+   "name": "ASG Real Estate Taxes",
+   "issueType": null
+  },
+  {
+   "pageLayoutID": 98937,
+   "kind": "SUB",
+   "name": "ASG Workflow Footer",
+   "issueType": null
+  },
+  {
+   "pageLayoutID": 99146,
+   "kind": "LIST",
+   "name": "ASG Approval - Expense Schedules",
+   "issueType": null
+  },
+  {
+   "pageLayoutID": 99147,
+   "kind": "LIST",
+   "name": "ASG Approval - Transactions",
+   "issueType": null
+  },
+  {
+   "pageLayoutID": 98859,
+   "kind": "LIST",
+   "name": "ASG ASC 842 Schedule",
+   "issueType": null
+  },
+  {
+   "pageLayoutID": 98860,
+   "kind": "LIST",
+   "name": "ASG Contract Allowance",
+   "issueType": null
+  },
+  {
+   "pageLayoutID": 102775,
+   "kind": "LIST",
+   "name": "ASG Contract Allowance Transaction",
+   "issueType": null
+  },
+  {
+   "pageLayoutID": 98861,
+   "kind": "LIST",
+   "name": "ASG Contract Alternate Rent",
+   "issueType": null
+  },
+  {
+   "pageLayoutID": 98862,
+   "kind": "LIST",
+   "name": "ASG Contract Amendments",
+   "issueType": null
+  },
+  {
+   "pageLayoutID": 98863,
+   "kind": "LIST",
+   "name": "ASG Contract Cotenants",
+   "issueType": null
+  },
+  {
+   "pageLayoutID": 99143,
+   "kind": "LIST",
+   "name": "ASG Contract Expense Recovery",
+   "issueType": null
+  },
+  {
+   "pageLayoutID": 99144,
+   "kind": "LIST",
+   "name": "ASG Contract Expense Recovery (Net)",
+   "issueType": null
+  },
+  {
+   "pageLayoutID": 99051,
+   "kind": "LIST",
+   "name": "ASG Contract Expense Setup",
+   "issueType": null
+  },
+  {
+   "pageLayoutID": 99050,
+   "kind": "LIST",
+   "name": "ASG Contract Expense Setup - Expense Schedule",
+   "issueType": null
+  },
+  {
+   "pageLayoutID": 99049,
+   "kind": "LIST",
+   "name": "ASG Contract Expense Setup - Vendor Allocation",
+   "issueType": null
+  },
+  {
+   "pageLayoutID": 98865,
+   "kind": "LIST",
+   "name": "ASG Contract Key Dates",
+   "issueType": null
+  },
+  {
+   "pageLayoutID": 98918,
+   "kind": "LIST",
+   "name": "ASG Contract List",
+   "issueType": null
+  },
+  {
+   "pageLayoutID": 98909,
+   "kind": "LIST",
+   "name": "ASG Contract Payment Details - Allowance",
+   "issueType": null
+  },
+  {
+   "pageLayoutID": 98910,
+   "kind": "LIST",
+   "name": "ASG Contract Payment Details - Alternate Rent",
+   "issueType": null
+  },
+  {
+   "pageLayoutID": 98908,
+   "kind": "LIST",
+   "name": "ASG Contract Payment Details - Breakpoints",
+   "issueType": null
+  },
+  {
+   "pageLayoutID": 98911,
+   "kind": "LIST",
+   "name": "ASG Contract Payment Details - Expense Recovery",
+   "issueType": null
+  },
+  {
+   "pageLayoutID": 98916,
+   "kind": "LIST",
+   "name": "ASG Contract Payment Details - Expense Setup",
+   "issueType": null
+  },
+  {
+   "pageLayoutID": 98914,
+   "kind": "LIST",
+   "name": "ASG Contract Payment Details - Percent Rent",
+   "issueType": null
+  },
+  {
+   "pageLayoutID": 98917,
+   "kind": "LIST",
+   "name": "ASG Contract Payment Details - Rent Steps",
+   "issueType": null
+  },
+  {
+   "pageLayoutID": 98912,
+   "kind": "LIST",
+   "name": "ASG Contract Payment Details - Scheduled Offset",
+   "issueType": null
+  },
+  {
+   "pageLayoutID": 98866,
+   "kind": "LIST",
+   "name": "ASG Contract Payment Details - Security Deposit",
+   "issueType": null
+  },
+  {
+   "pageLayoutID": 98915,
+   "kind": "LIST",
+   "name": "ASG Contract Payment Details - Security Deposit",
+   "issueType": null
+  },
+  {
+   "pageLayoutID": 98907,
+   "kind": "LIST",
+   "name": "ASG Contract Payment Details - Transactions",
+   "issueType": null
+  },
+  {
+   "pageLayoutID": 98867,
+   "kind": "LIST",
+   "name": "ASG Contract Payments",
+   "issueType": null
+  },
+  {
+   "pageLayoutID": 99145,
+   "kind": "LIST",
+   "name": "ASG Contract Percent Rent",
+   "issueType": null
+  },
+  {
+   "pageLayoutID": 98913,
+   "kind": "LIST",
+   "name": "ASG Contract Percent Rent - Breakpoints",
+   "issueType": null
+  },
+  {
+   "pageLayoutID": 98920,
+   "kind": "LIST",
+   "name": "ASG Contract Percent Rent - Schedule",
+   "issueType": null
+  },
+  {
+   "pageLayoutID": 98868,
+   "kind": "LIST",
+   "name": "ASG Contract Receipts",
+   "issueType": null
+  },
+  {
+   "pageLayoutID": 98869,
+   "kind": "LIST",
+   "name": "ASG Contract Responsibilities",
+   "issueType": null
+  },
+  {
+   "pageLayoutID": 98870,
+   "kind": "LIST",
+   "name": "ASG Contract Sales History",
+   "issueType": null
+  },
+  {
+   "pageLayoutID": 98871,
+   "kind": "LIST",
+   "name": "ASG Contract Terms",
+   "issueType": null
+  },
+  {
+   "pageLayoutID": 98906,
+   "kind": "LIST",
+   "name": "ASG Covenant List View",
+   "issueType": null
+  },
+  {
+   "pageLayoutID": 98872,
+   "kind": "LIST",
+   "name": "ASG Employers",
+   "issueType": null
+  },
+  {
+   "pageLayoutID": 98919,
+   "kind": "LIST",
+   "name": "ASG Facility List",
+   "issueType": null
+  },
+  {
+   "pageLayoutID": 102506,
+   "kind": "LIST",
+   "name": "ASG Lease Abstract - Contract Term",
+   "issueType": null
+  },
+  {
+   "pageLayoutID": 102251,
+   "kind": "LIST",
+   "name": "ASG Lease Abstract - Expense Schedule",
+   "issueType": null
+  },
+  {
+   "pageLayoutID": 102252,
+   "kind": "LIST",
+   "name": "ASG Lease Abstract - Expense Setup",
+   "issueType": null
+  },
+  {
+   "pageLayoutID": 102266,
+   "kind": "LIST",
+   "name": "ASG Lease Abstract - Key Dates",
+   "issueType": null
+  },
+  {
+   "pageLayoutID": 102109,
+   "kind": "LIST",
+   "name": "ASG Lease Abstract - Percent Rent",
+   "issueType": null
+  },
+  {
+   "pageLayoutID": 98873,
+   "kind": "LIST",
+   "name": "ASG SL Summary",
+   "issueType": null
+  },
+  {
+   "pageLayoutID": 102270,
+   "kind": "LIST",
+   "name": "zdelete",
+   "issueType": null
+  },
+  {
+   "pageLayoutID": 108641,
+   "kind": "FORM",
+   "name": "?",
+   "issueType": "ASC 842 Tracking"
+  },
+  {
+   "pageLayoutID": 108642,
+   "kind": "FORM",
+   "name": "ASC Review ASC 842 Tracking (BBW)",
+   "issueType": "ASC 842 Tracking"
+  },
+  {
+   "pageLayoutID": 108643,
+   "kind": "FORM",
+   "name": "ASC Submit Tracking Report",
+   "issueType": "ASC 842 Tracking"
+  },
+  {
+   "pageLayoutID": 103794,
+   "kind": "FORM",
+   "name": "?",
+   "issueType": "Change Request"
+  },
+  {
+   "pageLayoutID": 103795,
+   "kind": "FORM",
+   "name": "LxCR Review Change Request (ASG IT)",
+   "issueType": "Change Request"
+  },
+  {
+   "pageLayoutID": 103796,
+   "kind": "FORM",
+   "name": "LxCR Review Change Request Decision",
+   "issueType": "Change Request"
+  },
+  {
+   "pageLayoutID": 103797,
+   "kind": "FORM",
+   "name": "LxCR Review/Approve Change Request",
+   "issueType": "Change Request"
+  },
+  {
+   "pageLayoutID": 103798,
+   "kind": "FORM",
+   "name": "LxCR Submit Lx Change Request",
+   "issueType": "Change Request"
+  },
+  {
+   "pageLayoutID": 103799,
+   "kind": "FORM",
+   "name": "LxCR Validate Change Request",
+   "issueType": "Change Request"
+  },
+  {
+   "pageLayoutID": 110193,
+   "kind": "FORM",
+   "name": "?",
+   "issueType": "Lease Admin Request"
+  },
+  {
+   "pageLayoutID": 110192,
+   "kind": "FORM",
+   "name": "COT Review Cotenancy Update",
+   "issueType": "Lease Admin Request"
+  },
+  {
+   "pageLayoutID": 110194,
+   "kind": "FORM",
+   "name": "COT Submit Cotenancy Update",
+   "issueType": "Lease Admin Request"
+  },
+  {
+   "pageLayoutID": 108369,
+   "kind": "FORM",
+   "name": "DR Initial Review of Lease Date Changes",
+   "issueType": "Lease Admin Request"
+  },
+  {
+   "pageLayoutID": 108370,
+   "kind": "FORM",
+   "name": "DR Legal Review of Lease Abstract",
+   "issueType": "Lease Admin Request"
+  },
+  {
+   "pageLayoutID": 108371,
+   "kind": "FORM",
+   "name": "DR Submit Lease Date Changes",
+   "issueType": "Lease Admin Request"
+  },
+  {
+   "pageLayoutID": 99728,
+   "kind": "FORM",
+   "name": "IWF Abstract Lease Documents",
+   "issueType": "Lease Admin Request"
+  },
+  {
+   "pageLayoutID": 99729,
+   "kind": "FORM",
+   "name": "IWF Review Financial Abstract",
+   "issueType": "Lease Admin Request"
+  },
+  {
+   "pageLayoutID": 99730,
+   "kind": "FORM",
+   "name": "IWF Review Lease Abstract",
+   "issueType": "Lease Admin Request"
+  },
+  {
+   "pageLayoutID": 99731,
+   "kind": "FORM",
+   "name": "IWF Review Percent Rent",
+   "issueType": "Lease Admin Request"
+  },
+  {
+   "pageLayoutID": 99732,
+   "kind": "FORM",
+   "name": "IWF Review Recurring Expenses",
+   "issueType": "Lease Admin Request"
+  },
+  {
+   "pageLayoutID": 99733,
+   "kind": "FORM",
+   "name": "IWF Set Up ASC 842 Schedules",
+   "issueType": "Lease Admin Request"
+  },
+  {
+   "pageLayoutID": 99734,
+   "kind": "FORM",
+   "name": "IWF Set Up Percent Rent",
+   "issueType": "Lease Admin Request"
+  },
+  {
+   "pageLayoutID": 99735,
+   "kind": "FORM",
+   "name": "IWF Set Up Recurring Expenses",
+   "issueType": "Lease Admin Request"
+  },
+  {
+   "pageLayoutID": 99736,
+   "kind": "FORM",
+   "name": "IWF Submit Implementation Workflow",
+   "issueType": "Lease Admin Request"
+  },
+  {
+   "pageLayoutID": 98939,
+   "kind": "FORM",
+   "name": "LAR Abstract Lease Document",
+   "issueType": "Lease Admin Request"
+  },
+  {
+   "pageLayoutID": 103572,
+   "kind": "FORM",
+   "name": "VCN Complete Vendor Change",
+   "issueType": "Lease Admin Request"
+  },
+  {
+   "pageLayoutID": 103573,
+   "kind": "FORM",
+   "name": "VCN Review Vendor Change (ASG)",
+   "issueType": "Lease Admin Request"
+  },
+  {
+   "pageLayoutID": 103574,
+   "kind": "FORM",
+   "name": "VCN Review Vendor Change (Client)",
+   "issueType": "Lease Admin Request"
+  },
+  {
+   "pageLayoutID": 103570,
+   "kind": "FORM",
+   "name": "VCN Submit Vendor Change (Notice)",
+   "issueType": "Lease Admin Request"
+  },
+  {
+   "pageLayoutID": 103576,
+   "kind": "FORM",
+   "name": "VCN Vendor Integration Complete",
+   "issueType": "Lease Admin Request"
+  },
+  {
+   "pageLayoutID": 103720,
+   "kind": "FORM",
+   "name": "?",
+   "issueType": "QC Request"
+  },
+  {
+   "pageLayoutID": 98947,
+   "kind": "FORM",
+   "name": "?",
+   "issueType": "User Request"
+  },
+  {
+   "pageLayoutID": 98948,
+   "kind": "FORM",
+   "name": "UR Submit User Request",
+   "issueType": "User Request"
+  },
+  {
+   "pageLayoutID": 101797,
+   "kind": "FORM",
+   "name": "?",
+   "issueType": "Vendor Changes (Integration)"
+  },
+  {
+   "pageLayoutID": 101798,
+   "kind": "FORM",
+   "name": "VC Review Vendor Changes (BBW)",
+   "issueType": "Vendor Changes (Integration)"
+  }
+ ],
+ "_supersedes": "The ConditionalFieldsForLayout.jsp HTML sweep recorded here first was confirmed and then superseded by a REST sweep, which reads the stored JSON directly. Both agree: 8 layouts, 50 conditional-field records.",
+ "definitiveMethod": {
+  "endpoint": "GET /rest/businessObject/PageLayout/lxid/{pageLayoutID}?deep=true",
+  "why": "Returns the PageLayout with its PageLayoutField children. Each child's JSONConfigText is the stored JSON blob; conditionalFieldsConfig is a key INSIDE it, as a nested object (not a string). This is the storage form - no rendering, no builder session, no per-field popup.",
+  "supersedes": "Both ConditionalFieldsForLayout.jsp (rendered HTML) and ConditionFilterEx.jsp (per-field popup). Those remain useful for reading the human-rendered rule text.",
+  "coverage": "134 of 135 layouts returned 200. PageLayoutID 101799 ('VC Submit Vendor Changes', Vendor Changes (Integration)) returned 401 and is the single gap.",
+  "storageLocation": "PageLayoutField.JSONConfigText -> key 'conditionalFieldsConfig'. There is NO conditionalFieldsConfig on PageLayout itself; it is strictly per-field."
+ },
+ "vocabularyObserved": {
+  "showHide": {
+   "show": 50
+  },
+  "showHideAllowedValues": [
+   "show",
+   "showAndRequire",
+   "hide"
+  ],
+  "allAny": {
+   "all": 50
+  },
+  "allAnyAllowedValues": [
+   "all",
+   "any"
+  ],
+  "operatorCodes": {
+   "2": "in",
+   "17": "not in"
+  },
+  "operatorCodeCounts": {
+   "2": 51,
+   "17": 3
+  },
+  "drivingFieldScriptNames": {
+   "Covenant.CodeCovenantTypeID": 2,
+   "Issue.LAR_RequestType": 44,
+   "Issue.LAR_EstoppelCotenancyViolations": 2,
+   "Issue.LAR_EstoppelRentClaim": 2,
+   "Issue.LAR_EstoppelOffsetRent": 2,
+   "Issue.LAR_EstoppelOutstandingAmounts": 2
+  }
+ },
+ "remainingGaps": [
+  "PageLayoutID 101799 returned 401 over REST; its conditional state is unknown. The HTML sweep did read it and reported 'empty', so it is very likely to have none.",
+  "No layout in BBW uses showHide='hide' or 'showAndRequire', or allAny='any', or a second operand slot (crtOpt2/crtVal2). Those code paths exist in the UI but are unexercised here."
+ ]
+}

@@ -1,0 +1,593 @@
+{
+ "_question": "team-lead asked: how many columns across all tables are named *ID but typed Text? Does the 972-edge FK graph have a systematic blind spot?",
+ "_answer": "YES, and it is larger than Text alone - but the damage to the spine classification is exactly ONE object.",
+ "_firm": "(ASG)BBW  train-bbw.lucernex.com",
+ "_captured": "2026-09-13",
+ "_source": "docs/tenants/bbw-platform-tables.json - one pass, no session required.",
+ "_CAVEAT": "Computed over the GLOBAL-fields-only capture. The firm-field layer is not included, so 87 is itself a LOWER BOUND on the missed edges.",
+ "method": {
+  "rule": "A column is a hidden FK if its NAME ends in 'ID', its TYPE is not a typed object reference (does not end in ' ID'), its type is not a code-table 'Dropdown (...)', and the name minus the 'ID' suffix matches a real object in the 227.",
+  "exclusion": "150 rows were excluded as the table's OWN primary key (e.g. Contract.ContractID typed Number). A PK is not an FK and counting it would have inflated the result from 87 to 237. This was the first cut and it was wrong."
+ },
+ "totals": {
+  "columnsNamedIDWithTypedObjectFK": 864,
+  "columnsNamedIDButScalarTyped": 523,
+  "ofThoseMatchingARealObject": 237,
+  "selfPrimaryKeysExcluded": 150,
+  "TRUE_MISSED_FK_EDGES": 87,
+  "sourceTablesAffected": 60,
+  "targetObjectsUnderCounted": 30,
+  "existingGraphEdges": 972,
+  "approximateUnderCount": "~9%"
+ },
+ "hiddenColumnTypes": {
+  "Text": 59,
+  "Number": 13,
+  "Part": 5,
+  "Parts Package": 3,
+  "Currency": 2,
+  "Holiday Calendar": 2,
+  "Contact": 2,
+  "Entity": 1
+ },
+ "mostUnderCountedTargets": {
+  "Issue": 13,
+  "Firm": 12,
+  "ProjectEntity": 9,
+  "BudgetLineItem": 5,
+  "Part": 5,
+  "BudgetColumn": 4,
+  "Person": 4,
+  "ExpenseAccrualSetup": 3,
+  "BidPackage": 3,
+  "PartPackage": 3,
+  "BudgetColumnItemValue": 2,
+  "Program": 2,
+  "ExpenseRecovery": 2,
+  "HolidaySchedule": 2
+ },
+ "spineImpact": {
+  "_headline": "The spine classification survives almost intact. Exactly one object is affected.",
+  "checked": "All 223 catalogued objects: 161 entity_scoped, 52 firm_global, 9 subtype_root, 1 supertype.",
+  "consistency": "Of the 161 entity_scoped, all 148 present in this capture carry a ProjectEntityID typed 'Entity ID', and ZERO entity_scoped objects lack a ProjectEntityID column. The rule was applied consistently.",
+  "theSingleException": {
+   "object": "AssetHistory",
+   "fields": 13,
+   "catalogueSpine": "firm_global",
+   "problem": "It DOES carry a ProjectEntityID column, but typed 'Entity' rather than 'Entity ID', so a type-matched scan does not see it.",
+   "recommendation": "Likely mis-classified; should probably be entity_scoped. Verify before changing - AssetHistory is a snapshot of an Asset's financial state, and it is arguable whether it is scoped to the entity or to the Asset.",
+   "evidence": "Observed"
+  },
+  "whyTheSubtypeRootsAreNotAffected": "Contract, Facility, Location, Parcel, Program, Project, Prototype, PotentialProject and ProjectEntity all carry ProjectEntityID typed 'Number' rather than 'Entity ID'. That is the 9 subtype_root objects plus the supertype - the catalogue already models them separately on a shared key, so this is consistent behaviour, not a defect."
+ },
+ "whyItMatters": [
+  "Any FK graph built by matching type strings under-counts by ~87 edges (~9%). Impact analysis, orphan detection and in-degree are all computed from that graph.",
+  "The Punch List family is the extreme case: all three children reference their parent through a Text-typed column, so the family renders as four disconnected tables. That is what surfaced the pattern.",
+  "In-degree for the 30 under-counted targets is understated - Issue by 13, Firm by 12, ProjectEntity by 9. Issue and ProjectEntity are both central objects, so this is not confined to the periphery.",
+  "For ASG Edge+: a rebuild that derives its FK model from declared column TYPES rather than from naming convention will silently lose these 87 relationships."
+ ],
+ "missedEdges": [
+  {
+   "from": "AccrualTransaction",
+   "column": "ExpenseAccrualSetupID",
+   "columnType": "Text",
+   "to": "ExpenseAccrualSetup"
+  },
+  {
+   "from": "Asset",
+   "column": "ResponsibilityID",
+   "columnType": "Text",
+   "to": "Responsibility"
+  },
+  {
+   "from": "AssetHistory",
+   "column": "ProjectEntityID",
+   "columnType": "Entity",
+   "to": "ProjectEntity"
+  },
+  {
+   "from": "BidPackage",
+   "column": "IssueID",
+   "columnType": "Text",
+   "to": "Issue"
+  },
+  {
+   "from": "BidPackageAlternate",
+   "column": "BidPackageID",
+   "columnType": "Text",
+   "to": "BidPackage"
+  },
+  {
+   "from": "BidPackageAlternate",
+   "column": "BudgetLineItemID",
+   "columnType": "Text",
+   "to": "BudgetLineItem"
+  },
+  {
+   "from": "BidPackageAlternateValue",
+   "column": "BidPackageAlternateID",
+   "columnType": "Text",
+   "to": "BidPackageAlternate"
+  },
+  {
+   "from": "BidPackageAlternateValue",
+   "column": "BudgetColumnID",
+   "columnType": "Text",
+   "to": "BudgetColumn"
+  },
+  {
+   "from": "BidPackageBreakoutValue",
+   "column": "BudgetColumnID",
+   "columnType": "Text",
+   "to": "BudgetColumn"
+  },
+  {
+   "from": "BidPackageBreakoutValue",
+   "column": "BudgetLineItemID",
+   "columnType": "Text",
+   "to": "BudgetLineItem"
+  },
+  {
+   "from": "BidderIssue",
+   "column": "BidPackageID",
+   "columnType": "Text",
+   "to": "BidPackage"
+  },
+  {
+   "from": "BidderIssue",
+   "column": "IssueID",
+   "columnType": "Text",
+   "to": "Issue"
+  },
+  {
+   "from": "BudgetColumn",
+   "column": "BidPackageID",
+   "columnType": "Text",
+   "to": "BidPackage"
+  },
+  {
+   "from": "BudgetColumnItemValue",
+   "column": "BudgetColumnID",
+   "columnType": "Text",
+   "to": "BudgetColumn"
+  },
+  {
+   "from": "BudgetColumnItemValue",
+   "column": "BudgetLineItemID",
+   "columnType": "Text",
+   "to": "BudgetLineItem"
+  },
+  {
+   "from": "BudgetColumnItemValue",
+   "column": "BudgetOptionID",
+   "columnType": "Text",
+   "to": "BudgetOption"
+  },
+  {
+   "from": "BudgetColumnType",
+   "column": "ReportGroupAvailableFieldID",
+   "columnType": "Number",
+   "to": "ReportGroupAvailableField"
+  },
+  {
+   "from": "BudgetOption",
+   "column": "BudgetColumnID",
+   "columnType": "Text",
+   "to": "BudgetColumn"
+  },
+  {
+   "from": "ChangeOrder",
+   "column": "IssueID",
+   "columnType": "Text",
+   "to": "Issue"
+  },
+  {
+   "from": "ClientListRow",
+   "column": "BudgetColumnItemValueID",
+   "columnType": "Currency",
+   "to": "BudgetColumnItemValue"
+  },
+  {
+   "from": "ClientListRow",
+   "column": "BudgetLineItemID",
+   "columnType": "Text",
+   "to": "BudgetLineItem"
+  },
+  {
+   "from": "ClientListRow",
+   "column": "PartID",
+   "columnType": "Part",
+   "to": "Part"
+  },
+  {
+   "from": "ClientListRow",
+   "column": "PartPackageID",
+   "columnType": "Parts Package",
+   "to": "PartPackage"
+  },
+  {
+   "from": "CLRExtensionPart",
+   "column": "BudgetColumnItemValueID",
+   "columnType": "Currency",
+   "to": "BudgetColumnItemValue"
+  },
+  {
+   "from": "CLRExtensionPart",
+   "column": "BudgetLineItemID",
+   "columnType": "Text",
+   "to": "BudgetLineItem"
+  },
+  {
+   "from": "CLRExtensionPart",
+   "column": "ClientListRowID",
+   "columnType": "Number",
+   "to": "ClientListRow"
+  },
+  {
+   "from": "CLRExtensionPart",
+   "column": "PartID",
+   "columnType": "Part",
+   "to": "Part"
+  },
+  {
+   "from": "CLRExtensionPart",
+   "column": "PartPackageID",
+   "columnType": "Parts Package",
+   "to": "PartPackage"
+  },
+  {
+   "from": "Contract",
+   "column": "FirmID",
+   "columnType": "Text",
+   "to": "Firm"
+  },
+  {
+   "from": "Contract",
+   "column": "ProjectEntityID",
+   "columnType": "Number",
+   "to": "ProjectEntity"
+  },
+  {
+   "from": "DevelopmentPlan",
+   "column": "ProgramID",
+   "columnType": "Text",
+   "to": "Program"
+  },
+  {
+   "from": "DevelopmentSlot",
+   "column": "DevelopmentPlanID",
+   "columnType": "Text",
+   "to": "DevelopmentPlan"
+  },
+  {
+   "from": "VirtualExpAccrualForecastPeriod",
+   "column": "ExpenseAccrualSetupID",
+   "columnType": "Text",
+   "to": "ExpenseAccrualSetup"
+  },
+  {
+   "from": "ExpenseAccrualSchedule",
+   "column": "ExpenseAccrualSetupID",
+   "columnType": "Text",
+   "to": "ExpenseAccrualSetup"
+  },
+  {
+   "from": "ExpenseRecoveryItem",
+   "column": "ExpenseRecoveryID",
+   "columnType": "Text",
+   "to": "ExpenseRecovery"
+  },
+  {
+   "from": "ExpenseRecoveryItemMapping",
+   "column": "ExpenseRecoveryItemID",
+   "columnType": "Text",
+   "to": "ExpenseRecoveryItem"
+  },
+  {
+   "from": "Facility",
+   "column": "FirmID",
+   "columnType": "Text",
+   "to": "Firm"
+  },
+  {
+   "from": "Facility",
+   "column": "ProjectEntityID",
+   "columnType": "Number",
+   "to": "ProjectEntity"
+  },
+  {
+   "from": "ProjectEntity",
+   "column": "FirmID",
+   "columnType": "Text",
+   "to": "Firm"
+  },
+  {
+   "from": "ProjectEntity",
+   "column": "ProgramID",
+   "columnType": "Text",
+   "to": "Program"
+  },
+  {
+   "from": "GlobalProperty",
+   "column": "FirmID",
+   "columnType": "Text",
+   "to": "Firm"
+  },
+  {
+   "from": "HolidayDate",
+   "column": "HolidayScheduleID",
+   "columnType": "Holiday Calendar",
+   "to": "HolidaySchedule"
+  },
+  {
+   "from": "InvoiceIssue",
+   "column": "IssueID",
+   "columnType": "Text",
+   "to": "Issue"
+  },
+  {
+   "from": "InvoiceItem",
+   "column": "InvoiceIssueID",
+   "columnType": "Text",
+   "to": "InvoiceIssue"
+  },
+  {
+   "from": "IssueResponse",
+   "column": "IssueID",
+   "columnType": "Text",
+   "to": "Issue"
+  },
+  {
+   "from": "LandlordInvoiceItem",
+   "column": "LandlordInvoiceID",
+   "columnType": "Text",
+   "to": "LandlordInvoice"
+  },
+  {
+   "from": "LinkIssuePart",
+   "column": "IssueID",
+   "columnType": "Text",
+   "to": "Issue"
+  },
+  {
+   "from": "LinkIssuePart",
+   "column": "PartID",
+   "columnType": "Part",
+   "to": "Part"
+  },
+  {
+   "from": "LinkIssuePartOrder",
+   "column": "IssueID",
+   "columnType": "Text",
+   "to": "Issue"
+  },
+  {
+   "from": "LinkIssuePartOrder",
+   "column": "PartID",
+   "columnType": "Part",
+   "to": "Part"
+  },
+  {
+   "from": "LinkLandPurchaseInspection",
+   "column": "LandPurchaseSummaryID",
+   "columnType": "Text",
+   "to": "LandPurchaseSummary"
+  },
+  {
+   "from": "LinkLandlordInvPaymentTxn",
+   "column": "LandlordInvoiceItemID",
+   "columnType": "Text",
+   "to": "LandlordInvoiceItem"
+  },
+  {
+   "from": "LinkProjectEntityContact",
+   "column": "PersonID",
+   "columnType": "Contact",
+   "to": "Person"
+  },
+  {
+   "from": "LinkReTransScenContact",
+   "column": "PersonID",
+   "columnType": "Contact",
+   "to": "Person"
+  },
+  {
+   "from": "LinkSchedOffsetExpGrpType",
+   "column": "ScheduledOffsetID",
+   "columnType": "Text",
+   "to": "ScheduledOffset"
+  },
+  {
+   "from": "Location",
+   "column": "FirmID",
+   "columnType": "Text",
+   "to": "Firm"
+  },
+  {
+   "from": "Location",
+   "column": "ProjectEntityID",
+   "columnType": "Number",
+   "to": "ProjectEntity"
+  },
+  {
+   "from": "MapClientSchedule",
+   "column": "HolidayScheduleID",
+   "columnType": "Holiday Calendar",
+   "to": "HolidaySchedule"
+  },
+  {
+   "from": "Member",
+   "column": "PersonID",
+   "columnType": "Number",
+   "to": "Person"
+  },
+  {
+   "from": "NonMember",
+   "column": "PersonID",
+   "columnType": "Number",
+   "to": "Person"
+  },
+  {
+   "from": "Parcel",
+   "column": "FirmID",
+   "columnType": "Text",
+   "to": "Firm"
+  },
+  {
+   "from": "Parcel",
+   "column": "ProjectEntityID",
+   "columnType": "Number",
+   "to": "ProjectEntity"
+  },
+  {
+   "from": "PartPackageItem",
+   "column": "PartID",
+   "columnType": "Part",
+   "to": "Part"
+  },
+  {
+   "from": "PartPackageItem",
+   "column": "PartPackageID",
+   "columnType": "Parts Package",
+   "to": "PartPackage"
+  },
+  {
+   "from": "PayApp",
+   "column": "IssueID",
+   "columnType": "Text",
+   "to": "Issue"
+  },
+  {
+   "from": "PaymentTransaction",
+   "column": "ExpenseRecoveryID",
+   "columnType": "Text",
+   "to": "ExpenseRecovery"
+  },
+  {
+   "from": "PaymentTransaction",
+   "column": "ScheduledOffsetID",
+   "columnType": "Text",
+   "to": "ScheduledOffset"
+  },
+  {
+   "from": "PotentialProject",
+   "column": "FirmID",
+   "columnType": "Text",
+   "to": "Firm"
+  },
+  {
+   "from": "PotentialProject",
+   "column": "ProjectEntityID",
+   "columnType": "Number",
+   "to": "ProjectEntity"
+  },
+  {
+   "from": "Program",
+   "column": "FirmID",
+   "columnType": "Text",
+   "to": "Firm"
+  },
+  {
+   "from": "Program",
+   "column": "ProjectEntityID",
+   "columnType": "Number",
+   "to": "ProjectEntity"
+  },
+  {
+   "from": "Project",
+   "column": "FirmID",
+   "columnType": "Text",
+   "to": "Firm"
+  },
+  {
+   "from": "Project",
+   "column": "ProjectEntityID",
+   "columnType": "Number",
+   "to": "ProjectEntity"
+  },
+  {
+   "from": "Prototype",
+   "column": "FirmID",
+   "columnType": "Text",
+   "to": "Firm"
+  },
+  {
+   "from": "Prototype",
+   "column": "ProjectEntityID",
+   "columnType": "Number",
+   "to": "ProjectEntity"
+  },
+  {
+   "from": "PunchListAssignee",
+   "column": "PunchListID",
+   "columnType": "Text",
+   "to": "PunchList"
+  },
+  {
+   "from": "PunchListTask",
+   "column": "PunchListID",
+   "columnType": "Text",
+   "to": "PunchList"
+  },
+  {
+   "from": "PunchListTaskAssignee",
+   "column": "PunchListTaskID",
+   "columnType": "Text",
+   "to": "PunchListTask"
+  },
+  {
+   "from": "PurchaseOrder",
+   "column": "IssueID",
+   "columnType": "Text",
+   "to": "Issue"
+  },
+  {
+   "from": "Question",
+   "column": "IssueID",
+   "columnType": "Text",
+   "to": "Issue"
+  },
+  {
+   "from": "ReportGroupAvailableField",
+   "column": "FirmID",
+   "columnType": "Text",
+   "to": "Firm"
+  },
+  {
+   "from": "ReportGroupData",
+   "column": "FirmID",
+   "columnType": "Number",
+   "to": "Firm"
+  },
+  {
+   "from": "Scenario",
+   "column": "KeyDateID",
+   "columnType": "Text",
+   "to": "KeyDate"
+  },
+  {
+   "from": "ServiceRequest",
+   "column": "IssueID",
+   "columnType": "Text",
+   "to": "Issue"
+  },
+  {
+   "from": "WorkFlowStep",
+   "column": "IssueID",
+   "columnType": "Text",
+   "to": "Issue"
+  },
+  {
+   "from": "WorkOrder",
+   "column": "IssueID",
+   "columnType": "Text",
+   "to": "Issue"
+  },
+  {
+   "from": "WorkOrder",
+   "column": "ServiceRequestID",
+   "columnType": "Text",
+   "to": "ServiceRequest"
+  }
+ ]
+}

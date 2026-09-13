@@ -1,0 +1,948 @@
+{
+ "firm": "(ASG)American Freight",
+ "firmID": 3158,
+ "build": "26.09.0.113",
+ "captured": "2026-09-13",
+ "source": "/en/admin/ShowObjectDetails.jsp ('View Object Model') sqlTableID select",
+ "count": 227,
+ "note": "The select renders 228 <option>s; one is the placeholder (value='', text='All Tables'). 227 real tables - exactly BBW's number.",
+ "crossTenantResult": {
+  "verdict": "IDENTICAL. All 227 table ids and all 227 table names match BBW exactly - zero ids only in AF, zero only in BBW, zero name mismatches on shared ids.",
+  "reading": "Observed. The platform SQL schema is seeded identically for both tenants. This is a Hub-layer fact: the table catalog is not tenant-shaped.",
+  "equipmentContractImplication": "The `Equipment Contract` difference does NOT map onto a table difference. Stronger: the 227-table catalog contains **no table whose name contains 'Equipment' at all**, in either tenant. The only contract-bearing tables are Contract (2792), Contract Amendment (2793), Contract Financial Test (3054) and Contract Term (2794). So BBW's extra navigation root is backed by no extra table, and whatever gates it sits above the schema."
+ },
+ "equipmentTables": [],
+ "contractTables": [
+  {
+   "id": "2792",
+   "name": "Contract"
+  },
+  {
+   "id": "2793",
+   "name": "Contract Amendment"
+  },
+  {
+   "id": "3054",
+   "name": "Contract Financial Test"
+  },
+  {
+   "id": "2794",
+   "name": "Contract Term"
+  }
+ ],
+ "otherSelects": {
+  "showVersion": 80,
+  "modifiedVersion": 80
+ },
+ "tables": [
+  {
+   "id": "2884",
+   "name": "Accrual Transaction"
+  },
+  {
+   "id": "3057",
+   "name": "Accting Assumption Adjust"
+  },
+  {
+   "id": "2686",
+   "name": "Allowance"
+  },
+  {
+   "id": "2687",
+   "name": "Allowance Transaction"
+  },
+  {
+   "id": "2946",
+   "name": "Alternate Rent Schedule"
+  },
+  {
+   "id": "2885",
+   "name": "App Activity Log"
+  },
+  {
+   "id": "2561",
+   "name": "Asset"
+  },
+  {
+   "id": "2957",
+   "name": "Asset History"
+  },
+  {
+   "id": "2870",
+   "name": "Audit Column"
+  },
+  {
+   "id": "2871",
+   "name": "Audit Master"
+  },
+  {
+   "id": "2872",
+   "name": "Audit Table"
+  },
+  {
+   "id": "2958",
+   "name": "Bid Package"
+  },
+  {
+   "id": "3163",
+   "name": "Bid Package Alternate"
+  },
+  {
+   "id": "3164",
+   "name": "Bid Package Alternate Value"
+  },
+  {
+   "id": "3173",
+   "name": "Bid Package Breakout Value"
+  },
+  {
+   "id": "3120",
+   "name": "Bid Package Template"
+  },
+  {
+   "id": "2959",
+   "name": "Bidder Issue"
+  },
+  {
+   "id": "2654",
+   "name": "Budget Column"
+  },
+  {
+   "id": "2655",
+   "name": "Budget Column Item Value"
+  },
+  {
+   "id": "2656",
+   "name": "Budget Column Type"
+  },
+  {
+   "id": "2666",
+   "name": "Budget Index"
+  },
+  {
+   "id": "2667",
+   "name": "Budget Index Value"
+  },
+  {
+   "id": "2657",
+   "name": "Budget Line Item"
+  },
+  {
+   "id": "2668",
+   "name": "Budget Option"
+  },
+  {
+   "id": "3002",
+   "name": "Budget Option Template"
+  },
+  {
+   "id": "3001",
+   "name": "Budget Template"
+  },
+  {
+   "id": "2886",
+   "name": "Budget View"
+  },
+  {
+   "id": "2460",
+   "name": "Change Manage"
+  },
+  {
+   "id": "3102",
+   "name": "Change Order"
+  },
+  {
+   "id": "2634",
+   "name": "Client List Row"
+  },
+  {
+   "id": "2635",
+   "name": "CLR Extension Part"
+  },
+  {
+   "id": "2688",
+   "name": "Co Tenancy"
+  },
+  {
+   "id": "2516",
+   "name": "Committee Package"
+  },
+  {
+   "id": "2517",
+   "name": "Committee Package Template"
+  },
+  {
+   "id": "2683",
+   "name": "Comparison Item"
+  },
+  {
+   "id": "2684",
+   "name": "Comparison Report"
+  },
+  {
+   "id": "2518",
+   "name": "Competitor"
+  },
+  {
+   "id": "2791",
+   "name": "Complex"
+  },
+  {
+   "id": "2792",
+   "name": "Contract"
+  },
+  {
+   "id": "2793",
+   "name": "Contract Amendment"
+  },
+  {
+   "id": "3054",
+   "name": "Contract Financial Test"
+  },
+  {
+   "id": "2794",
+   "name": "Contract Term"
+  },
+  {
+   "id": "3176",
+   "name": "Cost Tracking Template"
+  },
+  {
+   "id": "2795",
+   "name": "Covenant"
+  },
+  {
+   "id": "3082",
+   "name": "CPI"
+  },
+  {
+   "id": "2604",
+   "name": "Custom Code Field"
+  },
+  {
+   "id": "2605",
+   "name": "Custom Code Table"
+  },
+  {
+   "id": "2519",
+   "name": "Dashboard"
+  },
+  {
+   "id": "2522",
+   "name": "Demographic Fact"
+  },
+  {
+   "id": "2523",
+   "name": "Demographic Report"
+  },
+  {
+   "id": "2664",
+   "name": "Demographic Results"
+  },
+  {
+   "id": "2524",
+   "name": "Demographic Study Area"
+  },
+  {
+   "id": "2525",
+   "name": "Development Plan"
+  },
+  {
+   "id": "2526",
+   "name": "Development Target"
+  },
+  {
+   "id": "3113",
+   "name": "Discount Rate"
+  },
+  {
+   "id": "2829",
+   "name": "DMA"
+  },
+  {
+   "id": "2527",
+   "name": "Document"
+  },
+  {
+   "id": "3071",
+   "name": "Document Markup"
+  },
+  {
+   "id": "3055",
+   "name": "E Mail Received Log"
+  },
+  {
+   "id": "3045",
+   "name": "E Mail Sent Log"
+  },
+  {
+   "id": "2529",
+   "name": "Employer"
+  },
+  {
+   "id": "3183",
+   "name": "Employer Site"
+  },
+  {
+   "id": "2994",
+   "name": "Entity Template"
+  },
+  {
+   "id": "2796",
+   "name": "Escalation Index"
+  },
+  {
+   "id": "2821",
+   "name": "Excel Server Status"
+  },
+  {
+   "id": "2822",
+   "name": "Excel Service Log"
+  },
+  {
+   "id": "2823",
+   "name": "Excel Service Queue"
+  },
+  {
+   "id": "2950",
+   "name": "Exchange Rate"
+  },
+  {
+   "id": "2905",
+   "name": "Exp Accrual Forecast Period"
+  },
+  {
+   "id": "2900",
+   "name": "Expense Accrual Schedule"
+  },
+  {
+   "id": "2901",
+   "name": "Expense Accrual Setup"
+  },
+  {
+   "id": "2797",
+   "name": "Expense Allocation"
+  },
+  {
+   "id": "2798",
+   "name": "Expense Escalation"
+  },
+  {
+   "id": "2861",
+   "name": "Expense Forecast Period"
+  },
+  {
+   "id": "2799",
+   "name": "Expense Recovery"
+  },
+  {
+   "id": "2858",
+   "name": "Expense Recovery Item"
+  },
+  {
+   "id": "3179",
+   "name": "Expense Recovery Item Mapping"
+  },
+  {
+   "id": "2825",
+   "name": "Expense Schedule"
+  },
+  {
+   "id": "2800",
+   "name": "Expense Setup"
+  },
+  {
+   "id": "2873",
+   "name": "Expense Vendor Allocation"
+  },
+  {
+   "id": "2530",
+   "name": "Facility"
+  },
+  {
+   "id": "2911",
+   "name": "Facility Expense"
+  },
+  {
+   "id": "2531",
+   "name": "Favorite Link"
+  },
+  {
+   "id": "3065",
+   "name": "Financial Adjustment"
+  },
+  {
+   "id": "2532",
+   "name": "Firm"
+  },
+  {
+   "id": "2827",
+   "name": "Fiscal Period"
+  },
+  {
+   "id": "2445",
+   "name": "Folder"
+  },
+  {
+   "id": "3003",
+   "name": "Folder Template"
+  },
+  {
+   "id": "2452",
+   "name": "General Entity Info"
+  },
+  {
+   "id": "2874",
+   "name": "Global Property"
+  },
+  {
+   "id": "2878",
+   "name": "Global Property Section"
+  },
+  {
+   "id": "3051",
+   "name": "Grid Preference"
+  },
+  {
+   "id": "2995",
+   "name": "Holiday Date"
+  },
+  {
+   "id": "2996",
+   "name": "Holiday Schedule"
+  },
+  {
+   "id": "3068",
+   "name": "Information Overlay"
+  },
+  {
+   "id": "2801",
+   "name": "Insurance"
+  },
+  {
+   "id": "2951",
+   "name": "Invoice Issue"
+  },
+  {
+   "id": "2952",
+   "name": "Invoice Item"
+  },
+  {
+   "id": "2446",
+   "name": "Issue"
+  },
+  {
+   "id": "2535",
+   "name": "Issue Response"
+  },
+  {
+   "id": "2536",
+   "name": "Issue Submittal"
+  },
+  {
+   "id": "2802",
+   "name": "Job Log"
+  },
+  {
+   "id": "2538",
+   "name": "Jurisdiction"
+  },
+  {
+   "id": "2803",
+   "name": "Key Date"
+  },
+  {
+   "id": "2539",
+   "name": "Land Purchase Summary"
+  },
+  {
+   "id": "3189",
+   "name": "Landlord Invoice"
+  },
+  {
+   "id": "3190",
+   "name": "Landlord Invoice Item"
+  },
+  {
+   "id": "2540",
+   "name": "Lease Audit"
+  },
+  {
+   "id": "2542",
+   "name": "Lease Info"
+  },
+  {
+   "id": "2672",
+   "name": "Link Budget Index BLI"
+  },
+  {
+   "id": "2902",
+   "name": "Link Budget View BLI"
+  },
+  {
+   "id": "2549",
+   "name": "Link Comm Pkg Templ Doc Content"
+  },
+  {
+   "id": "3056",
+   "name": "Link E Mail Received Log Document"
+  },
+  {
+   "id": "2608",
+   "name": "Link Issue Part"
+  },
+  {
+   "id": "2627",
+   "name": "Link Issue Part Order"
+  },
+  {
+   "id": "2554",
+   "name": "Link Land Purchase Inspection"
+  },
+  {
+   "id": "3191",
+   "name": "Link Landlord Inv Payment Txn"
+  },
+  {
+   "id": "2615",
+   "name": "Link Member Project Entity"
+  },
+  {
+   "id": "3070",
+   "name": "Link PE Member Code Job Title"
+  },
+  {
+   "id": "2826",
+   "name": "Link Project Entity Contact"
+  },
+  {
+   "id": "2998",
+   "name": "Link Project Entity Vendor"
+  },
+  {
+   "id": "3169",
+   "name": "Link Re Trans Scen Contact"
+  },
+  {
+   "id": "2969",
+   "name": "Link Receipt Transaction"
+  },
+  {
+   "id": "2593",
+   "name": "Link Region Manager"
+  },
+  {
+   "id": "2594",
+   "name": "Link Region Market"
+  },
+  {
+   "id": "2970",
+   "name": "Link Sched Offset Exp Grp Type"
+  },
+  {
+   "id": "2633",
+   "name": "Link Task By Code Member"
+  },
+  {
+   "id": "2999",
+   "name": "Link Task Document"
+  },
+  {
+   "id": "2560",
+   "name": "Link Task Member"
+  },
+  {
+   "id": "2804",
+   "name": "Location"
+  },
+  {
+   "id": "2562",
+   "name": "Map Client Budget"
+  },
+  {
+   "id": "2563",
+   "name": "Map Client Schedule"
+  },
+  {
+   "id": "2564",
+   "name": "Member"
+  },
+  {
+   "id": "2565",
+   "name": "Member Audit"
+  },
+  {
+   "id": "3004",
+   "name": "Member Template"
+  },
+  {
+   "id": "2566",
+   "name": "Non Member"
+  },
+  {
+   "id": "2642",
+   "name": "Notify"
+  },
+  {
+   "id": "2644",
+   "name": "Notify Template"
+  },
+  {
+   "id": "2645",
+   "name": "Notify Template Member"
+  },
+  {
+   "id": "2805",
+   "name": "Organization"
+  },
+  {
+   "id": "2567",
+   "name": "Ownership"
+  },
+  {
+   "id": "2611",
+   "name": "Page Layout"
+  },
+  {
+   "id": "2612",
+   "name": "Page Layout Field"
+  },
+  {
+   "id": "2613",
+   "name": "Page Layout Filter"
+  },
+  {
+   "id": "2806",
+   "name": "Parcel"
+  },
+  {
+   "id": "2847",
+   "name": "Parcel Access"
+  },
+  {
+   "id": "2807",
+   "name": "Parking"
+  },
+  {
+   "id": "2614",
+   "name": "Part"
+  },
+  {
+   "id": "2638",
+   "name": "Part Package"
+  },
+  {
+   "id": "2639",
+   "name": "Part Package Item"
+  },
+  {
+   "id": "2808",
+   "name": "Party"
+  },
+  {
+   "id": "3105",
+   "name": "Pay App"
+  },
+  {
+   "id": "2809",
+   "name": "Payment Receipt"
+  },
+  {
+   "id": "2810",
+   "name": "Payment Transaction"
+  },
+  {
+   "id": "2811",
+   "name": "Percentage Rent"
+  },
+  {
+   "id": "2906",
+   "name": "Percentage Rent Accrual Period"
+  },
+  {
+   "id": "2955",
+   "name": "Percentage Rent Breakpoint"
+  },
+  {
+   "id": "2848",
+   "name": "Percentage Rent Period"
+  },
+  {
+   "id": "2956",
+   "name": "Percentage Rent Summary Period"
+  },
+  {
+   "id": "2569",
+   "name": "Person"
+  },
+  {
+   "id": "3177",
+   "name": "Pgp Config"
+  },
+  {
+   "id": "2571",
+   "name": "Potential Project"
+  },
+  {
+   "id": "2682",
+   "name": "Pro Forma Budget"
+  },
+  {
+   "id": "2573",
+   "name": "Process Timeline"
+  },
+  {
+   "id": "2574",
+   "name": "Process Timeline Template"
+  },
+  {
+   "id": "2575",
+   "name": "Program"
+  },
+  {
+   "id": "2576",
+   "name": "Program Revenue Weeks"
+  },
+  {
+   "id": "2577",
+   "name": "Project"
+  },
+  {
+   "id": "2971",
+   "name": "Property Tax Appeal"
+  },
+  {
+   "id": "2972",
+   "name": "Property Tax Appeal Award"
+  },
+  {
+   "id": "2973",
+   "name": "Property Tax Assessment"
+  },
+  {
+   "id": "2974",
+   "name": "Property Tax Bill"
+  },
+  {
+   "id": "2975",
+   "name": "Property Tax Detail"
+  },
+  {
+   "id": "2976",
+   "name": "Property Tax Summary"
+  },
+  {
+   "id": "2579",
+   "name": "Prototype"
+  },
+  {
+   "id": "3197",
+   "name": "Punch List"
+  },
+  {
+   "id": "3198",
+   "name": "Punch List Assignee"
+  },
+  {
+   "id": "3199",
+   "name": "Punch List Task"
+  },
+  {
+   "id": "3200",
+   "name": "Punch List Task Assignee"
+  },
+  {
+   "id": "3107",
+   "name": "Purchase Order"
+  },
+  {
+   "id": "3122",
+   "name": "Question"
+  },
+  {
+   "id": "3170",
+   "name": "Re Trans Scen Contact"
+  },
+  {
+   "id": "3143",
+   "name": "RE Transaction"
+  },
+  {
+   "id": "3171",
+   "name": "Recalc Override Notes"
+  },
+  {
+   "id": "2580",
+   "name": "Region"
+  },
+  {
+   "id": "2595",
+   "name": "Report Group Available Field"
+  },
+  {
+   "id": "2596",
+   "name": "Report Group Data"
+  },
+  {
+   "id": "2813",
+   "name": "Responsibility"
+  },
+  {
+   "id": "2814",
+   "name": "Sales"
+  },
+  {
+   "id": "2841",
+   "name": "Sales Exclusion"
+  },
+  {
+   "id": "2883",
+   "name": "Sales Exclusion Cap"
+  },
+  {
+   "id": "2849",
+   "name": "Sales Period"
+  },
+  {
+   "id": "3144",
+   "name": "Scenario"
+  },
+  {
+   "id": "3005",
+   "name": "Schedule Template"
+  },
+  {
+   "id": "2629",
+   "name": "Scheduled Job"
+  },
+  {
+   "id": "2977",
+   "name": "Scheduled Offset"
+  },
+  {
+   "id": "3092",
+   "name": "Scratch Pad"
+  },
+  {
+   "id": "3093",
+   "name": "Scratch Pad Section"
+  },
+  {
+   "id": "2815",
+   "name": "Security Deposit"
+  },
+  {
+   "id": "2903",
+   "name": "Service Request"
+  },
+  {
+   "id": "2451",
+   "name": "Site Survey"
+  },
+  {
+   "id": "2859",
+   "name": "SL Period"
+  },
+  {
+   "id": "2860",
+   "name": "SL Summary"
+  },
+  {
+   "id": "2816",
+   "name": "Space"
+  },
+  {
+   "id": "2585",
+   "name": "State Province Country"
+  },
+  {
+   "id": "2448",
+   "name": "Task"
+  },
+  {
+   "id": "3000",
+   "name": "Task Predecessor"
+  },
+  {
+   "id": "3046",
+   "name": "Template Audit"
+  },
+  {
+   "id": "2817",
+   "name": "Tenant"
+  },
+  {
+   "id": "3075",
+   "name": "Usage"
+  },
+  {
+   "id": "3080",
+   "name": "Usage Period"
+  },
+  {
+   "id": "3076",
+   "name": "Use Based Rent"
+  },
+  {
+   "id": "3078",
+   "name": "Use Based Rent Breakpoint"
+  },
+  {
+   "id": "3081",
+   "name": "Use Based Rent Period"
+  },
+  {
+   "id": "3079",
+   "name": "Use Based Rent Summary Period"
+  },
+  {
+   "id": "2630",
+   "name": "User Class Security"
+  },
+  {
+   "id": "2842",
+   "name": "Variable Rent Offset"
+  },
+  {
+   "id": "2904",
+   "name": "Vendor Insurance"
+  },
+  {
+   "id": "2618",
+   "name": "Work Flow"
+  },
+  {
+   "id": "2619",
+   "name": "Work Flow Step"
+  },
+  {
+   "id": "2631",
+   "name": "Work Flow Step Approver"
+  },
+  {
+   "id": "2632",
+   "name": "Work Flow Step Assignee"
+  },
+  {
+   "id": "2621",
+   "name": "Work Flow Template"
+  },
+  {
+   "id": "2623",
+   "name": "Work Flow Template Step"
+  },
+  {
+   "id": "2624",
+   "name": "Work Flow Template Step Action"
+  },
+  {
+   "id": "2625",
+   "name": "Work Flow Template Step Member"
+  },
+  {
+   "id": "2907",
+   "name": "Work Order"
+  }
+ ],
+ "bearsOnQ_BBW_05": "Q-BBW-05's open follow-on asked whether the absent `EquipmentContract` object means the 223-object census is incomplete, or whether the type maps onto `Contract` at storage. This favours the second: the platform's own table catalog - identical across both tenants, and authoritative rather than a derived census - has no Equipment* table. `EquipmentContract` is a ProjectEntity type discriminating rows in `Contract`, not a table of its own. (Derived: from the table catalog, not from a schema export.)"
+}

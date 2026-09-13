@@ -1,0 +1,841 @@
+{
+ "firm": "(ASG)BBW",
+ "build": "26.09.0.113",
+ "captured": "2026-09-13",
+ "source": "FirmCodeList.jsp bulk JSON (BOType=CustomCodeTable, limit=5000)",
+ "total": 207,
+ "tableTypeRange": [
+  2000,
+  3016
+ ],
+ "dropDowns": [
+  {
+   "name": "Address Group Code",
+   "tableType": 2075
+  },
+  {
+   "name": "Address Type Code",
+   "tableType": 2076
+  },
+  {
+   "name": "Adjustment Method Code",
+   "tableType": 2182
+  },
+  {
+   "name": "Agreement Type Code",
+   "tableType": 2077
+  },
+  {
+   "name": "Allowance Group Code",
+   "tableType": 2078
+  },
+  {
+   "name": "Allowance Type Code",
+   "tableType": 2079
+  },
+  {
+   "name": "Amendment Group Code",
+   "tableType": 2080
+  },
+  {
+   "name": "Amendment Type Code",
+   "tableType": 3002
+  },
+  {
+   "name": "Appointment Type Code",
+   "tableType": 2000
+  },
+  {
+   "name": "Approval Status Code",
+   "tableType": 2081
+  },
+  {
+   "name": "Area Code",
+   "tableType": 2083
+  },
+  {
+   "name": "ASC 842 Schedule Type Code",
+   "tableType": 2162
+  },
+  {
+   "name": "Asset Category Code",
+   "tableType": 2047
+  },
+  {
+   "name": "Asset Class Code",
+   "tableType": 2084
+  },
+  {
+   "name": "Asset Department Code",
+   "tableType": 2001
+  },
+  {
+   "name": "Asset Group Code",
+   "tableType": 2002
+  },
+  {
+   "name": "Asset Operation Status Code",
+   "tableType": 2003
+  },
+  {
+   "name": "Asset Product Type Code",
+   "tableType": 2004
+  },
+  {
+   "name": "Asset Suspension Status Code",
+   "tableType": 2005
+  },
+  {
+   "name": "Asset Type Code",
+   "tableType": 3000
+  },
+  {
+   "name": "Asset Type Test Code",
+   "tableType": 2085
+  },
+  {
+   "name": "Base Year Amount Type Code",
+   "tableType": 2086
+  },
+  {
+   "name": "Budget Change Reason Code",
+   "tableType": 2006
+  },
+  {
+   "name": "Budget Column Status Code",
+   "tableType": 2007
+  },
+  {
+   "name": "Budget Value Units Code",
+   "tableType": 2008
+  },
+  {
+   "name": "Building Area Unit Code",
+   "tableType": 2009
+  },
+  {
+   "name": "Building Class Code",
+   "tableType": 2010
+  },
+  {
+   "name": "CAM Category Code",
+   "tableType": 2011
+  },
+  {
+   "name": "Cap Type Code",
+   "tableType": 2164
+  },
+  {
+   "name": "Change Department Code",
+   "tableType": 2012
+  },
+  {
+   "name": "Change Package Type Code",
+   "tableType": 2013
+  },
+  {
+   "name": "Change Source Code",
+   "tableType": 2015
+  },
+  {
+   "name": "Change Type Code",
+   "tableType": 2016
+  },
+  {
+   "name": "Classification Code",
+   "tableType": 2017
+  },
+  {
+   "name": "Co Tenancy Group Code",
+   "tableType": 2087
+  },
+  {
+   "name": "Co Tenancy Type Code",
+   "tableType": 2088
+  },
+  {
+   "name": "Company Group Code",
+   "tableType": 2089
+  },
+  {
+   "name": "Competitor Type Code",
+   "tableType": 2018
+  },
+  {
+   "name": "Complex Status Code",
+   "tableType": 2019
+  },
+  {
+   "name": "Complex Type Code",
+   "tableType": 2020
+  },
+  {
+   "name": "Concept Code",
+   "tableType": 2091
+  },
+  {
+   "name": "Construction Type Code",
+   "tableType": 2021
+  },
+  {
+   "name": "Contact Type Code",
+   "tableType": 2022
+  },
+  {
+   "name": "Contract Category Code",
+   "tableType": 2092
+  },
+  {
+   "name": "Contract Group Code",
+   "tableType": 2093
+  },
+  {
+   "name": "Contract Status Code",
+   "tableType": 2094
+  },
+  {
+   "name": "Contract Type Code",
+   "tableType": 3003
+  },
+  {
+   "name": "Contract Use Code",
+   "tableType": 2095
+  },
+  {
+   "name": "Covenant Category Code",
+   "tableType": 2156
+  },
+  {
+   "name": "Covenant Group Code",
+   "tableType": 2096
+  },
+  {
+   "name": "Covenant Status Code",
+   "tableType": 2157
+  },
+  {
+   "name": "Covenant Template Code",
+   "tableType": 2097
+  },
+  {
+   "name": "Covenant Type Code",
+   "tableType": 3004
+  },
+  {
+   "name": "Coverage Code",
+   "tableType": 2023
+  },
+  {
+   "name": "CPI Index Code",
+   "tableType": 2137
+  },
+  {
+   "name": "Deal Type Code",
+   "tableType": 2024
+  },
+  {
+   "name": "Decision Status Code",
+   "tableType": 2025
+  },
+  {
+   "name": "Demographic Results Type Code",
+   "tableType": 2026
+  },
+  {
+   "name": "Denominator Code",
+   "tableType": 2098
+  },
+  {
+   "name": "Discipline Code",
+   "tableType": 2027
+  },
+  {
+   "name": "Distribution Center Code",
+   "tableType": 2028
+  },
+  {
+   "name": "Document Content Code",
+   "tableType": 2029
+  },
+  {
+   "name": "Document Type Code",
+   "tableType": 2030
+  },
+  {
+   "name": "Escalation Category Code",
+   "tableType": 2165
+  },
+  {
+   "name": "Escalation Group Code",
+   "tableType": 2166
+  },
+  {
+   "name": "Escalation Payment Method Code",
+   "tableType": 2099
+  },
+  {
+   "name": "Escalation Type Code",
+   "tableType": 2167
+  },
+  {
+   "name": "Evaluation Rating Code",
+   "tableType": 2100
+  },
+  {
+   "name": "Exchange Rate Type Code",
+   "tableType": 2101
+  },
+  {
+   "name": "Exclusion Cap Code",
+   "tableType": 2183
+  },
+  {
+   "name": "Exp Rec Based On Code",
+   "tableType": 2168
+  },
+  {
+   "name": "Expense Acct Code",
+   "tableType": 2102
+  },
+  {
+   "name": "Expense Category Code",
+   "tableType": 2103
+  },
+  {
+   "name": "Expense Group Code",
+   "tableType": 2104
+  },
+  {
+   "name": "Expense Type Code",
+   "tableType": 3013
+  },
+  {
+   "name": "Facility Category Code",
+   "tableType": 2105
+  },
+  {
+   "name": "Facility Group Code",
+   "tableType": 2106
+  },
+  {
+   "name": "Facility Status Code",
+   "tableType": 2107
+  },
+  {
+   "name": "Facility Type Code",
+   "tableType": 3005
+  },
+  {
+   "name": "Facility Use Code",
+   "tableType": 2108
+  },
+  {
+   "name": "Financial Adjustment Status Code",
+   "tableType": 2109
+  },
+  {
+   "name": "Funding Type Code",
+   "tableType": 2031
+  },
+  {
+   "name": "Guarantee Type Code",
+   "tableType": 2110
+  },
+  {
+   "name": "Holding Interest Code",
+   "tableType": 2111
+  },
+  {
+   "name": "IFRS 16 Schedule Type Code",
+   "tableType": 2163
+  },
+  {
+   "name": "Index Group Code",
+   "tableType": 2169
+  },
+  {
+   "name": "Index Source Code",
+   "tableType": 2170
+  },
+  {
+   "name": "Index Type Code",
+   "tableType": 2171
+  },
+  {
+   "name": "Inspection Period Start Code",
+   "tableType": 2032
+  },
+  {
+   "name": "Inspection Type Code",
+   "tableType": 2033
+  },
+  {
+   "name": "Insurance Category Code",
+   "tableType": 2173
+  },
+  {
+   "name": "Insurance Group Code",
+   "tableType": 2112
+  },
+  {
+   "name": "Insurance Policy Type Code",
+   "tableType": 2034
+  },
+  {
+   "name": "Insurance Type Code",
+   "tableType": 2113
+  },
+  {
+   "name": "Invoice Status Code",
+   "tableType": 2036
+  },
+  {
+   "name": "Issue Type Code",
+   "tableType": 2035
+  },
+  {
+   "name": "Issue/RFI/Proposed Change Cause",
+   "tableType": 2014
+  },
+  {
+   "name": "Job Function Code",
+   "tableType": 2037
+  },
+  {
+   "name": "Job Title Code",
+   "tableType": 2038
+  },
+  {
+   "name": "Key Date Action Code",
+   "tableType": 2158
+  },
+  {
+   "name": "Key Date Group Code",
+   "tableType": 2114
+  },
+  {
+   "name": "Key Date Type Code",
+   "tableType": 3006
+  },
+  {
+   "name": "Land Area Unit Code",
+   "tableType": 2039
+  },
+  {
+   "name": "Last Action Status Code",
+   "tableType": 2082
+  },
+  {
+   "name": "Lease Co Tenant Type Code",
+   "tableType": 2040
+  },
+  {
+   "name": "Lease Option Other Type Code",
+   "tableType": 2041
+  },
+  {
+   "name": "Lease Option Type Code",
+   "tableType": 2042
+  },
+  {
+   "name": "Lease Status Code",
+   "tableType": 2043
+  },
+  {
+   "name": "Lease Type Code",
+   "tableType": 2044
+  },
+  {
+   "name": "Legal Classification Code",
+   "tableType": 2115
+  },
+  {
+   "name": "Location Access Code",
+   "tableType": 2045
+  },
+  {
+   "name": "Location Category Code",
+   "tableType": 2116
+  },
+  {
+   "name": "Location Code",
+   "tableType": 2046
+  },
+  {
+   "name": "Location Group Code",
+   "tableType": 2117
+  },
+  {
+   "name": "Location Status Code",
+   "tableType": 2118
+  },
+  {
+   "name": "Location Type Code",
+   "tableType": 3007
+  },
+  {
+   "name": "Location Use Code",
+   "tableType": 2119
+  },
+  {
+   "name": "Maintenance Remedy Code",
+   "tableType": 2048
+  },
+  {
+   "name": "Market Area Code",
+   "tableType": 2049
+  },
+  {
+   "name": "Market Demographics Code",
+   "tableType": 2050
+  },
+  {
+   "name": "Market Type Code",
+   "tableType": 2051
+  },
+  {
+   "name": "Master Employer Group Code",
+   "tableType": 2052
+  },
+  {
+   "name": "Misc Expense Category Code",
+   "tableType": 2053
+  },
+  {
+   "name": "Offset Group Code",
+   "tableType": 2175
+  },
+  {
+   "name": "Offset Type Code",
+   "tableType": 2176
+  },
+  {
+   "name": "Org Category Code",
+   "tableType": 2120
+  },
+  {
+   "name": "Org Group Code",
+   "tableType": 2121
+  },
+  {
+   "name": "Org Type Code",
+   "tableType": 2122
+  },
+  {
+   "name": "Parcel Access Category Code",
+   "tableType": 2177
+  },
+  {
+   "name": "Parcel Access Group Code",
+   "tableType": 2178
+  },
+  {
+   "name": "Parcel Access Type Code",
+   "tableType": 3014
+  },
+  {
+   "name": "Parcel Category Code",
+   "tableType": 2123
+  },
+  {
+   "name": "Parcel Group Code",
+   "tableType": 2124
+  },
+  {
+   "name": "Parcel Status Code",
+   "tableType": 2125
+  },
+  {
+   "name": "Parcel Type Code",
+   "tableType": 3008
+  },
+  {
+   "name": "Parcel Use Code",
+   "tableType": 2126
+  },
+  {
+   "name": "Parking Group Code",
+   "tableType": 2127
+  },
+  {
+   "name": "Parking Type Code",
+   "tableType": 2128
+  },
+  {
+   "name": "Party Group Code",
+   "tableType": 2129
+  },
+  {
+   "name": "Party Type Code",
+   "tableType": 2130
+  },
+  {
+   "name": "Pass Through Type Code",
+   "tableType": 2131
+  },
+  {
+   "name": "Payment Method Code",
+   "tableType": 2132
+  },
+  {
+   "name": "Plan Forecast Group Code",
+   "tableType": 2138
+  },
+  {
+   "name": "Pro Forma Budget Status Code",
+   "tableType": 2054
+  },
+  {
+   "name": "Pro Rata Share Method Code",
+   "tableType": 2139
+  },
+  {
+   "name": "Problem Code",
+   "tableType": 3001
+  },
+  {
+   "name": "Project Type Code",
+   "tableType": 2055
+  },
+  {
+   "name": "Property Primary Use Code",
+   "tableType": 2056
+  },
+  {
+   "name": "Property Tax Status Code",
+   "tableType": 2184
+  },
+  {
+   "name": "Property Tax Type Code",
+   "tableType": 2185
+  },
+  {
+   "name": "Rating Code",
+   "tableType": 2140
+  },
+  {
+   "name": "RE Transaction Status Code",
+   "tableType": 2057
+  },
+  {
+   "name": "Recovery Group Code",
+   "tableType": 2179
+  },
+  {
+   "name": "Recovery Item Group Code",
+   "tableType": 2180
+  },
+  {
+   "name": "Recovery Item Type Code",
+   "tableType": 3016
+  },
+  {
+   "name": "Recovery Type Code",
+   "tableType": 3015
+  },
+  {
+   "name": "Region Code",
+   "tableType": 2141
+  },
+  {
+   "name": "Responsibility Group Code",
+   "tableType": 2142
+  },
+  {
+   "name": "Responsibility Type Code",
+   "tableType": 3011
+  },
+  {
+   "name": "Responsible Party Code",
+   "tableType": 2058
+  },
+  {
+   "name": "Sales Category Code",
+   "tableType": 2143
+  },
+  {
+   "name": "Sales Group Code",
+   "tableType": 2144
+  },
+  {
+   "name": "Sales Type Code",
+   "tableType": 3012
+  },
+  {
+   "name": "Scenario Deal Type Code",
+   "tableType": 2059
+  },
+  {
+   "name": "Scenario Type Code",
+   "tableType": 2060
+  },
+  {
+   "name": "Schedule Creation Reason Code",
+   "tableType": 2160
+  },
+  {
+   "name": "Security Deposit Group Code",
+   "tableType": 2145
+  },
+  {
+   "name": "Security Deposit Status Code",
+   "tableType": 2181
+  },
+  {
+   "name": "Security Deposit Type Code",
+   "tableType": 2146
+  },
+  {
+   "name": "Security Privilege Code",
+   "tableType": 2061
+  },
+  {
+   "name": "Service Type Code",
+   "tableType": 2062
+  },
+  {
+   "name": "Site Rating Code",
+   "tableType": 2063
+  },
+  {
+   "name": "Slot Type Code",
+   "tableType": 2064
+  },
+  {
+   "name": "Source Entity Code",
+   "tableType": 2172
+  },
+  {
+   "name": "Space Group Code",
+   "tableType": 2147
+  },
+  {
+   "name": "Space Status Code",
+   "tableType": 2148
+  },
+  {
+   "name": "Space Type Code",
+   "tableType": 2149
+  },
+  {
+   "name": "Space Use Code",
+   "tableType": 2150
+  },
+  {
+   "name": "SRQ Source Code",
+   "tableType": 2065
+  },
+  {
+   "name": "SRQ Status Code",
+   "tableType": 2066
+  },
+  {
+   "name": "SRQ Type Code",
+   "tableType": 2067
+  },
+  {
+   "name": "Store Phase Code",
+   "tableType": 2068
+  },
+  {
+   "name": "Store Type Code",
+   "tableType": 2174
+  },
+  {
+   "name": "Straight Line Schedule Type Code",
+   "tableType": 2161
+  },
+  {
+   "name": "Tax Appeal Result Code",
+   "tableType": 2186
+  },
+  {
+   "name": "Tax Appeal Status Code",
+   "tableType": 2187
+  },
+  {
+   "name": "Tax Category Code",
+   "tableType": 2069
+  },
+  {
+   "name": "Tax Paid To Code",
+   "tableType": 2188
+  },
+  {
+   "name": "Tax Refund Type Code",
+   "tableType": 2189
+  },
+  {
+   "name": "Tax Type Code",
+   "tableType": 2190
+  },
+  {
+   "name": "Tenant Category Code",
+   "tableType": 2151
+  },
+  {
+   "name": "Tenant Group Code",
+   "tableType": 2152
+  },
+  {
+   "name": "Tenant Status Code",
+   "tableType": 2153
+  },
+  {
+   "name": "Tenant Type Code",
+   "tableType": 2154
+  },
+  {
+   "name": "Tenant Use Code",
+   "tableType": 2155
+  },
+  {
+   "name": "Term Type Code",
+   "tableType": 2159
+  },
+  {
+   "name": "Unit Sales Type Code",
+   "tableType": 2133
+  },
+  {
+   "name": "Usage Category Code",
+   "tableType": 2135
+  },
+  {
+   "name": "Usage Group Code",
+   "tableType": 3009
+  },
+  {
+   "name": "Usage Type Code",
+   "tableType": 3010
+  },
+  {
+   "name": "Usage Unit Type Code",
+   "tableType": 2134
+  },
+  {
+   "name": "Use Rent Model Type Code",
+   "tableType": 2136
+  },
+  {
+   "name": "User Class Code",
+   "tableType": 2070
+  },
+  {
+   "name": "Utility Category Code",
+   "tableType": 2071
+  },
+  {
+   "name": "Vendor Grade Code",
+   "tableType": 2072
+  },
+  {
+   "name": "Vertical Industry Code",
+   "tableType": 2073
+  },
+  {
+   "name": "Zoning Code",
+   "tableType": 2074
+  }
+ ]
+}

@@ -1,0 +1,1137 @@
+{
+ "captured": "2026-09-13",
+ "firm": "(ASG)BBW",
+ "build": "26.09.0.113",
+ "component": "Lx.ui.MenuTree",
+ "count": 141,
+ "screens": [
+  {
+   "depth": 0,
+   "name": "Portfolio",
+   "pageLayoutId": 924,
+   "jsp": "",
+   "entityType": "Program",
+   "leaf": false
+  },
+  {
+   "depth": 1,
+   "name": "Details",
+   "pageLayoutId": 935,
+   "jsp": "",
+   "entityType": "",
+   "leaf": false
+  },
+  {
+   "depth": 2,
+   "name": "Summary",
+   "pageLayoutId": 936,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 2,
+   "name": "Members/Contacts",
+   "pageLayoutId": 938,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 2,
+   "name": "Forms",
+   "pageLayoutId": 939,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 2,
+   "name": "Work Flow",
+   "pageLayoutId": 2283,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 2,
+   "name": "Documents",
+   "pageLayoutId": 937,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 2,
+   "name": "Binders",
+   "pageLayoutId": 931,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 2,
+   "name": "Budget",
+   "pageLayoutId": 1109,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 1,
+   "name": "Demographics",
+   "pageLayoutId": 925,
+   "jsp": "",
+   "entityType": "",
+   "leaf": false
+  },
+  {
+   "depth": 2,
+   "name": "Criteria",
+   "pageLayoutId": 928,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 2,
+   "name": "Study Areas",
+   "pageLayoutId": 927,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 2,
+   "name": "Demographics",
+   "pageLayoutId": 926,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 1,
+   "name": "Org Chart",
+   "pageLayoutId": 933,
+   "jsp": "",
+   "entityType": "",
+   "leaf": false
+  },
+  {
+   "depth": 2,
+   "name": "Org Chart",
+   "pageLayoutId": 934,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 1,
+   "name": "Facility / Store List",
+   "pageLayoutId": 4854,
+   "jsp": "",
+   "entityType": "",
+   "leaf": false
+  },
+  {
+   "depth": 2,
+   "name": "Facility / Store List",
+   "pageLayoutId": 4862,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 1,
+   "name": "Equipment",
+   "pageLayoutId": 51793,
+   "jsp": "",
+   "entityType": "",
+   "leaf": false
+  },
+  {
+   "depth": 2,
+   "name": "Equipment",
+   "pageLayoutId": 51809,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 1,
+   "name": "Reports",
+   "pageLayoutId": 3573,
+   "jsp": "",
+   "entityType": "",
+   "leaf": false
+  },
+  {
+   "depth": 2,
+   "name": "Program Reports",
+   "pageLayoutId": 3574,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 0,
+   "name": "Location",
+   "pageLayoutId": 3535,
+   "jsp": "",
+   "entityType": "Location",
+   "leaf": false
+  },
+  {
+   "depth": 1,
+   "name": "Details",
+   "pageLayoutId": 3536,
+   "jsp": "",
+   "entityType": "",
+   "leaf": false
+  },
+  {
+   "depth": 2,
+   "name": "Summary",
+   "pageLayoutId": 3537,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 2,
+   "name": "Members/Contacts",
+   "pageLayoutId": 3542,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 2,
+   "name": "Forms",
+   "pageLayoutId": 3543,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 2,
+   "name": "Work Flow",
+   "pageLayoutId": 3544,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 2,
+   "name": "Documents",
+   "pageLayoutId": 3545,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 2,
+   "name": "Binders",
+   "pageLayoutId": 3546,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 2,
+   "name": "Schedule",
+   "pageLayoutId": 3547,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 2,
+   "name": "Budget",
+   "pageLayoutId": 3548,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 1,
+   "name": "Complex/Center",
+   "pageLayoutId": 3549,
+   "jsp": "",
+   "entityType": "",
+   "leaf": false
+  },
+  {
+   "depth": 2,
+   "name": "Complex/Center Details",
+   "pageLayoutId": 3551,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 1,
+   "name": "Equipment",
+   "pageLayoutId": 51796,
+   "jsp": "",
+   "entityType": "",
+   "leaf": false
+  },
+  {
+   "depth": 2,
+   "name": "Equipment",
+   "pageLayoutId": 51810,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 2,
+   "name": "Work Orders",
+   "pageLayoutId": 51811,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 1,
+   "name": "Reports",
+   "pageLayoutId": 3556,
+   "jsp": "",
+   "entityType": "",
+   "leaf": false
+  },
+  {
+   "depth": 2,
+   "name": "Location Reports",
+   "pageLayoutId": 3557,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 0,
+   "name": "Facility",
+   "pageLayoutId": 1005,
+   "jsp": "",
+   "entityType": "Facility",
+   "leaf": false
+  },
+  {
+   "depth": 1,
+   "name": "Details",
+   "pageLayoutId": 1006,
+   "jsp": "",
+   "entityType": "",
+   "leaf": false
+  },
+  {
+   "depth": 2,
+   "name": "Summary",
+   "pageLayoutId": 1007,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 2,
+   "name": "Members/Contacts",
+   "pageLayoutId": 1009,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 2,
+   "name": "Forms",
+   "pageLayoutId": 1010,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 2,
+   "name": "Work Flow",
+   "pageLayoutId": 2286,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 2,
+   "name": "Documents",
+   "pageLayoutId": 1013,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 2,
+   "name": "Binders",
+   "pageLayoutId": 1030,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 2,
+   "name": "Schedule",
+   "pageLayoutId": 1008,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 2,
+   "name": "Budget",
+   "pageLayoutId": 1011,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 1,
+   "name": "Demographics",
+   "pageLayoutId": 5420,
+   "jsp": "",
+   "entityType": "",
+   "leaf": false
+  },
+  {
+   "depth": 2,
+   "name": "Summary",
+   "pageLayoutId": 5431,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 2,
+   "name": "Demographics Study",
+   "pageLayoutId": 5432,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 1,
+   "name": "Asset Management",
+   "pageLayoutId": 3525,
+   "jsp": "",
+   "entityType": "",
+   "leaf": false
+  },
+  {
+   "depth": 2,
+   "name": "Equipment (FF&E)",
+   "pageLayoutId": 1036,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 2,
+   "name": "Service Requests / Work Orders",
+   "pageLayoutId": 3526,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 1,
+   "name": "Space Management",
+   "pageLayoutId": 3527,
+   "jsp": "",
+   "entityType": "",
+   "leaf": false
+  },
+  {
+   "depth": 2,
+   "name": "Space Management",
+   "pageLayoutId": 3528,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 1,
+   "name": "Facility Expense",
+   "pageLayoutId": 13239,
+   "jsp": "",
+   "entityType": "",
+   "leaf": false
+  },
+  {
+   "depth": 2,
+   "name": "Facility Expense",
+   "pageLayoutId": 13240,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 1,
+   "name": "Pro Forma Lease",
+   "pageLayoutId": 1014,
+   "jsp": "",
+   "entityType": "",
+   "leaf": false
+  },
+  {
+   "depth": 2,
+   "name": "Pro Forma Lease",
+   "pageLayoutId": 5421,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 2,
+   "name": "Responsibilities",
+   "pageLayoutId": 1015,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 1,
+   "name": "Reports",
+   "pageLayoutId": 3533,
+   "jsp": "",
+   "entityType": "",
+   "leaf": false
+  },
+  {
+   "depth": 2,
+   "name": "Facility Reports",
+   "pageLayoutId": 3534,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 0,
+   "name": "Contract",
+   "pageLayoutId": 3492,
+   "jsp": "",
+   "entityType": "Contract",
+   "leaf": false
+  },
+  {
+   "depth": 1,
+   "name": "Details",
+   "pageLayoutId": 3493,
+   "jsp": "",
+   "entityType": "",
+   "leaf": false
+  },
+  {
+   "depth": 2,
+   "name": "Summary",
+   "pageLayoutId": 3494,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 2,
+   "name": "Members/Contacts",
+   "pageLayoutId": 3495,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 2,
+   "name": "Forms",
+   "pageLayoutId": 3496,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 2,
+   "name": "Work Flow",
+   "pageLayoutId": 3497,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 2,
+   "name": "Documents",
+   "pageLayoutId": 3498,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 2,
+   "name": "Binders",
+   "pageLayoutId": 3499,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 2,
+   "name": "Schedule",
+   "pageLayoutId": 3500,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 1,
+   "name": "Abstract Info",
+   "pageLayoutId": 3502,
+   "jsp": "",
+   "entityType": "",
+   "leaf": false
+  },
+  {
+   "depth": 2,
+   "name": "Abstract Details",
+   "pageLayoutId": 3503,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 2,
+   "name": "Terms",
+   "pageLayoutId": 3504,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 2,
+   "name": "Amendments",
+   "pageLayoutId": 3505,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 2,
+   "name": "Covenants",
+   "pageLayoutId": 3506,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 2,
+   "name": "Key Dates",
+   "pageLayoutId": 3507,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 2,
+   "name": "Responsibilities",
+   "pageLayoutId": 3508,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 2,
+   "name": "Insurance",
+   "pageLayoutId": 3509,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 2,
+   "name": "Co-Tenancy",
+   "pageLayoutId": 3510,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 1,
+   "name": "Payment Info",
+   "pageLayoutId": 3512,
+   "jsp": "",
+   "entityType": "",
+   "leaf": false
+  },
+  {
+   "depth": 2,
+   "name": "Payment Details",
+   "pageLayoutId": 3513,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 2,
+   "name": "Recurring Expenses",
+   "pageLayoutId": 3514,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 2,
+   "name": "Alternate Rent",
+   "pageLayoutId": 15951,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 2,
+   "name": "Transactions",
+   "pageLayoutId": 3518,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 2,
+   "name": "Invoices",
+   "pageLayoutId": 108382,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 2,
+   "name": "Receipts",
+   "pageLayoutId": 3519,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 2,
+   "name": "Recoveries",
+   "pageLayoutId": 3516,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 2,
+   "name": "Scheduled Offsets",
+   "pageLayoutId": 19844,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 2,
+   "name": "Allowances",
+   "pageLayoutId": 3517,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 2,
+   "name": "Security Deposit",
+   "pageLayoutId": 12444,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 2,
+   "name": "Percentage Rent",
+   "pageLayoutId": 3515,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 2,
+   "name": "Sales",
+   "pageLayoutId": 3520,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 1,
+   "name": "Accounting Info",
+   "pageLayoutId": 12293,
+   "jsp": "",
+   "entityType": "",
+   "leaf": false
+  },
+  {
+   "depth": 2,
+   "name": "Accounting Details",
+   "pageLayoutId": 45615,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 2,
+   "name": "Capital Lease Test",
+   "pageLayoutId": 12295,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 2,
+   "name": "Straight-Line Rent",
+   "pageLayoutId": 12445,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 2,
+   "name": "Accounting Assumptions",
+   "pageLayoutId": 43784,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 2,
+   "name": "ASC 842 Test",
+   "pageLayoutId": 41136,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 2,
+   "name": "ASC 842 Rent Schedule",
+   "pageLayoutId": 43785,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 2,
+   "name": "IFRS 16 Rent Schedule",
+   "pageLayoutId": 45609,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 1,
+   "name": "Accrual Info",
+   "pageLayoutId": 45610,
+   "jsp": "",
+   "entityType": "",
+   "leaf": false
+  },
+  {
+   "depth": 2,
+   "name": "Accrual Details",
+   "pageLayoutId": 12294,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 2,
+   "name": "Expense Accruals",
+   "pageLayoutId": 12297,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 2,
+   "name": "Transactions",
+   "pageLayoutId": 12298,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 2,
+   "name": "Percentage Rent Accruals",
+   "pageLayoutId": 12296,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 1,
+   "name": "Reports",
+   "pageLayoutId": 3521,
+   "jsp": "",
+   "entityType": "",
+   "leaf": false
+  },
+  {
+   "depth": 2,
+   "name": "Contract Reports",
+   "pageLayoutId": 3522,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 0,
+   "name": "Equipment Contract",
+   "pageLayoutId": 41087,
+   "jsp": "",
+   "entityType": "EquipmentContract",
+   "leaf": false
+  },
+  {
+   "depth": 1,
+   "name": "Details",
+   "pageLayoutId": 41094,
+   "jsp": "",
+   "entityType": "",
+   "leaf": false
+  },
+  {
+   "depth": 2,
+   "name": "Summary",
+   "pageLayoutId": 41095,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 2,
+   "name": "Members/Contacts",
+   "pageLayoutId": 41128,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 2,
+   "name": "Forms",
+   "pageLayoutId": 41129,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 2,
+   "name": "Work Flow",
+   "pageLayoutId": 41130,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 2,
+   "name": "Documents",
+   "pageLayoutId": 41131,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 1,
+   "name": "Abstract Info",
+   "pageLayoutId": 41090,
+   "jsp": "",
+   "entityType": "",
+   "leaf": false
+  },
+  {
+   "depth": 2,
+   "name": "Abstract Details",
+   "pageLayoutId": 41091,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 2,
+   "name": "Terms",
+   "pageLayoutId": 41117,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 2,
+   "name": "Amendments",
+   "pageLayoutId": 41114,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 2,
+   "name": "Covenants",
+   "pageLayoutId": 41115,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 2,
+   "name": "Key Dates",
+   "pageLayoutId": 41120,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 2,
+   "name": "Responsibilities",
+   "pageLayoutId": 41121,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 2,
+   "name": "Insurance",
+   "pageLayoutId": 41122,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 1,
+   "name": "Payment Info",
+   "pageLayoutId": 41092,
+   "jsp": "",
+   "entityType": "",
+   "leaf": false
+  },
+  {
+   "depth": 2,
+   "name": "Payment Details",
+   "pageLayoutId": 41093,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 2,
+   "name": "Recurring Payments",
+   "pageLayoutId": 41116,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 2,
+   "name": "Transactions",
+   "pageLayoutId": 41123,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 2,
+   "name": "Receipts",
+   "pageLayoutId": 41124,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 2,
+   "name": "Scheduled Offsets",
+   "pageLayoutId": 41125,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 2,
+   "name": "Allowances",
+   "pageLayoutId": 41126,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 2,
+   "name": "Security Deposit",
+   "pageLayoutId": 41127,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 1,
+   "name": "Accounting Info",
+   "pageLayoutId": 41118,
+   "jsp": "",
+   "entityType": "",
+   "leaf": false
+  },
+  {
+   "depth": 2,
+   "name": "Accounting Details",
+   "pageLayoutId": 45607,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 2,
+   "name": "Straight-Line Rent",
+   "pageLayoutId": 41153,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 2,
+   "name": "Accounting Assumptions",
+   "pageLayoutId": 43781,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 2,
+   "name": "ASC 842 Test",
+   "pageLayoutId": 41152,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 2,
+   "name": "ASC 842 Rent Schedule",
+   "pageLayoutId": 43782,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 2,
+   "name": "IFRS 16 Rent Schedule",
+   "pageLayoutId": 41151,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  },
+  {
+   "depth": 1,
+   "name": "Reports",
+   "pageLayoutId": 41119,
+   "jsp": "",
+   "entityType": "",
+   "leaf": false
+  },
+  {
+   "depth": 2,
+   "name": "Equipment Contract Reports",
+   "pageLayoutId": 41154,
+   "jsp": "",
+   "entityType": "",
+   "leaf": true
+  }
+ ]
+}

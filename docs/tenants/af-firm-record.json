@@ -1,0 +1,481 @@
+{
+ "firm": "(ASG)American Freight",
+ "firmID": 3158,
+ "build": "26.09.0.113",
+ "captured": "2026-09-13",
+ "source": "/en/admin/FirmEdit.jsp (Manage Company) - full form scrape, label/value pairs",
+ "comparisonTenant": {
+  "firm": "(ASG)BBW",
+  "firmID": 3159,
+  "build": "26.09.0.113",
+  "note": "AF is now on the SAME build as BBW (26.09.0.113). The earlier AF capture at 26.08.0.46 is superseded; build is no longer a confound."
+ },
+ "headline": {
+  "AllowEquipmentContractFunctionality": "Yes",
+  "navigationRootCount": 4,
+  "verdict": "FALSIFIES the simple licence/entitlement hypothesis for Q-BBW-12: the Firm flag 'Allow Equipment Contracts?' is YES at American Freight, on the same build as BBW, yet the 'Equipment Contract' navigation root is ABSENT.",
+  "EquipmentContractSetupPageFieldPresent": false,
+  "EquipmentContractSetupPageNote": "No field named 'Equipment Contract Setup Page' (nor 'Facility Setup Page', nor any '*Setup Page') exists anywhere on FirmEdit.jsp. Zero matches for /Setup Page/i in the rendered HTML. The object-catalog claim that Firm carries default page-layout assignments per module is NOT observable on this screen."
+ },
+ "entitlementFlags": {
+  "Enable Unsealed Bidding?": "false",
+  "Allow Documents?": "Yes",
+  "Allow Data Integration?": "Yes",
+  "Allow Advanced Reports?": "Yes",
+  "Allow Portfolio?": "Yes",
+  "Allow Capital Programs?": "No",
+  "Allow Sites?": "No",
+  "Allow Opening Projects?": "No",
+  "Allow Capital Projects?": "No",
+  "Allow Prototypes?": "No",
+  "Allow Facilities?": "Yes",
+  "Allow Locations?": "Yes",
+  "Allow Parcels?": "No",
+  "Allow Contracts?": "Yes",
+  "Allow Log In As Member?": "true",
+  "Allow AI Lease Abstraction": "",
+  "Allow Equipment Contracts?": "Yes",
+  "Allow RETransactions?": "No",
+  "Allow LX Invoice": "No",
+  "Allow Mobile App": "No",
+  "Allow Analytics": "",
+  "Allow Project Cost Tracking": ""
+ },
+ "entitlementNote": "Every 'Allow X?' flag renders READ-ONLY (plain text in the cell, no form control) - they are platform/vendor-controlled, not firm-editable. Editable controls on this page are only the cosmetic/operational ones (address, phone, org-chart defaults, timeouts, colour scheme).",
+ "fieldCount": 71,
+ "fields": [
+  {
+   "field": "FirmName",
+   "label": "Firm Name",
+   "control": "readonly",
+   "value": "(ASG)American Freight"
+  },
+  {
+   "field": "Phone",
+   "label": "Phone",
+   "control": "input",
+   "value": "614.423.5800"
+  },
+  {
+   "field": "FiscalYearEnd",
+   "label": "Fiscal Year End",
+   "control": "select",
+   "value": "11"
+  },
+  {
+   "field": "LoginFirmName",
+   "label": "Login Firm Name",
+   "control": "readonly",
+   "value": "americanfreight"
+  },
+  {
+   "field": "StreetAddress1",
+   "label": "Address",
+   "control": "input",
+   "value": "501 West Schrock Road"
+  },
+  {
+   "field": "StreetAddress2",
+   "label": "Address 2",
+   "control": "input",
+   "value": "Suite 201"
+  },
+  {
+   "field": "StreetAddress3",
+   "label": "Address 3",
+   "control": "input",
+   "value": ""
+  },
+  {
+   "field": "StreetAddress4",
+   "label": "Address 4",
+   "control": "input",
+   "value": ""
+  },
+  {
+   "field": "City",
+   "label": "City",
+   "control": "input",
+   "value": "Westerville"
+  },
+  {
+   "field": "CountryID",
+   "label": "Country",
+   "control": "readonly",
+   "value": ""
+  },
+  {
+   "field": "IStateProvinceCountryID",
+   "label": "State",
+   "control": "readonly",
+   "value": ""
+  },
+  {
+   "field": "PostalCode",
+   "label": "PostalCode",
+   "control": "input",
+   "value": "43081"
+  },
+  {
+   "field": "CodeDefaultFolderSecurityID",
+   "label": "Default Folder Security",
+   "control": "readonly",
+   "value": ""
+  },
+  {
+   "field": "json_DownloadNameNoVersion",
+   "label": "Download without appending version",
+   "control": "radio",
+   "value": "false"
+  },
+  {
+   "field": "MaxDocumentStorageGB",
+   "label": "Max Document Storage (GB)",
+   "control": "readonly",
+   "value": ""
+  },
+  {
+   "field": "DBDocumentStorageGB",
+   "label": "Actual Storage (GB)",
+   "control": "readonly",
+   "value": "20.40"
+  },
+  {
+   "field": "FromEMailAddress",
+   "label": "From Email",
+   "control": "input",
+   "value": "ASG_xamericanfreight_LxNotifications@lucernex.com"
+  },
+  {
+   "field": "DefaultWorkWeekends",
+   "label": "Work Weekends? (default for new schedules)",
+   "control": "radio",
+   "value": "false"
+  },
+  {
+   "field": "UseOrgChartForLocation",
+   "label": "Apply Org Chart when creating Locations",
+   "control": "radio",
+   "value": "true"
+  },
+  {
+   "field": "EMailAddressFilter",
+   "label": "Email Filter (GLOBAL, NONE, <comma-delimited list>)",
+   "control": "textarea",
+   "value": "@americanfreight.us, franchisegrp.com, @consultasg.com, @eximiusbpo.com, @entrus"
+  },
+  {
+   "field": "DefaultHolidayScheduleID",
+   "label": "Holiday Calendar (default for new schedules)",
+   "control": "select",
+   "value": ""
+  },
+  {
+   "field": "UseOrgChartForREContract",
+   "label": "Apply Org Chart when creating RE Contracts",
+   "control": "radio",
+   "value": "true"
+  },
+  {
+   "field": "RecentNews",
+   "label": "Recent News",
+   "control": "textarea",
+   "value": "Welcome to Lucernex!"
+  },
+  {
+   "field": "DefaultAutoPushForecastEndDate",
+   "label": "Auto adjust Forecast dates for current day",
+   "control": "readonly",
+   "value": ""
+  },
+  {
+   "field": "UseOrgChartForEquipContract",
+   "label": "Apply Org Chart when creating Equipment Contracts",
+   "control": "radio",
+   "value": "true"
+  },
+  {
+   "field": "LxFirmID",
+   "label": "Firm ID:",
+   "control": "readonly",
+   "value": "3158"
+  },
+  {
+   "field": "defaultCopyParentFolderSec",
+   "label": "Child Folder to inherit Parent Security?",
+   "control": "radio",
+   "value": "true"
+  },
+  {
+   "field": "json_sFTPLogs",
+   "label": "sFTP Job Logs:",
+   "control": "radio",
+   "value": null
+  },
+  {
+   "field": "CodeAllowedEMailSourceID",
+   "label": "Email into Lucernex",
+   "control": "readonly",
+   "value": ""
+  },
+  {
+   "field": "InboundEMailFolderName",
+   "label": "Email Attachment Folder",
+   "control": "select",
+   "value": "E-Mailed Documents"
+  },
+  {
+   "field": "EnableUnsealedBidding",
+   "label": "Enable Unsealed Bidding?",
+   "control": "radio",
+   "value": "false"
+  },
+  {
+   "field": "EntityNavigationMode",
+   "label": "Use Related Entity Navigation?",
+   "control": "readonly",
+   "value": ""
+  },
+  {
+   "field": "LxIDName",
+   "label": "Lx ID Name",
+   "control": "readonly",
+   "value": "(ASG)American Freight"
+  },
+  {
+   "field": "CodeProductTypeID",
+   "label": "Product Type",
+   "control": "readonly",
+   "value": "Enterprise"
+  },
+  {
+   "field": "IsTestFirm",
+   "label": "Is Test Firm?",
+   "control": "radio",
+   "value": "true"
+  },
+  {
+   "field": "LockOutUsers",
+   "label": "Lock Out Users?",
+   "control": "radio",
+   "value": "false"
+  },
+  {
+   "field": "json_GASB_Firm",
+   "label": "GASB Firm",
+   "control": "readonly",
+   "value": ""
+  },
+  {
+   "field": "json_GASB_Firm_Text",
+   "label": "Replace with",
+   "control": "readonly",
+   "value": ""
+  },
+  {
+   "field": "AllowDocumentFunctionality",
+   "label": "Allow Documents?",
+   "control": "readonly",
+   "value": "Yes"
+  },
+  {
+   "field": "AllowDataIntegration",
+   "label": "Allow Data Integration?",
+   "control": "readonly",
+   "value": "Yes"
+  },
+  {
+   "field": "IsAuditEnabled",
+   "label": "Is Audit Enabled?",
+   "control": "radio",
+   "value": "true"
+  },
+  {
+   "field": "AllowAdvancedReports",
+   "label": "Allow Advanced Reports?",
+   "control": "readonly",
+   "value": "Yes"
+  },
+  {
+   "field": "json_IgnoreTaskRelations",
+   "label": "Ignore Schedule Task Relationships?",
+   "control": "readonly",
+   "value": ""
+  },
+  {
+   "field": "json_SessionTimeout",
+   "label": "Inactive Session Timeout (Minutes)",
+   "control": "readonly",
+   "value": "100"
+  },
+  {
+   "field": "AllowPortfolioFunctionality",
+   "label": "Allow Portfolio?",
+   "control": "readonly",
+   "value": "Yes"
+  },
+  {
+   "field": "AllowCapProgramFunctionality",
+   "label": "Allow Capital Programs?",
+   "control": "readonly",
+   "value": "No"
+  },
+  {
+   "field": "AllowSiteFunctionality",
+   "label": "Allow Sites?",
+   "control": "readonly",
+   "value": "No"
+  },
+  {
+   "field": "AllowOpenProjectFunctionality",
+   "label": "Allow Opening Projects?",
+   "control": "readonly",
+   "value": "No"
+  },
+  {
+   "field": "AllowCapProjectFunctionality",
+   "label": "Allow Capital Projects?",
+   "control": "readonly",
+   "value": "No"
+  },
+  {
+   "field": "json_ActiveSessionTimeout",
+   "label": "Maximum Session Timeout (Hours)",
+   "control": "readonly",
+   "value": "0"
+  },
+  {
+   "field": "AllowPrototypeFunctionality",
+   "label": "Allow Prototypes?",
+   "control": "readonly",
+   "value": "No"
+  },
+  {
+   "field": "AllowFacilityFunctionality",
+   "label": "Allow Facilities?",
+   "control": "readonly",
+   "value": "Yes"
+  },
+  {
+   "field": "AllowLocationFunctionality",
+   "label": "Allow Locations?",
+   "control": "readonly",
+   "value": "Yes"
+  },
+  {
+   "field": "AllowParcelFunctionality",
+   "label": "Allow Parcels?",
+   "control": "readonly",
+   "value": "No"
+  },
+  {
+   "field": "AllowContractFunctionality",
+   "label": "Allow Contracts?",
+   "control": "readonly",
+   "value": "Yes"
+  },
+  {
+   "field": "AllowLoginAsMember",
+   "label": "Allow Log In As Member?",
+   "control": "radio",
+   "value": "true"
+  },
+  {
+   "field": "json_AllowAILeaseAbstraction",
+   "label": "Allow AI Lease Abstraction",
+   "control": "readonly",
+   "value": ""
+  },
+  {
+   "field": "json_RequireSSL",
+   "label": "Force Secure Site",
+   "control": "readonly",
+   "value": ""
+  },
+  {
+   "field": "FirmURLPrefix",
+   "label": "Url Prefix (Only IT Enables)",
+   "control": "readonly",
+   "value": "train-americanfreight"
+  },
+  {
+   "field": "json_ColorScheme",
+   "label": "Color Scheme",
+   "control": "select",
+   "value": "Blue"
+  },
+  {
+   "field": "AllowEquipmentContractFunctionality",
+   "label": "Allow Equipment Contracts?",
+   "control": "readonly",
+   "value": "Yes"
+  },
+  {
+   "field": "AllowRETransactionFunctionality",
+   "label": "Allow RETransactions?",
+   "control": "readonly",
+   "value": "No"
+  },
+  {
+   "field": "AllowLxInvoice",
+   "label": "Allow LX Invoice",
+   "control": "readonly",
+   "value": "No"
+  },
+  {
+   "field": "GoLiveDate",
+   "label": "Go Live Date",
+   "control": "readonly",
+   "value": "03/11/2023"
+  },
+  {
+   "field": "IsBillEnabled",
+   "label": "Billing Enabled?",
+   "control": "readonly",
+   "value": "Yes"
+  },
+  {
+   "field": "SalesforceID",
+   "label": "Salesforce Account ID",
+   "control": "readonly",
+   "value": "0014400001pCc6wAAC"
+  },
+  {
+   "field": "json_DocumentUploadLimit",
+   "label": "Document Upload Limit (MBytes)",
+   "control": "readonly",
+   "value": "500"
+  },
+  {
+   "field": "AllowMobileApp",
+   "label": "Allow Mobile App",
+   "control": "readonly",
+   "value": "No"
+  },
+  {
+   "field": "json_AllowAnalytics",
+   "label": "Allow Analytics",
+   "control": "readonly",
+   "value": ""
+  },
+  {
+   "field": "json_AllowProjectCostTracking",
+   "label": "Allow Project Cost Tracking",
+   "control": "readonly",
+   "value": ""
+  },
+  {
+   "field": "json_ReportFilterFailureEmail",
+   "label": "Report Filter Failure Email",
+   "control": "readonly",
+   "value": ""
+  }
+ ],
+ "scrapeVerification": {
+  "date": "2026-09-13",
+  "trap": "On FirmEdit.jsp the label <div> and its value share ONE <td>: `<td><div id='{Field}_label'>Label</div>Value</td>`. Using nextElementSibling yields pairs offset by one field, and every row still looks plausible (e.g. `Allow Documents? = 'Allow Data Integration?Yes'`), so the failure is silent.",
+  "methodUsed": "CORRECT. Values were read from the label's OWN <td> with the label div removed (td.cloneNode -> remove [id$='_label'] -> textContent), with form controls read directly where present. Sibling-cell logic was never used in the version that produced this file.",
+  "verification": "Re-scraped live on 2026-09-13 and diffed against this file, running BOTH methods side by side. Result: 71 of 71 fields match the stored values (the only delta was a string-truncation length on the Email Filter textarea, not a value difference). The sibling-logic method would have differed on 62 of 71 fields - so the trap is real and was avoided here.",
+  "note": "An earlier draft of my scraper DID use sibling logic; I caught the off-by-one before writing this file and rewrote it. The buggy intermediate never reached docs/."
+ }
+}

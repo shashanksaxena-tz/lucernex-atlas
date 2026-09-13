@@ -1,0 +1,99 @@
+{
+ "firm": "(ASG)American Freight",
+ "firmID": 3158,
+ "build": "26.09.0.113",
+ "captured": "2026-09-13",
+ "scope": "Runtime/UI half of the import-export picture. The API half is already documented from the REST captures; this is what the SCREENS show.",
+ "headlineForKbBuilder": {
+  "jobLogIsEMPTY_atAF": "Observed. American Freight's Job Log contains **0 entries** (grid totalCount=0), against BBW's 818. No import, export or scheduled job has ever run at this tenant. **AF therefore cannot supply the failure vocabulary or the retry control you asked for - BBW is the only place to get them.** Please don't treat AF silence as evidence that failure states don't exist.",
+  "consequence": "The success vocabulary you documented (`Complete`/`Completed`/`Finished`, varying by job type) came from BBW and stands. AF adds no status values at all."
+ },
+ "jobLog": {
+  "url": "/en/admin/JobLogEdit.jsp?type=joblog (Report Log is the same JSP with type=reportlog)",
+  "totalEntries": 0,
+  "columns": [
+   {
+    "text": "",
+    "dataIndex": "expandRowDetails",
+    "filterType": null
+   },
+   {
+    "text": "Actions",
+    "dataIndex": "EditDeleteLink",
+    "filterType": null
+   },
+   {
+    "text": "Name",
+    "dataIndex": "Name",
+    "filterType": "string"
+   },
+   {
+    "text": "Job Type",
+    "dataIndex": "CodeJobTypeID",
+    "filterType": "string"
+   },
+   {
+    "text": "Scheduled",
+    "dataIndex": "ScheduledTime",
+    "filterType": "string"
+   },
+   {
+    "text": "Initiated By",
+    "dataIndex": "InitiatedByMemberID",
+    "filterType": "string"
+   },
+   {
+    "text": "Status",
+    "dataIndex": "Status",
+    "filterType": "string"
+   },
+   {
+    "text": "Start Time",
+    "dataIndex": "StartTime",
+    "filterType": "date"
+   },
+   {
+    "text": "End Time",
+    "dataIndex": "EndTime",
+    "filterType": "date"
+   },
+   {
+    "text": "Input File",
+    "dataIndex": "InputDataFileName",
+    "filterType": "string"
+   },
+   {
+    "text": "Log File",
+    "dataIndex": "LogFileName",
+    "filterType": "string"
+   }
+  ],
+  "errorReportSurface": "Observed, from the column definitions even with no rows: the grid carries **`Input File` (InputDataFileName)** and **`Log File` (LogFileName)** columns. So each job run records both the file it consumed and a log file - that IS the error-report surface. Whether the log is downloadable, and what a failed row looks like, cannot be determined from AF because there are no rows.",
+  "retryControl": "NOT OBSERVABLE at AF - the Actions column (EditDeleteLink) exists but renders nothing without rows."
+ },
+ "exportConfiguration": {
+  "url": "/en/admin/MessengerExportData.jsp",
+  "title": "Export Data",
+  "whatItExports": "Observed. The grid columns are **Page Layout Name / Primary Table / Top Menu / Previous Layout** - so `Export Configuration` exports **PAGE LAYOUTS**, not drop-downs and not data fields. That answers the question directly: it is a layout-migration tool.",
+  "notableControl": "A checkbox **`isCopyWithinSameEnvironment`** - the export distinguishes copying within one environment from moving between environments, which implies id remapping on cross-environment import. That is consistent with the re-keyed PageLayoutID blocks seen between AF and BBW (+2626..+2677).",
+  "workflowWords": [
+   "preview",
+   "template",
+   "download",
+   "update",
+   "insert"
+  ],
+  "download": "NOT triggered. I recorded what the screen offers and downloaded nothing."
+ },
+ "importData": {
+  "url": "/en/admin/Messenger.jsp",
+  "title": "Import Data",
+  "staticHtmlFindings": "The page is an ExtJS shell - the static HTML exposes no file input and no column-mapping controls, so the workflow (object -> file -> mapping -> dry-run -> error report) cannot be read from the markup alone.",
+  "upsertKeyQuestion": "NOT answerable from AF's UI. Zero `ClientID`/`BOMapClientRecordID` mentions in the rendered page, and with an empty Job Log there is no executed import to inspect. **The REST evidence already settles this** (`@clientID` IS `BOMapClientRecordID`; `/clientid/{id}` addresses records; `POST ...?allowUpdate=true` upserts) - the UI neither confirms nor contradicts it.",
+  "honestStatus": "Partially answered. Screens captured, but AF is an unexercised tenant for import."
+ },
+ "importBestPracticeTemplates": {
+  "url": "/en/admin/BestPracticeTemplates.jsp",
+  "note": "ExtJS shell; no controls exposed in static HTML."
+ }
+}

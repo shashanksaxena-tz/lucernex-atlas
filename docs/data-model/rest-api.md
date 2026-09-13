@@ -7,8 +7,29 @@ tenant fields. That per-type, per-field mutability metadata is exactly what
 [`modules/accounting/computed-vs-input-fields.md`](../modules/accounting/computed-vs-input-fields.md)
 had to reconstruct by inference, and it exists here as first-class vendor data.
 
-**The documentation body did not render**, so the endpoint shapes themselves remain uncaptured. See
-[What did not work](#what-did-not-work).
+> **Superseded, 2026-09-13.** This document recorded that *"the documentation body did not render, so
+> the endpoint shapes themselves remain uncaptured"*. **That is no longer true.** The full OpenAPI
+> 3.0.1 spec was fetched from `/rest/api-docs/swagger` on `(ASG)BBW`, build `26.09.0.113`:
+> **141 paths, 160 operations — 104 GET, 40 POST, 7 PUT, 9 DELETE.** The surface is fully CRUD over a
+> single generic controller serving all 227 record types, and it is how the 25 tables
+> `ShowObjectDetails.jsp` refuses were finally read. Raw capture:
+> [`../tenants/bbw-rest-api.json`](../tenants/bbw-rest-api.json); analysis and the integration
+> constraints in [`../features/import-export/`](../features/import-export/).
+>
+> Three things from that capture bear directly on this page:
+> - **Writes return an `ImportResults` body with `successes[]` / `errors[]`, so HTTP 200 does not
+>   mean the records were written.** A client checking only the status code silently loses data.
+> - **`@clientID` in the serialisation is `BOMapClientRecordID`** — the external key that is required
+>   on 133 of 202 tables — and `/businessObject/{type}/clientid/{clientID}` is a first-class peer of
+>   `/lxid/{lxID}`, with `POST …?allowUpdate=true` performing an upsert against it.
+> - Reads use **FIQL** via `/businessObject/{objectType}/details`, where `fields` is **mandatory** and
+>   an over-broad query returns **413** rather than a truncated result.
+>
+> The `/en/test/RESTful.jsp` page described below renders live Basic and JWT credentials and is now
+> on the capture-exclusion list; the spec route above needs no such page.
+
+**Everything below this note describes the `/en/test/RESTful.jsp` documentation page as captured on
+2026-09-10**, and its observations about per-type, per-field mutability metadata still stand.
 
 | Property | Value |
 |---|---|

@@ -1,0 +1,369 @@
+{
+ "_firm": "(ASG)BBW",
+ "_captured": "2026-09-13",
+ "_purpose": "End-user screen capture for the Contract root, and the addressability classification for all 46 of its nav nodes.",
+ "_record": {
+  "contractName": "125th St NY",
+  "lxID": 482188,
+  "projectEntityID": 1775673,
+  "note": "One real contract, used consistently for every capture."
+ },
+ "_headline": "Contract is PARTIALLY deep-linkable, unlike Equipment Contract where only group heads resolve. 14 distinct screens captured.",
+ "_theTrap": {
+  "whatHappened": "Classifying the 46 routes by raw fetch said 36 were addressable. Driving them in a real browser produced only 14. The 22-route gap is CLIENT-SIDE JS REDIRECTION: the server returns a full 37-40KB HTML document, so fetch sees success, but the page's own script then bounces to EntityInfo.jsp and renders the default Summary.",
+  "whyItMatters": "A fetch-based route audit of this application will overstate deep-linkability by more than 2x. Only a real browser reveals it.",
+  "caught": "All 22 were discarded by the post-capture URL guard. Without it they would have been 22 correctly-named files containing the same Summary page."
+ },
+ "screenshots": {
+  "dir": "docs/assets/screenshots/bbw-enduser/",
+  "count": 14,
+  "allDistinct": "Verified by md5 - every retained file is a different screen.",
+  "files": [
+   "ct-01-contract.jpg",
+   "ct-02-details.jpg",
+   "ct-03-summary.jpg",
+   "ct-04-abstract-info.jpg",
+   "ct-05-abstract-details.jpg",
+   "ct-12-co-tenancy.jpg",
+   "ct-13-payment-info.jpg",
+   "ct-14-payment-details.jpg",
+   "ct-26-accounting-info.jpg",
+   "ct-27-accounting-details.jpg",
+   "ct-28-capital-lease-test.jpg",
+   "ct-32-accrual-info.jpg",
+   "ct-33-accrual-details.jpg",
+   "ct-36-percentage-rent-accruals.jpg"
+  ]
+ },
+ "routeClassification": {
+  "totalNodes": 46,
+  "rendersStandalone": 14,
+  "clientSideRedirectToShell": 22,
+  "accessDenied": 8,
+  "bouncedServerSide": 2,
+  "nodes": [
+   {
+    "pageLayoutID": 3492,
+    "name": "Contract",
+    "depth": 0,
+    "leaf": false,
+    "fetchClass": "RENDERS"
+   },
+   {
+    "pageLayoutID": 3493,
+    "name": "Details",
+    "depth": 1,
+    "leaf": false,
+    "fetchClass": "RENDERS"
+   },
+   {
+    "pageLayoutID": 3494,
+    "name": "Summary",
+    "depth": 2,
+    "leaf": true,
+    "fetchClass": "RENDERS"
+   },
+   {
+    "pageLayoutID": 3495,
+    "name": "Members/Contacts",
+    "depth": 2,
+    "leaf": true,
+    "fetchClass": "AccessDenied"
+   },
+   {
+    "pageLayoutID": 3496,
+    "name": "Forms",
+    "depth": 2,
+    "leaf": true,
+    "fetchClass": "AccessDenied"
+   },
+   {
+    "pageLayoutID": 3497,
+    "name": "Work Flow",
+    "depth": 2,
+    "leaf": true,
+    "fetchClass": "AccessDenied"
+   },
+   {
+    "pageLayoutID": 3498,
+    "name": "Documents",
+    "depth": 2,
+    "leaf": true,
+    "fetchClass": "AccessDenied"
+   },
+   {
+    "pageLayoutID": 3499,
+    "name": "Binders",
+    "depth": 2,
+    "leaf": true,
+    "fetchClass": "AccessDenied"
+   },
+   {
+    "pageLayoutID": 3500,
+    "name": "Schedule",
+    "depth": 2,
+    "leaf": true,
+    "fetchClass": "AccessDenied"
+   },
+   {
+    "pageLayoutID": 3502,
+    "name": "Abstract Info",
+    "depth": 1,
+    "leaf": false,
+    "fetchClass": "RENDERS"
+   },
+   {
+    "pageLayoutID": 3503,
+    "name": "Abstract Details",
+    "depth": 2,
+    "leaf": true,
+    "fetchClass": "RENDERS"
+   },
+   {
+    "pageLayoutID": 3504,
+    "name": "Terms",
+    "depth": 2,
+    "leaf": true,
+    "fetchClass": "RENDERS"
+   },
+   {
+    "pageLayoutID": 3505,
+    "name": "Amendments",
+    "depth": 2,
+    "leaf": true,
+    "fetchClass": "RENDERS"
+   },
+   {
+    "pageLayoutID": 3506,
+    "name": "Covenants",
+    "depth": 2,
+    "leaf": true,
+    "fetchClass": "RENDERS"
+   },
+   {
+    "pageLayoutID": 3507,
+    "name": "Key Dates",
+    "depth": 2,
+    "leaf": true,
+    "fetchClass": "RENDERS"
+   },
+   {
+    "pageLayoutID": 3508,
+    "name": "Responsibilities",
+    "depth": 2,
+    "leaf": true,
+    "fetchClass": "RENDERS"
+   },
+   {
+    "pageLayoutID": 3509,
+    "name": "Insurance",
+    "depth": 2,
+    "leaf": true,
+    "fetchClass": "RENDERS"
+   },
+   {
+    "pageLayoutID": 3510,
+    "name": "Co-Tenancy",
+    "depth": 2,
+    "leaf": true,
+    "fetchClass": "RENDERS"
+   },
+   {
+    "pageLayoutID": 3512,
+    "name": "Payment Info",
+    "depth": 1,
+    "leaf": false,
+    "fetchClass": "RENDERS"
+   },
+   {
+    "pageLayoutID": 3513,
+    "name": "Payment Details",
+    "depth": 2,
+    "leaf": true,
+    "fetchClass": "RENDERS"
+   },
+   {
+    "pageLayoutID": 3514,
+    "name": "Recurring Expenses",
+    "depth": 2,
+    "leaf": true,
+    "fetchClass": "RENDERS"
+   },
+   {
+    "pageLayoutID": 15951,
+    "name": "Alternate Rent",
+    "depth": 2,
+    "leaf": true,
+    "fetchClass": "RENDERS"
+   },
+   {
+    "pageLayoutID": 3518,
+    "name": "Transactions",
+    "depth": 2,
+    "leaf": true,
+    "fetchClass": "RENDERS"
+   },
+   {
+    "pageLayoutID": 108382,
+    "name": "Invoices",
+    "depth": 2,
+    "leaf": true,
+    "fetchClass": "RENDERS"
+   },
+   {
+    "pageLayoutID": 3519,
+    "name": "Receipts",
+    "depth": 2,
+    "leaf": true,
+    "fetchClass": "RENDERS"
+   },
+   {
+    "pageLayoutID": 3516,
+    "name": "Recoveries",
+    "depth": 2,
+    "leaf": true,
+    "fetchClass": "RENDERS"
+   },
+   {
+    "pageLayoutID": 19844,
+    "name": "Scheduled Offsets",
+    "depth": 2,
+    "leaf": true,
+    "fetchClass": "RENDERS"
+   },
+   {
+    "pageLayoutID": 3517,
+    "name": "Allowances",
+    "depth": 2,
+    "leaf": true,
+    "fetchClass": "RENDERS"
+   },
+   {
+    "pageLayoutID": 12444,
+    "name": "Security Deposit",
+    "depth": 2,
+    "leaf": true,
+    "fetchClass": "RENDERS"
+   },
+   {
+    "pageLayoutID": 3515,
+    "name": "Percentage Rent",
+    "depth": 2,
+    "leaf": true,
+    "fetchClass": "RENDERS"
+   },
+   {
+    "pageLayoutID": 3520,
+    "name": "Sales",
+    "depth": 2,
+    "leaf": true,
+    "fetchClass": "RENDERS"
+   },
+   {
+    "pageLayoutID": 12293,
+    "name": "Accounting Info",
+    "depth": 1,
+    "leaf": false,
+    "fetchClass": "RENDERS"
+   },
+   {
+    "pageLayoutID": 45615,
+    "name": "Accounting Details",
+    "depth": 2,
+    "leaf": true,
+    "fetchClass": "RENDERS"
+   },
+   {
+    "pageLayoutID": 12295,
+    "name": "Capital Lease Test",
+    "depth": 2,
+    "leaf": true,
+    "fetchClass": "RENDERS"
+   },
+   {
+    "pageLayoutID": 12445,
+    "name": "Straight-Line Rent",
+    "depth": 2,
+    "leaf": true,
+    "fetchClass": "RENDERS"
+   },
+   {
+    "pageLayoutID": 43784,
+    "name": "Accounting Assumptions",
+    "depth": 2,
+    "leaf": true,
+    "fetchClass": "bounced-to-EntityInfo"
+   },
+   {
+    "pageLayoutID": 41136,
+    "name": "ASC 842 Test",
+    "depth": 2,
+    "leaf": true,
+    "fetchClass": "RENDERS"
+   },
+   {
+    "pageLayoutID": 43785,
+    "name": "ASC 842 Rent Schedule",
+    "depth": 2,
+    "leaf": true,
+    "fetchClass": "RENDERS"
+   },
+   {
+    "pageLayoutID": 45609,
+    "name": "IFRS 16 Rent Schedule",
+    "depth": 2,
+    "leaf": true,
+    "fetchClass": "bounced-to-EntityInfo"
+   },
+   {
+    "pageLayoutID": 45610,
+    "name": "Accrual Info",
+    "depth": 1,
+    "leaf": false,
+    "fetchClass": "RENDERS"
+   },
+   {
+    "pageLayoutID": 12294,
+    "name": "Accrual Details",
+    "depth": 2,
+    "leaf": true,
+    "fetchClass": "RENDERS"
+   },
+   {
+    "pageLayoutID": 12297,
+    "name": "Expense Accruals",
+    "depth": 2,
+    "leaf": true,
+    "fetchClass": "RENDERS"
+   },
+   {
+    "pageLayoutID": 12298,
+    "name": "Transactions",
+    "depth": 2,
+    "leaf": true,
+    "fetchClass": "RENDERS"
+   },
+   {
+    "pageLayoutID": 12296,
+    "name": "Percentage Rent Accruals",
+    "depth": 2,
+    "leaf": true,
+    "fetchClass": "RENDERS"
+   },
+   {
+    "pageLayoutID": 3521,
+    "name": "Reports",
+    "depth": 1,
+    "leaf": false,
+    "fetchClass": "AccessDenied"
+   },
+   {
+    "pageLayoutID": 3522,
+    "name": "Contract Reports",
+    "depth": 2,
+    "leaf": true,
+    "fetchClass": "AccessDenied"
+   }
+  ]
+ }
+}

@@ -16,7 +16,7 @@
 
 ![Dashboard home with Help menu open](../assets/screenshots/dashboard/dashboard-home-help-menu.png)
 
-> The screenshot includes the Help dropdown because that toolbar state was active at capture time. See [002 — Help Menu](002-help-menu.md).
+> The screenshot includes the Help dropdown because that toolbar state was active at capture time. See 002 — Help Menu *(captured; document not yet written)*.
 
 ## Entry path
 

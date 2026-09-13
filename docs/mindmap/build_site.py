@@ -147,13 +147,25 @@ def page(title, body, depth=0, crumb=""):
 <nav><a href="{up}index.html">Overview</a><a href="{up}atlas.html#/map?set=feature">Feature map</a>
 <a href="{up}atlas.html">Interactive app</a>
 <a href="{up}entities/index.html">Record types</a><a href="{up}rules/index.html">Rules</a>
+<a href="{up}research/index.html">Research</a>
 <a href="{up}questions.html">Open questions</a></nav></header>
 <main>{crumb}{body}</main></body></html>"""
 
 
 # --------------------------------------------------------------------- rebuild
+# Preserve research/ across a rebuild: build_research.py owns it and runs after
+# this script. Wiping SITE wholesale would delete it on every atlas rebuild.
+_keep = os.path.join(SITE, "research")
+_tmp = os.path.join(DOCS, "_research_keep")
+if os.path.isdir(_keep):
+    if os.path.isdir(_tmp):
+        shutil.rmtree(_tmp)
+    shutil.move(_keep, _tmp)
 if os.path.isdir(SITE):
     shutil.rmtree(SITE)
+os.makedirs(SITE, exist_ok=True)
+if os.path.isdir(_tmp):
+    shutil.move(_tmp, _keep)
 for d in ("", "modules", "entities", "rules"):
     os.makedirs(os.path.join(SITE, d), exist_ok=True)
 
@@ -194,6 +206,24 @@ body = [f'<h1>Lucernex, as it actually runs</h1>',
         'field and key &rarr;</a></p>',
         '<div class="stats">' + "".join(
             f'<div><b class="mono">{v}</b><span>{k}</span></div>' for k, v in stats) + '</div>',
+        """<h2>The running product</h2>
+<p>The pages below the fold describe the <em>schema</em>. This section describes what two live
+tenants actually do &mdash; where they differ, what the product does that the schema cannot show,
+and what that means for a rebuild. Every claim is labelled Observed, Derived or Inferred.</p>
+<div class="cards">
+<a class="card" href="research/index.html"><h3>Research &rarr;</h3>
+<p>Two tenants on build 26.09.0.113, read live: the full AF/BBW comparison, feature-by-feature
+accounts, the REST API explained, 134 screens, and a coverage tracker that says what is still
+missing.</p><div class="row"><span>17 documents</span><span>34 data captures</span></div></a>
+<a class="card" href="research/tenants/bbw-vs-american-freight.html"><h3>AF vs BBW</h3>
+<p>What one tenant has that the other does not, why a navigation root can be invisible, and how
+configuration is published between firms and then forks.</p>
+<div class="row"><span>27 sections</span></div></a>
+<a class="card" href="research/data-model/api/index.html"><h3>The REST API</h3>
+<p>One generic CRUD controller serving all 227 record types. 141 paths, 160 operations, and the
+envelope that makes HTTP&nbsp;200 an unreliable success signal.</p>
+<div class="row"><span>160 operations</span></div></a>
+</div>""",
         '<h2>Modules</h2><div class="cards">' +
         "".join(mod_card(m) for m in modules if m["scope"]) + '</div>',
         '<h2>Excluded by decision</h2><div class="cards">' +

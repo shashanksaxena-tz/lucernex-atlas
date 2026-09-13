@@ -10,5 +10,6 @@
 <nav><a href="../index.html">Overview</a><a href="../atlas.html#/map?set=feature">Feature map</a>
 <a href="../atlas.html">Interactive app</a>
 <a href="../entities/index.html">Record types</a><a href="../rules/index.html">Rules</a>
+<a href="../research/index.html">Research</a>
 <a href="../questions.html">Open questions</a></nav></header>
 <main><p class="crumb"><a href="../index.html">Atlas</a> &rsaquo; <a href="index.html">Rules</a> &rsaquo; DOC-R-007</p><h1 class="mono">DOC-R-007</h1><p class="sub">Documents, Folders &amp; Correspondence &middot; A folder template&#x27;s real metadata lives on VirtualTemplateFolder, not FolderTemplate</p><span class="tag obs">Observed</span><p>Input: `FolderTemplate` has one field (`ProjectEntityID`); `VirtualTemplateFolder` carries `TemplateName`, `Description`, `Notes`, and 11 `IsValidFor*` flags. Effect: Any rebuild reading &quot;what is a folder template&quot; from `FolderTemplate` alone will find almost nothing; the authoritative shape is `VirtualTemplateFolder`&#x27;s. Confidence: Observed, field-list comparison — `data-model.md`.</p><p style="font-size:11.5px;color:var(--faint);margin-top:18px">Source: modules/documents-folders/rules.md</p></main></body></html>

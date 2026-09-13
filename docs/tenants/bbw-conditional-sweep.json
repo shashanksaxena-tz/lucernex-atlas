@@ -1,0 +1,694 @@
+{
+ "firm": "(ASG)BBW",
+ "build": "26.09.0.113",
+ "captured": "2026-09-13",
+ "method": "render LayoutEditorAJAX in iframe, harvest conditionOptions(), GET ConditionFilterEx.jsp per target",
+ "coverage": "all 93 page layouts (15 SEP + 32 SUB + 46 LIST)",
+ "totalTargets": 854,
+ "totalPopulated": 0,
+ "sep": [
+  {
+   "plid": 98921,
+   "targetCount": 1,
+   "waitedMs": 700,
+   "scanned": 1,
+   "errors": 0,
+   "populatedCount": 0,
+   "populated": []
+  },
+  {
+   "plid": 98923,
+   "targetCount": 3,
+   "waitedMs": 700,
+   "scanned": 3,
+   "errors": 0,
+   "populatedCount": 0,
+   "populated": []
+  },
+  {
+   "plid": 98924,
+   "targetCount": 1,
+   "waitedMs": 700,
+   "scanned": 1,
+   "errors": 0,
+   "populatedCount": 0,
+   "populated": []
+  },
+  {
+   "plid": 98925,
+   "targetCount": 28,
+   "waitedMs": 700,
+   "scanned": 28,
+   "errors": 0,
+   "populatedCount": 0,
+   "populated": []
+  },
+  {
+   "plid": 98926,
+   "targetCount": 25,
+   "waitedMs": 700,
+   "scanned": 25,
+   "errors": 0,
+   "populatedCount": 0,
+   "populated": []
+  },
+  {
+   "plid": 98927,
+   "targetCount": 22,
+   "waitedMs": 700,
+   "scanned": 22,
+   "errors": 0,
+   "populatedCount": 0,
+   "populated": []
+  },
+  {
+   "plid": 98928,
+   "targetCount": 1,
+   "waitedMs": 700,
+   "scanned": 1,
+   "errors": 0,
+   "populatedCount": 0,
+   "populated": []
+  },
+  {
+   "plid": 98929,
+   "targetCount": 13,
+   "waitedMs": 700,
+   "scanned": 13,
+   "errors": 0,
+   "populatedCount": 0,
+   "populated": []
+  },
+  {
+   "plid": 98930,
+   "targetCount": 1,
+   "waitedMs": 700,
+   "scanned": 1,
+   "errors": 0,
+   "populatedCount": 0,
+   "populated": []
+  },
+  {
+   "plid": 98931,
+   "targetCount": 2,
+   "waitedMs": 700,
+   "scanned": 2,
+   "errors": 0,
+   "populatedCount": 0,
+   "populated": []
+  },
+  {
+   "plid": 98932,
+   "targetCount": 5,
+   "waitedMs": 700,
+   "scanned": 5,
+   "errors": 0,
+   "populatedCount": 0,
+   "populated": []
+  },
+  {
+   "plid": 98933,
+   "targetCount": 14,
+   "waitedMs": 700,
+   "scanned": 14,
+   "errors": 0,
+   "populatedCount": 0,
+   "populated": []
+  },
+  {
+   "plid": 98934,
+   "targetCount": 18,
+   "waitedMs": 700,
+   "scanned": 18,
+   "errors": 0,
+   "populatedCount": 0,
+   "populated": []
+  },
+  {
+   "plid": 98935,
+   "targetCount": 22,
+   "waitedMs": 700,
+   "scanned": 22,
+   "errors": 0,
+   "populatedCount": 0,
+   "populated": []
+  },
+  {
+   "plid": 99140,
+   "targetCount": 1,
+   "waitedMs": 700,
+   "scanned": 1,
+   "errors": 0,
+   "populatedCount": 0,
+   "populated": []
+  }
+ ],
+ "subAndList": [
+  {
+   "plid": 98858,
+   "targets": 26,
+   "scanned": 26,
+   "populated": 0,
+   "pop": []
+  },
+  {
+   "plid": 98874,
+   "targets": 37,
+   "scanned": 37,
+   "populated": 0,
+   "pop": []
+  },
+  {
+   "plid": 98875,
+   "targets": 53,
+   "scanned": 53,
+   "populated": 0,
+   "pop": []
+  },
+  {
+   "plid": 98876,
+   "targets": 13,
+   "scanned": 13,
+   "populated": 0,
+   "pop": []
+  },
+  {
+   "plid": 98877,
+   "targets": 11,
+   "scanned": 11,
+   "populated": 0,
+   "pop": []
+  },
+  {
+   "plid": 98878,
+   "targets": 8,
+   "scanned": 8,
+   "populated": 0,
+   "pop": []
+  },
+  {
+   "plid": 98879,
+   "targets": 7,
+   "scanned": 7,
+   "populated": 0,
+   "pop": []
+  },
+  {
+   "plid": 98880,
+   "targets": 9,
+   "scanned": 9,
+   "populated": 0,
+   "pop": []
+  },
+  {
+   "plid": 98881,
+   "targets": 5,
+   "scanned": 5,
+   "populated": 0,
+   "pop": []
+  },
+  {
+   "plid": 98882,
+   "targets": 0,
+   "scanned": 0,
+   "populated": 0,
+   "pop": []
+  },
+  {
+   "plid": 98883,
+   "targets": 8,
+   "scanned": 8,
+   "populated": 0,
+   "pop": []
+  },
+  {
+   "plid": 98884,
+   "targets": 17,
+   "scanned": 17,
+   "populated": 0,
+   "pop": []
+  },
+  {
+   "plid": 98885,
+   "targets": 5,
+   "scanned": 5,
+   "populated": 0,
+   "pop": []
+  },
+  {
+   "plid": 98886,
+   "targets": 5,
+   "scanned": 5,
+   "populated": 0,
+   "pop": []
+  },
+  {
+   "plid": 98887,
+   "targets": 17,
+   "scanned": 17,
+   "populated": 0,
+   "pop": []
+  },
+  {
+   "plid": 98891,
+   "targets": 9,
+   "scanned": 9,
+   "populated": 0,
+   "pop": []
+  },
+  {
+   "plid": 98936,
+   "targets": 2,
+   "scanned": 2,
+   "populated": 0,
+   "pop": []
+  },
+  {
+   "plid": 98895,
+   "targets": 6,
+   "scanned": 6,
+   "populated": 0,
+   "pop": []
+  },
+  {
+   "plid": 98896,
+   "targets": 4,
+   "scanned": 4,
+   "populated": 0,
+   "pop": []
+  },
+  {
+   "plid": 98898,
+   "targets": 6,
+   "scanned": 6,
+   "populated": 0,
+   "pop": []
+  },
+  {
+   "plid": 98897,
+   "targets": 8,
+   "scanned": 8,
+   "populated": 0,
+   "pop": []
+  },
+  {
+   "plid": 99141,
+   "targets": 4,
+   "scanned": 4,
+   "populated": 0,
+   "pop": []
+  },
+  {
+   "plid": 98894,
+   "targets": 2,
+   "scanned": 2,
+   "populated": 0,
+   "pop": []
+  },
+  {
+   "plid": 100867,
+   "targets": 16,
+   "scanned": 16,
+   "populated": 0,
+   "pop": []
+  },
+  {
+   "plid": 102629,
+   "targets": 1,
+   "scanned": 1,
+   "populated": 0,
+   "pop": []
+  },
+  {
+   "plid": 98903,
+   "targets": 6,
+   "scanned": 6,
+   "populated": 0,
+   "pop": []
+  },
+  {
+   "plid": 98904,
+   "targets": 4,
+   "scanned": 4,
+   "populated": 0,
+   "pop": []
+  },
+  {
+   "plid": 98905,
+   "targets": 2,
+   "scanned": 2,
+   "populated": 0,
+   "pop": []
+  },
+  {
+   "plid": 98902,
+   "targets": 6,
+   "scanned": 6,
+   "populated": 0,
+   "pop": []
+  },
+  {
+   "plid": 99142,
+   "targets": 3,
+   "scanned": 3,
+   "populated": 0,
+   "pop": []
+  },
+  {
+   "plid": 98890,
+   "targets": 50,
+   "scanned": 50,
+   "populated": 0,
+   "pop": []
+  },
+  {
+   "plid": 98937,
+   "targets": 6,
+   "scanned": 6,
+   "populated": 0,
+   "pop": []
+  },
+  {
+   "plid": 99146,
+   "targets": 10,
+   "scanned": 10,
+   "populated": 0,
+   "pop": []
+  },
+  {
+   "plid": 99147,
+   "targets": 16,
+   "scanned": 16,
+   "populated": 0,
+   "pop": []
+  },
+  {
+   "plid": 98859,
+   "targets": 12,
+   "scanned": 12,
+   "populated": 0,
+   "pop": []
+  },
+  {
+   "plid": 98860,
+   "targets": 6,
+   "scanned": 6,
+   "populated": 0,
+   "pop": []
+  },
+  {
+   "plid": 102775,
+   "targets": 8,
+   "scanned": 8,
+   "populated": 0,
+   "pop": []
+  },
+  {
+   "plid": 98861,
+   "targets": 10,
+   "scanned": 10,
+   "populated": 0,
+   "pop": []
+  },
+  {
+   "plid": 98862,
+   "targets": 1,
+   "scanned": 1,
+   "populated": 0,
+   "pop": []
+  },
+  {
+   "plid": 98863,
+   "targets": 6,
+   "scanned": 6,
+   "populated": 0,
+   "pop": []
+  },
+  {
+   "plid": 98864,
+   "targets": 3,
+   "scanned": 3,
+   "populated": 0,
+   "pop": []
+  },
+  {
+   "plid": 99143,
+   "targets": 13,
+   "scanned": 13,
+   "populated": 0,
+   "pop": []
+  },
+  {
+   "plid": 99144,
+   "targets": 13,
+   "scanned": 13,
+   "populated": 0,
+   "pop": []
+  },
+  {
+   "plid": 99051,
+   "targets": 9,
+   "scanned": 9,
+   "populated": 0,
+   "pop": []
+  },
+  {
+   "plid": 99050,
+   "targets": 5,
+   "scanned": 5,
+   "populated": 0,
+   "pop": []
+  },
+  {
+   "plid": 99049,
+   "targets": 10,
+   "scanned": 10,
+   "populated": 0,
+   "pop": []
+  },
+  {
+   "plid": 98865,
+   "targets": 4,
+   "scanned": 4,
+   "populated": 0,
+   "pop": []
+  },
+  {
+   "plid": 98918,
+   "targets": 8,
+   "scanned": 8,
+   "populated": 0,
+   "pop": []
+  },
+  {
+   "plid": 98909,
+   "targets": 5,
+   "scanned": 5,
+   "populated": 0,
+   "pop": []
+  },
+  {
+   "plid": 98910,
+   "targets": 7,
+   "scanned": 7,
+   "populated": 0,
+   "pop": []
+  },
+  {
+   "plid": 98908,
+   "targets": 6,
+   "scanned": 6,
+   "populated": 0,
+   "pop": []
+  },
+  {
+   "plid": 98911,
+   "targets": 13,
+   "scanned": 13,
+   "populated": 0,
+   "pop": []
+  },
+  {
+   "plid": 98916,
+   "targets": 7,
+   "scanned": 7,
+   "populated": 0,
+   "pop": []
+  },
+  {
+   "plid": 98914,
+   "targets": 4,
+   "scanned": 4,
+   "populated": 0,
+   "pop": []
+  },
+  {
+   "plid": 98917,
+   "targets": 5,
+   "scanned": 5,
+   "populated": 0,
+   "pop": []
+  },
+  {
+   "plid": 98912,
+   "targets": 6,
+   "scanned": 6,
+   "populated": 0,
+   "pop": []
+  },
+  {
+   "plid": 98866,
+   "targets": 10,
+   "scanned": 10,
+   "populated": 0,
+   "pop": []
+  },
+  {
+   "plid": 98915,
+   "targets": 8,
+   "scanned": 8,
+   "populated": 0,
+   "pop": []
+  },
+  {
+   "plid": 98907,
+   "targets": 6,
+   "scanned": 6,
+   "populated": 0,
+   "pop": []
+  },
+  {
+   "plid": 98867,
+   "targets": 5,
+   "scanned": 5,
+   "populated": 0,
+   "pop": []
+  },
+  {
+   "plid": 99145,
+   "targets": 8,
+   "scanned": 8,
+   "populated": 0,
+   "pop": []
+  },
+  {
+   "plid": 98913,
+   "targets": 8,
+   "scanned": 8,
+   "populated": 0,
+   "pop": []
+  },
+  {
+   "plid": 98920,
+   "targets": 18,
+   "scanned": 18,
+   "populated": 0,
+   "pop": []
+  },
+  {
+   "plid": 98868,
+   "targets": 5,
+   "scanned": 5,
+   "populated": 0,
+   "pop": []
+  },
+  {
+   "plid": 98869,
+   "targets": 4,
+   "scanned": 4,
+   "populated": 0,
+   "pop": []
+  },
+  {
+   "plid": 98870,
+   "targets": 0,
+   "scanned": 0,
+   "populated": 0,
+   "pop": []
+  },
+  {
+   "plid": 98871,
+   "targets": 6,
+   "scanned": 6,
+   "populated": 0,
+   "pop": []
+  },
+  {
+   "plid": 98906,
+   "targets": 8,
+   "scanned": 8,
+   "populated": 0,
+   "pop": []
+  },
+  {
+   "plid": 98872,
+   "targets": 2,
+   "scanned": 2,
+   "populated": 0,
+   "pop": []
+  },
+  {
+   "plid": 98919,
+   "targets": 7,
+   "scanned": 7,
+   "populated": 0,
+   "pop": []
+  },
+  {
+   "plid": 102506,
+   "targets": 7,
+   "scanned": 7,
+   "populated": 0,
+   "pop": []
+  },
+  {
+   "plid": 102250,
+   "targets": 7,
+   "scanned": 7,
+   "populated": 0,
+   "pop": []
+  },
+  {
+   "plid": 102251,
+   "targets": 9,
+   "scanned": 9,
+   "populated": 0,
+   "pop": []
+  },
+  {
+   "plid": 102252,
+   "targets": 10,
+   "scanned": 10,
+   "populated": 0,
+   "pop": []
+  },
+  {
+   "plid": 102266,
+   "targets": 3,
+   "scanned": 3,
+   "populated": 0,
+   "pop": []
+  },
+  {
+   "plid": 102109,
+   "targets": 12,
+   "scanned": 12,
+   "populated": 0,
+   "pop": []
+  },
+  {
+   "plid": 98873,
+   "targets": 11,
+   "scanned": 11,
+   "populated": 0,
+   "pop": []
+  },
+  {
+   "plid": 102270,
+   "targets": 0,
+   "scanned": 0,
+   "populated": 0,
+   "pop": []
+  }
+ ]
+}

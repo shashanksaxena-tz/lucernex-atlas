@@ -1,0 +1,4559 @@
+{
+ "firms": [
+  "(ASG)American Freight firmID 3158",
+  "(ASG)BBW firmID 3159"
+ ],
+ "build": "26.09.0.113 (both)",
+ "captured": "2026-09-13",
+ "purpose": "Cross-tenant join of Firm Drop Down VALUES, to test (a) whether `isReadOnlyRecord` tracks provenance or reference count, and (b) whether the publish-and-fork model extends from page layouts to code tables.",
+ "sources": [
+  "docs/tenants/af-code-table-values.json (mine)",
+  "docs/tenants/bbw-drop-down-values.json (bbw-tracker)"
+ ],
+ "theTestIProposedCouldNotRun": {
+  "proposed": "Find a value with the SAME LxBOID in both tenants but a DIFFERENT isReadOnlyRecord - that would prove reference-counting or per-tenant config.",
+  "result": "UNRUNNABLE. **Zero** (tableType, LxBOID) pairs are shared between the tenants - AF has 1,140 values and BBW 1,217, with completely disjoint id spaces.",
+  "lesson": "Same trap as the page layouts: ids are re-keyed per tenant, so an id-join yields a false negative. Joining on NAME is the correct test - the lesson team-lead drew from the layout join generalises."
+ },
+ "nameJoinResult": {
+  "sharedNameKeys": 646,
+  "disagreementsOnIsReadOnlyRecord": 0,
+  "agreements": 646,
+  "afOnlyNames": 477,
+  "afOnlyThatAreReadOnly": 0,
+  "bbwOnlyNames": 568,
+  "bbwOnlyThatAreReadOnly": 0,
+  "readOnlyAmongShared": 153
+ },
+ "conclusion": {
+  "provenanceCONFIRMED": "Observed, and decisive. Across **646** values sharing (tableType, name) in both tenants, `isReadOnlyRecord` agrees **646 out of 646** - not one disagreement. And of the **1,045** values unique to one tenant (477 AF-only, 568 BBW-only), **ZERO** are read-only. Every protected value exists in both tenants; every tenant-unique value is deletable. That is exactly what platform-seeded-versus-firm-added predicts.",
+  "referenceCountingREFUTED": "This kills the reference-count reading outright. The two tenants differ enormously in data volume - AF holds 2 contracts and 400 locations against BBW's 2,190 and 2,140, roughly a thousandfold difference on contracts. If `delete` were suppressed by rows referencing a value, the flag would have to differ somewhere across 646 shared values. It differs **nowhere**. A reference count cannot produce identical flags across tenants with a 1000x data difference.",
+  "consequenceForD07": "This closes it out. Lucernex is NOT performing a Where-Used reference check on code-table values, so Q-BBW-01 gives no grounds to reopen ASG Edge+ D-07 / MST-015. The earlier reading in bbw-vs-american-freight.md \u00a73 is retracted and now has cross-tenant evidence against it, not merely a counterexample.",
+  "publishAndForkEXTENDS": "Derived. Code tables follow the SAME publish-and-fork pattern as page layouts: one seeded set (646 shared names, ~153 of them protected), re-keyed per tenant into disjoint id spaces, then forked locally with firm-added values (477 at AF, 568 at BBW - all editable). So the distribution models are now: page layouts and code tables PUBLISHED-THEN-FORKED; workflows TENANT-AUTHORED; navigation and the SQL table catalog PLATFORM-SEEDED AND SHARED (identical ids across tenants)."
+ },
+ "caveat": "One AF value counts as read-only outside the 646 shared-name set because two values in one table share a name and collapse to a single key. It is not a counterexample to the pattern - just a duplicate-name artefact of the join.",
+ "sharedValuePairs": [
+  {
+   "tableType": 2003,
+   "name": "Active",
+   "afId": "380",
+   "bbwId": "385",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2003,
+   "name": "Inactive",
+   "afId": "381",
+   "bbwId": "386",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2003,
+   "name": "Purchased",
+   "afId": "382",
+   "bbwId": "387",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2003,
+   "name": "Replaced",
+   "afId": "383",
+   "bbwId": "388",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2003,
+   "name": "Retired",
+   "afId": "384",
+   "bbwId": "389",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2009,
+   "name": "Square Feet",
+   "afId": "319",
+   "bbwId": "323",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2022,
+   "name": "Broker",
+   "afId": "9972",
+   "bbwId": "10006",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2022,
+   "name": "Client",
+   "afId": "9984",
+   "bbwId": "10083",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2022,
+   "name": "Construction Manager",
+   "afId": "9973",
+   "bbwId": "10007",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2022,
+   "name": "Employer",
+   "afId": "9974",
+   "bbwId": "10008",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2022,
+   "name": "Equipment Manager",
+   "afId": "9975",
+   "bbwId": "10009",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2022,
+   "name": "Landlord",
+   "afId": "9976",
+   "bbwId": "10010",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2022,
+   "name": "Lawyer",
+   "afId": "9977",
+   "bbwId": "10011",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2022,
+   "name": "Notice",
+   "afId": "9985",
+   "bbwId": "10065",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2022,
+   "name": "Primary Owner",
+   "afId": "9978",
+   "bbwId": "10012",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2022,
+   "name": "Property Manager",
+   "afId": "9979",
+   "bbwId": "10013",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2022,
+   "name": "Sales Reporting",
+   "afId": "9986",
+   "bbwId": "10062",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2022,
+   "name": "Team Member",
+   "afId": "9980",
+   "bbwId": "10014",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2022,
+   "name": "Third Party - ASG",
+   "afId": "9982",
+   "bbwId": "10018",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2022,
+   "name": "Vendor",
+   "afId": "9981",
+   "bbwId": "10015",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2025,
+   "name": "In Consideration",
+   "afId": "91",
+   "bbwId": "94",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2025,
+   "name": "Not Selected",
+   "afId": "92",
+   "bbwId": "95",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2025,
+   "name": "Selected",
+   "afId": "93",
+   "bbwId": "96",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2026,
+   "name": "Retail Sales Potential",
+   "afId": "216",
+   "bbwId": "218",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2026,
+   "name": "Sales Forecast",
+   "afId": "217",
+   "bbwId": "219",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2030,
+   "name": "Document",
+   "afId": "3045",
+   "bbwId": "3049",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2030,
+   "name": "Drawing",
+   "afId": "3046",
+   "bbwId": "3050",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2030,
+   "name": "Image",
+   "afId": "3047",
+   "bbwId": "3051",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2030,
+   "name": "Spreadsheet",
+   "afId": "3048",
+   "bbwId": "3052",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2034,
+   "name": "General Liability",
+   "afId": "62",
+   "bbwId": "63",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2035,
+   "name": "Lease Admin Request",
+   "afId": "6288",
+   "bbwId": "6314",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2035,
+   "name": "User Request",
+   "afId": "6289",
+   "bbwId": "6315",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2037,
+   "name": "Lease Abstraction",
+   "afId": "13080",
+   "bbwId": "13110",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2037,
+   "name": "Lease Admin",
+   "afId": "13078",
+   "bbwId": "13101",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2037,
+   "name": "Lease Admin Client",
+   "afId": "13081",
+   "bbwId": "13111",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2037,
+   "name": "Lease Admin Mail",
+   "afId": "13079",
+   "bbwId": "13109",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2037,
+   "name": "PS Administrator",
+   "afId": "13075",
+   "bbwId": "13098",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2037,
+   "name": "System Administrator",
+   "afId": "13076",
+   "bbwId": "13099",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2037,
+   "name": "Vendor Administrator",
+   "afId": "13077",
+   "bbwId": "13100",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2038,
+   "name": "Lease Abstractor",
+   "afId": "18567",
+   "bbwId": "18774",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2038,
+   "name": "Lease Admin",
+   "afId": "18565",
+   "bbwId": "18773",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2038,
+   "name": "Lease Admin Accounting",
+   "afId": "18566",
+   "bbwId": "18758",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2038,
+   "name": "Lease Admin Client",
+   "afId": "18570",
+   "bbwId": "18775",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2038,
+   "name": "Lease Admin Mail",
+   "afId": "18564",
+   "bbwId": "18772",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2038,
+   "name": "Lease Admin Manager",
+   "afId": "18568",
+   "bbwId": "18757",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2038,
+   "name": "Lease Admin Manager - Lead",
+   "afId": "18569",
+   "bbwId": "18776",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2038,
+   "name": "PS Administrator",
+   "afId": "18562",
+   "bbwId": "18756",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2038,
+   "name": "System Administrator",
+   "afId": "18563",
+   "bbwId": "18759",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2040,
+   "name": "Anchor",
+   "afId": "445",
+   "bbwId": "449",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2040,
+   "name": "Competitor",
+   "afId": "446",
+   "bbwId": "450",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2040,
+   "name": "Neighbor",
+   "afId": "447",
+   "bbwId": "451",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2040,
+   "name": "Seasonal",
+   "afId": "448",
+   "bbwId": "452",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2042,
+   "name": "Expansion",
+   "afId": "630",
+   "bbwId": "635",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2042,
+   "name": "Go dark",
+   "afId": "631",
+   "bbwId": "636",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2042,
+   "name": "Kick-out",
+   "afId": "632",
+   "bbwId": "637",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2042,
+   "name": "Purchase",
+   "afId": "633",
+   "bbwId": "638",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2042,
+   "name": "Renewal",
+   "afId": "634",
+   "bbwId": "639",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2043,
+   "name": "Expired",
+   "afId": "409",
+   "bbwId": "410",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2047,
+   "name": "Building Systems - Other",
+   "afId": "1678",
+   "bbwId": "1701",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2047,
+   "name": "Demised Premises",
+   "afId": "1679",
+   "bbwId": "1702",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2047,
+   "name": "Exterior Common Area Maintenance",
+   "afId": "1680",
+   "bbwId": "1703",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2047,
+   "name": "HVAC",
+   "afId": "1681",
+   "bbwId": "1704",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2047,
+   "name": "Interior Common Area Maintenance",
+   "afId": "1682",
+   "bbwId": "1705",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2047,
+   "name": "Janitorial",
+   "afId": "1683",
+   "bbwId": "1706",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2047,
+   "name": "Other",
+   "afId": "1684",
+   "bbwId": "1707",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2047,
+   "name": "Roof/Structure",
+   "afId": "1685",
+   "bbwId": "1708",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2047,
+   "name": "Trash",
+   "afId": "1686",
+   "bbwId": "1709",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2047,
+   "name": "Utilities",
+   "afId": "1687",
+   "bbwId": "1710",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Ada, OK",
+   "afId": "34508",
+   "bbwId": "35459",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Akron, OH",
+   "afId": "34528",
+   "bbwId": "35429",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Albany, GA",
+   "afId": "34521",
+   "bbwId": "35601",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Albany-Schenectady-Troy, NY",
+   "afId": "34445",
+   "bbwId": "35305",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Albuquerque, NM",
+   "afId": "34440",
+   "bbwId": "35317",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Altoona, PA",
+   "afId": "34575",
+   "bbwId": "35426",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Amarillo, TX",
+   "afId": "34562",
+   "bbwId": "35590",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Ann Arbor, MI",
+   "afId": "34580",
+   "bbwId": "35605",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Ardmore, OK",
+   "afId": "34502",
+   "bbwId": "35527",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Asheville, NC",
+   "afId": "34388",
+   "bbwId": "35238",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Athens-Clarke County, GA",
+   "afId": "34389",
+   "bbwId": "35257",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Atlanta-Sandy Springs-Roswell, GA",
+   "afId": "34400",
+   "bbwId": "35245",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Augusta-Richmond County, GA-SC",
+   "afId": "34540",
+   "bbwId": "35242",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Austin-Round Rock, TX",
+   "afId": "34510",
+   "bbwId": "35250",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Baltimore-Columbia-Towson, MD",
+   "afId": "34393",
+   "bbwId": "35231",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Bartlesville, OK",
+   "afId": "34423",
+   "bbwId": "35580",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Batesville, AR",
+   "afId": "34446",
+   "bbwId": "35342",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Baton Rouge, LA",
+   "afId": "34411",
+   "bbwId": "35668",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Battle Creek, MI",
+   "afId": "34407",
+   "bbwId": "35660",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Beaumont-Port Arthur, TX",
+   "afId": "34462",
+   "bbwId": "35482",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Birmingham-Hoover, AL",
+   "afId": "34456",
+   "bbwId": "35516",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Bloomington, IN",
+   "afId": "34578",
+   "bbwId": "35309",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Boise City, ID",
+   "afId": "34571",
+   "bbwId": "35445",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Bowling Green, KY",
+   "afId": "34405",
+   "bbwId": "35387",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Buffalo-Cheektowaga-Niagara Falls, NY",
+   "afId": "34527",
+   "bbwId": "35355",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Canton-Massillon, OH",
+   "afId": "34479",
+   "bbwId": "35258",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Cape Coral-Fort Myers, FL",
+   "afId": "34491",
+   "bbwId": "35259",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Champaign-Urbana, IL",
+   "afId": "34452",
+   "bbwId": "35438",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Charleston, WV",
+   "afId": "34484",
+   "bbwId": "35293",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Charleston-North Charleston, SC",
+   "afId": "34387",
+   "bbwId": "35302",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Charlotte-Concord-Gastonia, NC-SC",
+   "afId": "34382",
+   "bbwId": "35284",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Chattanooga, TN-GA",
+   "afId": "34460",
+   "bbwId": "35390",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Chicago-Naperville-Elgin, IL-IN-WI",
+   "afId": "34398",
+   "bbwId": "35225",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Chillicothe, OH",
+   "afId": "34409",
+   "bbwId": "35299",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Cincinnati, OH-KY-IN",
+   "afId": "34406",
+   "bbwId": "35363",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Clarksville, TN-KY",
+   "afId": "34485",
+   "bbwId": "35380",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Cleveland-Elyria, OH",
+   "afId": "34397",
+   "bbwId": "35379",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "College Station-Bryan, TX",
+   "afId": "34548",
+   "bbwId": "35499",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Colorado Springs, CO",
+   "afId": "34395",
+   "bbwId": "35292",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Columbia, MO",
+   "afId": "34404",
+   "bbwId": "35311",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Columbia, SC",
+   "afId": "34390",
+   "bbwId": "35314",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Columbus, GA-AL",
+   "afId": "34546",
+   "bbwId": "35486",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Columbus, OH",
+   "afId": "34367",
+   "bbwId": "35215",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Corpus Christi, TX",
+   "afId": "34391",
+   "bbwId": "35416",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Dallas-Fort Worth-Arlington, TX",
+   "afId": "34380",
+   "bbwId": "35277",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Danville, VA",
+   "afId": "34541",
+   "bbwId": "35330",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Davenport-Moline-Rock Island, IA-IL",
+   "afId": "34426",
+   "bbwId": "35461",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Dayton, OH",
+   "afId": "34417",
+   "bbwId": "35331",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Decatur, IL",
+   "afId": "34430",
+   "bbwId": "35395",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Deltona-Daytona Beach-Ormond Beach, FL",
+   "afId": "34547",
+   "bbwId": "35578",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Denver-Aurora-Lakewood, CO",
+   "afId": "34421",
+   "bbwId": "35234",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Detroit-Warren-Dearborn, MI",
+   "afId": "34413",
+   "bbwId": "35248",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Dothan, AL",
+   "afId": "34542",
+   "bbwId": "35640",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Dublin, GA",
+   "afId": "34457",
+   "bbwId": "35641",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "El Paso, TX",
+   "afId": "34471",
+   "bbwId": "35251",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Elizabethtown-Fort Knox, KY",
+   "afId": "34503",
+   "bbwId": "35553",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Elmira, NY",
+   "afId": "34402",
+   "bbwId": "35237",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Erie, PA",
+   "afId": "34568",
+   "bbwId": "35449",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Evansville, IN-KY",
+   "afId": "34483",
+   "bbwId": "35350",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Fayetteville, NC",
+   "afId": "34469",
+   "bbwId": "35322",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Fayetteville-Springdale-Rogers, AR-MO",
+   "afId": "34464",
+   "bbwId": "35466",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Flint, MI",
+   "afId": "34493",
+   "bbwId": "35320",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Fort Smith, AR-OK",
+   "afId": "34466",
+   "bbwId": "35287",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Fort Wayne, IN",
+   "afId": "34490",
+   "bbwId": "35376",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Fresno, CA",
+   "afId": "34576",
+   "bbwId": "35358",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Gadsden, AL",
+   "afId": "34449",
+   "bbwId": "35651",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Gainesville, FL",
+   "afId": "34529",
+   "bbwId": "35470",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Grand Rapids-Wyoming, MI",
+   "afId": "34475",
+   "bbwId": "35383",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Green Bay, WI",
+   "afId": "34487",
+   "bbwId": "35253",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Greenville, NC",
+   "afId": "34539",
+   "bbwId": "35386",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Greenville-Anderson-Mauldin, SC",
+   "afId": "34384",
+   "bbwId": "35603",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Hagerstown-Martinsburg, MD-WV",
+   "afId": "34567",
+   "bbwId": "35564",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Harrisburg-Carlisle, PA",
+   "afId": "34383",
+   "bbwId": "35282",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Hartford-West Hartford-East Hartford, CT",
+   "afId": "34458",
+   "bbwId": "35545",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Hickory-Lenoir-Morganton, NC",
+   "afId": "34442",
+   "bbwId": "35565",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Houston-The Woodlands-Sugar Land, TX",
+   "afId": "34385",
+   "bbwId": "35226",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Huntington-Ashland, WV-KY-OH",
+   "afId": "34566",
+   "bbwId": "35400",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Huntsville, AL",
+   "afId": "34514",
+   "bbwId": "35275",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Indianapolis-Carmel-Anderson, IN",
+   "afId": "34410",
+   "bbwId": "35247",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Jackson, MS",
+   "afId": "34467",
+   "bbwId": "35339",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Jackson, TN",
+   "afId": "34507",
+   "bbwId": "35474",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Jacksonville, FL",
+   "afId": "34372",
+   "bbwId": "35476",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Janesville-Beloit, WI",
+   "afId": "34494",
+   "bbwId": "35560",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Jefferson City, MO",
+   "afId": "34374",
+   "bbwId": "35280",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Johnstown, PA",
+   "afId": "34550",
+   "bbwId": "35729",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Jonesboro, AR",
+   "afId": "34538",
+   "bbwId": "35618",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Joplin, MO",
+   "afId": "34415",
+   "bbwId": "35462",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Kalamazoo-Portage, MI",
+   "afId": "34376",
+   "bbwId": "35324",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Kansas City, MO-KS",
+   "afId": "34424",
+   "bbwId": "35319",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Kingsport-Bristol-Bristol, TN-VA",
+   "afId": "34504",
+   "bbwId": "35650",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Knoxville, TN",
+   "afId": "34473",
+   "bbwId": "35588",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Lafayette, LA",
+   "afId": "34530",
+   "bbwId": "35599",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Lafayette-West Lafayette, IN",
+   "afId": "34563",
+   "bbwId": "35550",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Lakeland-Winter Haven, FL",
+   "afId": "34408",
+   "bbwId": "35343",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Lancaster, PA",
+   "afId": "34481",
+   "bbwId": "35480",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Lansing-East Lansing, MI",
+   "afId": "34476",
+   "bbwId": "35643",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Las Vegas-Henderson-Paradise, NV",
+   "afId": "34573",
+   "bbwId": "35268",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Lawton, OK",
+   "afId": "34531",
+   "bbwId": "35288",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Lexington-Fayette, KY",
+   "afId": "34525",
+   "bbwId": "35647",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Lima, OH",
+   "afId": "34552",
+   "bbwId": "35424",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Little Rock-North Little Rock-Conway, AR",
+   "afId": "34370",
+   "bbwId": "35315",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Longview, TX",
+   "afId": "34574",
+   "bbwId": "35427",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Los Angeles-Long Beach-Anaheim, CA",
+   "afId": "34454",
+   "bbwId": "35229",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Louisville/Jefferson County, KY-IN",
+   "afId": "34414",
+   "bbwId": "35338",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Lubbock, TX",
+   "afId": "34375",
+   "bbwId": "35413",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Lynchburg, VA",
+   "afId": "34401",
+   "bbwId": "35513",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Macon, GA",
+   "afId": "34535",
+   "bbwId": "35546",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Madison, WI",
+   "afId": "34474",
+   "bbwId": "35345",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Mansfield, OH",
+   "afId": "34478",
+   "bbwId": "35728",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "McAllen-Edinburg-Mission, TX",
+   "afId": "34422",
+   "bbwId": "35417",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Medford, OR",
+   "afId": "34518",
+   "bbwId": "35517",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Memphis, TN-MS-AR",
+   "afId": "34468",
+   "bbwId": "35286",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Meridian, MS",
+   "afId": "34506",
+   "bbwId": "35561",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Miami-Fort Lauderdale-West Palm Beach, FL",
+   "afId": "34515",
+   "bbwId": "35244",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Milwaukee-Waukesha-West Allis, WI",
+   "afId": "34513",
+   "bbwId": "35254",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Minneapolis-St. Paul-Bloomington, MN-WI",
+   "afId": "34378",
+   "bbwId": "35222",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Mobile, AL",
+   "afId": "34496",
+   "bbwId": "35758",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Modesto, CA",
+   "afId": "34536",
+   "bbwId": "35451",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Monroe, MI",
+   "afId": "34522",
+   "bbwId": "35754",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Montgomery, AL",
+   "afId": "34427",
+   "bbwId": "35347",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Muncie, IN",
+   "afId": "34517",
+   "bbwId": "35453",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Muskegon, MI",
+   "afId": "34433",
+   "bbwId": "35542",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Muskogee, OK",
+   "afId": "34577",
+   "bbwId": "35732",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Myrtle Beach-Conway-North Myrtle Beach, SC-NC",
+   "afId": "34451",
+   "bbwId": "35306",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Nashville-Davidson--Murfreesboro--Franklin, TN",
+   "afId": "34512",
+   "bbwId": "35246",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "New Haven-Milford, CT",
+   "afId": "34526",
+   "bbwId": "35274",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "New Orleans-Metairie, LA",
+   "afId": "34448",
+   "bbwId": "35501",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "New York-Newark-Jersey City, NY-NJ-PA",
+   "afId": "34537",
+   "bbwId": "35239",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Non-Market",
+   "afId": "34368",
+   "bbwId": "35217",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "North Port-Sarasota-Bradenton, FL",
+   "afId": "34482",
+   "bbwId": "35645",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Ocala, FL",
+   "afId": "34561",
+   "bbwId": "35477",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Ogden-Clearfield, UT",
+   "afId": "34455",
+   "bbwId": "35420",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Oklahoma City, OK",
+   "afId": "34555",
+   "bbwId": "35488",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Orlando-Kissimmee-Sanford, FL",
+   "afId": "34420",
+   "bbwId": "35227",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Owensboro, KY",
+   "afId": "34399",
+   "bbwId": "35652",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Paducah, KY-IL",
+   "afId": "34470",
+   "bbwId": "35411",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Palm Bay-Melbourne-Titusville, FL",
+   "afId": "34438",
+   "bbwId": "35443",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Panama City, FL",
+   "afId": "34544",
+   "bbwId": "35491",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Parkersburg-Vienna, WV",
+   "afId": "34533",
+   "bbwId": "35653",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Pensacola-Ferry Pass-Brent, FL",
+   "afId": "34495",
+   "bbwId": "35633",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Peoria, IL",
+   "afId": "34501",
+   "bbwId": "35467",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Philadelphia-Camden-Wilmington, PA-NJ-DE-MD",
+   "afId": "34444",
+   "bbwId": "35265",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2049,
+   "name": "Phoenix-Mesa-Scottsdale, AZ",
+   "afId": "34386",
+   "bbwId": "35236",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2057,
+   "name": "Complete",
+   "afId": "109",
+   "bbwId": "112",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2057,
+   "name": "In Process",
+   "afId": "110",
+   "bbwId": "113",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2057,
+   "name": "Not Begun",
+   "afId": "111",
+   "bbwId": "114",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2058,
+   "name": "Both",
+   "afId": "1023",
+   "bbwId": "1028",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2058,
+   "name": "Landlord",
+   "afId": "1024",
+   "bbwId": "1029",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2058,
+   "name": "Tenant",
+   "afId": "1025",
+   "bbwId": "1030",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2059,
+   "name": "Lease",
+   "afId": "121",
+   "bbwId": "125",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2059,
+   "name": "Purchase",
+   "afId": "122",
+   "bbwId": "126",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2059,
+   "name": "Sale",
+   "afId": "123",
+   "bbwId": "127",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2059,
+   "name": "Sub-Lease",
+   "afId": "124",
+   "bbwId": "128",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2060,
+   "name": "Disposition",
+   "afId": "122",
+   "bbwId": "126",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2060,
+   "name": "Expansion",
+   "afId": "123",
+   "bbwId": "127",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2060,
+   "name": "Relocation",
+   "afId": "124",
+   "bbwId": "128",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2060,
+   "name": "Renewal",
+   "afId": "125",
+   "bbwId": "129",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2061,
+   "name": "Allow Import Data Action",
+   "afId": "16147",
+   "bbwId": "16218",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2061,
+   "name": "Allow Locked Status for Budgets",
+   "afId": "16148",
+   "bbwId": "16219",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2061,
+   "name": "Allow My Portfolio",
+   "afId": "16149",
+   "bbwId": "16220",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2061,
+   "name": "Allow Selected Status for Budgets",
+   "afId": "16150",
+   "bbwId": "16221",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2061,
+   "name": "Allow Unlocked Status for Budgets",
+   "afId": "16151",
+   "bbwId": "16222",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2061,
+   "name": "Allow Unselected Status for Budgets",
+   "afId": "16152",
+   "bbwId": "16223",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2061,
+   "name": "Allow Vendor Update",
+   "afId": "16153",
+   "bbwId": "16224",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2061,
+   "name": "Allow WebDAV Access",
+   "afId": "16154",
+   "bbwId": "16225",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2061,
+   "name": "Condition Bids",
+   "afId": "16155",
+   "bbwId": "16226",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2061,
+   "name": "Convert Site To Project",
+   "afId": "16156",
+   "bbwId": "16227",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2061,
+   "name": "Create Capital Program",
+   "afId": "16157",
+   "bbwId": "16228",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2061,
+   "name": "Create Capital Project",
+   "afId": "16158",
+   "bbwId": "16229",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2061,
+   "name": "Create Capital Project For Facility",
+   "afId": "16159",
+   "bbwId": "16230",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2061,
+   "name": "Create Contract",
+   "afId": "16160",
+   "bbwId": "16231",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2061,
+   "name": "Create Equipment Contract",
+   "afId": "16161",
+   "bbwId": "16232",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2061,
+   "name": "Create Facility",
+   "afId": "16162",
+   "bbwId": "16233",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2061,
+   "name": "Create Facility From Project",
+   "afId": "16163",
+   "bbwId": "16234",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2061,
+   "name": "Create Location",
+   "afId": "16164",
+   "bbwId": "16235",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2061,
+   "name": "Create Opening Project",
+   "afId": "16165",
+   "bbwId": "16236",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2061,
+   "name": "Create Parcel",
+   "afId": "16166",
+   "bbwId": "16237",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2061,
+   "name": "Create Portfolio",
+   "afId": "16167",
+   "bbwId": "16238",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2061,
+   "name": "Create Prototype",
+   "afId": "16168",
+   "bbwId": "16239",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2061,
+   "name": "Create Public Reports",
+   "afId": "16169",
+   "bbwId": "16240",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2061,
+   "name": "Create Related Work Order",
+   "afId": "16170",
+   "bbwId": "16241",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2061,
+   "name": "Create Service Request",
+   "afId": "16171",
+   "bbwId": "16242",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2061,
+   "name": "Create Site",
+   "afId": "16172",
+   "bbwId": "16243",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2061,
+   "name": "Default access to Capital Projects for Program Members",
+   "afId": "16173",
+   "bbwId": "16244",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2061,
+   "name": "Default access to Contracts for Portfolio Members",
+   "afId": "16174",
+   "bbwId": "16245",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2061,
+   "name": "Default access to Equipment Contracts for Portfolio Members",
+   "afId": "16175",
+   "bbwId": "16246",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2061,
+   "name": "Default access to Facilities for Portfolio Members",
+   "afId": "16176",
+   "bbwId": "16247",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2061,
+   "name": "Default access to Locations for Portfolio Members",
+   "afId": "16177",
+   "bbwId": "16248",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2061,
+   "name": "Default access to Opening Projects for Portfolio Members",
+   "afId": "16178",
+   "bbwId": "16249",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2061,
+   "name": "Default access to Parcels for Portfolio Members",
+   "afId": "16179",
+   "bbwId": "16250",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2061,
+   "name": "Default access to Prototypes for Portfolio Members",
+   "afId": "16180",
+   "bbwId": "16251",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2061,
+   "name": "Default access to Sites for Portfolio Members",
+   "afId": "16181",
+   "bbwId": "16252",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2061,
+   "name": "Delete Budget",
+   "afId": "16182",
+   "bbwId": "16253",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2061,
+   "name": "Delete Entity and All Associated Data (no recovery option)",
+   "afId": "16183",
+   "bbwId": "16254",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2061,
+   "name": "Login As",
+   "afId": "16184",
+   "bbwId": "16255",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2061,
+   "name": "Manage All Schedule Items",
+   "afId": "16185",
+   "bbwId": "16256",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2061,
+   "name": "Manage All Schedule Items if Manager",
+   "afId": "16186",
+   "bbwId": "16257",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2061,
+   "name": "Manage Default Dashboards",
+   "afId": "16187",
+   "bbwId": "16258",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2061,
+   "name": "Manage RE Plan",
+   "afId": "16188",
+   "bbwId": "16259",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2061,
+   "name": "Manage Report Folders",
+   "afId": "16189",
+   "bbwId": "16260",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2061,
+   "name": "Receive Equipment Alerts",
+   "afId": "16190",
+   "bbwId": "16261",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2061,
+   "name": "Receive Lease Alerts",
+   "afId": "16191",
+   "bbwId": "16262",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2061,
+   "name": "Set Capital Program To Dead",
+   "afId": "16192",
+   "bbwId": "16263",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2061,
+   "name": "Set Capital Program To Inactive",
+   "afId": "16193",
+   "bbwId": "16264",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2061,
+   "name": "Set Capital Project To Dead",
+   "afId": "16194",
+   "bbwId": "16265",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2061,
+   "name": "Set Capital Project To Inactive",
+   "afId": "16195",
+   "bbwId": "16266",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2061,
+   "name": "Set Contract To Dead",
+   "afId": "16196",
+   "bbwId": "16267",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2061,
+   "name": "Set Contract To Inactive",
+   "afId": "16197",
+   "bbwId": "16268",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2061,
+   "name": "Set Equipment Contract To Dead",
+   "afId": "16198",
+   "bbwId": "16269",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2061,
+   "name": "Set Equipment Contract To Inactive",
+   "afId": "16199",
+   "bbwId": "16270",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2061,
+   "name": "Set Facility To Dead",
+   "afId": "16200",
+   "bbwId": "16271",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2061,
+   "name": "Set Facility To Inactive",
+   "afId": "16201",
+   "bbwId": "16272",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2061,
+   "name": "Set Location To Dead",
+   "afId": "16202",
+   "bbwId": "16273",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2061,
+   "name": "Set Location To Inactive",
+   "afId": "16203",
+   "bbwId": "16274",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2061,
+   "name": "Set Opening Project To Dead",
+   "afId": "16204",
+   "bbwId": "16275",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2061,
+   "name": "Set Opening Project To Inactive",
+   "afId": "16205",
+   "bbwId": "16276",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2061,
+   "name": "Set Parcel To Dead",
+   "afId": "16206",
+   "bbwId": "16277",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2061,
+   "name": "Set Parcel To Inactive",
+   "afId": "16207",
+   "bbwId": "16278",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2061,
+   "name": "Set Portfolio To Dead",
+   "afId": "16208",
+   "bbwId": "16279",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2061,
+   "name": "Set Portfolio To Inactive",
+   "afId": "16209",
+   "bbwId": "16280",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2061,
+   "name": "Set Prototype To Dead",
+   "afId": "16210",
+   "bbwId": "16281",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2061,
+   "name": "Set Prototype To Inactive",
+   "afId": "16211",
+   "bbwId": "16282",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2061,
+   "name": "Set Site To Dead",
+   "afId": "16212",
+   "bbwId": "16283",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2061,
+   "name": "Set Site To Inactive",
+   "afId": "16213",
+   "bbwId": "16284",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2061,
+   "name": "Task Association",
+   "afId": "16214",
+   "bbwId": "16285",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2061,
+   "name": "Update/Change Job Title",
+   "afId": "16215",
+   "bbwId": "16286",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2061,
+   "name": "View Portfolio/Program Documents",
+   "afId": "16216",
+   "bbwId": "16287",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2064,
+   "name": "Company",
+   "afId": "218",
+   "bbwId": "220",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2064,
+   "name": "Franchise",
+   "afId": "219",
+   "bbwId": "221",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2068,
+   "name": "New",
+   "afId": "2627",
+   "bbwId": "2628",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2070,
+   "name": "Default Security",
+   "afId": "7884",
+   "bbwId": "7992",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2070,
+   "name": "Lease Admin",
+   "afId": "7888",
+   "bbwId": "7998",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2070,
+   "name": "Lease Admin Accounting",
+   "afId": "7890",
+   "bbwId": "7996",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2070,
+   "name": "Lease Admin Client",
+   "afId": "7886",
+   "bbwId": "7999",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2070,
+   "name": "Lease Admin Mail",
+   "afId": "7887",
+   "bbwId": "8001",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2070,
+   "name": "Lease Admin Manager",
+   "afId": "7891",
+   "bbwId": "7995",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2070,
+   "name": "Lease Admin View",
+   "afId": "7892",
+   "bbwId": "8002",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2070,
+   "name": "System Administrator",
+   "afId": "7885",
+   "bbwId": "7993",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2078,
+   "name": "Abatement",
+   "afId": "239",
+   "bbwId": "245",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2078,
+   "name": "Cash",
+   "afId": "240",
+   "bbwId": "246",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2078,
+   "name": "Combination",
+   "afId": "241",
+   "bbwId": "247",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2078,
+   "name": "None",
+   "afId": "242",
+   "bbwId": "248",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2079,
+   "name": "Collected",
+   "afId": "565",
+   "bbwId": "573",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2079,
+   "name": "None",
+   "afId": "566",
+   "bbwId": "574",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2079,
+   "name": "Open",
+   "afId": "567",
+   "bbwId": "575",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2079,
+   "name": "Partially Collected",
+   "afId": "568",
+   "bbwId": "576",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2080,
+   "name": "Lease",
+   "afId": "929",
+   "bbwId": "932",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2080,
+   "name": "Notices",
+   "afId": "930",
+   "bbwId": "933",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2080,
+   "name": "SNDA-Estoppels",
+   "afId": "931",
+   "bbwId": "934",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2081,
+   "name": "Approved",
+   "afId": "765",
+   "bbwId": "768",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2081,
+   "name": "Denied",
+   "afId": "766",
+   "bbwId": "769",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2081,
+   "name": "Review",
+   "afId": "767",
+   "bbwId": "770",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2082,
+   "name": "Approved",
+   "afId": "58",
+   "bbwId": "59",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2085,
+   "name": "Other",
+   "afId": "199",
+   "bbwId": "201",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2085,
+   "name": "Real Estate",
+   "afId": "200",
+   "bbwId": "202",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2087,
+   "name": "Co-Tenancy",
+   "afId": "59",
+   "bbwId": "60",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2088,
+   "name": "Both",
+   "afId": "89",
+   "bbwId": "92",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2088,
+   "name": "Ongoing",
+   "afId": "90",
+   "bbwId": "93",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2088,
+   "name": "Opening",
+   "afId": "91",
+   "bbwId": "94",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2092,
+   "name": "Capital",
+   "afId": "290",
+   "bbwId": "295",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2092,
+   "name": "Operating",
+   "afId": "289",
+   "bbwId": "294",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2093,
+   "name": "Real Estate",
+   "afId": "556",
+   "bbwId": "561",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2094,
+   "name": "AI Abstracted",
+   "afId": "1308",
+   "bbwId": "1309",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2094,
+   "name": "Active",
+   "afId": "1243",
+   "bbwId": "1253",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2094,
+   "name": "Inactive",
+   "afId": "1244",
+   "bbwId": "1255",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2096,
+   "name": "Audit",
+   "afId": "678",
+   "bbwId": "689",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2096,
+   "name": "Key Dates",
+   "afId": "679",
+   "bbwId": "690",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2096,
+   "name": "Key Definitions",
+   "afId": "680",
+   "bbwId": "691",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2096,
+   "name": "Lease Clauses",
+   "afId": "681",
+   "bbwId": "692",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2096,
+   "name": "Other",
+   "afId": "682",
+   "bbwId": "693",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2096,
+   "name": "Percent Rent",
+   "afId": "683",
+   "bbwId": "694",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2096,
+   "name": "Storage",
+   "afId": "684",
+   "bbwId": "695",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2096,
+   "name": "Use",
+   "afId": "685",
+   "bbwId": "696",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2101,
+   "name": "Cash",
+   "afId": "536",
+   "bbwId": "538",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2101,
+   "name": "Period Average",
+   "afId": "537",
+   "bbwId": "539",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2103,
+   "name": "Expense",
+   "afId": "1151",
+   "bbwId": "1157",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2103,
+   "name": "Lease Payment",
+   "afId": "1149",
+   "bbwId": "1155",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2103,
+   "name": "Rent",
+   "afId": "1150",
+   "bbwId": "1156",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2104,
+   "name": "Base Rent",
+   "afId": "1511",
+   "bbwId": "1546",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2104,
+   "name": "Operating Expenses",
+   "afId": "1512",
+   "bbwId": "1547",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2104,
+   "name": "Percent Rent",
+   "afId": "1513",
+   "bbwId": "1548",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2104,
+   "name": "Real Estate Taxes",
+   "afId": "1514",
+   "bbwId": "1549",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2104,
+   "name": "Utilities",
+   "afId": "1515",
+   "bbwId": "1550",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2106,
+   "name": "Operations",
+   "afId": "772",
+   "bbwId": "782",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2106,
+   "name": "Retail",
+   "afId": "773",
+   "bbwId": "783",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2106,
+   "name": "Wizard",
+   "afId": "771",
+   "bbwId": "781",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2107,
+   "name": "AI Abstracted",
+   "afId": "887",
+   "bbwId": "888",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2107,
+   "name": "Closed",
+   "afId": "836",
+   "bbwId": "847",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2107,
+   "name": "Open",
+   "afId": "835",
+   "bbwId": "846",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2109,
+   "name": "Likely",
+   "afId": "158",
+   "bbwId": "159",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2114,
+   "name": "Covenants",
+   "afId": "456",
+   "bbwId": "462",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2114,
+   "name": "Key Dates",
+   "afId": "457",
+   "bbwId": "463",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2114,
+   "name": "Lease",
+   "afId": "455",
+   "bbwId": "460",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2114,
+   "name": "Terms",
+   "afId": "458",
+   "bbwId": "464",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2117,
+   "name": "Operations",
+   "afId": "823",
+   "bbwId": "834",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2117,
+   "name": "Retail",
+   "afId": "822",
+   "bbwId": "833",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2117,
+   "name": "Wizard",
+   "afId": "821",
+   "bbwId": "832",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2118,
+   "name": "AI Abstracted",
+   "afId": "604",
+   "bbwId": "605",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2118,
+   "name": "Active",
+   "afId": "556",
+   "bbwId": "563",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2118,
+   "name": "Inactive",
+   "afId": "557",
+   "bbwId": "564",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2135,
+   "name": "Actual",
+   "afId": "168",
+   "bbwId": "170",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2135,
+   "name": "Forecast",
+   "afId": "169",
+   "bbwId": "171",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2136,
+   "name": "Count Based",
+   "afId": "190",
+   "bbwId": "192",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2136,
+   "name": "Share Based",
+   "afId": "191",
+   "bbwId": "193",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2137,
+   "name": "BLS_CUUR0000SA0",
+   "afId": "4555",
+   "bbwId": "4560",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2137,
+   "name": "BLS_CWUR0000SA0",
+   "afId": "4556",
+   "bbwId": "4561",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2137,
+   "name": "BLS_PCUOMFG--OMFG--",
+   "afId": "4557",
+   "bbwId": "4562",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2137,
+   "name": "Contract Specific",
+   "afId": "4558",
+   "bbwId": "4563",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2137,
+   "name": "ONS_CHAW MM23",
+   "afId": "4559",
+   "bbwId": "4564",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2143,
+   "name": "Actual",
+   "afId": "222",
+   "bbwId": "224",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2143,
+   "name": "Forecast",
+   "afId": "223",
+   "bbwId": "225",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2144,
+   "name": "Sales",
+   "afId": "244",
+   "bbwId": "246",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2145,
+   "name": "Security Deposit",
+   "afId": "85",
+   "bbwId": "87",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2146,
+   "name": "Collected",
+   "afId": "93",
+   "bbwId": "97",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2146,
+   "name": "None",
+   "afId": "95",
+   "bbwId": "99",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2146,
+   "name": "Open",
+   "afId": "94",
+   "bbwId": "98",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2157,
+   "name": "AI Abstracted",
+   "afId": "241",
+   "bbwId": "242",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2157,
+   "name": "Active",
+   "afId": "180",
+   "bbwId": "184",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2157,
+   "name": "Deleted",
+   "afId": "181",
+   "bbwId": "185",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2157,
+   "name": "Inactive",
+   "afId": "182",
+   "bbwId": "186",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2157,
+   "name": "Not Applicable",
+   "afId": "183",
+   "bbwId": "187",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2158,
+   "name": "Active",
+   "afId": "466",
+   "bbwId": "475",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2158,
+   "name": "Available",
+   "afId": "467",
+   "bbwId": "476",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2158,
+   "name": "Declined",
+   "afId": "468",
+   "bbwId": "477",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2158,
+   "name": "Deleted",
+   "afId": "469",
+   "bbwId": "478",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2158,
+   "name": "Exercised",
+   "afId": "470",
+   "bbwId": "479",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2158,
+   "name": "Expired",
+   "afId": "471",
+   "bbwId": "480",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2158,
+   "name": "Inactive",
+   "afId": "472",
+   "bbwId": "481",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2158,
+   "name": "Likely",
+   "afId": "473",
+   "bbwId": "482",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2159,
+   "name": "Extension",
+   "afId": "6918",
+   "bbwId": "6924",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2159,
+   "name": "Option",
+   "afId": "6919",
+   "bbwId": "6925",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2159,
+   "name": "Original",
+   "afId": "6917",
+   "bbwId": "6923",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2160,
+   "name": "842 Original Schedule",
+   "afId": "43",
+   "bbwId": "45",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2160,
+   "name": "842 Recalculation",
+   "afId": "40",
+   "bbwId": "49",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2160,
+   "name": "842 Remeasurement",
+   "afId": "41",
+   "bbwId": "50",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2162,
+   "name": "842 Rent",
+   "afId": "507",
+   "bbwId": "509",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2179,
+   "name": "Common Area",
+   "afId": "426",
+   "bbwId": "431",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2179,
+   "name": "Insurance",
+   "afId": "427",
+   "bbwId": "432",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2179,
+   "name": "Real Estate Taxes",
+   "afId": "428",
+   "bbwId": "433",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2180,
+   "name": "CAM",
+   "afId": "806",
+   "bbwId": "812",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2180,
+   "name": "Contributions",
+   "afId": "811",
+   "bbwId": "817",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2180,
+   "name": "RET",
+   "afId": "810",
+   "bbwId": "816",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2181,
+   "name": "AI Abstracted",
+   "afId": "205",
+   "bbwId": "206",
+   "isReadOnlyRecord": true
+  },
+  {
+   "tableType": 2181,
+   "name": "Active",
+   "afId": "164",
+   "bbwId": "167",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 2181,
+   "name": "Deleted",
+   "afId": "165",
+   "bbwId": "168",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3002,
+   "name": "Agreement",
+   "afId": "903",
+   "bbwId": "919",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3002,
+   "name": "Amendment",
+   "afId": "904",
+   "bbwId": "920",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3002,
+   "name": "Assignment",
+   "afId": "909",
+   "bbwId": "925",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3002,
+   "name": "Change in Ownership",
+   "afId": "910",
+   "bbwId": "926",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3002,
+   "name": "Commencement Date Letter",
+   "afId": "911",
+   "bbwId": "927",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3002,
+   "name": "Delivery/Possession",
+   "afId": "912",
+   "bbwId": "928",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3002,
+   "name": "Estoppel",
+   "afId": "917",
+   "bbwId": "933",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3002,
+   "name": "Kickout",
+   "afId": "913",
+   "bbwId": "929",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3002,
+   "name": "Lease",
+   "afId": "905",
+   "bbwId": "921",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3002,
+   "name": "Notice",
+   "afId": "914",
+   "bbwId": "930",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3002,
+   "name": "Option",
+   "afId": "915",
+   "bbwId": "931",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3002,
+   "name": "Rider",
+   "afId": "907",
+   "bbwId": "923",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3002,
+   "name": "SNDA",
+   "afId": "918",
+   "bbwId": "934",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3002,
+   "name": "Storage",
+   "afId": "908",
+   "bbwId": "924",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3002,
+   "name": "Waiver",
+   "afId": "916",
+   "bbwId": "932",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3003,
+   "name": "Office",
+   "afId": "1247",
+   "bbwId": "1265",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3003,
+   "name": "Store",
+   "afId": "1246",
+   "bbwId": "1264",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3003,
+   "name": "Sublease",
+   "afId": "1249",
+   "bbwId": "1267",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3003,
+   "name": "Warehouse",
+   "afId": "1248",
+   "bbwId": "1361",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3004,
+   "name": "Alterations",
+   "afId": "19891",
+   "bbwId": "20004",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3004,
+   "name": "Anchor",
+   "afId": "19882",
+   "bbwId": "19995",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3004,
+   "name": "Assignment/Sublet",
+   "afId": "19892",
+   "bbwId": "20005",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3004,
+   "name": "Audit Rights - No/Statements Due",
+   "afId": "19867",
+   "bbwId": "19980",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3004,
+   "name": "Audit Rights - Yes/Statements Due",
+   "afId": "19868",
+   "bbwId": "19981",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3004,
+   "name": "Blackout/Slack Period",
+   "afId": "19870",
+   "bbwId": "19983",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3004,
+   "name": "CPI",
+   "afId": "19884",
+   "bbwId": "19997",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3004,
+   "name": "Center",
+   "afId": "19883",
+   "bbwId": "19996",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3004,
+   "name": "Damage/Destruction",
+   "afId": "19893",
+   "bbwId": "20006",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3004,
+   "name": "Default Landlord",
+   "afId": "19894",
+   "bbwId": "20007",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3004,
+   "name": "Default Tenant",
+   "afId": "19895",
+   "bbwId": "20008",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3004,
+   "name": "Department Stores",
+   "afId": "19885",
+   "bbwId": "19998",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3004,
+   "name": "Downsize",
+   "afId": "19871",
+   "bbwId": "19984",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3004,
+   "name": "Estoppel/SNDA",
+   "afId": "19896",
+   "bbwId": "20009",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3004,
+   "name": "Exclusive Use",
+   "afId": "19886",
+   "bbwId": "19999",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3004,
+   "name": "Exclusive Use - Co-Tenants",
+   "afId": "19887",
+   "bbwId": "20000",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3004,
+   "name": "Expansion",
+   "afId": "19872",
+   "bbwId": "19985",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3004,
+   "name": "Force Majeure",
+   "afId": "19897",
+   "bbwId": "20010",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3004,
+   "name": "Go Dark",
+   "afId": "19873",
+   "bbwId": "19986",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3004,
+   "name": "Guaranty",
+   "afId": "19898",
+   "bbwId": "20011",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3004,
+   "name": "Holdover",
+   "afId": "19899",
+   "bbwId": "20012",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3004,
+   "name": "Insurance",
+   "afId": "19900",
+   "bbwId": "20013",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3004,
+   "name": "Kickout",
+   "afId": "19874",
+   "bbwId": "19987",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3004,
+   "name": "Kickout - Landlord",
+   "afId": "19875",
+   "bbwId": "19988",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3004,
+   "name": "Kiosks",
+   "afId": "19901",
+   "bbwId": "20014",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3004,
+   "name": "Landlord Access",
+   "afId": "19902",
+   "bbwId": "20015",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3004,
+   "name": "Late Payments",
+   "afId": "19903",
+   "bbwId": "20016",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3004,
+   "name": "Lease Year",
+   "afId": "19888",
+   "bbwId": "20001",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3004,
+   "name": "Major",
+   "afId": "19889",
+   "bbwId": "20002",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3004,
+   "name": "Objections to Statements",
+   "afId": "19869",
+   "bbwId": "19982",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3004,
+   "name": "Operating Requirement",
+   "afId": "19904",
+   "bbwId": "20017",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3004,
+   "name": "Other",
+   "afId": "19916",
+   "bbwId": "20029",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3004,
+   "name": "Pandemic Closure",
+   "afId": "19928",
+   "bbwId": "20065",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3004,
+   "name": "Parking",
+   "afId": "19905",
+   "bbwId": "20018",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3004,
+   "name": "Partial Month Calculations",
+   "afId": "19890",
+   "bbwId": "20003",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3004,
+   "name": "Percent Rent",
+   "afId": "19917",
+   "bbwId": "20030",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3004,
+   "name": "Permitted Use/Alcohol",
+   "afId": "19919",
+   "bbwId": "20032",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3004,
+   "name": "Prohibited Use",
+   "afId": "19920",
+   "bbwId": "20033",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3004,
+   "name": "Radius Restriction",
+   "afId": "19876",
+   "bbwId": "19989",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3004,
+   "name": "Relocation",
+   "afId": "19906",
+   "bbwId": "20019",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3004,
+   "name": "Remeasurement Rights",
+   "afId": "19907",
+   "bbwId": "20020",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3004,
+   "name": "Remodel Requirement",
+   "afId": "19877",
+   "bbwId": "19990",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3004,
+   "name": "Rent Conversion",
+   "afId": "19878",
+   "bbwId": "19991",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3004,
+   "name": "Required Advertising",
+   "afId": "19908",
+   "bbwId": "20021",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3004,
+   "name": "Required Delivery of Notices",
+   "afId": "19909",
+   "bbwId": "20022",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3004,
+   "name": "Required Return in Original Condition",
+   "afId": "19910",
+   "bbwId": "20023",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3004,
+   "name": "Right of First Refusal",
+   "afId": "19911",
+   "bbwId": "20024",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3004,
+   "name": "Signage",
+   "afId": "19912",
+   "bbwId": "20025",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3004,
+   "name": "Storage",
+   "afId": "19959",
+   "bbwId": "20031",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3004,
+   "name": "Temporary Space",
+   "afId": "19879",
+   "bbwId": "19992",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3004,
+   "name": "Termination - Landlord",
+   "afId": "19880",
+   "bbwId": "19993",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3004,
+   "name": "Termination - Tenant",
+   "afId": "19881",
+   "bbwId": "19994",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3004,
+   "name": "Trade Name",
+   "afId": "19913",
+   "bbwId": "20026",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3004,
+   "name": "Use",
+   "afId": "19921",
+   "bbwId": "20034",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3004,
+   "name": "Utility",
+   "afId": "19914",
+   "bbwId": "20027",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3004,
+   "name": "Utility Reference",
+   "afId": "19915",
+   "bbwId": "20028",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3005,
+   "name": "A Mall",
+   "afId": "3284",
+   "bbwId": "3405",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3005,
+   "name": "A- Mall",
+   "afId": "3285",
+   "bbwId": "3406",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3005,
+   "name": "B Mall",
+   "afId": "3286",
+   "bbwId": "3407",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3005,
+   "name": "B+ Mall",
+   "afId": "3288",
+   "bbwId": "3409",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3005,
+   "name": "B- Mall",
+   "afId": "3287",
+   "bbwId": "3408",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3005,
+   "name": "C Mall",
+   "afId": "3289",
+   "bbwId": "3410",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3005,
+   "name": "College Towns",
+   "afId": "3290",
+   "bbwId": "3411",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3005,
+   "name": "Distribution Center",
+   "afId": "3300",
+   "bbwId": "3422",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3005,
+   "name": "Downtown Mall",
+   "afId": "3291",
+   "bbwId": "3412",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3005,
+   "name": "High Profile Street",
+   "afId": "3279",
+   "bbwId": "3400",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3005,
+   "name": "Housing",
+   "afId": "3299",
+   "bbwId": "3420",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3005,
+   "name": "Hybrid",
+   "afId": "3273",
+   "bbwId": "3394",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3005,
+   "name": "Metro Area Street",
+   "afId": "3278",
+   "bbwId": "3399",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3005,
+   "name": "Metro Neighborhood Strip",
+   "afId": "3282",
+   "bbwId": "3403",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3005,
+   "name": "Office",
+   "afId": "3297",
+   "bbwId": "3418",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3005,
+   "name": "Outlet Mall",
+   "afId": "3272",
+   "bbwId": "3393",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3005,
+   "name": "Outlet Strip",
+   "afId": "3271",
+   "bbwId": "3392",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3005,
+   "name": "Power Strip",
+   "afId": "3281",
+   "bbwId": "3402",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3005,
+   "name": "Power Style",
+   "afId": "3276",
+   "bbwId": "3397",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3005,
+   "name": "Regional Mall",
+   "afId": "3295",
+   "bbwId": "3416",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3005,
+   "name": "Small Town Main Streets",
+   "afId": "3280",
+   "bbwId": "3401",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3005,
+   "name": "Specialty",
+   "afId": "3294",
+   "bbwId": "3415",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3005,
+   "name": "Storage",
+   "afId": "3298",
+   "bbwId": "3419",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3005,
+   "name": "Street Location",
+   "afId": "3293",
+   "bbwId": "3414",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3005,
+   "name": "Strip Center",
+   "afId": "3296",
+   "bbwId": "3417",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3005,
+   "name": "Suburban Specialty",
+   "afId": "3274",
+   "bbwId": "3395",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3005,
+   "name": "Top Tier Mall",
+   "afId": "3277",
+   "bbwId": "3398",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3005,
+   "name": "Urban Specialty",
+   "afId": "3275",
+   "bbwId": "3396",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3005,
+   "name": "Warehouse",
+   "afId": "3283",
+   "bbwId": "3404",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3006,
+   "name": "% in Lieu",
+   "afId": "3107",
+   "bbwId": "3135",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3006,
+   "name": "Blackout/Slack Period",
+   "afId": "3096",
+   "bbwId": "3124",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3006,
+   "name": "Co-Tenancy",
+   "afId": "3108",
+   "bbwId": "3136",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3006,
+   "name": "Downsize",
+   "afId": "3097",
+   "bbwId": "3125",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3006,
+   "name": "Expansion",
+   "afId": "3098",
+   "bbwId": "3126",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3006,
+   "name": "Extension",
+   "afId": "3115",
+   "bbwId": "3143",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3006,
+   "name": "Go Dark",
+   "afId": "3099",
+   "bbwId": "3127",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3006,
+   "name": "Gross Rent",
+   "afId": "3109",
+   "bbwId": "3137",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3006,
+   "name": "Kickout",
+   "afId": "3100",
+   "bbwId": "3128",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3006,
+   "name": "Landlord Kickout",
+   "afId": "3101",
+   "bbwId": "3129",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3006,
+   "name": "Lease",
+   "afId": "3110",
+   "bbwId": "3138",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3006,
+   "name": "Option",
+   "afId": "3116",
+   "bbwId": "3144",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3006,
+   "name": "Original Lease Term",
+   "afId": "3117",
+   "bbwId": "3145",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3006,
+   "name": "Radius Restriction",
+   "afId": "3102",
+   "bbwId": "3130",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3006,
+   "name": "Remodel Requirement",
+   "afId": "3103",
+   "bbwId": "3131",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3006,
+   "name": "Rent Relief",
+   "afId": "3111",
+   "bbwId": "3139",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3006,
+   "name": "Rent Relief - % in Lieu",
+   "afId": "3112",
+   "bbwId": "3140",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3006,
+   "name": "Rent Relief - Gross Rent",
+   "afId": "3113",
+   "bbwId": "3141",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3006,
+   "name": "Storage",
+   "afId": "3114",
+   "bbwId": "3142",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3006,
+   "name": "Temporary Space",
+   "afId": "3104",
+   "bbwId": "3132",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3006,
+   "name": "Termination - Landlord",
+   "afId": "3105",
+   "bbwId": "3133",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3006,
+   "name": "Termination - Tenant",
+   "afId": "3106",
+   "bbwId": "3134",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3007,
+   "name": "Distribution Center",
+   "afId": "3269",
+   "bbwId": "3397",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3007,
+   "name": "Office",
+   "afId": "3270",
+   "bbwId": "3398",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3007,
+   "name": "Storage",
+   "afId": "3275",
+   "bbwId": "3403",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3007,
+   "name": "Warehouse",
+   "afId": "3278",
+   "bbwId": "3411",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3012,
+   "name": "Sales",
+   "afId": "1855",
+   "bbwId": "1870",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3013,
+   "name": "Abatement",
+   "afId": "27035",
+   "bbwId": "27560",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3013,
+   "name": "Advertising",
+   "afId": "27081",
+   "bbwId": "27587",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3013,
+   "name": "Base Rent",
+   "afId": "27036",
+   "bbwId": "27561",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3013,
+   "name": "Base Rent - CPI Fixed",
+   "afId": "27037",
+   "bbwId": "27562",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3013,
+   "name": "Base Rent - CPI Variable",
+   "afId": "27038",
+   "bbwId": "27563",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3013,
+   "name": "Base Rent - Defer Repay",
+   "afId": "27039",
+   "bbwId": "27564",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3013,
+   "name": "Base Rent - Other",
+   "afId": "27040",
+   "bbwId": "27565",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3013,
+   "name": "Base Rent - Prepaid",
+   "afId": "27041",
+   "bbwId": "27566",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3013,
+   "name": "City/Town Tax",
+   "afId": "27047",
+   "bbwId": "27573",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3013,
+   "name": "City/Town Tax - YEA",
+   "afId": "27048",
+   "bbwId": "27574",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3013,
+   "name": "Co-Tenancy",
+   "afId": "27044",
+   "bbwId": "27569",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3013,
+   "name": "Common Area",
+   "afId": "27082",
+   "bbwId": "27588",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3013,
+   "name": "Common Area - CPI Fixed",
+   "afId": "27083",
+   "bbwId": "27589",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3013,
+   "name": "Common Area - CPI Variable",
+   "afId": "27084",
+   "bbwId": "27590",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3013,
+   "name": "Common Area - Fixed",
+   "afId": "27085",
+   "bbwId": "27591",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3013,
+   "name": "Common Area - Uncontrollable",
+   "afId": "27086",
+   "bbwId": "27592",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3013,
+   "name": "Common Area - YEA",
+   "afId": "27087",
+   "bbwId": "27593",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3013,
+   "name": "Electric",
+   "afId": "27059",
+   "bbwId": "27621",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3013,
+   "name": "Electric - Sign",
+   "afId": "27060",
+   "bbwId": "27622",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3013,
+   "name": "Electric - YEA",
+   "afId": "27061",
+   "bbwId": "27623",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3013,
+   "name": "Environmental",
+   "afId": "27062",
+   "bbwId": "27624",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3013,
+   "name": "Environmental - YEA",
+   "afId": "27063",
+   "bbwId": "27625",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3013,
+   "name": "Excess Rent",
+   "afId": "27045",
+   "bbwId": "27570",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3013,
+   "name": "Fire",
+   "afId": "27088",
+   "bbwId": "27594",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3013,
+   "name": "Fixed Advertising",
+   "afId": "27089",
+   "bbwId": "27595",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3013,
+   "name": "Fixed Electric",
+   "afId": "27064",
+   "bbwId": "27626",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3013,
+   "name": "Fixed HVAC",
+   "afId": "27065",
+   "bbwId": "27627",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3013,
+   "name": "Fixed Marketing",
+   "afId": "27091",
+   "bbwId": "27597",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3013,
+   "name": "Fixed Media Fund",
+   "afId": "27092",
+   "bbwId": "27598",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3013,
+   "name": "Fixed Merchants Association",
+   "afId": "27093",
+   "bbwId": "27599",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3013,
+   "name": "Fixed Promo",
+   "afId": "27094",
+   "bbwId": "27600",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3013,
+   "name": "Fixed Trash",
+   "afId": "27066",
+   "bbwId": "27628",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3013,
+   "name": "Fixed Water",
+   "afId": "27067",
+   "bbwId": "27629",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3013,
+   "name": "Gas",
+   "afId": "27068",
+   "bbwId": "27630",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3013,
+   "name": "Gas - YEA",
+   "afId": "27069",
+   "bbwId": "27631",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3013,
+   "name": "Gross Receipts Tax",
+   "afId": "27049",
+   "bbwId": "27575",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3013,
+   "name": "Gross Receipts Tax - YEA",
+   "afId": "27050",
+   "bbwId": "27576",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3013,
+   "name": "HVAC",
+   "afId": "27070",
+   "bbwId": "27632",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3013,
+   "name": "HVAC - YEA",
+   "afId": "27071",
+   "bbwId": "27633",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3013,
+   "name": "HVAC Equipment",
+   "afId": "27095",
+   "bbwId": "27601",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3013,
+   "name": "Insurance",
+   "afId": "27096",
+   "bbwId": "27602",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3013,
+   "name": "Insurance - YEA",
+   "afId": "27097",
+   "bbwId": "27603",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3013,
+   "name": "Internet",
+   "afId": "27072",
+   "bbwId": "27634",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3013,
+   "name": "Mall HVAC",
+   "afId": "27098",
+   "bbwId": "27604",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3013,
+   "name": "Marketing Fund",
+   "afId": "27099",
+   "bbwId": "27605",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3013,
+   "name": "Media Fund",
+   "afId": "27100",
+   "bbwId": "27606",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3013,
+   "name": "Merchants Association",
+   "afId": "27101",
+   "bbwId": "27607",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3013,
+   "name": "Occupancy Tax",
+   "afId": "27051",
+   "bbwId": "27577",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3013,
+   "name": "OpEx - Defer Repay",
+   "afId": "27102",
+   "bbwId": "27608",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3013,
+   "name": "Other Landlord Misc",
+   "afId": "27103",
+   "bbwId": "27609",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3013,
+   "name": "Parking",
+   "afId": "27104",
+   "bbwId": "27610",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3013,
+   "name": "Percent Rent",
+   "afId": "27046",
+   "bbwId": "27571",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3013,
+   "name": "Pest Control",
+   "afId": "27105",
+   "bbwId": "27611",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3013,
+   "name": "Promotion Fund",
+   "afId": "27106",
+   "bbwId": "27612",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3013,
+   "name": "Pylon",
+   "afId": "27107",
+   "bbwId": "27613",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3013,
+   "name": "Real Estate Taxes",
+   "afId": "27052",
+   "bbwId": "27579",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3013,
+   "name": "Real Estate Taxes - YEA",
+   "afId": "27053",
+   "bbwId": "27580",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3013,
+   "name": "Repair & Maintenance",
+   "afId": "27108",
+   "bbwId": "27614",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3013,
+   "name": "School Tax",
+   "afId": "27055",
+   "bbwId": "27583",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3013,
+   "name": "School Tax - YEA",
+   "afId": "27056",
+   "bbwId": "27584",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3013,
+   "name": "Security",
+   "afId": "27109",
+   "bbwId": "27615",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3013,
+   "name": "Security Deposit",
+   "afId": "27042",
+   "bbwId": "27568",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3013,
+   "name": "Sewer",
+   "afId": "27073",
+   "bbwId": "27635",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3013,
+   "name": "Sewer - YEA",
+   "afId": "27074",
+   "bbwId": "27636",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3013,
+   "name": "Snow - YEA",
+   "afId": "27110",
+   "bbwId": "27616",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3013,
+   "name": "Snow Removal",
+   "afId": "27111",
+   "bbwId": "27617",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3013,
+   "name": "Sprinkler",
+   "afId": "27112",
+   "bbwId": "27618",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3013,
+   "name": "Storage",
+   "afId": "27113",
+   "bbwId": "27663",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3013,
+   "name": "Trash",
+   "afId": "27075",
+   "bbwId": "27637",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3013,
+   "name": "Trash - YEA",
+   "afId": "27076",
+   "bbwId": "27638",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3013,
+   "name": "Use Tax",
+   "afId": "27057",
+   "bbwId": "27585",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3013,
+   "name": "Use Tax - YEA",
+   "afId": "27058",
+   "bbwId": "27586",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3013,
+   "name": "Utilities - Defer Repay",
+   "afId": "27077",
+   "bbwId": "27639",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3013,
+   "name": "Utilities - Other",
+   "afId": "27078",
+   "bbwId": "27640",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3013,
+   "name": "Water",
+   "afId": "27079",
+   "bbwId": "27641",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3013,
+   "name": "Water - YEA",
+   "afId": "27080",
+   "bbwId": "27642",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3016,
+   "name": "Admin Fee",
+   "afId": "16494",
+   "bbwId": "16937",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3016,
+   "name": "Cleaning",
+   "afId": "16497",
+   "bbwId": "17065",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3016,
+   "name": "Consulting Fees",
+   "afId": "16523",
+   "bbwId": "16840",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3016,
+   "name": "Equipment",
+   "afId": "16499",
+   "bbwId": "17069",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3016,
+   "name": "Fire Safety",
+   "afId": "16501",
+   "bbwId": "17048",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3016,
+   "name": "Gas",
+   "afId": "16736",
+   "bbwId": "17067",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3016,
+   "name": "HVAC",
+   "afId": "16761",
+   "bbwId": "17078",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3016,
+   "name": "Insurance",
+   "afId": "16535",
+   "bbwId": "16997",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3016,
+   "name": "Janitorial",
+   "afId": "16540",
+   "bbwId": "16885",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3016,
+   "name": "Landscaping",
+   "afId": "16502",
+   "bbwId": "16883",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3016,
+   "name": "Lighting",
+   "afId": "16503",
+   "bbwId": "17051",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3016,
+   "name": "Management Fee",
+   "afId": "16571",
+   "bbwId": "16831",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3016,
+   "name": "Painting",
+   "afId": "16505",
+   "bbwId": "17052",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3016,
+   "name": "Payroll",
+   "afId": "16508",
+   "bbwId": "17044",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3016,
+   "name": "Pest Control",
+   "afId": "16509",
+   "bbwId": "16899",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3016,
+   "name": "Plumbing",
+   "afId": "16510",
+   "bbwId": "17054",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3016,
+   "name": "Porter Service",
+   "afId": "16758",
+   "bbwId": "17055",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3016,
+   "name": "Roof",
+   "afId": "16512",
+   "bbwId": "16884",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3016,
+   "name": "Security",
+   "afId": "16514",
+   "bbwId": "16888",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3016,
+   "name": "Snow Removal",
+   "afId": "16517",
+   "bbwId": "16925",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3016,
+   "name": "Supplies",
+   "afId": "16518",
+   "bbwId": "16866",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3016,
+   "name": "Sweeping",
+   "afId": "16519",
+   "bbwId": "17041",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3016,
+   "name": "Trash",
+   "afId": "16520",
+   "bbwId": "16983",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3016,
+   "name": "Utilities",
+   "afId": "16532",
+   "bbwId": "16867",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3016,
+   "name": "Water",
+   "afId": "16541",
+   "bbwId": "16918",
+   "isReadOnlyRecord": false
+  },
+  {
+   "tableType": 3016,
+   "name": "Window Cleaning",
+   "afId": "16699",
+   "bbwId": "16994",
+   "isReadOnlyRecord": false
+  }
+ ]
+}

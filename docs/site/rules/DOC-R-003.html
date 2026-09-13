@@ -10,5 +10,6 @@
 <nav><a href="../index.html">Overview</a><a href="../atlas.html#/map?set=feature">Feature map</a>
 <a href="../atlas.html">Interactive app</a>
 <a href="../entities/index.html">Record types</a><a href="../rules/index.html">Rules</a>
+<a href="../research/index.html">Research</a>
 <a href="../questions.html">Open questions</a></nav></header>
 <main><p class="crumb"><a href="../index.html">Atlas</a> &rsaquo; <a href="index.html">Rules</a> &rsaquo; DOC-R-003</p><h1 class="mono">DOC-R-003</h1><p class="sub">Documents, Folders &amp; Correspondence &middot; A Document carries an explicit release gate, independent of its checkout lock</p><span class="tag obs">Observed</span><p>Input: `Document.ReadyForRelease`, `Required = Yes`, distinct from `IsCheckedOut`/ `CheckedOutByMemberID`/`CheckedOutDate`. Effect: Every document row must explicitly state whether it counts as released, as a separate fact from whether it is currently locked for editing. Confidence: Observed (`../../data-fields/document.md`); what gates the transition (who may set it, whether it can be un-set) is Inferred/unconfirmed.</p><p style="font-size:11.5px;color:var(--faint);margin-top:18px">Source: modules/documents-folders/rules.md</p></main></body></html>

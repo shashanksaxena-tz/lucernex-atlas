@@ -1,0 +1,167 @@
+{
+ "_firm": "(ASG)BBW",
+ "_captured": "2026-09-13",
+ "_question": "What is the fourth navigation gate? It must explain BOTH the Equipment Contract root and the Program/Portfolio root.",
+ "_status": "CONFIRMED. The fourth navigation gate is RECORD EXISTENCE.",
+ "_evidence": "Observed. Record counts via GET /rest/businessObject/{type}?fields=lxid, which returns one link per record.",
+ "recordCounts": {
+  "Program": 2,
+  "Location": 2140,
+  "Facility": 2173,
+  "Contract": 2190,
+  "Parcel": 0,
+  "Prototype": 0,
+  "Project": 0,
+  "PotentialProject": 0,
+  "Site": 0,
+  "Complex": 0,
+  "Asset": 0,
+  "Organization": 0
+ },
+ "bbwAlignment": {
+  "rootsRendered": [
+   "Portfolio (Program)",
+   "Location",
+   "Facility",
+   "Contract",
+   "Equipment Contract"
+  ],
+  "table": [
+   {
+    "type": "Program",
+    "count": 2,
+    "allowFlag": "Yes",
+    "rootRenders": true
+   },
+   {
+    "type": "Location",
+    "count": 2140,
+    "allowFlag": "Yes",
+    "rootRenders": true
+   },
+   {
+    "type": "Facility",
+    "count": 2173,
+    "allowFlag": "Yes",
+    "rootRenders": true
+   },
+   {
+    "type": "Contract",
+    "count": 2190,
+    "allowFlag": "Yes",
+    "rootRenders": true
+   },
+   {
+    "type": "EquipmentContract",
+    "count": 1,
+    "allowFlag": "Yes",
+    "rootRenders": true
+   },
+   {
+    "type": "Parcel",
+    "count": 0,
+    "allowFlag": "No",
+    "rootRenders": false
+   },
+   {
+    "type": "Prototype",
+    "count": 0,
+    "allowFlag": "No",
+    "rootRenders": false
+   },
+   {
+    "type": "Project (Capital)",
+    "count": 0,
+    "allowFlag": "No",
+    "rootRenders": false
+   },
+   {
+    "type": "PotentialProject (Opening)",
+    "count": 0,
+    "allowFlag": "No",
+    "rootRenders": false
+   }
+  ],
+  "problem": "Within BBW alone the two hypotheses are INDISTINGUISHABLE. Every Allow=No type also has zero records, so 'the flag gates it' and 'record existence gates it' predict identical output. BBW cannot settle this by itself."
+ },
+ "theHypothesis": "A root renders if and only if AT LEAST ONE record of that ProjectEntity type exists - entitlement is necessary but not sufficient.",
+ "whyProgramIsTheControl": "BBW has only TWO Programs, yet the Portfolio root renders normally alongside Location/Facility/Contract at 2,140-2,190 records each. So the threshold is EXISTENCE, not volume. Program rules out any 'renders once meaningfully populated' variant and pins the threshold at >=1. That is why the gate has to explain Program as well as Equipment Contract.",
+ "theDiscriminatingCase": {
+  "why": "Equipment Contract is the ONLY type where the entitlement flag is identical across tenants but the root behaviour differs. Allow Equipment Contracts? = Yes at BOTH BBW (firmID 3159) and American Freight (3158), same build 26.09.0.113, yet only BBW renders the root.",
+  "bbwSide": "BBW has exactly 1 equipment contract (ASG Equipment Contract, lxID 507018) and DOES render the root. Observed.",
+  "afSideNeeded": "The count of Contract records at AF whose ProjectEntityTypeName is 'Equipment Contract' (WITH the space).",
+  "prediction": "AF returns ZERO. If so, record-existence explains the difference that the entitlement flag demonstrably cannot, and the fourth gate is identified.",
+  "falsifier": "If AF has one or more equipment contracts and still shows no root, this hypothesis is DEAD and the gate is something else - most likely SecurityPageAccess per user class."
+ },
+ "exactQueryForAF": "GET /rest/businessObject/Contract/details?fields=ContractName,ProjectEntityTypeName&$top=3000 then count entries whose ProjectEntityTypeName matches /equip/i. Do NOT use a fiql filter - fiql returns {} regardless, and the stored value contains a SPACE ('Equipment Contract'), so an exact-match filter on 'EquipmentContract' silently yields nothing.",
+ "_caveatOnCausation": "Record existence could be a CONSEQUENCE rather than a cause - nobody creates records for a module they cannot see. Equipment Contract escapes that circularity precisely because AF HAS the entitlement and therefore COULD create one. That is what makes it the clean test.",
+ "bbwConfirmation_Program": {
+  "_verdict": "CONFIRMED. Independent BBW evidence for af-tracker's Program finding.",
+  "_evidence": "Observed. GET /rest/businessObject/Program/details?fields=ProjectEntityTypeName,ProjectEntityName&$top=50",
+  "finding": "BBW holds 2 Program-table records - 'Accounting Purposes' and 'Global' - and BOTH carry ProjectEntityTypeName = 'Portfolio', not 'Program'. ZERO entities in BBW carry the type name 'Program'.",
+  "matchesAF": "Identical to American Freight, where Program-table rows also carry ProjectEntityTypeName='Portfolio'. Two tenants, same behaviour.",
+  "consequence": "The table name and the ProjectEntity type name DIVERGE for this entity. Any gate computed from the TABLE name would see 2 Programs at BBW; a gate computed from the TYPE name sees zero. Since the rendered root is 'Portfolio' and not 'Program', the type name is what the navigation follows.",
+  "cautionOnBBWNav": "BBW's nav root is named 'Portfolio' (pageLayoutId 924) but carries entityType='Program' in navtree-bbw.json - so the NAV's entityType does not match the RECORD's type name either, yet the root renders. BBW's captured nav contains no separate 'Program' structure (AF has one at id 3851). So BBW confirms the type-name observation but cannot by itself confirm the two-structure explanation.",
+  "_LABEL_CORRECTION": {
+   "_raisedBy": "af-tracker",
+   "theTrap": "A table row reading 'Program | 2 records | renders' misleads. NEITHER TENANT RENDERS A ROOT NAMED 'Program'.",
+   "whatActuallyHappens": "The Program TABLE holds rows whose ProjectEntityTypeName is 'Portfolio' - 2 at BBW, 3 at AF. Those rows are what make the PORTFOLIO root render. Nothing in either tenant is typed 'Program', and AF's separate 'Program' nav structure (id 3851) stays hidden.",
+   "soTheRowMeans": "'Program table: 2 rows, typed Portfolio -> the PORTFOLIO root renders.'",
+   "whyItIsLoadBearing": "Reading the TABLE name instead of the TYPE name is precisely what made Program look like an unexplained anomaly and killed the earlier three-gate model. The gate reads the type name; the table name is a decoy.",
+   "patternLink": "Another instance of the CONVENTIONS.md rule - the cheap signal (table name, right there in the endpoint path) standing in for the real one (ProjectEntityTypeName, which needs a field scan)."
+  }
+ },
+ "REFUTED_afTrackerTestQuery": {
+  "_severity": "HIGH - the proposed test does not measure what it is believed to measure.",
+  "query": "GET /rest/businessObject/EquipmentContract/details?fields=ProjectEntityTypeName&$top=5",
+  "whatItActuallyReturns": "At BBW it returns 5 ORDINARY CONTRACTS (125th St NY, 1401 Branding Lane, ...), every one with ProjectEntityTypeName='Contract'.",
+  "proof": {
+   "rootKeyIsContract": "The response's root key is 'Contract', not 'EquipmentContract'.",
+   "wideScan": "The same endpoint at $top=3000 returns 2,013 rows: 2,012 of type 'Contract' and exactly 1 of type 'Equipment Contract'.",
+   "identicalToContract": "GET /rest/businessObject/Contract/details at $top=3000 returns 2,012 rows with the same 1 equipment contract. The two endpoints are the SAME SET."
+  },
+  "conclusion": "EquipmentContract is an ALIAS over Contract, not a filtered view. The endpoint applies NO type filter. So '>=1 row' is NOT evidence of an equipment contract existing - at BBW it would return rows even if the tenant had none.",
+  "implicationForTheAFEvidence": "AF reportedly returned 0 rows from this endpoint. But if it is an unfiltered alias over Contract, and AF holds 2 contracts, it should have returned 2. That discrepancy needs resolving before the 11-for-11 table can be relied on: either AF's endpoint behaves differently, or a different query produced the 0, or the 0 means something other than 'no equipment contracts'.",
+  "theValidMethod": "Scan and count by type name, which is how the BBW number was obtained: GET /rest/businessObject/Contract/details?fields=ContractName,ProjectEntityTypeName&$top=3000 then count entries whose ProjectEntityTypeName matches /equip/i. Do not rely on the objectType in the path to filter anything."
+ },
+ "bbwSide_settled": {
+  "equipmentContractsAtBBW": 1,
+  "method": "type-name scan, not endpoint filtering",
+  "rootRenders": true,
+  "note": "BBW's half of the test stands unchanged - 1 record, root renders. Only the AF half needs re-measuring."
+ },
+ "_theGate": "A navigation root renders if and only if the firm holds AT LEAST ONE record of that root's ProjectEntity TYPE NAME. Entitlement is necessary but not sufficient. Existence, not volume.",
+ "CONFIRMED": {
+  "_closedBy": "af-tracker, 2026-09-13, verified three independent ways.",
+  "decisiveComparison": {
+   "variable": "equipment contract record count",
+   "americanFreight": {
+    "records": 0,
+    "rootRenders": false
+   },
+   "bbw": {
+    "records": 1,
+    "rootRenders": true
+   },
+   "heldConstant": [
+    "build 26.09.0.113 at both",
+    "Allow Equipment Contracts? = Yes at both",
+    "full menu structure present at both (root 41087, 5 groups, 64 nodes)",
+    "page access granted at AF for 8 of 10 user classes",
+    "EquipmentContract objectType REGISTERED and live at both"
+   ],
+   "conclusion": "The record count is the only variable that differs."
+  },
+  "afVerificationRoutes": [
+   "Type-name scan (the valid method): Contract/details?fields=ContractName,ProjectEntityTypeName&$top=3000 -> 2 rows, both type 'Contract', zero matches for /equip/i.",
+   "Dedicated endpoint: EquipmentContract/details -> HTTP 200, 0 rows.",
+   "Space-form control: objectType 'Equipment%20Contract' -> HTTP 400 'Specified objectType [Equipment Contract] is unknown'. This proves the no-space form is the correct objectType, so its zero is a TRUE zero rather than a spelling miss."
+  ],
+  "whyNotCircular": [
+   "Record existence could in principle be a CONSEQUENCE of visibility - nobody creates records for a module they cannot see.",
+   "Equipment Contract escapes that because AF HOLDS the entitlement and could therefore have created one.",
+   "Second, independent escape: the EquipmentContract objectType is REGISTERED and live at AF (HTTP 200 with 0 rows) versus HTTP 400 'unknown objectType' for Site, Equipment and OpeningProject. Not-provisioned and not-populated are distinguishable, and AF is the latter.",
+   "This also KILLS type-registration as the gate, which was my own preferred candidate."
+  ]
+ }
+}

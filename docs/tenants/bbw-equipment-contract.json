@@ -1,0 +1,591 @@
+{
+ "_firm": "(ASG)BBW",
+ "_captured": "2026-09-13",
+ "_evidence": "Observed via REST; nav structure from docs/mindmap/navtree-bbw.json.",
+ "storage_ANSWERED": {
+  "_headline": "Equipment Contract is a CONTRACT row discriminated by ProjectEntityTypeName = 'Equipment Contract' (WITH A SPACE). There is no EquipmentContract physical table.",
+  "discriminatorValue": "Equipment Contract",
+  "correctionToMyEarlierNote": "I previously wrote the value as 'EquipmentContract' (no space), inferred from the requestedProjectEntityType URL parameter. The STORED value has a space. A FIQL filter on ProjectEntityTypeName==EquipmentContract returns nothing for that reason.",
+  "restTypeIsAnAlias": "GET /rest/businessObject/EquipmentContract IS a valid REST type and returns 2,017 links - but they are the SAME Contract records (125th St NY, 1401 Branding Lane...). It is an alias/view over Contract, not a separate store. GET /rest/businessObject/EquipContract 400s.",
+  "population": {
+   "contractsSampled": 2008,
+   "typeContract": 2007,
+   "typeEquipmentContract": 1,
+   "note": "BBW holds exactly ONE equipment contract. Any conclusion about how the module behaves rests on a single record."
+  },
+  "theRecord": {
+   "lxID": 507018,
+   "projectEntityID": 1863428,
+   "contractName": "ASG Equipment Contract",
+   "clientEntityID": "ASG1234",
+   "commenceDate": "2026-09-01",
+   "expireDate": "2031-09-30",
+   "contractStatus": "Active",
+   "program": "Global",
+   "currency": "USD",
+   "populatedFieldCount": 79,
+   "note": "79 populated fields on a Contract-shaped record. Firm_* fields are present (Firm_OrgPath='BBW->BBW', Firm_SalesReportSignatureTitle='AVP Finance'), confirming firm fields apply to equipment contracts identically."
+  }
+ },
+ "navigation": {
+  "_headline": "All 32 Equipment Contract nav nodes have ZERO PageLayoutField rows. They are pure navigation structure, not content layouts.",
+  "rootPageLayoutID": 41087,
+  "nodeCount": 32,
+  "verifiedZeroPlacements": [
+   {
+    "pageLayoutID": 41087,
+    "name": "Equipment Contract",
+    "parent": null,
+    "placements": 0
+   },
+   {
+    "pageLayoutID": 41094,
+    "name": "Details",
+    "parent": "Equipment Contract",
+    "placements": 0
+   },
+   {
+    "pageLayoutID": 41095,
+    "name": "Summary",
+    "parent": "Details",
+    "placements": 0
+   },
+   {
+    "pageLayoutID": 41090,
+    "name": "Abstract Info",
+    "parent": "Equipment Contract",
+    "placements": 0
+   },
+   {
+    "pageLayoutID": 41091,
+    "name": "Abstract Details",
+    "parent": "Abstract Info",
+    "placements": 0
+   },
+   {
+    "pageLayoutID": 41092,
+    "name": "Payment Info",
+    "parent": "Equipment Contract",
+    "placements": 0
+   },
+   {
+    "pageLayoutID": 41093,
+    "name": "Payment Details",
+    "parent": "Payment Info",
+    "placements": 0
+   },
+   {
+    "pageLayoutID": 41118,
+    "name": "Accounting Info",
+    "parent": "Equipment Contract",
+    "placements": 0
+   },
+   {
+    "pageLayoutID": 45607,
+    "name": "Accounting Details",
+    "parent": "Accounting Info",
+    "placements": 0
+   },
+   {
+    "pageLayoutID": 43782,
+    "name": "ASC 842 Rent Schedule",
+    "parent": "Accounting Info",
+    "placements": 0
+   },
+   {
+    "pageLayoutID": 41119,
+    "name": "Reports",
+    "parent": "Equipment Contract",
+    "placements": 0
+   }
+  ],
+  "parentChain": "Equipment Contract (41087) -> Details (41094) -> Summary (41095); -> Abstract Info (41090) -> Abstract Details (41091); -> Payment Info (41092) -> Payment Details (41093); -> Accounting Info (41118) -> Accounting Details (45607) and ASC 842 Rent Schedule (43782); -> Reports (41119).",
+  "routePattern": "/en/pagebuilder/PForm.jsp?menuPLID={pageLayoutId}&requestedProjectEntityType=EquipmentContract&projectEntityID=1863428",
+  "routePatternNote": "requestedProjectEntityType uses the NO-SPACE form 'EquipmentContract' in the URL, while the STORED ProjectEntityTypeName uses 'Equipment Contract' with a space. Both forms are real and they are not interchangeable.",
+  "nodes": [
+   {
+    "pageLayoutID": 41087,
+    "name": "Equipment Contract",
+    "depth": 0,
+    "leaf": false,
+    "route": "/en/pagebuilder/PForm.jsp?menuPLID=41087&requestedProjectEntityType=EquipmentContract&projectEntityID=1863428"
+   },
+   {
+    "pageLayoutID": 41094,
+    "name": "Details",
+    "depth": 1,
+    "leaf": false,
+    "route": "/en/pagebuilder/PForm.jsp?menuPLID=41094&requestedProjectEntityType=EquipmentContract&projectEntityID=1863428"
+   },
+   {
+    "pageLayoutID": 41095,
+    "name": "Summary",
+    "depth": 2,
+    "leaf": true,
+    "route": "/en/pagebuilder/PForm.jsp?menuPLID=41095&requestedProjectEntityType=EquipmentContract&projectEntityID=1863428"
+   },
+   {
+    "pageLayoutID": 41128,
+    "name": "Members/Contacts",
+    "depth": 2,
+    "leaf": true,
+    "route": "/en/pagebuilder/PForm.jsp?menuPLID=41128&requestedProjectEntityType=EquipmentContract&projectEntityID=1863428"
+   },
+   {
+    "pageLayoutID": 41129,
+    "name": "Forms",
+    "depth": 2,
+    "leaf": true,
+    "route": "/en/pagebuilder/PForm.jsp?menuPLID=41129&requestedProjectEntityType=EquipmentContract&projectEntityID=1863428"
+   },
+   {
+    "pageLayoutID": 41130,
+    "name": "Work Flow",
+    "depth": 2,
+    "leaf": true,
+    "route": "/en/pagebuilder/PForm.jsp?menuPLID=41130&requestedProjectEntityType=EquipmentContract&projectEntityID=1863428"
+   },
+   {
+    "pageLayoutID": 41131,
+    "name": "Documents",
+    "depth": 2,
+    "leaf": true,
+    "route": "/en/pagebuilder/PForm.jsp?menuPLID=41131&requestedProjectEntityType=EquipmentContract&projectEntityID=1863428"
+   },
+   {
+    "pageLayoutID": 41090,
+    "name": "Abstract Info",
+    "depth": 1,
+    "leaf": false,
+    "route": "/en/pagebuilder/PForm.jsp?menuPLID=41090&requestedProjectEntityType=EquipmentContract&projectEntityID=1863428"
+   },
+   {
+    "pageLayoutID": 41091,
+    "name": "Abstract Details",
+    "depth": 2,
+    "leaf": true,
+    "route": "/en/pagebuilder/PForm.jsp?menuPLID=41091&requestedProjectEntityType=EquipmentContract&projectEntityID=1863428"
+   },
+   {
+    "pageLayoutID": 41117,
+    "name": "Terms",
+    "depth": 2,
+    "leaf": true,
+    "route": "/en/pagebuilder/PForm.jsp?menuPLID=41117&requestedProjectEntityType=EquipmentContract&projectEntityID=1863428"
+   },
+   {
+    "pageLayoutID": 41114,
+    "name": "Amendments",
+    "depth": 2,
+    "leaf": true,
+    "route": "/en/pagebuilder/PForm.jsp?menuPLID=41114&requestedProjectEntityType=EquipmentContract&projectEntityID=1863428"
+   },
+   {
+    "pageLayoutID": 41115,
+    "name": "Covenants",
+    "depth": 2,
+    "leaf": true,
+    "route": "/en/pagebuilder/PForm.jsp?menuPLID=41115&requestedProjectEntityType=EquipmentContract&projectEntityID=1863428"
+   },
+   {
+    "pageLayoutID": 41120,
+    "name": "Key Dates",
+    "depth": 2,
+    "leaf": true,
+    "route": "/en/pagebuilder/PForm.jsp?menuPLID=41120&requestedProjectEntityType=EquipmentContract&projectEntityID=1863428"
+   },
+   {
+    "pageLayoutID": 41121,
+    "name": "Responsibilities",
+    "depth": 2,
+    "leaf": true,
+    "route": "/en/pagebuilder/PForm.jsp?menuPLID=41121&requestedProjectEntityType=EquipmentContract&projectEntityID=1863428"
+   },
+   {
+    "pageLayoutID": 41122,
+    "name": "Insurance",
+    "depth": 2,
+    "leaf": true,
+    "route": "/en/pagebuilder/PForm.jsp?menuPLID=41122&requestedProjectEntityType=EquipmentContract&projectEntityID=1863428"
+   },
+   {
+    "pageLayoutID": 41092,
+    "name": "Payment Info",
+    "depth": 1,
+    "leaf": false,
+    "route": "/en/pagebuilder/PForm.jsp?menuPLID=41092&requestedProjectEntityType=EquipmentContract&projectEntityID=1863428"
+   },
+   {
+    "pageLayoutID": 41093,
+    "name": "Payment Details",
+    "depth": 2,
+    "leaf": true,
+    "route": "/en/pagebuilder/PForm.jsp?menuPLID=41093&requestedProjectEntityType=EquipmentContract&projectEntityID=1863428"
+   },
+   {
+    "pageLayoutID": 41116,
+    "name": "Recurring Payments",
+    "depth": 2,
+    "leaf": true,
+    "route": "/en/pagebuilder/PForm.jsp?menuPLID=41116&requestedProjectEntityType=EquipmentContract&projectEntityID=1863428"
+   },
+   {
+    "pageLayoutID": 41123,
+    "name": "Transactions",
+    "depth": 2,
+    "leaf": true,
+    "route": "/en/pagebuilder/PForm.jsp?menuPLID=41123&requestedProjectEntityType=EquipmentContract&projectEntityID=1863428"
+   },
+   {
+    "pageLayoutID": 41124,
+    "name": "Receipts",
+    "depth": 2,
+    "leaf": true,
+    "route": "/en/pagebuilder/PForm.jsp?menuPLID=41124&requestedProjectEntityType=EquipmentContract&projectEntityID=1863428"
+   },
+   {
+    "pageLayoutID": 41125,
+    "name": "Scheduled Offsets",
+    "depth": 2,
+    "leaf": true,
+    "route": "/en/pagebuilder/PForm.jsp?menuPLID=41125&requestedProjectEntityType=EquipmentContract&projectEntityID=1863428"
+   },
+   {
+    "pageLayoutID": 41126,
+    "name": "Allowances",
+    "depth": 2,
+    "leaf": true,
+    "route": "/en/pagebuilder/PForm.jsp?menuPLID=41126&requestedProjectEntityType=EquipmentContract&projectEntityID=1863428"
+   },
+   {
+    "pageLayoutID": 41127,
+    "name": "Security Deposit",
+    "depth": 2,
+    "leaf": true,
+    "route": "/en/pagebuilder/PForm.jsp?menuPLID=41127&requestedProjectEntityType=EquipmentContract&projectEntityID=1863428"
+   },
+   {
+    "pageLayoutID": 41118,
+    "name": "Accounting Info",
+    "depth": 1,
+    "leaf": false,
+    "route": "/en/pagebuilder/PForm.jsp?menuPLID=41118&requestedProjectEntityType=EquipmentContract&projectEntityID=1863428"
+   },
+   {
+    "pageLayoutID": 45607,
+    "name": "Accounting Details",
+    "depth": 2,
+    "leaf": true,
+    "route": "/en/pagebuilder/PForm.jsp?menuPLID=45607&requestedProjectEntityType=EquipmentContract&projectEntityID=1863428"
+   },
+   {
+    "pageLayoutID": 41153,
+    "name": "Straight-Line Rent",
+    "depth": 2,
+    "leaf": true,
+    "route": "/en/pagebuilder/PForm.jsp?menuPLID=41153&requestedProjectEntityType=EquipmentContract&projectEntityID=1863428"
+   },
+   {
+    "pageLayoutID": 43781,
+    "name": "Accounting Assumptions",
+    "depth": 2,
+    "leaf": true,
+    "route": "/en/pagebuilder/PForm.jsp?menuPLID=43781&requestedProjectEntityType=EquipmentContract&projectEntityID=1863428"
+   },
+   {
+    "pageLayoutID": 41152,
+    "name": "ASC 842 Test",
+    "depth": 2,
+    "leaf": true,
+    "route": "/en/pagebuilder/PForm.jsp?menuPLID=41152&requestedProjectEntityType=EquipmentContract&projectEntityID=1863428"
+   },
+   {
+    "pageLayoutID": 43782,
+    "name": "ASC 842 Rent Schedule",
+    "depth": 2,
+    "leaf": true,
+    "route": "/en/pagebuilder/PForm.jsp?menuPLID=43782&requestedProjectEntityType=EquipmentContract&projectEntityID=1863428"
+   },
+   {
+    "pageLayoutID": 41151,
+    "name": "IFRS 16 Rent Schedule",
+    "depth": 2,
+    "leaf": true,
+    "route": "/en/pagebuilder/PForm.jsp?menuPLID=41151&requestedProjectEntityType=EquipmentContract&projectEntityID=1863428"
+   },
+   {
+    "pageLayoutID": 41119,
+    "name": "Reports",
+    "depth": 1,
+    "leaf": false,
+    "route": "/en/pagebuilder/PForm.jsp?menuPLID=41119&requestedProjectEntityType=EquipmentContract&projectEntityID=1863428"
+   },
+   {
+    "pageLayoutID": 41154,
+    "name": "Equipment Contract Reports",
+    "depth": 2,
+    "leaf": true,
+    "route": "/en/pagebuilder/PForm.jsp?menuPLID=41154&requestedProjectEntityType=EquipmentContract&projectEntityID=1863428"
+   }
+  ]
+ },
+ "_openItem": "FIQL does not work as documented in the OpenAPI spec - fiql=ProjectEntityTypeName==Contract returns {} even though 2,007 records match. Either the syntax differs from the spec or the field is not FIQL-queryable. Not chased; the $top scan worked instead.",
+ "screenshots": {
+  "_status": "4 of 32 nodes captured. The other 28 CANNOT be captured standalone - see whyOnly4.",
+  "_dir": "docs/assets/screenshots/bbw-enduser/",
+  "_tool": "shot2.mjs on a pinned tab (TAB=), 1728px, all FULL, none right-cropped.",
+  "_firstEverInThisTenant": "Per bbw-vs-american-freight.md S14, no end-user screen in BBW had ever been rendered. These are the first.",
+  "files": [
+   {
+    "file": "eq-01-details-summary.jpg",
+    "screen": "Details : Summary",
+    "menuPLID": 41095
+   },
+   {
+    "file": "eq-02-abstract-details.jpg",
+    "screen": "Abstract Info : Abstract Details",
+    "menuPLID": 41091
+   },
+   {
+    "file": "eq-03-payment-details.jpg",
+    "screen": "Payment Info : Payment Details",
+    "menuPLID": 41093
+   },
+   {
+    "file": "eq-04-accounting-details.jpg",
+    "screen": "Accounting Info : Accounting Details",
+    "menuPLID": 45607
+   }
+  ],
+  "verifiedDistinct": "All four md5s differ, so these are four genuinely different screens, not the same page saved four times.",
+  "whyOnly4": {
+   "groupNodesRedirect": "A group node (Details 41094, Abstract Info 41090, Payment Info 41092, Accounting Info 41118) renders IDENTICALLY to its first leaf - it redirects there. Those duplicate captures were deleted rather than kept under distinct names.",
+   "accessDenied": "Members & Contacts (41128), Forms (41129), Work Flow (41130), Documents, Reports and several others return /en/ErrorPages/AccessDenied.jsp. The capturing user lacks rights to them. The 46KB files were Access Denied pages and were discarded by the URL guard.",
+   "panelOnly": "The remaining deep leaves (Terms 41102, Amendments, Covenants, Key Dates, Insurance, Transactions, Straight-Line Rent, ASC 842 Test, ASC 842 Rent Schedule 43782, IFRS 16 and others) return a 14KB EMPTY FRAGMENT when requested standalone, or bounce to /en/project/EntityInfo.jsp which renders the default Summary.",
+   "theStructuralReason": "EntityInfo.jsp is the record SHELL and loads the active sub-screen into an inner iframe at EntityInfo.jsp?projectEntityID={id}&inPanel=true. A sub-screen is selected by the in-app left menu tree, not by URL. PForm.jsp?menuPLID=... is NOT a routable deep link for these nodes - adding &inPanel=true does not change it.",
+   "consequenceIfIgnored": "Sweeping all 32 URLs naively would have produced ~20 files with distinct names all containing the SAME default Summary page, plus ~6 Access Denied pages. The URL guard caught every one."
+  },
+  "_caveat": "BBW holds exactly ONE equipment contract, so these four screens show one record's population, not the module's range. Empty sections may be empty for this record rather than unused in the module."
+ },
+ "detailsSummaryFieldList": {
+  "_evidence": "Observed. Read from the inner content frame (EntityInfo.jsp?projectEntityID=1863428&inPanel=true) of the rendered record.",
+  "fieldCount": 39,
+  "requiredMarkedFields": 0,
+  "_headline": "39 labels, and ZERO carry the required class. No field on the Equipment Contract Summary is marked required to an end user.",
+  "bearingOnTheRequiredQuestion": "SUPERSEDED - see _WITHDRAWN_bearingOnTheRequiredQuestion. This screen is view-mode and cannot discriminate.",
+  "sections": [
+   "Equipment Contract Summary",
+   "General Information",
+   "Critical Dates",
+   "Payment Details",
+   "Assets",
+   "Notes"
+  ],
+  "fields": [
+   {
+    "label": "Equipment Contract Summary",
+    "requiredClass": false,
+    "sampleValue": ""
+   },
+   {
+    "label": "Group",
+    "requiredClass": false,
+    "sampleValue": ""
+   },
+   {
+    "label": "Type",
+    "requiredClass": false,
+    "sampleValue": ""
+   },
+   {
+    "label": "Category",
+    "requiredClass": false,
+    "sampleValue": ""
+   },
+   {
+    "label": "Contract Status",
+    "requiredClass": false,
+    "sampleValue": ""
+   },
+   {
+    "label": "Contract ID",
+    "requiredClass": false,
+    "sampleValue": ""
+   },
+   {
+    "label": "Portfolio",
+    "requiredClass": false,
+    "sampleValue": ""
+   },
+   {
+    "label": "Usage",
+    "requiredClass": false,
+    "sampleValue": ""
+   },
+   {
+    "label": "Status Effective Date",
+    "requiredClass": false,
+    "sampleValue": ""
+   },
+   {
+    "label": "General Information",
+    "requiredClass": false,
+    "sampleValue": ""
+   },
+   {
+    "label": "Contract Name",
+    "requiredClass": false,
+    "sampleValue": ""
+   },
+   {
+    "label": "Location",
+    "requiredClass": false,
+    "sampleValue": ""
+   },
+   {
+    "label": "Entity Email",
+    "requiredClass": false,
+    "sampleValue": "1863428_bbw@train-lxretail3.lucernex.com"
+   },
+   {
+    "label": "Description",
+    "requiredClass": false,
+    "sampleValue": ""
+   },
+   {
+    "label": "Organization",
+    "requiredClass": false,
+    "sampleValue": ""
+   },
+   {
+    "label": "Asset Class",
+    "requiredClass": false,
+    "sampleValue": ""
+   },
+   {
+    "label": "Master Contract",
+    "requiredClass": false,
+    "sampleValue": ""
+   },
+   {
+    "label": "Currency Type",
+    "requiredClass": false,
+    "sampleValue": ""
+   },
+   {
+    "label": "Is Short Term",
+    "requiredClass": false,
+    "sampleValue": ""
+   },
+   {
+    "label": "Related Contracts (if any)",
+    "requiredClass": false,
+    "sampleValue": ""
+   },
+   {
+    "label": "Is Low Asset Value",
+    "requiredClass": false,
+    "sampleValue": ""
+   },
+   {
+    "label": "Contract List",
+    "requiredClass": false,
+    "sampleValue": "NameCell value has been editedContract NumberCell value has been edite"
+   },
+   {
+    "label": "Critical Dates",
+    "requiredClass": false,
+    "sampleValue": ""
+   },
+   {
+    "label": "Commence Date",
+    "requiredClass": false,
+    "sampleValue": ""
+   },
+   {
+    "label": "Expire Date",
+    "requiredClass": false,
+    "sampleValue": ""
+   },
+   {
+    "label": "Payments Begin Date",
+    "requiredClass": false,
+    "sampleValue": ""
+   },
+   {
+    "label": "Payments End Date",
+    "requiredClass": false,
+    "sampleValue": ""
+   },
+   {
+    "label": "Possession Date",
+    "requiredClass": false,
+    "sampleValue": ""
+   },
+   {
+    "label": "Execute Date",
+    "requiredClass": false,
+    "sampleValue": ""
+   },
+   {
+    "label": "Option Description",
+    "requiredClass": false,
+    "sampleValue": ""
+   },
+   {
+    "label": "Payment Details",
+    "requiredClass": false,
+    "sampleValue": ""
+   },
+   {
+    "label": "Current Monthly Payment",
+    "requiredClass": false,
+    "sampleValue": ""
+   },
+   {
+    "label": "Current Annual Payment",
+    "requiredClass": false,
+    "sampleValue": ""
+   },
+   {
+    "label": "Aggregate Payment",
+    "requiredClass": false,
+    "sampleValue": ""
+   },
+   {
+    "label": "Remaining Payment Obligation",
+    "requiredClass": false,
+    "sampleValue": ""
+   },
+   {
+    "label": "Is Translation",
+    "requiredClass": false,
+    "sampleValue": ""
+   },
+   {
+    "label": "Assets",
+    "requiredClass": false,
+    "sampleValue": ""
+   },
+   {
+    "label": "Equipment",
+    "requiredClass": false,
+    "sampleValue": "Cell value has been editedAsset GroupCell value has been editedAsset T"
+   },
+   {
+    "label": "Notes",
+    "requiredClass": false,
+    "sampleValue": ""
+   }
+  ],
+  "_WITHDRAWN_bearingOnTheRequiredQuestion": {
+   "_raisedBy": "kb-builder",
+   "_date": "2026-09-13",
+   "whatIClaimed": "39 labels with zero required markers - Contract Status, Location and Master Contract all present and none asterisked - supports the reframe that there is no fourth required layer.",
+   "whyItDoesNotFollow": "eq-01 is a VIEW-MODE page. There is an Edit action in the right-hand rail, and the same is true of ct-03. A view-mode page has no reason to mark anything required because there is nothing to fill in. An all-plain result is exactly what you would see WHETHER OR NOT a fourth layer exists.",
+   "sameShapeAsMyOwn98925Caveat": "A method validated only against a case that cannot discriminate. I raised exactly this objection against my own DisplayOption test on 98925 and then failed to apply it to my own reading of eq-01.",
+   "status": "WITHDRAWN as evidence. The reframe is neither confirmed nor refuted by this screen.",
+   "outstandingTest": "Open ONE record in EDIT mode and compare which fields render asterisked against the schema-required set for that primary table."
+  }
+ }
+}

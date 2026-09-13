@@ -10,5 +10,6 @@
 <nav><a href="../index.html">Overview</a><a href="../atlas.html#/map?set=feature">Feature map</a>
 <a href="../atlas.html">Interactive app</a>
 <a href="../entities/index.html">Record types</a><a href="../rules/index.html">Rules</a>
+<a href="../research/index.html">Research</a>
 <a href="../questions.html">Open questions</a></nav></header>
 <main><p class="crumb"><a href="../index.html">Atlas</a> &rsaquo; <a href="index.html">Rules</a> &rsaquo; TAX-R-011</p><h1 class="mono">TAX-R-011</h1><p class="sub">Property Tax &middot; An appeal&#x27;s outcome does not automatically adjust an already-issued bill</p><span class="tag der">Derived</span><p>Input: No FK from `PropertyTaxAppeal` or `PropertyTaxAppealAward` to `PropertyTaxBill` or `PropertyTaxDetail`. Effect: Reconciling a won appeal&#x27;s computed reduction (`AssessmentReduction`/`TaxReduction`/`NetTaxReduction`) against bills already issued or paid is not represented anywhere in this object model. Confidence: Derived (absence of any such FK, exhaustive read); see `appeals.md`§3.</p><p style="font-size:11.5px;color:var(--faint);margin-top:18px">Source: modules/property-tax/rules.md</p></main></body></html>

@@ -1,0 +1,8847 @@
+{
+ "_firm": "(ASG)BBW",
+ "_captured": "2026-09-13",
+ "_status": "COMPLETE for 207 of 207 platform drop-down tables.",
+ "_evidence": "Observed.",
+ "_method": "Per af-tracker's recipe, with one correction: BOType=FirmCode must be on the PAGE url so the emitted storeUrl carries it. GET /en/admin/FirmCodeEdit.jsp?&popupList=true&includeType=Manage&TableType={tt}&BOType=FirmCode -> regex \"storeUrl\":\"(...)\" and BOListExtEdit_\\d+ -> GET storeUrl + '&start=0&limit=5000&isGridEdit=true&searchTextkey=&fdName={fd}'.",
+ "_captureIssue": "RESOLVED. The earlier alternating failures were tab contention between three agents sharing a Chrome tab pool. team-lead added TAB=<targetId> pinning to the shared drivers; on a pinned tab every remaining batch succeeded first time. The failures were never timeouts.",
+ "totals": {
+  "tablesTargeted": 207,
+  "tablesCaptured": 207,
+  "tablesWithAtLeastOneValue": 71,
+  "tablesEmpty": 136,
+  "valuesCaptured": 1217,
+  "valuesReadOnly": 154,
+  "valuesFirmEditable": 1063
+ },
+ "afTrackerTest": {
+  "question": "Does any value carry the same LxBOID in both tenants but a different isReadOnlyRecord?",
+  "bbwSide": "Captured per value below: LxBOID, LxBOName, isReadOnlyRecord, Inactive. Join on LxBOID against the AF capture to run the test.",
+  "bbwReadOnlyCount": 122,
+  "note": "If seeded rows match on both id and flag, provenance is confirmed; if the same id carries different flags, per-tenant config or reference-counting is proven and the isReadOnlyRecord reading needs revisiting."
+ },
+ "tables": [
+  {
+   "tableType": 2162,
+   "name": "ASC 842 Schedule Type Code",
+   "totalCount": 11,
+   "valueCount": 11,
+   "values": [
+    {
+     "LxBOID": "543",
+     "name": "842 - CA",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "559",
+     "name": "842 - CA 2",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "546",
+     "name": "842 - KM",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "538",
+     "name": "842 - LL",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "537",
+     "name": "842 - Main",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "544",
+     "name": "842 - O",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "545",
+     "name": "842 - O2",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "539",
+     "name": "842 - S",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "547",
+     "name": "842 - S2",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "536",
+     "name": "842 - U",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "509",
+     "name": "842 Rent",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    }
+   ]
+  },
+  {
+   "tableType": 2075,
+   "name": "Address Group Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2076,
+   "name": "Address Type Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2182,
+   "name": "Adjustment Method Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2077,
+   "name": "Agreement Type Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2078,
+   "name": "Allowance Group Code",
+   "totalCount": 4,
+   "valueCount": 4,
+   "values": [
+    {
+     "LxBOID": "245",
+     "name": "Abatement",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "246",
+     "name": "Cash",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "247",
+     "name": "Combination",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "248",
+     "name": "None",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    }
+   ]
+  },
+  {
+   "tableType": 2079,
+   "name": "Allowance Type Code",
+   "totalCount": 4,
+   "valueCount": 4,
+   "values": [
+    {
+     "LxBOID": "573",
+     "name": "Collected",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "574",
+     "name": "None",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "575",
+     "name": "Open",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "576",
+     "name": "Partially Collected",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    }
+   ]
+  },
+  {
+   "tableType": 2080,
+   "name": "Amendment Group Code",
+   "totalCount": 3,
+   "valueCount": 3,
+   "values": [
+    {
+     "LxBOID": "932",
+     "name": "Lease",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "933",
+     "name": "Notices",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "934",
+     "name": "SNDA-Estoppels",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    }
+   ]
+  },
+  {
+   "tableType": 3002,
+   "name": "Amendment Type Code",
+   "totalCount": 16,
+   "valueCount": 16,
+   "values": [
+    {
+     "LxBOID": "919",
+     "name": "Agreement",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "920",
+     "name": "Amendment",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "925",
+     "name": "Assignment",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "926",
+     "name": "Change in Ownership",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "927",
+     "name": "Commencement Date Letter",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "928",
+     "name": "Delivery/Possession",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "933",
+     "name": "Estoppel",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "929",
+     "name": "Kickout",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "921",
+     "name": "Lease",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "930",
+     "name": "Notice",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "931",
+     "name": "Option",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "922",
+     "name": "Option",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "923",
+     "name": "Rider",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "934",
+     "name": "SNDA",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "924",
+     "name": "Storage",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "932",
+     "name": "Waiver",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    }
+   ]
+  },
+  {
+   "tableType": 2000,
+   "name": "Appointment Type Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2081,
+   "name": "Approval Status Code",
+   "totalCount": 3,
+   "valueCount": 3,
+   "values": [
+    {
+     "LxBOID": "768",
+     "name": "Approved",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "769",
+     "name": "Denied",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "770",
+     "name": "Review",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    }
+   ]
+  },
+  {
+   "tableType": 2083,
+   "name": "Area Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2047,
+   "name": "Asset Category Code",
+   "totalCount": 10,
+   "valueCount": 10,
+   "values": [
+    {
+     "LxBOID": "1701",
+     "name": "Building Systems - Other",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "1702",
+     "name": "Demised Premises",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "1703",
+     "name": "Exterior Common Area Maintenance",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "1704",
+     "name": "HVAC",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "1705",
+     "name": "Interior Common Area Maintenance",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "1706",
+     "name": "Janitorial",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "1707",
+     "name": "Other",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "1708",
+     "name": "Roof/Structure",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "1709",
+     "name": "Trash",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "1710",
+     "name": "Utilities",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    }
+   ]
+  },
+  {
+   "tableType": 2084,
+   "name": "Asset Class Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2001,
+   "name": "Asset Department Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2002,
+   "name": "Asset Group Code",
+   "totalCount": 1,
+   "valueCount": 1,
+   "values": [
+    {
+     "LxBOID": "104",
+     "name": "ASG",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    }
+   ]
+  },
+  {
+   "tableType": 2003,
+   "name": "Asset Operation Status Code",
+   "totalCount": 5,
+   "valueCount": 5,
+   "values": [
+    {
+     "LxBOID": "385",
+     "name": "Active",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "386",
+     "name": "Inactive",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "387",
+     "name": "Purchased",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "388",
+     "name": "Replaced",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "389",
+     "name": "Retired",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    }
+   ]
+  },
+  {
+   "tableType": 2004,
+   "name": "Asset Product Type Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2005,
+   "name": "Asset Suspension Status Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 3000,
+   "name": "Asset Type Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2085,
+   "name": "Asset Type Test Code",
+   "totalCount": 2,
+   "valueCount": 2,
+   "values": [
+    {
+     "LxBOID": "201",
+     "name": "Other",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "202",
+     "name": "Real Estate",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    }
+   ]
+  },
+  {
+   "tableType": 2086,
+   "name": "Base Year Amount Type Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2006,
+   "name": "Budget Change Reason Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2007,
+   "name": "Budget Column Status Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2008,
+   "name": "Budget Value Units Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2009,
+   "name": "Building Area Unit Code",
+   "totalCount": 2,
+   "valueCount": 2,
+   "values": [
+    {
+     "LxBOID": "323",
+     "name": "Square Feet",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "324",
+     "name": "Square Meters",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    }
+   ]
+  },
+  {
+   "tableType": 2010,
+   "name": "Building Class Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2011,
+   "name": "CAM Category Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2137,
+   "name": "CPI Index Code",
+   "totalCount": 5,
+   "valueCount": 5,
+   "values": [
+    {
+     "LxBOID": "4560",
+     "name": "BLS_CUUR0000SA0",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "4561",
+     "name": "BLS_CWUR0000SA0",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "4562",
+     "name": "BLS_PCUOMFG--OMFG--",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "4563",
+     "name": "Contract Specific",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "4564",
+     "name": "ONS_CHAW MM23",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    }
+   ]
+  },
+  {
+   "tableType": 2164,
+   "name": "Cap Type Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2012,
+   "name": "Change Department Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2013,
+   "name": "Change Package Type Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2015,
+   "name": "Change Source Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2016,
+   "name": "Change Type Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2017,
+   "name": "Classification Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2087,
+   "name": "Co Tenancy Group Code",
+   "totalCount": 1,
+   "valueCount": 1,
+   "values": [
+    {
+     "LxBOID": "60",
+     "name": "Co-Tenancy",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    }
+   ]
+  },
+  {
+   "tableType": 2088,
+   "name": "Co Tenancy Type Code",
+   "totalCount": 3,
+   "valueCount": 3,
+   "values": [
+    {
+     "LxBOID": "92",
+     "name": "Both",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "93",
+     "name": "Ongoing",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "94",
+     "name": "Opening",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    }
+   ]
+  },
+  {
+   "tableType": 2089,
+   "name": "Company Group Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2018,
+   "name": "Competitor Type Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2019,
+   "name": "Complex Status Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2020,
+   "name": "Complex Type Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2091,
+   "name": "Concept Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2021,
+   "name": "Construction Type Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2022,
+   "name": "Contact Type Code",
+   "totalCount": 17,
+   "valueCount": 17,
+   "values": [
+    {
+     "LxBOID": "10006",
+     "name": "Broker",
+     "isReadOnlyRecord": true,
+     "inactive": "Yes"
+    },
+    {
+     "LxBOID": "10083",
+     "name": "Client",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "10007",
+     "name": "Construction Manager",
+     "isReadOnlyRecord": true,
+     "inactive": "Yes"
+    },
+    {
+     "LxBOID": "10008",
+     "name": "Employer",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "10009",
+     "name": "Equipment Manager",
+     "isReadOnlyRecord": true,
+     "inactive": "Yes"
+    },
+    {
+     "LxBOID": "10010",
+     "name": "Landlord",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "10011",
+     "name": "Lawyer",
+     "isReadOnlyRecord": true,
+     "inactive": "Yes"
+    },
+    {
+     "LxBOID": "10060",
+     "name": "Lease Admin Mail",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "10065",
+     "name": "Notice",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "10063",
+     "name": "Other",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "10012",
+     "name": "Primary Owner",
+     "isReadOnlyRecord": true,
+     "inactive": "Yes"
+    },
+    {
+     "LxBOID": "10013",
+     "name": "Property Manager",
+     "isReadOnlyRecord": true,
+     "inactive": "Yes"
+    },
+    {
+     "LxBOID": "10062",
+     "name": "Sales Reporting",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "10014",
+     "name": "Team Member",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "10018",
+     "name": "Third Party - ASG",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "10094",
+     "name": "Third Party - Client",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "10015",
+     "name": "Vendor",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    }
+   ]
+  },
+  {
+   "tableType": 2092,
+   "name": "Contract Category Code",
+   "totalCount": 2,
+   "valueCount": 2,
+   "values": [
+    {
+     "LxBOID": "295",
+     "name": "Capital",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "294",
+     "name": "Operating",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    }
+   ]
+  },
+  {
+   "tableType": 2093,
+   "name": "Contract Group Code",
+   "totalCount": 1,
+   "valueCount": 1,
+   "values": [
+    {
+     "LxBOID": "561",
+     "name": "Real Estate",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    }
+   ]
+  },
+  {
+   "tableType": 2094,
+   "name": "Contract Status Code",
+   "totalCount": 3,
+   "valueCount": 3,
+   "values": [
+    {
+     "LxBOID": "1253",
+     "name": "Active",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "1309",
+     "name": "AI Abstracted",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "1255",
+     "name": "Inactive",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    }
+   ]
+  },
+  {
+   "tableType": 3003,
+   "name": "Contract Type Code",
+   "totalCount": 7,
+   "valueCount": 7,
+   "values": [
+    {
+     "LxBOID": "1268",
+     "name": "Distribution Center",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "1362",
+     "name": "Equipment",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "1265",
+     "name": "Office",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "1269",
+     "name": "Storage",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "1264",
+     "name": "Store",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "1267",
+     "name": "Sublease",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "1361",
+     "name": "Warehouse",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    }
+   ]
+  },
+  {
+   "tableType": 2095,
+   "name": "Contract Use Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2156,
+   "name": "Covenant Category Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2096,
+   "name": "Covenant Group Code",
+   "totalCount": 8,
+   "valueCount": 8,
+   "values": [
+    {
+     "LxBOID": "689",
+     "name": "Audit",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "690",
+     "name": "Key Dates",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "691",
+     "name": "Key Definitions",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "692",
+     "name": "Lease Clauses",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "693",
+     "name": "Other",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "694",
+     "name": "Percent Rent",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "695",
+     "name": "Storage",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "696",
+     "name": "Use",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    }
+   ]
+  },
+  {
+   "tableType": 2157,
+   "name": "Covenant Status Code",
+   "totalCount": 5,
+   "valueCount": 5,
+   "values": [
+    {
+     "LxBOID": "184",
+     "name": "Active",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "242",
+     "name": "AI Abstracted",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "185",
+     "name": "Deleted",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "186",
+     "name": "Inactive",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "187",
+     "name": "Not Applicable",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    }
+   ]
+  },
+  {
+   "tableType": 2097,
+   "name": "Covenant Template Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 3004,
+   "name": "Covenant Type Code",
+   "totalCount": 62,
+   "valueCount": 62,
+   "values": [
+    {
+     "LxBOID": "20004",
+     "name": "Alterations",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "19995",
+     "name": "Anchor",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "20005",
+     "name": "Assignment/Sublet",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "19980",
+     "name": "Audit Rights - No/Statements Due",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "19981",
+     "name": "Audit Rights - Yes/Statements Due",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "19983",
+     "name": "Blackout/Slack Period",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "20219",
+     "name": "BOPIS Space Area",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "19996",
+     "name": "Center",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "19997",
+     "name": "CPI",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "20006",
+     "name": "Damage/Destruction",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "20007",
+     "name": "Default Landlord",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "20008",
+     "name": "Default Tenant",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "19998",
+     "name": "Department Stores",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "20232",
+     "name": "Director Action Required",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "19984",
+     "name": "Downsize",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "20009",
+     "name": "Estoppel/SNDA",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "19999",
+     "name": "Exclusive Use",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "20000",
+     "name": "Exclusive Use - Co-Tenants",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "19985",
+     "name": "Expansion",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "20010",
+     "name": "Force Majeure",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "19986",
+     "name": "Go Dark",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "20011",
+     "name": "Guaranty",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "20012",
+     "name": "Holdover",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "20013",
+     "name": "Insurance",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "19987",
+     "name": "Kickout",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "19988",
+     "name": "Kickout - Landlord",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "20014",
+     "name": "Kiosks",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "20015",
+     "name": "Landlord Access",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "20016",
+     "name": "Late Payments",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "20120",
+     "name": "Lease Buyout",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "20001",
+     "name": "Lease Year",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "20002",
+     "name": "Major",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "20240",
+     "name": "Moth Ball",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "19982",
+     "name": "Objections to Statements",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "20017",
+     "name": "Operating Requirement",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "20029",
+     "name": "Other",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "20065",
+     "name": "Pandemic Closure",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "20018",
+     "name": "Parking",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "20003",
+     "name": "Partial Month Calculations",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "20030",
+     "name": "Percent Rent",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "20032",
+     "name": "Permitted Use/Alcohol",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "20033",
+     "name": "Prohibited Use",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "20242",
+     "name": "Pylon Signage",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "19989",
+     "name": "Radius Restriction",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "20129",
+     "name": "Recapture",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "20019",
+     "name": "Relocation",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "20020",
+     "name": "Remeasurement Rights",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "19990",
+     "name": "Remodel Requirement",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "19991",
+     "name": "Rent Conversion",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "20021",
+     "name": "Required Advertising",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "20022",
+     "name": "Required Delivery of Notices",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "20023",
+     "name": "Required Return in Original Condition",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "20024",
+     "name": "Right of First Refusal",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "20025",
+     "name": "Signage",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "20031",
+     "name": "Storage",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "19992",
+     "name": "Temporary Space",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "19993",
+     "name": "Termination - Landlord",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "19994",
+     "name": "Termination - Tenant",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "20026",
+     "name": "Trade Name",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "20034",
+     "name": "Use",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "20027",
+     "name": "Utility",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "20028",
+     "name": "Utility Reference",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    }
+   ]
+  },
+  {
+   "tableType": 2023,
+   "name": "Coverage Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2024,
+   "name": "Deal Type Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2025,
+   "name": "Decision Status Code",
+   "totalCount": 3,
+   "valueCount": 3,
+   "values": [
+    {
+     "LxBOID": "94",
+     "name": "In Consideration",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "95",
+     "name": "Not Selected",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "96",
+     "name": "Selected",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    }
+   ]
+  },
+  {
+   "tableType": 2026,
+   "name": "Demographic Results Type Code",
+   "totalCount": 2,
+   "valueCount": 2,
+   "values": [
+    {
+     "LxBOID": "218",
+     "name": "Retail Sales Potential",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "219",
+     "name": "Sales Forecast",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    }
+   ]
+  },
+  {
+   "tableType": 2098,
+   "name": "Denominator Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2027,
+   "name": "Discipline Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2028,
+   "name": "Distribution Center Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2029,
+   "name": "Document Content Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2030,
+   "name": "Document Type Code",
+   "totalCount": 4,
+   "valueCount": 4,
+   "values": [
+    {
+     "LxBOID": "3049",
+     "name": "Document",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "3050",
+     "name": "Drawing",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "3051",
+     "name": "Image",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "3052",
+     "name": "Spreadsheet",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    }
+   ]
+  },
+  {
+   "tableType": 2165,
+   "name": "Escalation Category Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2166,
+   "name": "Escalation Group Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2099,
+   "name": "Escalation Payment Method Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2167,
+   "name": "Escalation Type Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2100,
+   "name": "Evaluation Rating Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2101,
+   "name": "Exchange Rate Type Code",
+   "totalCount": 2,
+   "valueCount": 2,
+   "values": [
+    {
+     "LxBOID": "538",
+     "name": "Cash",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "539",
+     "name": "Period Average",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    }
+   ]
+  },
+  {
+   "tableType": 2183,
+   "name": "Exclusion Cap Code",
+   "totalCount": 26,
+   "valueCount": 26,
+   "values": [
+    {
+     "LxBOID": "54",
+     "name": "Bad Debt, CC Fees",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "59",
+     "name": "Bad Debt, CC Fees, Emp Sales",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "66",
+     "name": "Bad Debt, CC Fees, Emp Sales, OBOO",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "65",
+     "name": "Bad Debt, CC Fees, Emp Sales, Sales Tax",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "70",
+     "name": "Bad Debt, CC Fees, Sales Tax",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "71",
+     "name": "Bad Debt, Charge Backs, Emp Sales, OOBO, Returns",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "55",
+     "name": "Bad Debt, Emp Sales",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "56",
+     "name": "Bad Debt, Emp Sales, OOBO, Returns - Non-Home",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "61",
+     "name": "Bad Debt, Emp Sales, Returns-Home & Non-Home",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "63",
+     "name": "Bad Debt, Emp Sales, Sales Tax",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "73",
+     "name": "Bad Debt, ES, OOBO",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "74",
+     "name": "BD, Charge Backs",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "57",
+     "name": "BOPIS, OOBO, Returns - ALL",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "58",
+     "name": "BOPIS, OOBO, Returns - ALL (B)",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "60",
+     "name": "BOPIS, OOBO, Ship from Store",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "75",
+     "name": "BOPIS, SFS",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "62",
+     "name": "CC Fees, Returns - All",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "68",
+     "name": "CC Fees, Returns - Home",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "79",
+     "name": "CC, Emp Sales",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "72",
+     "name": "Emp Sales/BD/Returns Non Home",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "64",
+     "name": "Returns - ALL",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "69",
+     "name": "Returns - Home, Non-Home",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "80",
+     "name": "Returns ALL, Internet ALL",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "81",
+     "name": "Returns ALL, Internet ALL (#2)",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "77",
+     "name": "Returns and Internet",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "78",
+     "name": "Returns and Internet (A)",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    }
+   ]
+  },
+  {
+   "tableType": 2168,
+   "name": "Exp Rec Based On Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2102,
+   "name": "Expense Acct Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2103,
+   "name": "Expense Category Code",
+   "totalCount": 3,
+   "valueCount": 3,
+   "values": [
+    {
+     "LxBOID": "1157",
+     "name": "Expense",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "1155",
+     "name": "Lease Payment",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "1156",
+     "name": "Rent",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    }
+   ]
+  },
+  {
+   "tableType": 2104,
+   "name": "Expense Group Code",
+   "totalCount": 5,
+   "valueCount": 5,
+   "values": [
+    {
+     "LxBOID": "1546",
+     "name": "Base Rent",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "1547",
+     "name": "Operating Expenses",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "1548",
+     "name": "Percent Rent",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "1549",
+     "name": "Real Estate Taxes",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "1550",
+     "name": "Utilities",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    }
+   ]
+  },
+  {
+   "tableType": 3013,
+   "name": "Expense Type Code",
+   "totalCount": 150,
+   "valueCount": 150,
+   "values": [
+    {
+     "LxBOID": "27560",
+     "name": "Abatement",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27572",
+     "name": "Adjusted Net Sales",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27587",
+     "name": "Advertising",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27561",
+     "name": "Base Rent",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27562",
+     "name": "Base Rent - CPI Fixed",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27563",
+     "name": "Base Rent - CPI Variable",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27564",
+     "name": "Base Rent - Defer Repay",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27565",
+     "name": "Base Rent - Other",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27566",
+     "name": "Base Rent - Prepaid",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27567",
+     "name": "Base Rent - Temp Space",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27775",
+     "name": "CAM Utilities - Fixed",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27620",
+     "name": "Chilled Water",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27573",
+     "name": "City/Town Tax",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27574",
+     "name": "City/Town Tax - YEA",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27588",
+     "name": "Common Area",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27589",
+     "name": "Common Area - CPI Fixed",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27590",
+     "name": "Common Area - CPI Variable",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27591",
+     "name": "Common Area - Fixed",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27592",
+     "name": "Common Area - Uncontrollable",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27593",
+     "name": "Common Area - YEA",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27785",
+     "name": "Common Area *Non Escrowed",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27569",
+     "name": "Co-Tenancy",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27621",
+     "name": "Electric",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27622",
+     "name": "Electric - Sign",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27623",
+     "name": "Electric - YEA",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27624",
+     "name": "Environmental",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27625",
+     "name": "Environmental - YEA",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27570",
+     "name": "Excess Rent",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27594",
+     "name": "Fire",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27596",
+     "name": "Fire - Fixed",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27678",
+     "name": "Fire Detection Service - Fixed",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27595",
+     "name": "Fixed Advertising",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27626",
+     "name": "Fixed Electric",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27627",
+     "name": "Fixed HVAC",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27597",
+     "name": "Fixed Marketing",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27598",
+     "name": "Fixed Media Fund",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27599",
+     "name": "Fixed Merchants Association",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27600",
+     "name": "Fixed Promo",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27628",
+     "name": "Fixed Trash",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27629",
+     "name": "Fixed Water",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27630",
+     "name": "Gas",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27631",
+     "name": "Gas - YEA",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27575",
+     "name": "Gross Receipts Tax",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27576",
+     "name": "Gross Receipts Tax - YEA",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27632",
+     "name": "HVAC",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27747",
+     "name": "HVAC - CPI Fixed",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27748",
+     "name": "HVAC - CPI Variable",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27757",
+     "name": "HVAC - Equipment",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27664",
+     "name": "HVAC - Fixed",
+     "isReadOnlyRecord": false,
+     "inactive": "Yes"
+    },
+    {
+     "LxBOID": "27633",
+     "name": "HVAC - YEA",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27601",
+     "name": "HVAC Equipment",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27665",
+     "name": "HVAC Equipment - Fixed",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27602",
+     "name": "Insurance",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27749",
+     "name": "Insurance - CPI Fixed",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27750",
+     "name": "Insurance - CPI Variable",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27666",
+     "name": "Insurance - Fixed",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27603",
+     "name": "Insurance - YEA",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27794",
+     "name": "Insurance *Non Escrowed",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27634",
+     "name": "Internet",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27777",
+     "name": "Internet - Fixed",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27604",
+     "name": "Mall HVAC",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27741",
+     "name": "Mall HVAC - Fixed",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27755",
+     "name": "Marketing - CPI Fixed",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27756",
+     "name": "Marketing - CPI Variable",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27667",
+     "name": "Marketing - Fixed",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27605",
+     "name": "Marketing Fund",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27606",
+     "name": "Media Fund",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27607",
+     "name": "Merchants Association",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27659",
+     "name": "Merchants Association - CPI Fixed",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27660",
+     "name": "Merchants Association - CPI Variable",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27668",
+     "name": "Merchants Association - Fixed",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27577",
+     "name": "Occupancy Tax",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27608",
+     "name": "OpEx - Defer Repay",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27578",
+     "name": "Other",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27609",
+     "name": "Other Landlord Misc",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27766",
+     "name": "Other Landlord Misc - Fixed",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27795",
+     "name": "Other Landlord Misc - YEA",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27610",
+     "name": "Parking",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27778",
+     "name": "Parking - Fixed",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27571",
+     "name": "Percent Rent",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27611",
+     "name": "Pest Control",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27612",
+     "name": "Promotion Fund",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27661",
+     "name": "Promotional Fund - CPI Fixed",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27662",
+     "name": "Promotional Fund - CPI Variable",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27613",
+     "name": "Pylon",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27746",
+     "name": "Pylon - Fixed",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27784",
+     "name": "Real Estate *Non Escrowed",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27579",
+     "name": "Real Estate Taxes",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27582",
+     "name": "Real Estate Taxes - Defer Repay",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27677",
+     "name": "Real Estate Taxes - Fixed",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27580",
+     "name": "Real Estate Taxes - YEA",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27927",
+     "name": "Reinstatement Fees",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27614",
+     "name": "Repair & Maintenance",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27581",
+     "name": "Sales Tax",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27583",
+     "name": "School Tax",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27584",
+     "name": "School Tax - YEA",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27615",
+     "name": "Security",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27753",
+     "name": "Security - CPI Fixed",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27754",
+     "name": "Security - CPI Variable",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27669",
+     "name": "Security - Fixed",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27568",
+     "name": "Security Deposit",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27635",
+     "name": "Sewer",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27636",
+     "name": "Sewer - YEA",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27616",
+     "name": "Snow - YEA",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27617",
+     "name": "Snow Removal",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27618",
+     "name": "Sprinkler",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27752",
+     "name": "Sprinkler - CPI Fixed",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27751",
+     "name": "Sprinkler - CPI Variable",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27670",
+     "name": "Sprinkler - Fixed",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27663",
+     "name": "Storage",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27768",
+     "name": "Storage - CPI Fixed",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27769",
+     "name": "Storage - CPI Variable",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27776",
+     "name": "Storage 2",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27637",
+     "name": "Trash",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27680",
+     "name": "Trash - CPI Fixed",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27681",
+     "name": "Trash - CPI Variable",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27638",
+     "name": "Trash - YEA",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27585",
+     "name": "Use Tax",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27586",
+     "name": "Use Tax - YEA",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27639",
+     "name": "Utilities - Defer Repay",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27640",
+     "name": "Utilities - Other",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27641",
+     "name": "Water",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27642",
+     "name": "Water - YEA",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27715",
+     "name": "x Base Rent - CPI Fixed Non 842",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27716",
+     "name": "x Common Area - CPI Fixed Non 842",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27717",
+     "name": "x Common Area - Fixed Non 842",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27740",
+     "name": "x Fire - Fixed Non 842",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27719",
+     "name": "x Fire - Fixed Non 842b",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27737",
+     "name": "x Fire Detection Service - Fixed Non 842",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27718",
+     "name": "x Fixed Advertising Non 842",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27724",
+     "name": "x Fixed Electric Non 842",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27725",
+     "name": "x Fixed HVAC Non 842",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27720",
+     "name": "x Fixed Marketing Non 842",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27721",
+     "name": "x Fixed Media Fund Non 842",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27722",
+     "name": "x Fixed Merchants Association Non 842",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27723",
+     "name": "x Fixed Promo Non 842",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27726",
+     "name": "x Fixed Trash Non 842",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27727",
+     "name": "x Fixed Water Non 842",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27730",
+     "name": "x HVAC Equipment - Fixed Non 842",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27731",
+     "name": "x Insurance - Fixed Non 842",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27732",
+     "name": "x Marketing - Fixed Non 842",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27728",
+     "name": "x Merchants Association - CPI Fixed Non 842",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27733",
+     "name": "x Merchants Association - Fixed Non 842",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27729",
+     "name": "x Promotional Fund - CPI Fixed Non 842",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27736",
+     "name": "x Real Estate Taxes - Fixed Non 842",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27734",
+     "name": "x Security - Fixed Non 842",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27735",
+     "name": "x Sprinkler - Fixed Non 842",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27619",
+     "name": "x Storage",
+     "isReadOnlyRecord": false,
+     "inactive": "Yes"
+    },
+    {
+     "LxBOID": "27745",
+     "name": "x Storage Non 842",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "27738",
+     "name": "x Trash - CPI Fixed Non 842",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    }
+   ]
+  },
+  {
+   "tableType": 2105,
+   "name": "Facility Category Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2106,
+   "name": "Facility Group Code",
+   "totalCount": 3,
+   "valueCount": 3,
+   "values": [
+    {
+     "LxBOID": "782",
+     "name": "Operations",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "783",
+     "name": "Retail",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "781",
+     "name": "Wizard",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    }
+   ]
+  },
+  {
+   "tableType": 2107,
+   "name": "Facility Status Code",
+   "totalCount": 3,
+   "valueCount": 3,
+   "values": [
+    {
+     "LxBOID": "888",
+     "name": "AI Abstracted",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "847",
+     "name": "Closed",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "846",
+     "name": "Open",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    }
+   ]
+  },
+  {
+   "tableType": 3005,
+   "name": "Facility Type Code",
+   "totalCount": 32,
+   "valueCount": 32,
+   "values": [
+    {
+     "LxBOID": "3405",
+     "name": "A Mall",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "3406",
+     "name": "A- Mall",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "3407",
+     "name": "B Mall",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "3408",
+     "name": "B- Mall",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "3409",
+     "name": "B+ Mall",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "3410",
+     "name": "C Mall",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "3411",
+     "name": "College Towns",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "3422",
+     "name": "Distribution Center",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "3412",
+     "name": "Downtown Mall",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "3429",
+     "name": "Equipment",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "3400",
+     "name": "High Profile Street",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "3420",
+     "name": "Housing",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "3394",
+     "name": "Hybrid",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "3399",
+     "name": "Metro Area Street",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "3403",
+     "name": "Metro Neighborhood Strip",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "3418",
+     "name": "Office",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "3413",
+     "name": "Office",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "3393",
+     "name": "Outlet Mall",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "3392",
+     "name": "Outlet Strip",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "3402",
+     "name": "Power Strip",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "3397",
+     "name": "Power Style",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "3416",
+     "name": "Regional Mall",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "3401",
+     "name": "Small Town Main Streets",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "3415",
+     "name": "Specialty",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "3419",
+     "name": "Storage",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "3421",
+     "name": "Store",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "3414",
+     "name": "Street Location",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "3417",
+     "name": "Strip Center",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "3395",
+     "name": "Suburban Specialty",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "3398",
+     "name": "Top Tier Mall",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "3396",
+     "name": "Urban Specialty",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "3404",
+     "name": "Warehouse",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    }
+   ]
+  },
+  {
+   "tableType": 2108,
+   "name": "Facility Use Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2109,
+   "name": "Financial Adjustment Status Code",
+   "totalCount": 1,
+   "valueCount": 1,
+   "values": [
+    {
+     "LxBOID": "159",
+     "name": "Likely",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    }
+   ]
+  },
+  {
+   "tableType": 2031,
+   "name": "Funding Type Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2110,
+   "name": "Guarantee Type Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2111,
+   "name": "Holding Interest Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2163,
+   "name": "IFRS 16 Schedule Type Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2169,
+   "name": "Index Group Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2170,
+   "name": "Index Source Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2171,
+   "name": "Index Type Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2032,
+   "name": "Inspection Period Start Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2033,
+   "name": "Inspection Type Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2173,
+   "name": "Insurance Category Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2112,
+   "name": "Insurance Group Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2034,
+   "name": "Insurance Policy Type Code",
+   "totalCount": 1,
+   "valueCount": 1,
+   "values": [
+    {
+     "LxBOID": "63",
+     "name": "General Liability",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    }
+   ]
+  },
+  {
+   "tableType": 2113,
+   "name": "Insurance Type Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2036,
+   "name": "Invoice Status Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2035,
+   "name": "Issue Type Code",
+   "totalCount": 6,
+   "valueCount": 6,
+   "values": [
+    {
+     "LxBOID": "6339",
+     "name": "ASC 842 Tracking",
+     "isReadOnlyRecord": false,
+     "inactive": null
+    },
+    {
+     "LxBOID": "6331",
+     "name": "Change Request",
+     "isReadOnlyRecord": false,
+     "inactive": null
+    },
+    {
+     "LxBOID": "6314",
+     "name": "Lease Admin Request",
+     "isReadOnlyRecord": false,
+     "inactive": null
+    },
+    {
+     "LxBOID": "6330",
+     "name": "QC Request",
+     "isReadOnlyRecord": false,
+     "inactive": null
+    },
+    {
+     "LxBOID": "6315",
+     "name": "User Request",
+     "isReadOnlyRecord": false,
+     "inactive": null
+    },
+    {
+     "LxBOID": "6325",
+     "name": "Vendor Changes (Integration)",
+     "isReadOnlyRecord": false,
+     "inactive": null
+    }
+   ]
+  },
+  {
+   "tableType": 2014,
+   "name": "Issue/RFI/Proposed Change Cause",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2037,
+   "name": "Job Function Code",
+   "totalCount": 7,
+   "valueCount": 7,
+   "values": [
+    {
+     "LxBOID": "13110",
+     "name": "Lease Abstraction",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "13101",
+     "name": "Lease Admin",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "13111",
+     "name": "Lease Admin Client",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "13109",
+     "name": "Lease Admin Mail",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "13098",
+     "name": "PS Administrator",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "13099",
+     "name": "System Administrator",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "13100",
+     "name": "Vendor Administrator",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    }
+   ]
+  },
+  {
+   "tableType": 2038,
+   "name": "Job Title Code",
+   "totalCount": 12,
+   "valueCount": 12,
+   "values": [
+    {
+     "LxBOID": "18774",
+     "name": "Lease Abstractor",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "18773",
+     "name": "Lease Admin",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "18758",
+     "name": "Lease Admin Accounting",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "18775",
+     "name": "Lease Admin Client",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "18772",
+     "name": "Lease Admin Mail",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "18757",
+     "name": "Lease Admin Manager",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "18776",
+     "name": "Lease Admin Manager - Lead",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "19262",
+     "name": "Lease Admin View",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "18805",
+     "name": "Outside Attorney",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "18806",
+     "name": "Outside Paralegal",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "18756",
+     "name": "PS Administrator",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "18759",
+     "name": "System Administrator",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    }
+   ]
+  },
+  {
+   "tableType": 2158,
+   "name": "Key Date Action Code",
+   "totalCount": 8,
+   "valueCount": 8,
+   "values": [
+    {
+     "LxBOID": "475",
+     "name": "Active",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "476",
+     "name": "Available",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "477",
+     "name": "Declined",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "478",
+     "name": "Deleted",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "479",
+     "name": "Exercised",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "480",
+     "name": "Expired",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "481",
+     "name": "Inactive",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "482",
+     "name": "Likely",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    }
+   ]
+  },
+  {
+   "tableType": 2114,
+   "name": "Key Date Group Code",
+   "totalCount": 4,
+   "valueCount": 4,
+   "values": [
+    {
+     "LxBOID": "462",
+     "name": "Covenants",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "463",
+     "name": "Key Dates",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "460",
+     "name": "Lease",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "464",
+     "name": "Terms",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    }
+   ]
+  },
+  {
+   "tableType": 3006,
+   "name": "Key Date Type Code",
+   "totalCount": 27,
+   "valueCount": 27,
+   "values": [
+    {
+     "LxBOID": "3135",
+     "name": "% in Lieu",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "3124",
+     "name": "Blackout/Slack Period",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "3136",
+     "name": "Co-Tenancy",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "8952",
+     "name": "Co-Tenancy Watch - Anchor",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "8953",
+     "name": "Co-Tenancy Watch - Inline",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "3125",
+     "name": "Downsize",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "3126",
+     "name": "Expansion",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "3143",
+     "name": "Extension",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "3127",
+     "name": "Go Dark",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "3137",
+     "name": "Gross Rent",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "3128",
+     "name": "Kickout",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "3129",
+     "name": "Landlord Kickout",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "3138",
+     "name": "Lease",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "3144",
+     "name": "Option",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "3121",
+     "name": "Option",
+     "isReadOnlyRecord": true,
+     "inactive": "Yes"
+    },
+    {
+     "LxBOID": "3145",
+     "name": "Original Lease Term",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "8956",
+     "name": "Other",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "8965",
+     "name": "Pylon Signage",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "3130",
+     "name": "Radius Restriction",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "3131",
+     "name": "Remodel Requirement",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "3139",
+     "name": "Rent Relief",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "3140",
+     "name": "Rent Relief - % in Lieu",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "3141",
+     "name": "Rent Relief - Gross Rent",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "3142",
+     "name": "Storage",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "3132",
+     "name": "Temporary Space",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "3133",
+     "name": "Termination - Landlord",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "3134",
+     "name": "Termination - Tenant",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    }
+   ]
+  },
+  {
+   "tableType": 2039,
+   "name": "Land Area Unit Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2082,
+   "name": "Last Action Status Code",
+   "totalCount": 1,
+   "valueCount": 1,
+   "values": [
+    {
+     "LxBOID": "59",
+     "name": "Approved",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    }
+   ]
+  },
+  {
+   "tableType": 2040,
+   "name": "Lease Co Tenant Type Code",
+   "totalCount": 4,
+   "valueCount": 4,
+   "values": [
+    {
+     "LxBOID": "449",
+     "name": "Anchor",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "450",
+     "name": "Competitor",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "451",
+     "name": "Neighbor",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "452",
+     "name": "Seasonal",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    }
+   ]
+  },
+  {
+   "tableType": 2041,
+   "name": "Lease Option Other Type Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2042,
+   "name": "Lease Option Type Code",
+   "totalCount": 5,
+   "valueCount": 5,
+   "values": [
+    {
+     "LxBOID": "635",
+     "name": "Expansion",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "636",
+     "name": "Go dark",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "637",
+     "name": "Kick-out",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "638",
+     "name": "Purchase",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "639",
+     "name": "Renewal",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    }
+   ]
+  },
+  {
+   "tableType": 2043,
+   "name": "Lease Status Code",
+   "totalCount": 1,
+   "valueCount": 1,
+   "values": [
+    {
+     "LxBOID": "410",
+     "name": "Expired",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    }
+   ]
+  },
+  {
+   "tableType": 2044,
+   "name": "Lease Type Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2115,
+   "name": "Legal Classification Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2045,
+   "name": "Location Access Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2116,
+   "name": "Location Category Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2046,
+   "name": "Location Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2117,
+   "name": "Location Group Code",
+   "totalCount": 3,
+   "valueCount": 3,
+   "values": [
+    {
+     "LxBOID": "834",
+     "name": "Operations",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "833",
+     "name": "Retail",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "832",
+     "name": "Wizard",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    }
+   ]
+  },
+  {
+   "tableType": 2118,
+   "name": "Location Status Code",
+   "totalCount": 3,
+   "valueCount": 3,
+   "values": [
+    {
+     "LxBOID": "563",
+     "name": "Active",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "605",
+     "name": "AI Abstracted",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "564",
+     "name": "Inactive",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    }
+   ]
+  },
+  {
+   "tableType": 3007,
+   "name": "Location Type Code",
+   "totalCount": 6,
+   "valueCount": 6,
+   "values": [
+    {
+     "LxBOID": "3397",
+     "name": "Distribution Center",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "3412",
+     "name": "Equipment",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "3398",
+     "name": "Office",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "3403",
+     "name": "Storage",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "3399",
+     "name": "Store",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "3411",
+     "name": "Warehouse",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    }
+   ]
+  },
+  {
+   "tableType": 2119,
+   "name": "Location Use Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2048,
+   "name": "Maintenance Remedy Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2049,
+   "name": "Market Area Code",
+   "totalCount": 576,
+   "valueCount": 400,
+   "values": [
+    {
+     "LxBOID": "35737",
+     "name": "Abbotsford - Mission, BC",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35219",
+     "name": "Aberdeen, SD",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35434",
+     "name": "Abilene, TX",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35459",
+     "name": "Ada, OK",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "36063",
+     "name": "Adrian, MI",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35429",
+     "name": "Akron, OH",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35601",
+     "name": "Albany, GA",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35394",
+     "name": "Albany, OR",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35305",
+     "name": "Albany-Schenectady-Troy, NY",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35317",
+     "name": "Albuquerque, NM",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35224",
+     "name": "Alexandria, LA",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35574",
+     "name": "Alexandria, MN",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35263",
+     "name": "Allentown-Bethlehem-Easton, PA-NJ",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35426",
+     "name": "Altoona, PA",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35590",
+     "name": "Amarillo, TX",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35458",
+     "name": "Ames, IA",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35602",
+     "name": "Anchorage, AK",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35755",
+     "name": "Angola, IN",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35605",
+     "name": "Ann Arbor, MI",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35711",
+     "name": "Anniston-Oxford-Jacksonville, AL",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35368",
+     "name": "Appleton, WI",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35527",
+     "name": "Ardmore, OK",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35238",
+     "name": "Asheville, NC",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35606",
+     "name": "Ashtabula, OH",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35736",
+     "name": "Astoria, OR",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "36069",
+     "name": "Athens, OH",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35630",
+     "name": "Athens, TN",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35257",
+     "name": "Athens-Clarke County, GA",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35245",
+     "name": "Atlanta-Sandy Springs-Roswell, GA",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35389",
+     "name": "Atlantic City-Hammonton, NJ",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35767",
+     "name": "Auburn-Opelika, AL",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35242",
+     "name": "Augusta-Richmond County, GA-SC",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35243",
+     "name": "Augusta-Waterville, ME",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35250",
+     "name": "Austin-Round Rock, TX",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35568",
+     "name": "Bakersfield, CA",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35231",
+     "name": "Baltimore-Columbia-Towson, MD",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35249",
+     "name": "Bangor, ME",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35710",
+     "name": "Baraboo, WI",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35279",
+     "name": "Barnstable Town, MA",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35631",
+     "name": "Barrie, ON",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35580",
+     "name": "Bartlesville, OK",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35342",
+     "name": "Batesville, AR",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35668",
+     "name": "Baton Rouge, LA",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35660",
+     "name": "Battle Creek, MI",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35609",
+     "name": "Bay City, MI",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35482",
+     "name": "Beaumont-Port Arthur, TX",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35637",
+     "name": "Beckley, WV",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35552",
+     "name": "Bedford, IN",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35725",
+     "name": "Belleville, ON",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35260",
+     "name": "Bellingham, WA",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35485",
+     "name": "Bemidji, MN",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35475",
+     "name": "Bend-Redmond, OR",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35509",
+     "name": "Billings, MT",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35469",
+     "name": "Binghamton, NY",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35516",
+     "name": "Birmingham-Hoover, AL",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35414",
+     "name": "Bismarck, ND",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35763",
+     "name": "Blacksburg-Christiansburg-Radford, VA",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35349",
+     "name": "Bloomington, IL",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35309",
+     "name": "Bloomington, IN",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35697",
+     "name": "Bluefield, WV-VA",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35445",
+     "name": "Boise City, ID",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35269",
+     "name": "Boone, NC",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35278",
+     "name": "Boston-Cambridge-Newton, MA-NH",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35387",
+     "name": "Bowling Green, KY",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35373",
+     "name": "Bozeman, MT",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35589",
+     "name": "Brainerd, MN",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35739",
+     "name": "Brandon, MB",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35273",
+     "name": "Branson, MO",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35686",
+     "name": "Brantford, ON",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35415",
+     "name": "Bremerton-Silverdale, WA",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35329",
+     "name": "Bridgeport-Stamford-Norwalk, CT",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35538",
+     "name": "Brownsville-Harlingen, TX",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35392",
+     "name": "Brownwood, TX",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35377",
+     "name": "Brunswick, GA",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35355",
+     "name": "Buffalo-Cheektowaga-Niagara Falls, NY",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35591",
+     "name": "Burlington, IA-IL",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35221",
+     "name": "Burlington, NC",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35556",
+     "name": "Burlington-South Burlington, VT",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35674",
+     "name": "Cadillac, MI",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35625",
+     "name": "Calgary, AB",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35616",
+     "name": "Calhoun, GA",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35360",
+     "name": "California-Lexington Park, MD",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35258",
+     "name": "Canton-Massillon, OH",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35693",
+     "name": "Cape Breton, NS",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35259",
+     "name": "Cape Coral-Fort Myers, FL",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35586",
+     "name": "Cape Girardeau, MO-IL",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35555",
+     "name": "Carbondale-Marion, IL",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35612",
+     "name": "Casper, WY",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35425",
+     "name": "Cedar Rapids, IA",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35622",
+     "name": "Centralia, WA",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35623",
+     "name": "Chambersburg-Waynesboro, PA",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35438",
+     "name": "Champaign-Urbana, IL",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35293",
+     "name": "Charleston, WV",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35321",
+     "name": "Charleston-Mattoon, IL",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35302",
+     "name": "Charleston-North Charleston, SC",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35284",
+     "name": "Charlotte-Concord-Gastonia, NC-SC",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35608",
+     "name": "Charlottesville, VA",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35390",
+     "name": "Chattanooga, TN-GA",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35371",
+     "name": "Cheyenne, WY",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35225",
+     "name": "Chicago-Naperville-Elgin, IL-IN-WI",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35298",
+     "name": "Chico, CA",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35299",
+     "name": "Chillicothe, OH",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35363",
+     "name": "Cincinnati, OH-KY-IN",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35695",
+     "name": "Clarksburg, WV",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35380",
+     "name": "Clarksville, TN-KY",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35626",
+     "name": "Cleveland, TN",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35379",
+     "name": "Cleveland-Elyria, OH",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35460",
+     "name": "Clovis, NM",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35529",
+     "name": "Coeur d'Alene, ID",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35499",
+     "name": "College Station-Bryan, TX",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35292",
+     "name": "Colorado Springs, CO",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35311",
+     "name": "Columbia, MO",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35314",
+     "name": "Columbia, SC",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35486",
+     "name": "Columbus, GA-AL",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35629",
+     "name": "Columbus, IN",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35688",
+     "name": "Columbus, MS",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35215",
+     "name": "Columbus, OH",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35405",
+     "name": "Cookeville, TN",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35416",
+     "name": "Corpus Christi, TX",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35638",
+     "name": "Crestview-Fort Walton Beach-Destin, FL",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "36065",
+     "name": "Cullman, AL",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35318",
+     "name": "Cumberland, MD-WV",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35277",
+     "name": "Dallas-Fort Worth-Arlington, TX",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35770",
+     "name": "Dalton, GA",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35575",
+     "name": "Danville, IL",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35330",
+     "name": "Danville, VA",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35348",
+     "name": "Daphne-Fairhope-Foley, AL",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35461",
+     "name": "Davenport-Moline-Rock Island, IA-IL",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35331",
+     "name": "Dayton, OH",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "36068",
+     "name": "Decatur, AL",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35395",
+     "name": "Decatur, IL",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35465",
+     "name": "Defiance, OH",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35496",
+     "name": "Del Rio, TX",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35578",
+     "name": "Deltona-Daytona Beach-Ormond Beach, FL",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35234",
+     "name": "Denver-Aurora-Lakewood, CO",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35408",
+     "name": "Des Moines-West Des Moines, IA",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35248",
+     "name": "Detroit-Warren-Dearborn, MI",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35500",
+     "name": "Dickinson, ND",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35576",
+     "name": "Dodge City, KS",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35640",
+     "name": "Dothan, AL",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35340",
+     "name": "Dover, DE",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35641",
+     "name": "Dublin, GA",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35341",
+     "name": "DuBois, PA",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35410",
+     "name": "Dubuque, IA",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35450",
+     "name": "Duluth, MN-WI",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35535",
+     "name": "Durham-Chapel Hill, NC",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35642",
+     "name": "Dyersburg, TN",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35689",
+     "name": "Eagle Pass, TX",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35536",
+     "name": "East Stroudsburg, PA",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35471",
+     "name": "Eau Claire, WI",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35670",
+     "name": "Edmonton, AB",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35644",
+     "name": "Effingham, IL",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35402",
+     "name": "El Centro, CA",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35251",
+     "name": "El Paso, TX",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35553",
+     "name": "Elizabethtown-Fort Knox, KY",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35593",
+     "name": "Elkhart-Goshen, IN",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35237",
+     "name": "Elmira, NY",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35362",
+     "name": "Emporia, KS",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35676",
+     "name": "Enid, OK",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35449",
+     "name": "Erie, PA",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35334",
+     "name": "Escanaba, MI",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35569",
+     "name": "Eugene, OR",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35255",
+     "name": "Eureka-Arcata-Fortuna, CA",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35350",
+     "name": "Evansville, IN-KY",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35585",
+     "name": "Fargo, ND-MN",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "36083",
+     "name": "Farmington, MO",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35230",
+     "name": "Farmington, NM",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35322",
+     "name": "Fayetteville, NC",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35466",
+     "name": "Fayetteville-Springdale-Rogers, AR-MO",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35649",
+     "name": "Findlay, OH",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35361",
+     "name": "Flagstaff, AZ",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35320",
+     "name": "Flint, MI",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35430",
+     "name": "Florence, SC",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35364",
+     "name": "Florence-Muscle Shoals, AL",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35365",
+     "name": "Fort Collins, CO",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35287",
+     "name": "Fort Smith, AR-OK",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35376",
+     "name": "Fort Wayne, IN",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35727",
+     "name": "Fredericton, NB",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35370",
+     "name": "Fremont, NE",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35358",
+     "name": "Fresno, CA",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35651",
+     "name": "Gadsden, AL",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35372",
+     "name": "Gaffney, SC",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35470",
+     "name": "Gainesville, FL",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35747",
+     "name": "Gainesville, GA",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "36073",
+     "name": "Gardnerville Ranchos, NV",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35756",
+     "name": "Gettysburg, PA",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35757",
+     "name": "Glens Falls, NY",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35261",
+     "name": "Goldsboro, NC",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35312",
+     "name": "Grand Forks, ND-MN",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35707",
+     "name": "Grand Island, NE",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35446",
+     "name": "Grand Junction, CO",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35383",
+     "name": "Grand Rapids-Wyoming, MI",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35722",
+     "name": "Grande Prairie, AB",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "36079",
+     "name": "Grants Pass, OR",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35663",
+     "name": "Great Falls, MT",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35703",
+     "name": "Greater Sudbury, ON",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35621",
+     "name": "Greeley, CO",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35253",
+     "name": "Green Bay, WI",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35656",
+     "name": "Greeneville, TN",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35367",
+     "name": "Greensboro-High Point, NC",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35384",
+     "name": "Greensburg, IN",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35385",
+     "name": "Greenville, MS",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35386",
+     "name": "Greenville, NC",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35603",
+     "name": "Greenville-Anderson-Mauldin, SC",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35388",
+     "name": "Greenwood, MS",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35775",
+     "name": "Greenwood, SC",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35746",
+     "name": "Guelph, ON",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35354",
+     "name": "Gulfport-Biloxi-Pascagoula, MS",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35564",
+     "name": "Hagerstown-Martinsburg, MD-WV",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35657",
+     "name": "Halifax, NS",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35682",
+     "name": "Hamilton, ON",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35659",
+     "name": "Hanford-Corcoran, CA",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35510",
+     "name": "Hannibal, MO",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35282",
+     "name": "Harrisburg-Carlisle, PA",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35566",
+     "name": "Harrisonburg, VA",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35545",
+     "name": "Hartford-West Hartford-East Hartford, CT",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35761",
+     "name": "Hattiesburg, MS",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35264",
+     "name": "Hays, KS",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35393",
+     "name": "Henderson, NC",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35565",
+     "name": "Hickory-Lenoir-Morganton, NC",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35671",
+     "name": "Hilo, HI",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35749",
+     "name": "Hilton Head Island-Bluffton-Beaufort, SC",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35398",
+     "name": "Hinesville, GA",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35634",
+     "name": "Hot Springs, AR",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35741",
+     "name": "Houma-Thibodaux, LA",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35226",
+     "name": "Houston-The Woodlands-Sugar Land, TX",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35400",
+     "name": "Huntington-Ashland, WV-KY-OH",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35275",
+     "name": "Huntsville, AL",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "36067",
+     "name": "Huntsville, TX",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35559",
+     "name": "Hutchinson, KS",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35401",
+     "name": "Hutchinson, MN",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35382",
+     "name": "Idaho Falls, ID",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35742",
+     "name": "Indiana, PA",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35247",
+     "name": "Indianapolis-Carmel-Anderson, IN",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35316",
+     "name": "Iowa City, IA",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35740",
+     "name": "Ithaca, NY",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35667",
+     "name": "Jackson, MI",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35339",
+     "name": "Jackson, MS",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35474",
+     "name": "Jackson, TN",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35476",
+     "name": "Jacksonville, FL",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35579",
+     "name": "Jacksonville, IL",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35406",
+     "name": "Jacksonville, NC",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35294",
+     "name": "Jamestown-Dunkirk-Fredonia, NY",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35560",
+     "name": "Janesville-Beloit, WI",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "36076",
+     "name": "Jasper, IN",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35280",
+     "name": "Jefferson City, MO",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35748",
+     "name": "Jefferson, GA",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35432",
+     "name": "Johnson City, TN",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35729",
+     "name": "Johnstown, PA",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35618",
+     "name": "Jonesboro, AR",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35462",
+     "name": "Joplin, MO",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35724",
+     "name": "Kahului-Wailuku-Lahaina, HI",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35324",
+     "name": "Kalamazoo-Portage, MI",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35409",
+     "name": "Kalispell, MT",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35598",
+     "name": "Kamloops, BC",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35614",
+     "name": "Kankakee, IL",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35319",
+     "name": "Kansas City, MO-KS",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35397",
+     "name": "Kearney, NE",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35708",
+     "name": "Kelowna, BC",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35313",
+     "name": "Kennewick-Richland, WA",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35511",
+     "name": "Kerrville, TX",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35412",
+     "name": "Killeen-Temple, TX",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35650",
+     "name": "Kingsport-Bristol-Bristol, TN-VA",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35620",
+     "name": "Kingston, ON",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "36077",
+     "name": "Kingsville, TX",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35617",
+     "name": "Kitchener - Cambridge - Waterloo, ON",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35588",
+     "name": "Knoxville, TN",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35439",
+     "name": "Kokomo, IN",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35570",
+     "name": "La Crosse-Onalaska, WI-MN",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35752",
+     "name": "Laconia, NH",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35599",
+     "name": "Lafayette, LA",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35550",
+     "name": "Lafayette-West Lafayette, IN",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35672",
+     "name": "LaGrange, GA",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35673",
+     "name": "Lake Charles, LA",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35418",
+     "name": "Lake City, FL",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35701",
+     "name": "Lake Havasu City-Kingman, AZ",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35343",
+     "name": "Lakeland-Winter Haven, FL",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35480",
+     "name": "Lancaster, PA",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35643",
+     "name": "Lansing-East Lansing, MI",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35375",
+     "name": "Laramie, WY",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35433",
+     "name": "Laredo, TX",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35447",
+     "name": "Las Cruces, NM",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35268",
+     "name": "Las Vegas-Henderson-Paradise, NV",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35735",
+     "name": "Laurel, MS",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35525",
+     "name": "Laurinburg, NC",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35494",
+     "name": "Lawrence, KS",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35288",
+     "name": "Lawton, OK",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35421",
+     "name": "Lebanon, PA",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35713",
+     "name": "Lethbridge, AB",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35422",
+     "name": "Lewiston, ID-WA",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35241",
+     "name": "Lewiston-Auburn, ME",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35647",
+     "name": "Lexington-Fayette, KY",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35424",
+     "name": "Lima, OH",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35374",
+     "name": "Lincoln, NE",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35315",
+     "name": "Little Rock-North Little Rock-Conway, AR",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35684",
+     "name": "Lloydminster, AB-SK",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35726",
+     "name": "Logan, UT-ID",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35691",
+     "name": "London, ON",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35427",
+     "name": "Longview, TX",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35547",
+     "name": "Longview, WA",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35229",
+     "name": "Los Angeles-Long Beach-Anaheim, CA",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35338",
+     "name": "Louisville/Jefferson County, KY-IN",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35413",
+     "name": "Lubbock, TX",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35428",
+     "name": "Lufkin, TX",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35266",
+     "name": "Lumberton, NC",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35513",
+     "name": "Lynchburg, VA",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35546",
+     "name": "Macon, GA",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35345",
+     "name": "Madison, WI",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35483",
+     "name": "Madisonville, KY",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35490",
+     "name": "Manchester-Nashua, NH",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35436",
+     "name": "Manhattan, KS",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35512",
+     "name": "Mankato-North Mankato, MN",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35728",
+     "name": "Mansfield, OH",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35681",
+     "name": "Marion, OH",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35774",
+     "name": "Marquette, MI",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35776",
+     "name": "Mason City, IA",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35440",
+     "name": "McAlester, OK",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35417",
+     "name": "McAllen-Edinburg-Mission, TX",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35764",
+     "name": "McComb, MS",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35760",
+     "name": "McMinnville, TN",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35517",
+     "name": "Medford, OR",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35696",
+     "name": "Medicine Hat, AB",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35286",
+     "name": "Memphis, TN-MS-AR",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35444",
+     "name": "Merced, CA",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35561",
+     "name": "Meridian, MS",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35244",
+     "name": "Miami-Fort Lauderdale-West Palm Beach, FL",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35423",
+     "name": "Michigan City-La Porte, IN",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35698",
+     "name": "Middlesborough, KY",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35699",
+     "name": "Midland, MI",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35448",
+     "name": "Midland, TX",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35661",
+     "name": "Milledgeville, GA",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35254",
+     "name": "Milwaukee-Waukesha-West Allis, WI",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35222",
+     "name": "Minneapolis-St. Paul-Bloomington, MN-WI",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35328",
+     "name": "Minot, ND",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35532",
+     "name": "Missoula, MT",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35758",
+     "name": "Mobile, AL",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35451",
+     "name": "Modesto, CA",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35624",
+     "name": "Moncton, NB",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35487",
+     "name": "Monroe, LA",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35754",
+     "name": "Monroe, MI",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35347",
+     "name": "Montgomery, AL",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35619",
+     "name": "Montr\u00e9al, QC",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35702",
+     "name": "Morgantown, WV",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35627",
+     "name": "Morristown, TN",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35478",
+     "name": "Moscow, ID",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35731",
+     "name": "Mount Airy, NC",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35665",
+     "name": "Mount Pleasant, MI",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35549",
+     "name": "Mount Vernon, IL",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35453",
+     "name": "Muncie, IN",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35542",
+     "name": "Muskegon, MI",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35732",
+     "name": "Muskogee, OK",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35306",
+     "name": "Myrtle Beach-Conway-North Myrtle Beach, SC-NC",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35777",
+     "name": "Nanaimo, BC",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35307",
+     "name": "Naples-Immokalee-Marco Island, FL",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35246",
+     "name": "Nashville-Davidson--Murfreesboro--Franklin, TN",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35456",
+     "name": "New Bern, NC",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35274",
+     "name": "New Haven-Milford, CT",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35501",
+     "name": "New Orleans-Metairie, LA",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35704",
+     "name": "New Philadelphia-Dover, OH",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35239",
+     "name": "New York-Newark-Jersey City, NY-NJ-PA",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35683",
+     "name": "Newport, OR",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35646",
+     "name": "Niles-Benton Harbor, MI",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35217",
+     "name": "Non-Market",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35539",
+     "name": "Norfolk, NE",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35706",
+     "name": "North Bay, ON",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35337",
+     "name": "North Platte, NE",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35645",
+     "name": "North Port-Sarasota-Bradenton, FL",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35326",
+     "name": "Norwich-New London, CT",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35477",
+     "name": "Ocala, FL",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35454",
+     "name": "Odessa, TX",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35420",
+     "name": "Ogden-Clearfield, UT",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35636",
+     "name": "Oil City, PA",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35488",
+     "name": "Oklahoma City, OK",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35768",
+     "name": "Olean, NY",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35281",
+     "name": "Olympia-Tumwater, WA",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35468",
+     "name": "Omaha-Council Bluffs, NE-IA",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35533",
+     "name": "Oneonta, NY",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35504",
+     "name": "Orangeburg, SC",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35227",
+     "name": "Orlando-Kissimmee-Sanford, FL",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35709",
+     "name": "Oshawa, ON",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35503",
+     "name": "Oshkosh-Neenah, WI",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35610",
+     "name": "Ottawa - Gatineau, ON-QC",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35489",
+     "name": "Ottawa-Peru, IL",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "36066",
+     "name": "Ottumwa, IA",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35762",
+     "name": "Owatonna, MN",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35652",
+     "name": "Owensboro, KY",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35712",
+     "name": "Oxford, MS",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35357",
+     "name": "Oxnard-Thousand Oaks-Ventura, CA",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35411",
+     "name": "Paducah, KY-IL",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35443",
+     "name": "Palm Bay-Melbourne-Titusville, FL",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35491",
+     "name": "Panama City, FL",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35479",
+     "name": "Paris, TX",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35653",
+     "name": "Parkersburg-Vienna, WV",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35633",
+     "name": "Pensacola-Ferry Pass-Brent, FL",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35467",
+     "name": "Peoria, IL",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35677",
+     "name": "Peterborough, ON",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35265",
+     "name": "Philadelphia-Camden-Wilmington, PA-NJ-DE-MD",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35236",
+     "name": "Phoenix-Mesa-Scottsdale, AZ",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35464",
+     "name": "Pierre, SD",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "35493",
+     "name": "Pinehurst-Southern Pines, NC",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    }
+   ]
+  },
+  {
+   "tableType": 2050,
+   "name": "Market Demographics Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2051,
+   "name": "Market Type Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2052,
+   "name": "Master Employer Group Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2053,
+   "name": "Misc Expense Category Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2175,
+   "name": "Offset Group Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2176,
+   "name": "Offset Type Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2120,
+   "name": "Org Category Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2121,
+   "name": "Org Group Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2122,
+   "name": "Org Type Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2177,
+   "name": "Parcel Access Category Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2178,
+   "name": "Parcel Access Group Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 3014,
+   "name": "Parcel Access Type Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2123,
+   "name": "Parcel Category Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2124,
+   "name": "Parcel Group Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2125,
+   "name": "Parcel Status Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 3008,
+   "name": "Parcel Type Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2126,
+   "name": "Parcel Use Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2127,
+   "name": "Parking Group Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2128,
+   "name": "Parking Type Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2129,
+   "name": "Party Group Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2130,
+   "name": "Party Type Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2131,
+   "name": "Pass Through Type Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2132,
+   "name": "Payment Method Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2138,
+   "name": "Plan Forecast Group Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2054,
+   "name": "Pro Forma Budget Status Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2139,
+   "name": "Pro Rata Share Method Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 3001,
+   "name": "Problem Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2055,
+   "name": "Project Type Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2056,
+   "name": "Property Primary Use Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2184,
+   "name": "Property Tax Status Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2185,
+   "name": "Property Tax Type Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2057,
+   "name": "RE Transaction Status Code",
+   "totalCount": 3,
+   "valueCount": 3,
+   "values": [
+    {
+     "LxBOID": "112",
+     "name": "Complete",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "113",
+     "name": "In Process",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "114",
+     "name": "Not Begun",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    }
+   ]
+  },
+  {
+   "tableType": 2140,
+   "name": "Rating Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2179,
+   "name": "Recovery Group Code",
+   "totalCount": 3,
+   "valueCount": 3,
+   "values": [
+    {
+     "LxBOID": "431",
+     "name": "Common Area",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "432",
+     "name": "Insurance",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "433",
+     "name": "Real Estate Taxes",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    }
+   ]
+  },
+  {
+   "tableType": 2180,
+   "name": "Recovery Item Group Code",
+   "totalCount": 4,
+   "valueCount": 4,
+   "values": [
+    {
+     "LxBOID": "812",
+     "name": "CAM",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "817",
+     "name": "Contributions",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "814",
+     "name": "INS",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "816",
+     "name": "RET",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    }
+   ]
+  },
+  {
+   "tableType": 3016,
+   "name": "Recovery Item Type Code",
+   "totalCount": 162,
+   "valueCount": 162,
+   "values": [
+    {
+     "LxBOID": "16937",
+     "name": "Admin Fee",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16832",
+     "name": "Anchor/Major",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16841",
+     "name": "Appeal/Contesting Fees",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "17063",
+     "name": "Attorney Fees",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "17046",
+     "name": "Auto/Mileage",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "17062",
+     "name": "Base Fee Legal Fees",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "17074",
+     "name": "Borough Taxes",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "17047",
+     "name": "Bulk Trash",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16842",
+     "name": "Business License Tax",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16941",
+     "name": "CAM 01",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16942",
+     "name": "CAM 02",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16943",
+     "name": "CAM 03",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16945",
+     "name": "CAM 04",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16946",
+     "name": "CAM 05",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16947",
+     "name": "CAM 06",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16979",
+     "name": "CAM 07",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16980",
+     "name": "CAM 08",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16939",
+     "name": "CAM 09",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16940",
+     "name": "CAM 10",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16981",
+     "name": "CAM 11",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16872",
+     "name": "CAM 12",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16873",
+     "name": "CAM 13",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16874",
+     "name": "CAM 14",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16875",
+     "name": "CAM 15",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16876",
+     "name": "CAM 16",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16877",
+     "name": "CAM 17",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16878",
+     "name": "CAM 18",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16879",
+     "name": "CAM 19",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16881",
+     "name": "CAM 20",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16974",
+     "name": "CAM 21",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16975",
+     "name": "CAM 22",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16976",
+     "name": "CAM 23",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16977",
+     "name": "CAM 24",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16978",
+     "name": "CAM 25",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16861",
+     "name": "CAM 26",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16935",
+     "name": "CAM 27",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16948",
+     "name": "CAM 28",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16906",
+     "name": "CAM 29",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16982",
+     "name": "CAM 30",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "17075",
+     "name": "City Taxes",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "17065",
+     "name": "Cleaning",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16904",
+     "name": "Common Area Electricity",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16840",
+     "name": "Consulting Fees",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "17042",
+     "name": "Contesting Fees",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16835",
+     "name": "Contribution 01",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16836",
+     "name": "Contribution 02",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16837",
+     "name": "Contribution 03",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16838",
+     "name": "Contribution 04",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16839",
+     "name": "Contribution 05",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "17072",
+     "name": "County Taxes",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "17070",
+     "name": "Doors, Locks, Keys",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16996",
+     "name": "Dues, Subscriptions",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16898",
+     "name": "Electrical Services/Supplies",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16910",
+     "name": "Electricity",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "17069",
+     "name": "Equipment",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "17076",
+     "name": "Exterior - R&M",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "17048",
+     "name": "Fire Safety",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16892",
+     "name": "Flood INS",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "17067",
+     "name": "Gas",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16893",
+     "name": "GL INS",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "17049",
+     "name": "Golf Carts",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "17045",
+     "name": "Grease Trap/Oil",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16971",
+     "name": "Gross Receipts Tax",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "17064",
+     "name": "Grounds Expenses",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16871",
+     "name": "Holiday Decorations",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "17078",
+     "name": "HVAC",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16949",
+     "name": "INS 01",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16967",
+     "name": "INS 02",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16968",
+     "name": "INS 03",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16969",
+     "name": "INS 04",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16970",
+     "name": "INS 05",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16997",
+     "name": "Insurance",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16885",
+     "name": "Janitorial",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "17050",
+     "name": "Lakes, Ponds, Waterways",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16883",
+     "name": "Landscaping",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16995",
+     "name": "Landscaping Service",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16890",
+     "name": "Liability INS",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "17051",
+     "name": "Lighting",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16938",
+     "name": "Major Contributions",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16932",
+     "name": "Mall Office",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16831",
+     "name": "Management Fee",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16972",
+     "name": "Margin Tax",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "17066",
+     "name": "On Site Maintenance",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16833",
+     "name": "Outparcel",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "17052",
+     "name": "Painting",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16851",
+     "name": "Parcel 01",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16852",
+     "name": "Parcel 02",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16853",
+     "name": "Parcel 03",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16854",
+     "name": "Parcel 04",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16855",
+     "name": "Parcel 05",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16856",
+     "name": "Parcel 06",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16857",
+     "name": "Parcel 07",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16858",
+     "name": "Parcel 08",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16859",
+     "name": "Parcel 09",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16860",
+     "name": "Parcel 10",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16950",
+     "name": "Parcel 11",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16951",
+     "name": "Parcel 12",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16952",
+     "name": "Parcel 13",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16953",
+     "name": "Parcel 14",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16954",
+     "name": "Parcel 15",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16955",
+     "name": "Parcel 16",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16956",
+     "name": "Parcel 17",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16957",
+     "name": "Parcel 18",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16958",
+     "name": "Parcel 19",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16959",
+     "name": "Parcel 20",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16960",
+     "name": "Parcel 21",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16961",
+     "name": "Parcel 22",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16962",
+     "name": "Parcel 23",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16963",
+     "name": "Parcel 24",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16964",
+     "name": "Parcel 25",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16965",
+     "name": "Parcel 26",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16984",
+     "name": "Parcel 27",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16985",
+     "name": "Parcel 28",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16986",
+     "name": "Parcel 29",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16987",
+     "name": "Parcel 30",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16988",
+     "name": "Parcel 31",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16989",
+     "name": "Parcel 32",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16990",
+     "name": "Parcel 33",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16991",
+     "name": "Parcel 34",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16992",
+     "name": "Parcel 35",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16993",
+     "name": "Parcel 36",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16887",
+     "name": "Parking Lot - Lighting",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16886",
+     "name": "Parking Lot - R&M",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "17053",
+     "name": "Parking Lot - Sweeping",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "17044",
+     "name": "Payroll",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16843",
+     "name": "Personal Property Tax 01",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16844",
+     "name": "Personal Property Tax 02",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16845",
+     "name": "Personal Property Tax 03",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16846",
+     "name": "Personal Property Tax 04",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16848",
+     "name": "Personal Property Tax 05",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "17059",
+     "name": "Personnel",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16899",
+     "name": "Pest Control",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "17054",
+     "name": "Plumbing",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "17055",
+     "name": "Porter Service",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "17056",
+     "name": "Pressure Wash",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16889",
+     "name": "Property INS",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "17060",
+     "name": "Property Management",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16849",
+     "name": "Refund",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "17058",
+     "name": "Refund 02",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16882",
+     "name": "Repairs & Maintenance (R&M)",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16998",
+     "name": "RET",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16884",
+     "name": "Roof",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16864",
+     "name": "Salaries",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "17073",
+     "name": "School Taxes",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16888",
+     "name": "Security",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16973",
+     "name": "Sign",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16925",
+     "name": "Snow Removal",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "17043",
+     "name": "Software Fees",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "17071",
+     "name": "Sprinkler",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16850",
+     "name": "Stormwater",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16866",
+     "name": "Supplies",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "17041",
+     "name": "Sweeping",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16983",
+     "name": "Trash",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16891",
+     "name": "Umbrella INS",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "17057",
+     "name": "Uniforms",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16867",
+     "name": "Utilities",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16936",
+     "name": "Utilities - CAM",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16834",
+     "name": "Variety/Specialty Tenants",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16918",
+     "name": "Water",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "17068",
+     "name": "Water - Non Sewer",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "17077",
+     "name": "Wind/Named Storm INS",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16994",
+     "name": "Window Cleaning",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    }
+   ]
+  },
+  {
+   "tableType": 3015,
+   "name": "Recovery Type Code",
+   "totalCount": 4,
+   "valueCount": 4,
+   "values": [
+    {
+     "LxBOID": "1145",
+     "name": "CAM",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "1147",
+     "name": "Gross Receipts Taxes",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "1148",
+     "name": "INS",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "1146",
+     "name": "RET",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    }
+   ]
+  },
+  {
+   "tableType": 2141,
+   "name": "Region Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2142,
+   "name": "Responsibility Group Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 3011,
+   "name": "Responsibility Type Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2058,
+   "name": "Responsible Party Code",
+   "totalCount": 3,
+   "valueCount": 3,
+   "values": [
+    {
+     "LxBOID": "1028",
+     "name": "Both",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "1029",
+     "name": "Landlord",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "1030",
+     "name": "Tenant",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    }
+   ]
+  },
+  {
+   "tableType": 2065,
+   "name": "SRQ Source Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2066,
+   "name": "SRQ Status Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2067,
+   "name": "SRQ Type Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2143,
+   "name": "Sales Category Code",
+   "totalCount": 2,
+   "valueCount": 2,
+   "values": [
+    {
+     "LxBOID": "224",
+     "name": "Actual",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "225",
+     "name": "Forecast",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    }
+   ]
+  },
+  {
+   "tableType": 2144,
+   "name": "Sales Group Code",
+   "totalCount": 1,
+   "valueCount": 1,
+   "values": [
+    {
+     "LxBOID": "246",
+     "name": "Sales",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    }
+   ]
+  },
+  {
+   "tableType": 3012,
+   "name": "Sales Type Code",
+   "totalCount": 17,
+   "valueCount": 17,
+   "values": [
+    {
+     "LxBOID": "1866",
+     "name": "Bad Debt",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "1875",
+     "name": "BOPIS",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "1867",
+     "name": "Cash Over/Short",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "1868",
+     "name": "Charge Backs",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "1869",
+     "name": "Credit Card Fees",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "1907",
+     "name": "Customer Returns",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "1878",
+     "name": "Delivery Fees/Shipping Costs",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "1879",
+     "name": "Emp Sale - Discounted Portion",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "1865",
+     "name": "Employee Sales",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "1877",
+     "name": "OOBO",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "1872",
+     "name": "Returns - Home Store",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "1874",
+     "name": "Returns - Internet (BORIS)",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "1873",
+     "name": "Returns - Non-Home Store",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "1870",
+     "name": "Sales",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "1871",
+     "name": "Sales Tax",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "1876",
+     "name": "Ship from Store",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "1883",
+     "name": "VAT",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    }
+   ]
+  },
+  {
+   "tableType": 2059,
+   "name": "Scenario Deal Type Code",
+   "totalCount": 4,
+   "valueCount": 4,
+   "values": [
+    {
+     "LxBOID": "125",
+     "name": "Lease",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "126",
+     "name": "Purchase",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "127",
+     "name": "Sale",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "128",
+     "name": "Sub-Lease",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    }
+   ]
+  },
+  {
+   "tableType": 2060,
+   "name": "Scenario Type Code",
+   "totalCount": 4,
+   "valueCount": 4,
+   "values": [
+    {
+     "LxBOID": "126",
+     "name": "Disposition",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "127",
+     "name": "Expansion",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "128",
+     "name": "Relocation",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "129",
+     "name": "Renewal",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    }
+   ]
+  },
+  {
+   "tableType": 2160,
+   "name": "Schedule Creation Reason Code",
+   "totalCount": 11,
+   "valueCount": 11,
+   "values": [
+    {
+     "LxBOID": "66",
+     "name": "842 Assumed Option Approved PCR",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "64",
+     "name": "842 Expansion in Place",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "52",
+     "name": "842 Extension",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "53",
+     "name": "842 Option Exercised",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "45",
+     "name": "842 Original Schedule",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "49",
+     "name": "842 Recalculation",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "63",
+     "name": "842 Relocation Expiration Adjustment (old space)",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "50",
+     "name": "842 Remeasurement",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "67",
+     "name": "842 Renovation",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "65",
+     "name": "Close, Before Expiration (kickout)",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "51",
+     "name": "Close, Before Expiration (non-kickout)",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    }
+   ]
+  },
+  {
+   "tableType": 2145,
+   "name": "Security Deposit Group Code",
+   "totalCount": 1,
+   "valueCount": 1,
+   "values": [
+    {
+     "LxBOID": "87",
+     "name": "Security Deposit",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    }
+   ]
+  },
+  {
+   "tableType": 2181,
+   "name": "Security Deposit Status Code",
+   "totalCount": 3,
+   "valueCount": 3,
+   "values": [
+    {
+     "LxBOID": "167",
+     "name": "Active",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "206",
+     "name": "AI Abstracted",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "168",
+     "name": "Deleted",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    }
+   ]
+  },
+  {
+   "tableType": 2146,
+   "name": "Security Deposit Type Code",
+   "totalCount": 3,
+   "valueCount": 3,
+   "values": [
+    {
+     "LxBOID": "97",
+     "name": "Collected",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "99",
+     "name": "None",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "98",
+     "name": "Open",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    }
+   ]
+  },
+  {
+   "tableType": 2061,
+   "name": "Security Privilege Code",
+   "totalCount": 70,
+   "valueCount": 70,
+   "values": [
+    {
+     "LxBOID": "16218",
+     "name": "Allow Import Data Action",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16219",
+     "name": "Allow Locked Status for Budgets",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16220",
+     "name": "Allow My Portfolio",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16221",
+     "name": "Allow Selected Status for Budgets",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16222",
+     "name": "Allow Unlocked Status for Budgets",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16223",
+     "name": "Allow Unselected Status for Budgets",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16224",
+     "name": "Allow Vendor Update",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16225",
+     "name": "Allow WebDAV Access",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16226",
+     "name": "Condition Bids",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16227",
+     "name": "Convert Site To Project",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16228",
+     "name": "Create Capital Program",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16229",
+     "name": "Create Capital Project",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16230",
+     "name": "Create Capital Project For Facility",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16231",
+     "name": "Create Contract",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16232",
+     "name": "Create Equipment Contract",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16233",
+     "name": "Create Facility",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16234",
+     "name": "Create Facility From Project",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16235",
+     "name": "Create Location",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16236",
+     "name": "Create Opening Project",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16237",
+     "name": "Create Parcel",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16238",
+     "name": "Create Portfolio",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16239",
+     "name": "Create Prototype",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16240",
+     "name": "Create Public Reports",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16241",
+     "name": "Create Related Work Order",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16242",
+     "name": "Create Service Request",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16243",
+     "name": "Create Site",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16244",
+     "name": "Default access to Capital Projects for Program Members",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16245",
+     "name": "Default access to Contracts for Portfolio Members",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16246",
+     "name": "Default access to Equipment Contracts for Portfolio Members",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16247",
+     "name": "Default access to Facilities for Portfolio Members",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16248",
+     "name": "Default access to Locations for Portfolio Members",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16249",
+     "name": "Default access to Opening Projects for Portfolio Members",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16250",
+     "name": "Default access to Parcels for Portfolio Members",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16251",
+     "name": "Default access to Prototypes for Portfolio Members",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16252",
+     "name": "Default access to Sites for Portfolio Members",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16253",
+     "name": "Delete Budget",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16254",
+     "name": "Delete Entity and All Associated Data (no recovery option)",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16255",
+     "name": "Login As",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16256",
+     "name": "Manage All Schedule Items",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16257",
+     "name": "Manage All Schedule Items if Manager",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16258",
+     "name": "Manage Default Dashboards",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16259",
+     "name": "Manage RE Plan",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16260",
+     "name": "Manage Report Folders",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16261",
+     "name": "Receive Equipment Alerts",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16262",
+     "name": "Receive Lease Alerts",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16263",
+     "name": "Set Capital Program To Dead",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16264",
+     "name": "Set Capital Program To Inactive",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16265",
+     "name": "Set Capital Project To Dead",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16266",
+     "name": "Set Capital Project To Inactive",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16267",
+     "name": "Set Contract To Dead",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16268",
+     "name": "Set Contract To Inactive",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16269",
+     "name": "Set Equipment Contract To Dead",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16270",
+     "name": "Set Equipment Contract To Inactive",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16271",
+     "name": "Set Facility To Dead",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16272",
+     "name": "Set Facility To Inactive",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16273",
+     "name": "Set Location To Dead",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16274",
+     "name": "Set Location To Inactive",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16275",
+     "name": "Set Opening Project To Dead",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16276",
+     "name": "Set Opening Project To Inactive",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16277",
+     "name": "Set Parcel To Dead",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16278",
+     "name": "Set Parcel To Inactive",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16279",
+     "name": "Set Portfolio To Dead",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16280",
+     "name": "Set Portfolio To Inactive",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16281",
+     "name": "Set Prototype To Dead",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16282",
+     "name": "Set Prototype To Inactive",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16283",
+     "name": "Set Site To Dead",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16284",
+     "name": "Set Site To Inactive",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16285",
+     "name": "Task Association",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16286",
+     "name": "Update/Change Job Title",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "16287",
+     "name": "View Portfolio/Program Documents",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    }
+   ]
+  },
+  {
+   "tableType": 2062,
+   "name": "Service Type Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2063,
+   "name": "Site Rating Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2064,
+   "name": "Slot Type Code",
+   "totalCount": 2,
+   "valueCount": 2,
+   "values": [
+    {
+     "LxBOID": "220",
+     "name": "Company",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "221",
+     "name": "Franchise",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    }
+   ]
+  },
+  {
+   "tableType": 2172,
+   "name": "Source Entity Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2147,
+   "name": "Space Group Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2148,
+   "name": "Space Status Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2149,
+   "name": "Space Type Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2150,
+   "name": "Space Use Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2068,
+   "name": "Store Phase Code",
+   "totalCount": 1,
+   "valueCount": 1,
+   "values": [
+    {
+     "LxBOID": "2628",
+     "name": "New",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    }
+   ]
+  },
+  {
+   "tableType": 2174,
+   "name": "Store Type Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2161,
+   "name": "Straight Line Schedule Type Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2186,
+   "name": "Tax Appeal Result Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2187,
+   "name": "Tax Appeal Status Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2069,
+   "name": "Tax Category Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2188,
+   "name": "Tax Paid To Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2189,
+   "name": "Tax Refund Type Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2190,
+   "name": "Tax Type Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2151,
+   "name": "Tenant Category Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2152,
+   "name": "Tenant Group Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2153,
+   "name": "Tenant Status Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2154,
+   "name": "Tenant Type Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2155,
+   "name": "Tenant Use Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2159,
+   "name": "Term Type Code",
+   "totalCount": 3,
+   "valueCount": 3,
+   "values": [
+    {
+     "LxBOID": "6924",
+     "name": "Extension",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "6925",
+     "name": "Option",
+     "isReadOnlyRecord": false,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "6923",
+     "name": "Original",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    }
+   ]
+  },
+  {
+   "tableType": 2133,
+   "name": "Unit Sales Type Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2135,
+   "name": "Usage Category Code",
+   "totalCount": 2,
+   "valueCount": 2,
+   "values": [
+    {
+     "LxBOID": "170",
+     "name": "Actual",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "171",
+     "name": "Forecast",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    }
+   ]
+  },
+  {
+   "tableType": 3009,
+   "name": "Usage Group Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 3010,
+   "name": "Usage Type Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2134,
+   "name": "Usage Unit Type Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2136,
+   "name": "Use Rent Model Type Code",
+   "totalCount": 2,
+   "valueCount": 2,
+   "values": [
+    {
+     "LxBOID": "192",
+     "name": "Count Based",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    },
+    {
+     "LxBOID": "193",
+     "name": "Share Based",
+     "isReadOnlyRecord": true,
+     "inactive": "No"
+    }
+   ]
+  },
+  {
+   "tableType": 2070,
+   "name": "User Class Code",
+   "totalCount": 15,
+   "valueCount": 15,
+   "values": [
+    {
+     "LxBOID": "7992",
+     "name": "Default Security",
+     "isReadOnlyRecord": true,
+     "inactive": null
+    },
+    {
+     "LxBOID": "7998",
+     "name": "Lease Admin",
+     "isReadOnlyRecord": false,
+     "inactive": null
+    },
+    {
+     "LxBOID": "8043",
+     "name": "Lease Admin Abstracting",
+     "isReadOnlyRecord": false,
+     "inactive": null
+    },
+    {
+     "LxBOID": "7996",
+     "name": "Lease Admin Accounting",
+     "isReadOnlyRecord": false,
+     "inactive": null
+    },
+    {
+     "LxBOID": "8070",
+     "name": "Lease Admin Analyst",
+     "isReadOnlyRecord": false,
+     "inactive": null
+    },
+    {
+     "LxBOID": "7999",
+     "name": "Lease Admin Client",
+     "isReadOnlyRecord": false,
+     "inactive": null
+    },
+    {
+     "LxBOID": "8068",
+     "name": "Lease Admin Client - Docs",
+     "isReadOnlyRecord": false,
+     "inactive": null
+    },
+    {
+     "LxBOID": "8000",
+     "name": "Lease Admin Client - Edit",
+     "isReadOnlyRecord": false,
+     "inactive": null
+    },
+    {
+     "LxBOID": "8069",
+     "name": "Lease Admin Client - Edit/Docs",
+     "isReadOnlyRecord": false,
+     "inactive": null
+    },
+    {
+     "LxBOID": "8059",
+     "name": "Lease Admin Facility",
+     "isReadOnlyRecord": false,
+     "inactive": null
+    },
+    {
+     "LxBOID": "7997",
+     "name": "Lease Admin IT",
+     "isReadOnlyRecord": false,
+     "inactive": null
+    },
+    {
+     "LxBOID": "8001",
+     "name": "Lease Admin Mail",
+     "isReadOnlyRecord": false,
+     "inactive": null
+    },
+    {
+     "LxBOID": "7995",
+     "name": "Lease Admin Manager",
+     "isReadOnlyRecord": false,
+     "inactive": null
+    },
+    {
+     "LxBOID": "8002",
+     "name": "Lease Admin View",
+     "isReadOnlyRecord": false,
+     "inactive": null
+    },
+    {
+     "LxBOID": "7993",
+     "name": "System Administrator",
+     "isReadOnlyRecord": false,
+     "inactive": null
+    }
+   ]
+  },
+  {
+   "tableType": 2071,
+   "name": "Utility Category Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2072,
+   "name": "Vendor Grade Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2073,
+   "name": "Vertical Industry Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  },
+  {
+   "tableType": 2074,
+   "name": "Zoning Code",
+   "totalCount": 0,
+   "valueCount": 0,
+   "values": []
+  }
+ ]
+}

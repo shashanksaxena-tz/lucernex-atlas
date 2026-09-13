@@ -1,0 +1,983 @@
+{
+ "firm": "(ASG)BBW",
+ "build": "26.09.0.113",
+ "captured": "2026-09-13",
+ "source": "LayoutEditorAJAX.jsp rendered per PageLayoutID; placed fields read from the live DOM",
+ "wizards": [
+  {
+   "plid": 98883,
+   "name": "ASG Contract Wizard",
+   "step": "STEP ONE: Contract Summary Setup Enter contract summary details and press the Next button to continue. Required fields are the",
+   "fieldCount": 35,
+   "fields": [
+    {
+     "label": "",
+     "name": "ext-comp-1010-inputEl",
+     "tag": "INPUT",
+     "type": "text",
+     "required": false
+    },
+    {
+     "label": "",
+     "name": "Contract_ClientEntityID",
+     "tag": "INPUT",
+     "type": "text",
+     "required": false
+    },
+    {
+     "label": "",
+     "name": "Contract_CodeContractStatusID",
+     "tag": "SELECT",
+     "type": "select-one",
+     "options": 4,
+     "required": false
+    },
+    {
+     "label": "",
+     "name": "Contract_ContractName",
+     "tag": "INPUT",
+     "type": "text",
+     "required": false
+    },
+    {
+     "label": "Contract Name",
+     "name": "Contract_MasterContractID",
+     "tag": "SELECT",
+     "type": "select-one",
+     "options": 2191,
+     "required": false
+    },
+    {
+     "label": "",
+     "name": "Contract_Firm_LeaseAnalyst",
+     "tag": "SELECT",
+     "type": "select-one",
+     "options": 142,
+     "required": false
+    },
+    {
+     "label": "",
+     "name": "Contract_Firm_TenantLegalName",
+     "tag": "SELECT",
+     "type": "select-one",
+     "options": 10,
+     "required": false
+    },
+    {
+     "label": "",
+     "name": "Contract_LocationID",
+     "tag": "SELECT",
+     "type": "select-one",
+     "options": 2141,
+     "required": false
+    },
+    {
+     "label": "Location 11720 Amber Park Drive - Alpharetta, GA 125th Stree",
+     "name": "Contract_FacilityID",
+     "tag": "SELECT",
+     "type": "select-one",
+     "options": 2062,
+     "required": false
+    },
+    {
+     "label": "",
+     "name": "Contract_CodeContractGroupID",
+     "tag": "SELECT",
+     "type": "select-one",
+     "options": 2,
+     "required": false
+    },
+    {
+     "label": "",
+     "name": "Contract_CodeContractTypeID",
+     "tag": "SELECT",
+     "type": "select-one",
+     "options": 8,
+     "required": false
+    },
+    {
+     "label": "",
+     "name": "Contract_CodeContractCategoryID",
+     "tag": "SELECT",
+     "type": "select-one",
+     "options": 3,
+     "required": false
+    },
+    {
+     "label": "",
+     "name": "Contract_Notes",
+     "tag": "TEXTAREA",
+     "type": "textarea",
+     "required": false
+    },
+    {
+     "label": "Open Date",
+     "name": "Facility_OpenDate",
+     "tag": "INPUT",
+     "type": "text",
+     "required": false
+    },
+    {
+     "label": "Close Date",
+     "name": "Facility_CloseDate",
+     "tag": "INPUT",
+     "type": "text",
+     "required": false
+    },
+    {
+     "label": "Commence Date",
+     "name": "Contract_CommenceDate",
+     "tag": "INPUT",
+     "type": "text",
+     "required": false
+    },
+    {
+     "label": "Expire Date",
+     "name": "Contract_ExpireDate",
+     "tag": "INPUT",
+     "type": "text",
+     "required": false
+    },
+    {
+     "label": "Term Length",
+     "name": "TermLength",
+     "tag": "INPUT",
+     "type": "hidden",
+     "required": false
+    },
+    {
+     "label": "Possession Begin Date",
+     "name": "Contract_PossessionBeginDate",
+     "tag": "INPUT",
+     "type": "text",
+     "required": false
+    },
+    {
+     "label": "Possession End Date",
+     "name": "Contract_PossessionEndDate",
+     "tag": "INPUT",
+     "type": "text",
+     "required": false
+    },
+    {
+     "label": "Execute Date",
+     "name": "Contract_ExecuteDate",
+     "tag": "INPUT",
+     "type": "text",
+     "required": false
+    },
+    {
+     "label": "Payments Begin Date",
+     "name": "Contract_PaymentsBeginDate",
+     "tag": "INPUT",
+     "type": "text",
+     "required": false
+    },
+    {
+     "label": "Payments End Date",
+     "name": "Contract_PaymentsEndDate",
+     "tag": "INPUT",
+     "type": "text",
+     "required": false
+    },
+    {
+     "label": "Buildout Duration",
+     "name": "Contract_Firm_BuildoutDuration",
+     "tag": "INPUT",
+     "type": "text",
+     "required": false
+    },
+    {
+     "label": "Fixturing Period",
+     "name": "Contract_Firm_FixturingPeriod",
+     "tag": "INPUT",
+     "type": "hidden",
+     "required": false
+    },
+    {
+     "label": "Latest Commencement Date",
+     "name": "Contract_Firm_LatestCommencementDate",
+     "tag": "INPUT",
+     "type": "hidden",
+     "required": false
+    },
+    {
+     "label": "Rent Commencement Notes",
+     "name": "Contract_Firm_RentCommencementNotes",
+     "tag": "INPUT",
+     "type": "text",
+     "required": false
+    },
+    {
+     "label": "Lease Expiration Reference",
+     "name": "Contract_Firm_LeaseExpirationReference",
+     "tag": "INPUT",
+     "type": "text",
+     "required": false
+    },
+    {
+     "label": "",
+     "name": "Contract_Firm_LeaseDateHistory",
+     "tag": "TEXTAREA",
+     "type": "textarea",
+     "required": false
+    },
+    {
+     "label": "Lease Status Notes",
+     "name": "Contract_Firm_LeaseStatusNotes",
+     "tag": "INPUT",
+     "type": "text",
+     "required": false
+    },
+    {
+     "label": "Lease Year Reference",
+     "name": "Contract_Firm_LeaseYearReference",
+     "tag": "INPUT",
+     "type": "text",
+     "required": false
+    },
+    {
+     "label": "Rentable Area",
+     "name": "Contract_RentableArea",
+     "tag": "INPUT",
+     "type": "text",
+     "required": false
+    },
+    {
+     "label": "",
+     "name": "frmSubmit",
+     "tag": "INPUT",
+     "type": "hidden",
+     "required": false
+    },
+    {
+     "label": "",
+     "name": "PageLayoutID",
+     "tag": "INPUT",
+     "type": "hidden",
+     "required": false
+    },
+    {
+     "label": "",
+     "name": "RemoveEmptyRowsButton",
+     "tag": "INPUT",
+     "type": "button",
+     "required": false
+    }
+   ]
+  },
+  {
+   "plid": 98884,
+   "name": "ASG Contract Wizard Step 2",
+   "step": "",
+   "fieldCount": 10,
+   "fields": [
+    {
+     "label": "",
+     "name": "ext-comp-1010-inputEl",
+     "tag": "INPUT",
+     "type": "text",
+     "required": false
+    },
+    {
+     "label": "Number of Options",
+     "name": "ContractTerm_ContractTermWizard_OptionNumber",
+     "tag": "INPUT",
+     "type": "text",
+     "required": false
+    },
+    {
+     "label": "",
+     "name": "ContractTerm_CodeTermTypeID",
+     "tag": "SELECT",
+     "type": "select-one",
+     "options": 4,
+     "required": false
+    },
+    {
+     "label": "Term Length (years)",
+     "name": "ContractTerm_ContractTermWizard_TermLength",
+     "tag": "INPUT",
+     "type": "text",
+     "required": false
+    },
+    {
+     "label": "Rentable Area",
+     "name": "Contract_RentableArea",
+     "tag": "INPUT",
+     "type": "text",
+     "required": false
+    },
+    {
+     "label": "",
+     "name": "Contract_CodeBuildingAreaUnitID",
+     "tag": "SELECT",
+     "type": "select-one",
+     "options": 3,
+     "required": false
+    },
+    {
+     "label": "",
+     "name": "submitButton",
+     "tag": "INPUT",
+     "type": "button",
+     "required": false
+    },
+    {
+     "label": "",
+     "name": "frmSubmit",
+     "tag": "INPUT",
+     "type": "hidden",
+     "required": false
+    },
+    {
+     "label": "",
+     "name": "PageLayoutID",
+     "tag": "INPUT",
+     "type": "hidden",
+     "required": false
+    },
+    {
+     "label": "",
+     "name": "RemoveEmptyRowsButton",
+     "tag": "INPUT",
+     "type": "button",
+     "required": false
+    }
+   ]
+  },
+  {
+   "plid": 98885,
+   "name": "ASG Contract Wizard Step 3",
+   "step": "STEP THREE: Contract Covenants Select the Contract template below to clone its covenant entries automatically. Select Contract Template (Contract Wizard Template) Wizard Contract Covenants (One to Many List) ((((List Layout))))",
+   "fieldCount": 6,
+   "fields": [
+    {
+     "label": "",
+     "name": "ext-comp-1010-inputEl",
+     "tag": "INPUT",
+     "type": "text",
+     "required": false
+    },
+    {
+     "label": "",
+     "name": "Covenant_ContractWizardTemplate",
+     "tag": "SELECT",
+     "type": "select-one",
+     "options": 2,
+     "required": false
+    },
+    {
+     "label": "",
+     "name": "submitButton",
+     "tag": "INPUT",
+     "type": "button",
+     "required": false
+    },
+    {
+     "label": "",
+     "name": "frmSubmit",
+     "tag": "INPUT",
+     "type": "hidden",
+     "required": false
+    },
+    {
+     "label": "",
+     "name": "PageLayoutID",
+     "tag": "INPUT",
+     "type": "hidden",
+     "required": false
+    },
+    {
+     "label": "",
+     "name": "RemoveEmptyRowsButton",
+     "tag": "INPUT",
+     "type": "button",
+     "required": false
+    }
+   ]
+  },
+  {
+   "plid": 98886,
+   "name": "ASG Contract Wizard Step 4",
+   "step": "STEP FOUR: Responsibilities Select the Contract template below to clone its Responsibility entries automatically. Select Contract Template (Contract Wizard Template) Wizard Contract Responsibilities (One to Many List) ((((List Layout))))",
+   "fieldCount": 6,
+   "fields": [
+    {
+     "label": "",
+     "name": "ext-comp-1010-inputEl",
+     "tag": "INPUT",
+     "type": "text",
+     "required": false
+    },
+    {
+     "label": "",
+     "name": "Responsibility_ContractWizardTemplate",
+     "tag": "SELECT",
+     "type": "select-one",
+     "options": 2,
+     "required": false
+    },
+    {
+     "label": "",
+     "name": "submitButton",
+     "tag": "INPUT",
+     "type": "button",
+     "required": false
+    },
+    {
+     "label": "",
+     "name": "frmSubmit",
+     "tag": "INPUT",
+     "type": "hidden",
+     "required": false
+    },
+    {
+     "label": "",
+     "name": "PageLayoutID",
+     "tag": "INPUT",
+     "type": "hidden",
+     "required": false
+    },
+    {
+     "label": "",
+     "name": "RemoveEmptyRowsButton",
+     "tag": "INPUT",
+     "type": "button",
+     "required": false
+    }
+   ]
+  },
+  {
+   "plid": 98887,
+   "name": "ASG Contract Wizard Step 5",
+   "step": "",
+   "fieldCount": 22,
+   "fields": [
+    {
+     "label": "",
+     "name": "ext-comp-1010-inputEl",
+     "tag": "INPUT",
+     "type": "text",
+     "required": false
+    },
+    {
+     "label": "",
+     "name": "ExpenseSetup_CodeExpenseGroupID",
+     "tag": "SELECT",
+     "type": "select-one",
+     "options": 6,
+     "required": false
+    },
+    {
+     "label": "",
+     "name": "ExpenseSetup_CodeExpenseTypeID",
+     "tag": "SELECT",
+     "type": "select-one",
+     "options": 151,
+     "required": false
+    },
+    {
+     "label": "",
+     "name": "ExpenseSetup_CodeExpenseCategoryID",
+     "tag": "SELECT",
+     "type": "select-one",
+     "options": 4,
+     "required": false
+    },
+    {
+     "label": "",
+     "name": "ExpenseSetup_RemitMessage",
+     "tag": "INPUT",
+     "type": "text",
+     "required": false
+    },
+    {
+     "label": "",
+     "name": "ExpenseSetup_VendorID",
+     "tag": "SELECT",
+     "type": "select-one",
+     "options": 1,
+     "required": false
+    },
+    {
+     "label": "",
+     "name": "ExpenseSetup_CodeFrequencyID",
+     "tag": "SELECT",
+     "type": "select-one",
+     "options": 5,
+     "required": false
+    },
+    {
+     "label": "",
+     "name": "Contract_PaymentsBeginDate",
+     "tag": "INPUT",
+     "type": "text",
+     "required": false
+    },
+    {
+     "label": "",
+     "name": "Contract_PaymentsEndDate",
+     "tag": "INPUT",
+     "type": "text",
+     "required": false
+    },
+    {
+     "label": "",
+     "name": "ExpenseSetup_CodeProrationMethodID",
+     "tag": "SELECT",
+     "type": "select-one",
+     "options": 5,
+     "required": false
+    },
+    {
+     "label": "",
+     "name": "Contract_RentableArea",
+     "tag": "INPUT",
+     "type": "text",
+     "required": false
+    },
+    {
+     "label": "",
+     "name": "Contract_CodeBuildingAreaUnitID",
+     "tag": "SELECT",
+     "type": "select-one",
+     "options": 3,
+     "required": false
+    },
+    {
+     "label": "",
+     "name": "ExpenseSetup_ExpenseSetupWizard_StartingAmout",
+     "tag": "INPUT",
+     "type": "text",
+     "required": false
+    },
+    {
+     "label": "Starting Amount is: (Starting Amount)",
+     "name": "ExpenseSetup_ExpenseSetupWizard_AmountType",
+     "tag": "INPUT",
+     "type": "text",
+     "required": false
+    },
+    {
+     "label": "Amount Type",
+     "name": "ExpenseSetup_CodeCurrencyTypeID",
+     "tag": "SELECT",
+     "type": "select-one",
+     "options": 166,
+     "required": false
+    },
+    {
+     "label": "",
+     "name": "ExpenseSetup_ExpenseSetupWizard_TypeOfEscalation",
+     "tag": "SELECT",
+     "type": "select-one",
+     "options": 4,
+     "required": false
+    },
+    {
+     "label": "",
+     "name": "ExpenseSetup_ExpenseSetupWizard_EscalateEvery",
+     "tag": "INPUT",
+     "type": "text",
+     "required": false
+    },
+    {
+     "label": "",
+     "name": "ExpenseSetup_ExpenseSetupWizard_EscalateAmountRate",
+     "tag": "INPUT",
+     "type": "text",
+     "required": false
+    },
+    {
+     "label": "",
+     "name": "submitButton",
+     "tag": "INPUT",
+     "type": "button",
+     "required": false
+    },
+    {
+     "label": "",
+     "name": "frmSubmit",
+     "tag": "INPUT",
+     "type": "hidden",
+     "required": false
+    },
+    {
+     "label": "",
+     "name": "PageLayoutID",
+     "tag": "INPUT",
+     "type": "hidden",
+     "required": false
+    },
+    {
+     "label": "",
+     "name": "RemoveEmptyRowsButton",
+     "tag": "INPUT",
+     "type": "button",
+     "required": false
+    }
+   ]
+  },
+  {
+   "plid": 99141,
+   "name": "ASG Facility Wizard",
+   "step": "",
+   "fieldCount": 26,
+   "fields": [
+    {
+     "label": "",
+     "name": "ext-comp-1010-inputEl",
+     "tag": "INPUT",
+     "type": "text",
+     "required": false
+    },
+    {
+     "label": "Facility ID",
+     "name": "Facility_ClientEntityID",
+     "tag": "INPUT",
+     "type": "text",
+     "required": false
+    },
+    {
+     "label": "Facility Name",
+     "name": "Facility_FacilityName",
+     "tag": "INPUT",
+     "type": "text",
+     "required": false
+    },
+    {
+     "label": "SAP Facility Name",
+     "name": "Facility_Firm_SAPFacilityName",
+     "tag": "INPUT",
+     "type": "text",
+     "required": false
+    },
+    {
+     "label": "",
+     "name": "Facility_LocationID",
+     "tag": "SELECT",
+     "type": "select-one",
+     "options": 2141,
+     "required": false
+    },
+    {
+     "label": "Street Address #1",
+     "name": "Facility_StreetAddress1",
+     "tag": "INPUT",
+     "type": "text",
+     "required": false
+    },
+    {
+     "label": "City",
+     "name": "Facility_City",
+     "tag": "INPUT",
+     "type": "text",
+     "required": false
+    },
+    {
+     "label": "Street Address #2",
+     "name": "Facility_StreetAddress2",
+     "tag": "INPUT",
+     "type": "text",
+     "required": false
+    },
+    {
+     "label": "Street Address #3",
+     "name": "Facility_StreetAddress3",
+     "tag": "INPUT",
+     "type": "text",
+     "required": false
+    },
+    {
+     "label": "Postal Code",
+     "name": "Facility_PostalCode",
+     "tag": "INPUT",
+     "type": "text",
+     "required": false
+    },
+    {
+     "label": "",
+     "name": "ProjectEntity_LongitudeDegrees",
+     "tag": "INPUT",
+     "type": "text",
+     "required": false
+    },
+    {
+     "label": "Street Address #4",
+     "name": "Facility_StreetAddress4",
+     "tag": "INPUT",
+     "type": "text",
+     "required": false
+    },
+    {
+     "label": "",
+     "name": "ProjectEntity_LatitudeDegrees",
+     "tag": "INPUT",
+     "type": "text",
+     "required": false
+    },
+    {
+     "label": "Space Number",
+     "name": "Facility_Firm_SpaceNumber",
+     "tag": "INPUT",
+     "type": "text",
+     "required": false
+    },
+    {
+     "label": "",
+     "name": "Facility_UseLocationAddress",
+     "tag": "INPUT",
+     "type": "hidden",
+     "required": false
+    },
+    {
+     "label": "",
+     "name": "_checkbox_Facility_UseLocationAddress",
+     "tag": "INPUT",
+     "type": "checkbox",
+     "required": false
+    },
+    {
+     "label": "Open Date",
+     "name": "Facility_OpenDate",
+     "tag": "INPUT",
+     "type": "text",
+     "required": false
+    },
+    {
+     "label": "Close Date",
+     "name": "Facility_CloseDate",
+     "tag": "INPUT",
+     "type": "text",
+     "required": false
+    },
+    {
+     "label": "Construction Date",
+     "name": "Facility_ConstructionDate",
+     "tag": "INPUT",
+     "type": "text",
+     "required": false
+    },
+    {
+     "label": "Frontage",
+     "name": "Facility_Frontage",
+     "tag": "INPUT",
+     "type": "text",
+     "required": false
+    },
+    {
+     "label": "Gross Area",
+     "name": "Facility_GrossArea",
+     "tag": "INPUT",
+     "type": "text",
+     "required": false
+    },
+    {
+     "label": "Payable Area",
+     "name": "Facility_RentableArea",
+     "tag": "INPUT",
+     "type": "text",
+     "required": false
+    },
+    {
+     "label": "Selling Area",
+     "name": "Facility_UsableArea",
+     "tag": "INPUT",
+     "type": "text",
+     "required": false
+    },
+    {
+     "label": "",
+     "name": "frmSubmit",
+     "tag": "INPUT",
+     "type": "hidden",
+     "required": false
+    },
+    {
+     "label": "",
+     "name": "PageLayoutID",
+     "tag": "INPUT",
+     "type": "hidden",
+     "required": false
+    },
+    {
+     "label": "",
+     "name": "RemoveEmptyRowsButton",
+     "tag": "INPUT",
+     "type": "button",
+     "required": false
+    }
+   ]
+  },
+  {
+   "plid": 99142,
+   "name": "ASG Location Wizard",
+   "step": "",
+   "fieldCount": 23,
+   "fields": [
+    {
+     "label": "",
+     "name": "ext-comp-1010-inputEl",
+     "tag": "INPUT",
+     "type": "text",
+     "required": false
+    },
+    {
+     "label": "Location Name",
+     "name": "Location_LocationName",
+     "tag": "INPUT",
+     "type": "hidden",
+     "required": false
+    },
+    {
+     "label": "Grand Opening Date",
+     "name": "Location_Firm_GrandOpeningDate",
+     "tag": "INPUT",
+     "type": "text",
+     "required": false
+    },
+    {
+     "label": "ASG Center ID",
+     "name": "Location_EDGE_ASGCenterID",
+     "tag": "INPUT",
+     "type": "text",
+     "required": false
+    },
+    {
+     "label": "Center Name",
+     "name": "Location_Firm_CenterName",
+     "tag": "INPUT",
+     "type": "text",
+     "required": false
+    },
+    {
+     "label": "ASG Developer",
+     "name": "Location_firm_ASGDeveloper",
+     "tag": "INPUT",
+     "type": "text",
+     "required": false
+    },
+    {
+     "label": "BBW Center ID",
+     "name": "Location_Firm_BBWCenterID",
+     "tag": "INPUT",
+     "type": "text",
+     "required": false
+    },
+    {
+     "label": "Edge Developer",
+     "name": "Location_Firm_Developer",
+     "tag": "INPUT",
+     "type": "text",
+     "required": false
+    },
+    {
+     "label": "Street Address #1",
+     "name": "Location_StreetAddress1",
+     "tag": "INPUT",
+     "type": "text",
+     "required": false
+    },
+    {
+     "label": "City",
+     "name": "Location_City",
+     "tag": "INPUT",
+     "type": "text",
+     "required": false
+    },
+    {
+     "label": "Street Address #2",
+     "name": "Location_StreetAddress2",
+     "tag": "INPUT",
+     "type": "text",
+     "required": false
+    },
+    {
+     "label": "Street Address #3",
+     "name": "Location_StreetAddress3",
+     "tag": "INPUT",
+     "type": "text",
+     "required": false
+    },
+    {
+     "label": "Postal Code",
+     "name": "Location_PostalCode",
+     "tag": "INPUT",
+     "type": "text",
+     "required": false
+    },
+    {
+     "label": "",
+     "name": "Location_LongitudeDegrees",
+     "tag": "INPUT",
+     "type": "text",
+     "required": false
+    },
+    {
+     "label": "Street Address #4",
+     "name": "Location_StreetAddress4",
+     "tag": "INPUT",
+     "type": "text",
+     "required": false
+    },
+    {
+     "label": "",
+     "name": "Location_LatitudeDegrees",
+     "tag": "INPUT",
+     "type": "text",
+     "required": false
+    },
+    {
+     "label": "County",
+     "name": "Location_Firm_County",
+     "tag": "INPUT",
+     "type": "text",
+     "required": false
+    },
+    {
+     "label": "Primary Tax/Sales/GST/HST",
+     "name": "Location_TaxRate1",
+     "tag": "INPUT",
+     "type": "text",
+     "required": false
+    },
+    {
+     "label": "Secondary Tax/PST",
+     "name": "Location_TaxRate2",
+     "tag": "INPUT",
+     "type": "text",
+     "required": false
+    },
+    {
+     "label": "Tertiary Tax",
+     "name": "Location_TaxRate3",
+     "tag": "INPUT",
+     "type": "text",
+     "required": false
+    },
+    {
+     "label": "",
+     "name": "frmSubmit",
+     "tag": "INPUT",
+     "type": "hidden",
+     "required": false
+    },
+    {
+     "label": "",
+     "name": "PageLayoutID",
+     "tag": "INPUT",
+     "type": "hidden",
+     "required": false
+    },
+    {
+     "label": "",
+     "name": "RemoveEmptyRowsButton",
+     "tag": "INPUT",
+     "type": "button",
+     "required": false
+    }
+   ]
+  }
+ ]
+}

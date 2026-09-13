@@ -10,5 +10,6 @@
 <nav><a href="../index.html">Overview</a><a href="../atlas.html#/map?set=feature">Feature map</a>
 <a href="../atlas.html">Interactive app</a>
 <a href="../entities/index.html">Record types</a><a href="../rules/index.html">Rules</a>
+<a href="../research/index.html">Research</a>
 <a href="../questions.html">Open questions</a></nav></header>
 <main><p class="crumb"><a href="../index.html">Atlas</a> &rsaquo; <a href="index.html">Rules</a> &rsaquo; TAX-R-012</p><h1 class="mono">TAX-R-012</h1><p class="sub">Property Tax &middot; `PropertyTaxDetail` is a structured, priced breakdown line, not a notes field</p><span class="tag inf">Inferred</span><p>Input: `TaxAmount` (`sTYPE_MONEY`), `TaxRate` (`sTYPE_PERCENTAGE`), `CodeTaxTypeID`, `RateFlag` — four substantive fields, plus one genuinely free-form `Notes` field among fifteen total. Effect: A rebuild that models this object as a notes/comment record (per `../../data-fields/INDEX.md`&#x27;s inferred one-liner) will lose the actual per-tax-type amount/rate breakdown a bill is composed of. Confidence: Derived, direct field-list read — see `data-model.md` for the correction in full.</p><p style="font-size:11.5px;color:var(--faint);margin-top:18px">Source: modules/property-tax/rules.md</p></main></body></html>

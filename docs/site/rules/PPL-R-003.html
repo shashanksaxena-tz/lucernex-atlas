@@ -10,5 +10,6 @@
 <nav><a href="../index.html">Overview</a><a href="../atlas.html#/map?set=feature">Feature map</a>
 <a href="../atlas.html">Interactive app</a>
 <a href="../entities/index.html">Record types</a><a href="../rules/index.html">Rules</a>
+<a href="../research/index.html">Research</a>
 <a href="../questions.html">Open questions</a></nav></header>
 <main><p class="crumb"><a href="../index.html">Atlas</a> &rsaquo; <a href="index.html">Rules</a> &rsaquo; PPL-R-003</p><h1 class="mono">PPL-R-003</h1><p class="sub">People &amp; Parties &middot; `ConvertToMember` implies promotion, not replacement</p><span class="tag inf">Inferred</span><p>- Trigger: A `Person`/`NonMember` is granted system login. - Input: `Member.ConvertToMember` (Boolean). - Condition: — - Effect: The existing identity is promoted to carry login/authorization data; it is not deleted and recreated. The exact mechanics (same row extended vs. new row sharing `PersonID`) are open — see `member-vs-person-vs-party.md` open question 1. - Confidence: Inferred from the field name alone. ## Companies and roles</p><p style="font-size:11.5px;color:var(--faint);margin-top:18px">Source: modules/people-parties/rules.md</p></main></body></html>

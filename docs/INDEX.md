@@ -78,10 +78,45 @@ The questions that drove this pass, and where each is settled.
 |---|---|---|
 | **How does conditional field filtering work?** | A flat rule engine: `[Show \| Show and Require \| Hide] this field when [all \| any] of these rules match`. Operators depend on the driver's type. Drivers cross foreign keys into related entities. | [`modules/layouts-and-forms/conditional-fields.md`](modules/layouts-and-forms/conditional-fields.md) |
 | **How is a Form different from a Page?** | A Page presents an entity that already exists. A **Form is an Issue Type** — a tenant-defined request type with one layout per workflow step. A Custom List is a Form without the workflow. | [`modules/layouts-and-forms/forms-vs-pages-vs-layouts.md`](modules/layouts-and-forms/forms-vs-pages-vs-layouts.md), [`data-model/code-table-registry.md`](data-model/code-table-registry.md) |
-| **What are the workflows?** | Four live workflows, 1:1 with four form types. Lease Admin Request's 8 steps *are* BRD-24. Routing is by organisational position, not by name. | [`modules/workflow/`](modules/workflow/) |
+| **What are the workflows?** | **Corrected.** `(ASG)American Freight` has 4 workflows and 4 form types, which looked 1:1; `(ASG)BBW` has **13 workflows, 62 steps and 6 form types**, and only 4 of 13 names match — **Form↔Workflow is not 1:1**. Two form types have no workflow at all. Versioning is by name suffix (`… v1`, `… v2`). Lease Admin Request's 8 steps *are* BRD-24. Routing resolves in practice to lists of named individuals, not positions. | [`features/workflows-forms/`](features/workflows-forms/), [`modules/workflow/`](modules/workflow/) |
 | **How does ASC 842 work?** | One engine, three standards, selected by flags on `SLSummary`. Classification is a separate 93-field record. Schedules are **approved, not published**. | [`modules/accounting/`](modules/accounting/) |
 
 ---
+
+## Coverage — what is documented and what is not
+
+[**`COVERAGE.md`**](COVERAGE.md) is the scoreboard: **744 known surfaces** — 141 navigation nodes,
+57 administration tools, 93 page layouts, 227 sql tables, 207 firm drop-downs, 13 workflow
+templates and 6 form types — each with its route, whether a document explains it, and whether a
+screenshot exists. It is **generated** from the raw captures by
+[`tools/build_coverage.py`](tools/build_coverage.py); edit
+[`tools/coverage-owners.json`](tools/coverage-owners.json) and re-run rather than hand-editing the
+table. Read it before assuming an area is covered.
+
+It also surfaces the structural gaps: **31 sql tables absent from the 223-object census**, **25
+tables the schema viewer refuses** (including the whole `Page Layout` family), and **49 of 57 admin
+tools with no owning document**.
+
+## Feature areas
+
+[`features/`](features/README.md) documents the product as a **manual** — feature by feature, screen
+by screen — complementing [`modules/`](modules/) (domain concepts) and
+[`data-model/`](data-model/) (schema).
+
+| Area | What it settles |
+|---|---|
+| [**required-and-validation**](features/required-and-validation/) | **At least three, probably four, independent sources of required-ness**, and they are **not** one flag surfaced several times: the column's `Required?` and the catalog's `Required` disagree on 44 fields **in both directions** — 42 owner foreign keys the application demands but the database permits to be null, and 2 audit columns the reverse — so they are *NOT NULL at storage* versus *the user must supply this*, two obligations that mostly coincide. Collapsing them loses 44 obligations. The red asterisk is a third source whose storage is **unresolved** with one candidate left under test; `Show and Require` is a fourth that is **used zero times**. `Contract` has 307 columns and requires 7, none of them a business fact. *(The agreement percentage is withheld — the sweep behind it captured global fields only.)* |
+| [**page-layouts**](features/page-layouts/) | One `PageLayout` table in **two tiers**, joined by a self-referential `ParentPageLayoutID` — nav ids and firm layout ids are disjoint but not separate things. **Several layouts on one navigation node form an ordered chain** via `PreviousPageLayoutID`, and the chain renders as a **layout-selector dropdown** — the runtime shows the head and offers the rest, which is why five layouts can share one node. Chains cross modes (a LIST head followed by SEP pages). From the first rendered end-user screens: **SUB layouts render as titled sections** and are reused across pages, and **action buttons render in a right-hand rail and are per-layout** (13 on Summary, 4 on Abstract Details, same record). SEP/SUB/LIST composition, the publish-and-fork model, the recovered 17+20-column engine schema, per-placement behaviour in `JSONConfigText`, and layouts as hosts for **business-action buttons** |
+| [**equipment-contracts**](features/equipment-contracts/) | BBW's fifth root with all 32 node ids. `Contract` minus the retail layers, the ASC 842 engine kept whole. **No `EquipmentContract` table exists** in the 223-object census, the 227-table picker, or the 25 refused tables |
+| [**workflows-forms**](features/workflows-forms/) | **Corrects the 1:1 Form↔Workflow claim.** Workflow versioning by name suffix; workflows chain; two separate JavaScript escape hatches |
+| [**data-fields**](features/data-fields/) | **205 `Firm`-scope custom fields and not one of them is a physical column** — 147 are CAM clauses on `Contract`, making ASG's customisation of Lucernex almost entirely a CAM abstraction. Field *definitions* are rows in `ReportGroupAvailableField` (`IsGlobal` + `FirmID` + `IsClientExtensionField`); where the *values* are stored is unidentified. Also reconciles the three inventories — census 223, picker 227, catalog 214 — **none complete, union 254** |
+| [**security-access**](features/security-access/) | Security is granted to a **user class** over four kinds of thing — navigation/layout **pages**, **70 action verbs**, **6,553 individual fields**, and budget columns — on a `NoAccess` / `View` / `Edit` / `Delete` / `Default` ladder. **Read-only turns out to be `View` on a field**, and the field catalog's uniform `ReadOnly = No` is *not* an error: definition-level and per-class grant measure different things. It also **refutes** this corpus's three-gate explanation of why `Equipment Contract` fails to render at American Freight — entitlement, menu structure and page access are **all open** there (granted for 8 of 10 classes), and `Program` is granted by all 10 and also does not render, so **a fourth mechanism exists and is unidentified**. Also documents the **audit trail** — a synchronous, in-transaction, field-level table with old/new values, bearing on ASG's open **ADR-0020** vs **ADR-0012** decision |
+| [**reference-data**](features/reference-data/) | Discount rates, CPI, exchange rates, fiscal and holiday calendars. **Four of the five tables are empty in BBW** — most consequentially the **discount-rate table, while the tenant runs ASC 842, IFRS 16 and straight-line**, so the rate must reach the engine by a per-record override. CPI holds **3,683 rows of one BLS series** (1932–2019). The discount-rate lookup is keyed by **seven dimensions** including a lease-length band and the accounting method. The fiscal calendar supports **4-4-5** and **13-period** retail years and **extrapolates** beyond the last defined year — so a fiscal period is not a calendar month. The holiday calendar turns out to feed **project scheduling, not accounting** |
+| [**administration**](features/administration/) | **All 57 administration tools, classified with routes** — the complete inventory, which did not previously exist. A quarter of the admin surface is the configuration engine. Settles from the routes that Firm Drop Downs (`FirmCodeList.jsp`) and Client Drop Downs (`CustomCodeTableEdit.jsp`) are **two distinct registries**, that Import and Export are one "Messenger" subsystem, and that `Job Log` and `Report Log` are one screen. Names the **five undocumented financial reference-data tools** — discount rates, CPI data, exchange rates, fiscal and holiday calendars — that feed the accounting engine |
+| [**import-export**](features/import-export/) | **Three publish tiers and four inbound data paths.** Accruent ships **versioned configuration packages** (`Version`, **`Min Version`**, `Released`) via `Import Best Practice Templates` — the closest prior art anywhere for the Hub→Spoke "never more than one version behind" rule; **`Export Configuration` is the firm-to-firm publish mechanism** — it exports layouts/forms/reports as XML with a `Clone` checkbox whose two modes ("new layouts created when this xml is imported" versus "moving from one firm to another") **are exactly the publish-and-fork model** derived from id arithmetic elsewhere. Generic bulk import is an XML form post (`POST /rest/firm`, `synchronous` required, UI defaults to stop-on-first-error, no dry-run) and **creates parent records implicitly** — importing a Facility creates its Location. **`BOMapClientRecordID` is confirmed as the upsert key** — `/clientid/{id}` addresses records by it and `POST …?allowUpdate=true` upserts — which is why it is required on 133 of 202 tables. `/atlas-api` + `/adapter-config` + `/vendor-lease` are a **live AI lease-abstraction pipeline** tying together the `Allow AI Lease Abstraction` flag, BBW's 7 Lease Abstract layouts and the `AI Abstracted` status value. And `Job Log`'s **818 entries** are the first evidence of the product *running*: a real XLSX import, an **hourly inbound HTTP integration**, and `Generate Payments` logged as a user-triggered job |
+| [**search-filtering**](features/search-filtering/) | Search participation is configured **per field per placement** (`IncludeInSearch`, 9 placements tenant-wide), paging is layout configuration (`rowsPerPage`), inline row editing is the default, and layout-level run-mode filters are **built and unused**. The API query surface is **FIQL** with mandatory `fields` and a 413 ceiling |
+| [**custom-lists**](features/custom-lists/) | A Custom List is a tenant-authored **mini record type** with its own field namespace, layout and parent binding — and it is **a Form without the workflow**: `CodeIssueType.IsWorkFlow` is the only difference, so Manage Forms and Manage Custom Lists are two views over one code table. Form attachability is **11 `IsValidFor…` boolean columns**, one of them `IsValidForEquipContract` |
+| [**drop-downs-code-tables**](features/drop-downs-code-tables/) | The value census behind the 207-table registry: **73 populated, 134 empty, 1,140 values**, three tables holding 56% of them. `delete` is gated by a server-supplied **`isReadOnlyRecord`**, not a reference count — so Lucernex is **no precedent for Where-Used**, and D-07 / MST-015 stand. The flag **moved between builds**, which corrects two claims in [`data-model/code-table-registry.md`](data-model/code-table-registry.md) |
 
 ## Screens explored
 
@@ -176,6 +211,7 @@ catalogue and the foreign-key graph so the model stays whole, grouped under
 | [`data-model/project-entity.md`](data-model/project-entity.md) | **`ProjectEntity` is the universal entity supertype, and it is *not* the tenant key — `FirmID` is.** Decisive for the database-per-tenant design |
 | [`data-model/type-system.md`](data-model/type-system.md) | The full type vocabulary by family |
 | [`data-model/graphql-api.md`](data-model/graphql-api.md) | The live API: 490 types, 617 queries, 3 mutations, and the canonical 10-value `FieldType` enum behind the 448 `sTYPE_*` codes |
+| [**`data-model/api/`**](data-model/api/README.md) | **The full REST API explained** — the complete OpenAPI 3.0.1 spec verbatim (132KB), a machine-readable operation index, and a written account of how the API works: one generic CRUD controller for all 227 types, dual identifier space, the `ImportResults` trap, the AI pipeline, and what to copy vs fix |
 | [`data-model/rest-api.md`](data-model/rest-api.md) | The REST surface over all 223 record types. Record sets are `Base` / `CodeTables` / `Issues`; fields filter by required / editable / read-only. The endpoint shapes themselves did **not** render and remain uncaptured |
 | [`data-model/screen-routing.md`](data-model/screen-routing.md) | **All 81 end-user screens mapped to their `PageLayoutID` and JSP.** 17 renderers serve the lot; two of them serve 56%. Proves Forms and Work Flow are one screen, and that "Portfolio" is `Program` |
 | [`data-model/code-table-registry.md`](data-model/code-table-registry.md) | **All 207 Firm Drop Downs with their `TableType` IDs**, the 2000/3000 band split, captured values, and **the contract lifecycle, resolved** |
@@ -204,24 +240,81 @@ Held at the repository root, outside `docs/`.
 
 ---
 
+## A second tenant
+
+[`tenants/bbw-vs-american-freight.md`](tenants/bbw-vs-american-freight.md) — the `(ASG)BBW` training
+tenant (build `26.09.0.113`) read against `(ASG)American Freight` (`26.08.0.46`). The four end-user
+navigation roots are **identical name-for-name**; BBW adds a fifth, **`Equipment Contract`** — a
+parallel lease aggregate that keeps the entire ASC 842 / IFRS 16 / straight-line engine and drops
+every retail-real-estate layer (co-tenancy, recoveries/CAM, percentage rent, sales, the whole Accrual
+Info group). It also carries **13 workflow templates / 62 steps** against American Freight's 4 — including the
+document- and financial-abstraction workflows, and **BRD-24's eight `Lease Admin Request` steps,
+observed for the first time**. Not one of those 62 steps is a `Task` step.
+
+| Data | Holds |
+|---|---|
+| [`mindmap/navtree-bbw.json`](mindmap/navtree-bbw.json) | BBW navigation, 141 nodes. Route columns need re-capture |
+| [`tenants/bbw-conditional-sweep.json`](tenants/bbw-conditional-sweep.json) | **854** conditional targets across **all 93** layouts — **zero populated** |
+| [`tenants/bbw-workflow-steps.json`](tenants/bbw-workflow-steps.json) | 13 templates, 62 steps. Approver identities deliberately omitted |
+| [`tenants/bbw-page-layouts.json`](tenants/bbw-page-layouts.json) | All **93** page layouts across `SEP`/`SUB`/`LIST`, with primary table and navigation |
+| [`tenants/bbw-drop-downs.json`](tenants/bbw-drop-downs.json) | All **207** Firm Drop Downs with their `TableType` ids (2000-3016) |
+| [`tenants/bbw-wizards.json`](tenants/bbw-wizards.json) | The **5-step contract creation wizard**, field by field, plus Facility and Location wizards |
+| [`tenants/bbw-platform-inventory.json`](tenants/bbw-platform-inventory.json) | **227** sql tables, **57** admin tools, **6** form types |
+| [`tenants/bbw-platform-tables.json`](tenants/bbw-platform-tables.json) | Field detail for **202** of 227 tables, **6,487** fields — **caveat: global layer only** (`showGlobal=true`); firm fields absent, re-run queued. 25 platform-internal tables (incl. the `Page Layout` trio) are **refused** by the viewer |
+| [`tenants/layout-set-comparison.json`](tenants/layout-set-comparison.json) | AF↔BBW layout join: **0 shared ids but 80 shared names** — one ASG template set, copied per tenant and forked |
+| [`tenants/af-*.json`](tenants/) | American Freight on the **same build**: Firm record, all 207 code tables' row actions, navigation, platform tables, comparison counts |
+
+**Four corrections to this corpus** come out of it — including a **retraction** (§3): the
+reference-count reading of code-table `delete` protection was wrong, and must not be used to reopen
+**D-07** / **MST-015**. It, all recorded in that document: the single-tenant
+reading of code-table `delete` protection is insufficient; a sweep method that reads
+`LayoutEditorAJAX.jsp` over HTTP yields **false negatives** because conditional targets are injected
+client-side; and workflow routing, documented as "by organisational position, not by name", resolves
+in practice to lists of **named individuals**. It also surfaces two undocumented mechanisms —
+workflows **chain** (one kicks off another), and a `Conditional Workflow JS` field holds
+workflow-level rules as **JavaScript**, separate from `conditionalFieldsConfig`.
+
+---
+
 ## What is still open
 
 Ranked by how much each blocks the rebuild.
 
-1. **The populated shape of `json.conditionalFieldsConfig`.** The conditional-rule storage format is
-   inferred, not observed — the target opened had no rules on it. Find a layout that does.
-2. **Contract lifecycle.** `Contract Status Code` has only three values (`AI Abstracted`, `Active`,
-   `Inactive`), which does not match BRD-24's Open → Active → Possession → Paying Rent → Closed.
-   Resolve before the contract schema is frozen.
-3. **The write path.** 617 GraphQL queries against 3 mutations. `RESTful WebService Docs`
-   (`/en/test/RESTful.jsp`) has not been opened.
+1. ~~**The populated shape of `json.conditionalFieldsConfig`.**~~ **ANSWERED, 2026-09-13.** The
+   "854 targets, zero populated" reading held only for the **93 page layouts**; the feature is used
+   on the **42 form layouts**. A REST sweep of all **135** finds **8 layouts, 50 conditional-field
+   records, 54 criteria clauses**, and the stored shape is now Observed:
+   `{allAny, showHide, criteriaFields:[{scriptName, crtOpt1, crtVal1[], isCheckBox}]}`, with operator
+   codes `2` = *in* and `17` = *not in*, and **`crtVal1` holding display labels, not ids**. All 50
+   use `show`; `showAndRequire` is used **0** times. See
+   [`features/page-layouts/`](features/page-layouts/) and
+   [`tenants/bbw-form-layout-sweep.json`](tenants/bbw-form-layout-sweep.json).
+2. **Contract lifecycle.** The platform's `Contract Status Code` has only three values
+   (`AI Abstracted`, `Active`, `Inactive`), which does not match BRD-24's Open → Active →
+   Possession → Paying Rent → Closed. **A strong lead has appeared:** BBW carries **38 firm-defined
+   drop-downs** in `Client Drop Downs`, and one of them is **`Lease Status`** — exactly what a tenant
+   would create to track a lifecycle the platform field cannot express. **The first rendered Contract
+   screens show both fields on one record — `Contract Status = Active` and `Lease Status = Open` —
+   and the record's own breadcrumb header ends with the `Lease Status`, not the contract status.**
+   `Open` is BRD-24's first state and is not among the platform field's three values. Reading the
+   full `Lease Status` value list is one click, and is requested. Note also that `Facility Status Code` *does* carry `Open`, `Closed` and
+   `Possession`, so the BRD-24 vocabulary exists in the product on the **facility**. Resolve before
+   the contract schema is frozen. See [`features/drop-downs-code-tables/`](features/drop-downs-code-tables/).
+3. ~~**The write path.**~~ **ANSWERED, 2026-09-13.** `/en/test/RESTful.jsp` was opened. The REST
+   surface is **fully CRUD — 160 operations over 141 paths: 104 GET, 40 POST, 7 PUT, 9 DELETE.** The
+   617-queries-against-3-mutations picture describes GraphQL only and does not describe the product's
+   write path. See [`tenants/bbw-rest-api.json`](tenants/bbw-rest-api.json). *(No token or credential
+   was captured; the page renders live Basic and JWT tokens and the capture was structure-only.)*
+   REST is also how the 25 tables the schema viewer refuses were recovered — see
+   [`tenants/bbw-layout-engine-tables.json`](tenants/bbw-layout-engine-tables.json).
 4. **`Export Schema`** would yield the complete physical schema in one file. It is a download and
    needs explicit approval.
-5. **No `Task` step exists in this tenant**, so half the workflow step model is unobserved.
-   `WorkFlowTemplateStep` has 55 fields; the admin grid surfaces six.
+5. **No `Task` step exists in either tenant**, so half the workflow step model is unobserved.
+   `WorkFlowTemplateStep` has 55 fields; the admin grid surfaces six. **0 of 19** AF steps and
+   **0 of 62** BBW steps are `Task` steps — see [`features/workflows-forms/`](features/workflows-forms/).
 6. **Where workflow status lives** — `Work Flow Status Code` is *not* among the 207 Firm Drop Downs.
 7. **IFRS 16 is configured nowhere.** Confirm with the business whether the rebuild needs it at all.
 
 ---
 
-_Last updated: 2026-09-10._
+_Last updated: 2026-09-13._

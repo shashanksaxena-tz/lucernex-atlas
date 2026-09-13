@@ -1,0 +1,1682 @@
+{
+ "firm": "(ASG)American Freight",
+ "firmID": 3158,
+ "build": "26.09.0.113",
+ "captured": "2026-09-13",
+ "purpose": "Task 4 - AF counts for direct comparison with BBW (both now on build 26.09.0.113).",
+ "counts": {
+  "pageLayouts": {
+   "SEP": 17,
+   "SUB": 31,
+   "LIST": 40,
+   "all": 88,
+   "bbw": {
+    "SEP": 15,
+    "SUB": 32,
+    "LIST": 46,
+    "all": 93
+   },
+   "note": "AF has MORE SEP layouts than BBW (17 vs 15) but fewer SUB (31 vs 32) and materially fewer LIST (40 vs 46). Page layouts are therefore genuinely tenant-shaped - unlike navigation, drop-down TableTypes and the SQL table catalog, which are identical.",
+   "source": "/en/pagebuilder/SummaryEntityPageLayoutEdit.jsp?popupList=true&mode={SEP,SUB,LIST} - NOTE the path is /en/pagebuilder/, NOT /en/admin/ (the /en/admin/ path 404s)."
+  },
+  "workflowTemplates": {
+   "af": 4,
+   "bbw": 13,
+   "source": "/en/workflow/WorkFlowTemplateEdit.jsp"
+  },
+  "formTypes": {
+   "af": 4,
+   "bbw": 6,
+   "source": "FirmCodeEdit.jsp TableType=2035 ('Manage Forms')"
+  },
+  "firmDropDowns": {
+   "af": 207,
+   "bbw": 207,
+   "identical": true,
+   "note": "Observed: all 207 TableTypes AND all 207 names match BBW exactly. Range 2000-3016 in both."
+  },
+  "sqlTables": {
+   "af": 227,
+   "bbw": 227,
+   "identical": true
+  },
+  "navigationRoots": {
+   "af": 4,
+   "bbw": 5
+  },
+  "adminTools": {
+   "afRawLinks": 66,
+   "afTools": 63,
+   "bbwReported": 57,
+   "afLxAdminOnlyTools": [
+    "Modify Straight Line Status",
+    "Data Conversion Cleaner",
+    "Test Email Address",
+    "Delete Entities"
+   ],
+   "note": "AF's admin dashboard renders 66 anchors; 3 are page chrome (Privacy Policy, the user menu, Printable View), leaving 63 tools versus BBW's reported 57. CAUTION: this is the one count I would not treat as comparable without re-deriving BBW's the same way - AF has IsTestFirm=true and exposes 4 vendor-only /lxadmin/ tools plus several experimental ones, which plausibly accounts for the gap. Counting method, not tenant configuration, may be the whole difference.",
+   "source": "/en/dashboard/DashboardDispatchOld.jsp?dashboardName=admin"
+  }
+ },
+ "pageLayoutIdOverlap": {
+  "CORRECTION": "This block previously reported 'ZERO overlap, therefore page layouts are independently firm-authored'. That was WRONG - it joined on id alone. Joining on (mode, name) is the correct test and reverses the conclusion. Retained here so the error is not silently rewritten.",
+  "joinOnIdAlone": {
+   "sharedModeAndId": 0,
+   "note": "True but MEANINGLESS - the id spaces are re-keyed per tenant, so an id join can never match."
+  },
+  "joinOnModeAndName": {
+   "afLayouts": 88,
+   "bbwLayouts": 93,
+   "shared": 80,
+   "onlyAF": 7,
+   "onlyBBW": 12,
+   "primaryTableMismatches": 0,
+   "idDeltaBand": "BBW_id - AF_id: 58 of 80 shared layouts fall in +2626..+2677; most common deltas +2626 (14), +2638 (13), +2652 (7), +2653 (7). Full range 1010..2923.",
+   "duplicateRowInBoth": "Both tenants carry the SAME duplicate (mode,name): LIST / 'ASG Contract Payment Details - Security Deposit'. A duplicate reproduced in both tenants is copied, not independently authored.",
+   "conclusion": "Observed. ASG publishes ONE page-layout template set per tenant which then forks locally; BBW is the more advanced fork (93 vs 88, 12 layouts AF lacks). Page layouts are NOT independently firm-authored. Zero primaryTable mismatches across all 80 shared layouts means the fork diverges in inventory and ids, not in what each layout binds to.",
+   "methodLesson": "Join on NAME as well as id before concluding two tenants differ. Re-keyed id blocks make an id-only join produce a false negative."
+  },
+  "sharedLayoutPairs": [
+   {
+    "mode": "LIST",
+    "name": "ASG ASC 842 Schedule",
+    "afId": "96207",
+    "bbwId": 98859,
+    "delta": 2652,
+    "primaryTable": "Straight-Line Schedule"
+   },
+   {
+    "mode": "LIST",
+    "name": "ASG Approval - Expense Schedules",
+    "afId": "96229",
+    "bbwId": 99146,
+    "delta": 2917,
+    "primaryTable": "Expense Schedule"
+   },
+   {
+    "mode": "LIST",
+    "name": "ASG Approval - Transactions",
+    "afId": "96232",
+    "bbwId": 99147,
+    "delta": 2915,
+    "primaryTable": "Payment Transaction"
+   },
+   {
+    "mode": "LIST",
+    "name": "ASG Contract Allowance",
+    "afId": "96208",
+    "bbwId": 98860,
+    "delta": 2652,
+    "primaryTable": "Allowance"
+   },
+   {
+    "mode": "LIST",
+    "name": "ASG Contract Alternate Rent",
+    "afId": "96209",
+    "bbwId": 98861,
+    "delta": 2652,
+    "primaryTable": "Alternate Rent Schedule"
+   },
+   {
+    "mode": "LIST",
+    "name": "ASG Contract Amendments",
+    "afId": "96210",
+    "bbwId": 98862,
+    "delta": 2652,
+    "primaryTable": "Contract Amendment"
+   },
+   {
+    "mode": "LIST",
+    "name": "ASG Contract Covenants",
+    "afId": "96212",
+    "bbwId": 98864,
+    "delta": 2652,
+    "primaryTable": "Covenant"
+   },
+   {
+    "mode": "LIST",
+    "name": "ASG Contract Expense Recovery",
+    "afId": "97725",
+    "bbwId": 99143,
+    "delta": 1418,
+    "primaryTable": "Expense Recovery"
+   },
+   {
+    "mode": "LIST",
+    "name": "ASG Contract Expense Recovery (Net)",
+    "afId": "97726",
+    "bbwId": 99144,
+    "delta": 1418,
+    "primaryTable": "Expense Recovery"
+   },
+   {
+    "mode": "LIST",
+    "name": "ASG Contract Expense Setup",
+    "afId": "96221",
+    "bbwId": 99051,
+    "delta": 2830,
+    "primaryTable": "Expense Setup"
+   },
+   {
+    "mode": "LIST",
+    "name": "ASG Contract Expense Setup - Expense Schedule",
+    "afId": "96234",
+    "bbwId": 99050,
+    "delta": 2816,
+    "primaryTable": "Expense Schedule"
+   },
+   {
+    "mode": "LIST",
+    "name": "ASG Contract Expense Setup - Vendor Allocation",
+    "afId": "96233",
+    "bbwId": 99049,
+    "delta": 2816,
+    "primaryTable": "Expense Vendor Allocation"
+   },
+   {
+    "mode": "LIST",
+    "name": "ASG Contract Key Dates",
+    "afId": "96213",
+    "bbwId": 98865,
+    "delta": 2652,
+    "primaryTable": "Key Date"
+   },
+   {
+    "mode": "LIST",
+    "name": "ASG Contract List",
+    "afId": "96223",
+    "bbwId": 98918,
+    "delta": 2695,
+    "primaryTable": "Contract"
+   },
+   {
+    "mode": "LIST",
+    "name": "ASG Contract Payment Details - Allowance",
+    "afId": "96235",
+    "bbwId": 98909,
+    "delta": 2674,
+    "primaryTable": "Allowance"
+   },
+   {
+    "mode": "LIST",
+    "name": "ASG Contract Payment Details - Alternate Rent",
+    "afId": "96228",
+    "bbwId": 98910,
+    "delta": 2682,
+    "primaryTable": "Alternate Rent Schedule"
+   },
+   {
+    "mode": "LIST",
+    "name": "ASG Contract Payment Details - Breakpoints",
+    "afId": "96226",
+    "bbwId": 98908,
+    "delta": 2682,
+    "primaryTable": "Percentage Rent Period"
+   },
+   {
+    "mode": "LIST",
+    "name": "ASG Contract Payment Details - Expense Recovery",
+    "afId": "96224",
+    "bbwId": 98911,
+    "delta": 2687,
+    "primaryTable": "Expense Recovery"
+   },
+   {
+    "mode": "LIST",
+    "name": "ASG Contract Payment Details - Expense Setup",
+    "afId": "96240",
+    "bbwId": 98916,
+    "delta": 2676,
+    "primaryTable": "Expense Setup"
+   },
+   {
+    "mode": "LIST",
+    "name": "ASG Contract Payment Details - Percent Rent",
+    "afId": "96237",
+    "bbwId": 98914,
+    "delta": 2677,
+    "primaryTable": "Percentage Rent"
+   },
+   {
+    "mode": "LIST",
+    "name": "ASG Contract Payment Details - Rent Steps",
+    "afId": "96231",
+    "bbwId": 98917,
+    "delta": 2686,
+    "primaryTable": "Expense Schedule"
+   },
+   {
+    "mode": "LIST",
+    "name": "ASG Contract Payment Details - Scheduled Offset",
+    "afId": "96225",
+    "bbwId": 98912,
+    "delta": 2687,
+    "primaryTable": "Scheduled Offset"
+   },
+   {
+    "mode": "LIST",
+    "name": "ASG Contract Payment Details - Security Deposit",
+    "afId": "97856",
+    "bbwId": 98866,
+    "delta": 1010,
+    "primaryTable": "Security Deposit"
+   },
+   {
+    "mode": "LIST",
+    "name": "ASG Contract Payment Details - Transactions",
+    "afId": "96230",
+    "bbwId": 98907,
+    "delta": 2677,
+    "primaryTable": "Payment Transaction"
+   },
+   {
+    "mode": "LIST",
+    "name": "ASG Contract Payments",
+    "afId": "96214",
+    "bbwId": 98867,
+    "delta": 2653,
+    "primaryTable": "Payment Transaction"
+   },
+   {
+    "mode": "LIST",
+    "name": "ASG Contract Percent Rent",
+    "afId": "96222",
+    "bbwId": 99145,
+    "delta": 2923,
+    "primaryTable": "Percentage Rent"
+   },
+   {
+    "mode": "LIST",
+    "name": "ASG Contract Percent Rent - Breakpoints",
+    "afId": "96239",
+    "bbwId": 98913,
+    "delta": 2674,
+    "primaryTable": "Percentage Rent Breakpoint"
+   },
+   {
+    "mode": "LIST",
+    "name": "ASG Contract Percent Rent - Schedule",
+    "afId": "96227",
+    "bbwId": 98920,
+    "delta": 2693,
+    "primaryTable": "Sales Period"
+   },
+   {
+    "mode": "LIST",
+    "name": "ASG Contract Receipts",
+    "afId": "96215",
+    "bbwId": 98868,
+    "delta": 2653,
+    "primaryTable": "Payment Receipt"
+   },
+   {
+    "mode": "LIST",
+    "name": "ASG Contract Responsibilities",
+    "afId": "96216",
+    "bbwId": 98869,
+    "delta": 2653,
+    "primaryTable": "Responsibility"
+   },
+   {
+    "mode": "LIST",
+    "name": "ASG Contract Sales History",
+    "afId": "96217",
+    "bbwId": 98870,
+    "delta": 2653,
+    "primaryTable": "Sales"
+   },
+   {
+    "mode": "LIST",
+    "name": "ASG Contract Terms",
+    "afId": "96218",
+    "bbwId": 98871,
+    "delta": 2653,
+    "primaryTable": "Contract Term"
+   },
+   {
+    "mode": "LIST",
+    "name": "ASG Covenant List View",
+    "afId": "96236",
+    "bbwId": 98906,
+    "delta": 2670,
+    "primaryTable": "Covenant"
+   },
+   {
+    "mode": "LIST",
+    "name": "ASG Employers",
+    "afId": "96219",
+    "bbwId": 98872,
+    "delta": 2653,
+    "primaryTable": "Employer"
+   },
+   {
+    "mode": "LIST",
+    "name": "ASG Facility List",
+    "afId": "96241",
+    "bbwId": 98919,
+    "delta": 2678,
+    "primaryTable": "Facility"
+   },
+   {
+    "mode": "LIST",
+    "name": "ASG SL Summary",
+    "afId": "96220",
+    "bbwId": 98873,
+    "delta": 2653,
+    "primaryTable": "Straight-Line Schedule"
+   },
+   {
+    "mode": "SEP",
+    "name": "ASG Breakpoint Schedule",
+    "afId": "96283",
+    "bbwId": 98921,
+    "delta": 2638,
+    "primaryTable": "Percentage Rent Period"
+   },
+   {
+    "mode": "SEP",
+    "name": "ASG Common Area Maintenance",
+    "afId": "96286",
+    "bbwId": 98924,
+    "delta": 2638,
+    "primaryTable": "Contract"
+   },
+   {
+    "mode": "SEP",
+    "name": "ASG Contract Abstract Details",
+    "afId": "96287",
+    "bbwId": 98925,
+    "delta": 2638,
+    "primaryTable": "Contract"
+   },
+   {
+    "mode": "SEP",
+    "name": "ASG Contract Payment Details",
+    "afId": "96288",
+    "bbwId": 98926,
+    "delta": 2638,
+    "primaryTable": "Contract"
+   },
+   {
+    "mode": "SEP",
+    "name": "ASG Contract Summary",
+    "afId": "96289",
+    "bbwId": 98927,
+    "delta": 2638,
+    "primaryTable": "Contract"
+   },
+   {
+    "mode": "SEP",
+    "name": "ASG Delivery Requirements",
+    "afId": "96290",
+    "bbwId": 98928,
+    "delta": 2638,
+    "primaryTable": "Contract"
+   },
+   {
+    "mode": "SEP",
+    "name": "ASG Facility Summary",
+    "afId": "96291",
+    "bbwId": 98929,
+    "delta": 2638,
+    "primaryTable": "Facility"
+   },
+   {
+    "mode": "SEP",
+    "name": "ASG Funds and Expenses",
+    "afId": "96292",
+    "bbwId": 98930,
+    "delta": 2638,
+    "primaryTable": "Contract"
+   },
+   {
+    "mode": "SEP",
+    "name": "ASG Last Deferred SL Entry",
+    "afId": "96293",
+    "bbwId": 98931,
+    "delta": 2638,
+    "primaryTable": "Contract"
+   },
+   {
+    "mode": "SEP",
+    "name": "ASG Lease Logs",
+    "afId": "96294",
+    "bbwId": 98932,
+    "delta": 2638,
+    "primaryTable": "Contract"
+   },
+   {
+    "mode": "SEP",
+    "name": "ASG Location Summary",
+    "afId": "96295",
+    "bbwId": 98933,
+    "delta": 2638,
+    "primaryTable": "Location"
+   },
+   {
+    "mode": "SEP",
+    "name": "ASG Percent Rent Schedule",
+    "afId": "96296",
+    "bbwId": 98934,
+    "delta": 2638,
+    "primaryTable": "Percentage Rent Period"
+   },
+   {
+    "mode": "SEP",
+    "name": "ASG Portfolio Summary",
+    "afId": "96297",
+    "bbwId": 98935,
+    "delta": 2638,
+    "primaryTable": "Portfolio"
+   },
+   {
+    "mode": "SEP",
+    "name": "ASG Real Estate Taxes",
+    "afId": "96298",
+    "bbwId": 99140,
+    "delta": 2842,
+    "primaryTable": "Contract"
+   },
+   {
+    "mode": "SUB",
+    "name": "ASG Accounting Schedule Details",
+    "afId": "96206",
+    "bbwId": 98858,
+    "delta": 2652,
+    "primaryTable": "Contract"
+   },
+   {
+    "mode": "SUB",
+    "name": "ASG Co Tenancy",
+    "afId": "96248",
+    "bbwId": 98874,
+    "delta": 2626,
+    "primaryTable": "Contract"
+   },
+   {
+    "mode": "SUB",
+    "name": "ASG Common Area Maintenance",
+    "afId": "96249",
+    "bbwId": 98875,
+    "delta": 2626,
+    "primaryTable": "Contract"
+   },
+   {
+    "mode": "SUB",
+    "name": "ASG Contract Critical Dates",
+    "afId": "96250",
+    "bbwId": 98876,
+    "delta": 2626,
+    "primaryTable": "Contract"
+   },
+   {
+    "mode": "SUB",
+    "name": "ASG Contract Facility Information",
+    "afId": "96251",
+    "bbwId": 98877,
+    "delta": 2626,
+    "primaryTable": "Contract"
+   },
+   {
+    "mode": "SUB",
+    "name": "ASG Contract Firm Information",
+    "afId": "96252",
+    "bbwId": 98878,
+    "delta": 2626,
+    "primaryTable": "Contract"
+   },
+   {
+    "mode": "SUB",
+    "name": "ASG Contract Header",
+    "afId": "96253",
+    "bbwId": 98879,
+    "delta": 2626,
+    "primaryTable": "Contract"
+   },
+   {
+    "mode": "SUB",
+    "name": "ASG Contract Location Information",
+    "afId": "96254",
+    "bbwId": 98880,
+    "delta": 2626,
+    "primaryTable": "Contract"
+   },
+   {
+    "mode": "SUB",
+    "name": "ASG Contract Log Header",
+    "afId": "96255",
+    "bbwId": 98881,
+    "delta": 2626,
+    "primaryTable": "Contract"
+   },
+   {
+    "mode": "SUB",
+    "name": "ASG Contract Space Information",
+    "afId": "96256",
+    "bbwId": 98882,
+    "delta": 2626,
+    "primaryTable": "Contract"
+   },
+   {
+    "mode": "SUB",
+    "name": "ASG Contract Wizard",
+    "afId": "96257",
+    "bbwId": 98883,
+    "delta": 2626,
+    "primaryTable": "Contract"
+   },
+   {
+    "mode": "SUB",
+    "name": "ASG Contract Wizard Step 2",
+    "afId": "96258",
+    "bbwId": 98884,
+    "delta": 2626,
+    "primaryTable": "Contract"
+   },
+   {
+    "mode": "SUB",
+    "name": "ASG Contract Wizard Step 3",
+    "afId": "96259",
+    "bbwId": 98885,
+    "delta": 2626,
+    "primaryTable": "Contract"
+   },
+   {
+    "mode": "SUB",
+    "name": "ASG Contract Wizard Step 4",
+    "afId": "96260",
+    "bbwId": 98886,
+    "delta": 2626,
+    "primaryTable": "Contract"
+   },
+   {
+    "mode": "SUB",
+    "name": "ASG Contract Wizard Step 5",
+    "afId": "96261",
+    "bbwId": 98887,
+    "delta": 2626,
+    "primaryTable": "Contract"
+   },
+   {
+    "mode": "SUB",
+    "name": "ASG Delivery Requirements",
+    "afId": "96262",
+    "bbwId": 98891,
+    "delta": 2629,
+    "primaryTable": "Contract"
+   },
+   {
+    "mode": "SUB",
+    "name": "ASG Documents Form Field",
+    "afId": "96263",
+    "bbwId": 98936,
+    "delta": 2673,
+    "primaryTable": "Entity"
+   },
+   {
+    "mode": "SUB",
+    "name": "ASG Facility Address",
+    "afId": "96264",
+    "bbwId": 98895,
+    "delta": 2631,
+    "primaryTable": "Facility"
+   },
+   {
+    "mode": "SUB",
+    "name": "ASG Facility Header",
+    "afId": "96265",
+    "bbwId": 98896,
+    "delta": 2631,
+    "primaryTable": "Facility"
+   },
+   {
+    "mode": "SUB",
+    "name": "ASG Facility Location Information",
+    "afId": "96266",
+    "bbwId": 98898,
+    "delta": 2632,
+    "primaryTable": "Facility"
+   },
+   {
+    "mode": "SUB",
+    "name": "ASG Facility Space Information",
+    "afId": "96267",
+    "bbwId": 98897,
+    "delta": 2630,
+    "primaryTable": "Facility"
+   },
+   {
+    "mode": "SUB",
+    "name": "ASG Facility Wizard",
+    "afId": "96268",
+    "bbwId": 99141,
+    "delta": 2873,
+    "primaryTable": "Facility"
+   },
+   {
+    "mode": "SUB",
+    "name": "ASG Funds and Expenses",
+    "afId": "96271",
+    "bbwId": 98894,
+    "delta": 2623,
+    "primaryTable": "Contract"
+   },
+   {
+    "mode": "SUB",
+    "name": "ASG Location Address",
+    "afId": "96272",
+    "bbwId": 98903,
+    "delta": 2631,
+    "primaryTable": "Location"
+   },
+   {
+    "mode": "SUB",
+    "name": "ASG Location Area Information",
+    "afId": "96273",
+    "bbwId": 98904,
+    "delta": 2631,
+    "primaryTable": "Location"
+   },
+   {
+    "mode": "SUB",
+    "name": "ASG Location Financial Information",
+    "afId": "96274",
+    "bbwId": 98905,
+    "delta": 2631,
+    "primaryTable": "Location"
+   },
+   {
+    "mode": "SUB",
+    "name": "ASG Location Header",
+    "afId": "96275",
+    "bbwId": 98902,
+    "delta": 2627,
+    "primaryTable": "Location"
+   },
+   {
+    "mode": "SUB",
+    "name": "ASG Location Wizard",
+    "afId": "96276",
+    "bbwId": 99142,
+    "delta": 2866,
+    "primaryTable": "Location"
+   },
+   {
+    "mode": "SUB",
+    "name": "ASG Real Estate Taxes",
+    "afId": "96277",
+    "bbwId": 98890,
+    "delta": 2613,
+    "primaryTable": "Contract"
+   },
+   {
+    "mode": "SUB",
+    "name": "ASG Workflow Footer",
+    "afId": "96278",
+    "bbwId": 98937,
+    "delta": 2659,
+    "primaryTable": "Entity"
+   }
+  ]
+ },
+ "layouts": [
+  {
+   "mode": "SEP",
+   "pageLayoutId": "96283",
+   "name": "ASG Breakpoint Schedule",
+   "parentPageLayoutID": "Contract : Payment Info : Percentage Rent&nbsp;&nbsp;",
+   "primaryTable": "Percentage Rent Period",
+   "isReadOnlyRecord": false
+  },
+  {
+   "mode": "SEP",
+   "pageLayoutId": "96284",
+   "name": "ASG Client Request Log",
+   "parentPageLayoutID": "Portfolio : Details : Summary&nbsp;&nbsp;",
+   "primaryTable": "Portfolio",
+   "isReadOnlyRecord": false
+  },
+  {
+   "mode": "SEP",
+   "pageLayoutId": "96285",
+   "name": "ASG Co Tenancy",
+   "parentPageLayoutID": "Contract : Abstract Info : Abstract Details&nbsp;&nbsp;",
+   "primaryTable": "Contract",
+   "isReadOnlyRecord": false
+  },
+  {
+   "mode": "SEP",
+   "pageLayoutId": "96286",
+   "name": "ASG Common Area Maintenance",
+   "parentPageLayoutID": "Contract : Abstract Info : Abstract Details&nbsp;&nbsp;",
+   "primaryTable": "Contract",
+   "isReadOnlyRecord": false
+  },
+  {
+   "mode": "SEP",
+   "pageLayoutId": "96287",
+   "name": "ASG Contract Abstract Details",
+   "parentPageLayoutID": "Contract : Abstract Info : Abstract Details&nbsp;&nbsp;",
+   "primaryTable": "Contract",
+   "isReadOnlyRecord": false
+  },
+  {
+   "mode": "SEP",
+   "pageLayoutId": "96288",
+   "name": "ASG Contract Payment Details",
+   "parentPageLayoutID": "Contract : Payment Info : Payment Details&nbsp;&nbsp;",
+   "primaryTable": "Contract",
+   "isReadOnlyRecord": false
+  },
+  {
+   "mode": "SEP",
+   "pageLayoutId": "96289",
+   "name": "ASG Contract Summary",
+   "parentPageLayoutID": "Contract : Details : Summary&nbsp;&nbsp;",
+   "primaryTable": "Contract",
+   "isReadOnlyRecord": false
+  },
+  {
+   "mode": "SEP",
+   "pageLayoutId": "96290",
+   "name": "ASG Delivery Requirements",
+   "parentPageLayoutID": "Contract : Abstract Info : Abstract Details&nbsp;&nbsp;",
+   "primaryTable": "Contract",
+   "isReadOnlyRecord": false
+  },
+  {
+   "mode": "SEP",
+   "pageLayoutId": "96291",
+   "name": "ASG Facility Summary",
+   "parentPageLayoutID": "Facility : Details : Summary&nbsp;&nbsp;",
+   "primaryTable": "Facility",
+   "isReadOnlyRecord": false
+  },
+  {
+   "mode": "SEP",
+   "pageLayoutId": "96292",
+   "name": "ASG Funds and Expenses",
+   "parentPageLayoutID": "Contract : Abstract Info : Abstract Details&nbsp;&nbsp;",
+   "primaryTable": "Contract",
+   "isReadOnlyRecord": false
+  },
+  {
+   "mode": "SEP",
+   "pageLayoutId": "96293",
+   "name": "ASG Last Deferred SL Entry",
+   "parentPageLayoutID": "Contract : Accounting Info : Straight-Line Rent&nbsp;&nbsp;",
+   "primaryTable": "Contract",
+   "isReadOnlyRecord": false
+  },
+  {
+   "mode": "SEP",
+   "pageLayoutId": "96294",
+   "name": "ASG Lease Logs",
+   "parentPageLayoutID": "Contract : Details : Summary&nbsp;&nbsp;",
+   "primaryTable": "Contract",
+   "isReadOnlyRecord": false
+  },
+  {
+   "mode": "SEP",
+   "pageLayoutId": "96295",
+   "name": "ASG Location Summary",
+   "parentPageLayoutID": "Location : Details : Summary&nbsp;&nbsp;",
+   "primaryTable": "Location",
+   "isReadOnlyRecord": false
+  },
+  {
+   "mode": "SEP",
+   "pageLayoutId": "96296",
+   "name": "ASG Percent Rent Schedule",
+   "parentPageLayoutID": "Contract : Payment Info : Percentage Rent&nbsp;&nbsp;",
+   "primaryTable": "Percentage Rent Period",
+   "isReadOnlyRecord": false
+  },
+  {
+   "mode": "SEP",
+   "pageLayoutId": "96297",
+   "name": "ASG Portfolio Summary",
+   "parentPageLayoutID": "Portfolio : Details : Summary&nbsp;&nbsp;",
+   "primaryTable": "Portfolio",
+   "isReadOnlyRecord": false
+  },
+  {
+   "mode": "SEP",
+   "pageLayoutId": "96298",
+   "name": "ASG Real Estate Taxes",
+   "parentPageLayoutID": "Contract : Abstract Info : Abstract Details&nbsp;&nbsp;",
+   "primaryTable": "Contract",
+   "isReadOnlyRecord": false
+  },
+  {
+   "mode": "SEP",
+   "pageLayoutId": "110188",
+   "name": "test",
+   "parentPageLayoutID": "Program : Details : Summary&nbsp;&nbsp;",
+   "primaryTable": "Contract",
+   "isReadOnlyRecord": false
+  },
+  {
+   "mode": "SUB",
+   "pageLayoutId": "96206",
+   "name": "ASG Accounting Schedule Details",
+   "parentPageLayoutID": null,
+   "primaryTable": "Contract",
+   "isReadOnlyRecord": false
+  },
+  {
+   "mode": "SUB",
+   "pageLayoutId": "96248",
+   "name": "ASG Co Tenancy",
+   "parentPageLayoutID": null,
+   "primaryTable": "Contract",
+   "isReadOnlyRecord": false
+  },
+  {
+   "mode": "SUB",
+   "pageLayoutId": "96249",
+   "name": "ASG Common Area Maintenance",
+   "parentPageLayoutID": null,
+   "primaryTable": "Contract",
+   "isReadOnlyRecord": false
+  },
+  {
+   "mode": "SUB",
+   "pageLayoutId": "96250",
+   "name": "ASG Contract Critical Dates",
+   "parentPageLayoutID": null,
+   "primaryTable": "Contract",
+   "isReadOnlyRecord": false
+  },
+  {
+   "mode": "SUB",
+   "pageLayoutId": "96251",
+   "name": "ASG Contract Facility Information",
+   "parentPageLayoutID": null,
+   "primaryTable": "Contract",
+   "isReadOnlyRecord": false
+  },
+  {
+   "mode": "SUB",
+   "pageLayoutId": "96252",
+   "name": "ASG Contract Firm Information",
+   "parentPageLayoutID": null,
+   "primaryTable": "Contract",
+   "isReadOnlyRecord": false
+  },
+  {
+   "mode": "SUB",
+   "pageLayoutId": "96253",
+   "name": "ASG Contract Header",
+   "parentPageLayoutID": null,
+   "primaryTable": "Contract",
+   "isReadOnlyRecord": false
+  },
+  {
+   "mode": "SUB",
+   "pageLayoutId": "96254",
+   "name": "ASG Contract Location Information",
+   "parentPageLayoutID": null,
+   "primaryTable": "Contract",
+   "isReadOnlyRecord": false
+  },
+  {
+   "mode": "SUB",
+   "pageLayoutId": "96255",
+   "name": "ASG Contract Log Header",
+   "parentPageLayoutID": null,
+   "primaryTable": "Contract",
+   "isReadOnlyRecord": false
+  },
+  {
+   "mode": "SUB",
+   "pageLayoutId": "96256",
+   "name": "ASG Contract Space Information",
+   "parentPageLayoutID": null,
+   "primaryTable": "Contract",
+   "isReadOnlyRecord": false
+  },
+  {
+   "mode": "SUB",
+   "pageLayoutId": "96257",
+   "name": "ASG Contract Wizard",
+   "parentPageLayoutID": null,
+   "primaryTable": "Contract",
+   "isReadOnlyRecord": false
+  },
+  {
+   "mode": "SUB",
+   "pageLayoutId": "96258",
+   "name": "ASG Contract Wizard Step 2",
+   "parentPageLayoutID": null,
+   "primaryTable": "Contract",
+   "isReadOnlyRecord": false
+  },
+  {
+   "mode": "SUB",
+   "pageLayoutId": "96259",
+   "name": "ASG Contract Wizard Step 3",
+   "parentPageLayoutID": null,
+   "primaryTable": "Contract",
+   "isReadOnlyRecord": false
+  },
+  {
+   "mode": "SUB",
+   "pageLayoutId": "96260",
+   "name": "ASG Contract Wizard Step 4",
+   "parentPageLayoutID": null,
+   "primaryTable": "Contract",
+   "isReadOnlyRecord": false
+  },
+  {
+   "mode": "SUB",
+   "pageLayoutId": "96261",
+   "name": "ASG Contract Wizard Step 5",
+   "parentPageLayoutID": null,
+   "primaryTable": "Contract",
+   "isReadOnlyRecord": false
+  },
+  {
+   "mode": "SUB",
+   "pageLayoutId": "96262",
+   "name": "ASG Delivery Requirements",
+   "parentPageLayoutID": null,
+   "primaryTable": "Contract",
+   "isReadOnlyRecord": false
+  },
+  {
+   "mode": "SUB",
+   "pageLayoutId": "96263",
+   "name": "ASG Documents Form Field",
+   "parentPageLayoutID": null,
+   "primaryTable": "Entity",
+   "isReadOnlyRecord": false
+  },
+  {
+   "mode": "SUB",
+   "pageLayoutId": "96264",
+   "name": "ASG Facility Address",
+   "parentPageLayoutID": null,
+   "primaryTable": "Facility",
+   "isReadOnlyRecord": false
+  },
+  {
+   "mode": "SUB",
+   "pageLayoutId": "96265",
+   "name": "ASG Facility Header",
+   "parentPageLayoutID": null,
+   "primaryTable": "Facility",
+   "isReadOnlyRecord": false
+  },
+  {
+   "mode": "SUB",
+   "pageLayoutId": "96266",
+   "name": "ASG Facility Location Information",
+   "parentPageLayoutID": null,
+   "primaryTable": "Facility",
+   "isReadOnlyRecord": false
+  },
+  {
+   "mode": "SUB",
+   "pageLayoutId": "96267",
+   "name": "ASG Facility Space Information",
+   "parentPageLayoutID": null,
+   "primaryTable": "Facility",
+   "isReadOnlyRecord": false
+  },
+  {
+   "mode": "SUB",
+   "pageLayoutId": "96268",
+   "name": "ASG Facility Wizard",
+   "parentPageLayoutID": null,
+   "primaryTable": "Facility",
+   "isReadOnlyRecord": false
+  },
+  {
+   "mode": "SUB",
+   "pageLayoutId": "96271",
+   "name": "ASG Funds and Expenses",
+   "parentPageLayoutID": null,
+   "primaryTable": "Contract",
+   "isReadOnlyRecord": false
+  },
+  {
+   "mode": "SUB",
+   "pageLayoutId": "96272",
+   "name": "ASG Location Address",
+   "parentPageLayoutID": null,
+   "primaryTable": "Location",
+   "isReadOnlyRecord": false
+  },
+  {
+   "mode": "SUB",
+   "pageLayoutId": "96273",
+   "name": "ASG Location Area Information",
+   "parentPageLayoutID": null,
+   "primaryTable": "Location",
+   "isReadOnlyRecord": false
+  },
+  {
+   "mode": "SUB",
+   "pageLayoutId": "96274",
+   "name": "ASG Location Financial Information",
+   "parentPageLayoutID": null,
+   "primaryTable": "Location",
+   "isReadOnlyRecord": false
+  },
+  {
+   "mode": "SUB",
+   "pageLayoutId": "96275",
+   "name": "ASG Location Header",
+   "parentPageLayoutID": null,
+   "primaryTable": "Location",
+   "isReadOnlyRecord": false
+  },
+  {
+   "mode": "SUB",
+   "pageLayoutId": "96276",
+   "name": "ASG Location Wizard",
+   "parentPageLayoutID": null,
+   "primaryTable": "Location",
+   "isReadOnlyRecord": false
+  },
+  {
+   "mode": "SUB",
+   "pageLayoutId": "96277",
+   "name": "ASG Real Estate Taxes",
+   "parentPageLayoutID": null,
+   "primaryTable": "Contract",
+   "isReadOnlyRecord": false
+  },
+  {
+   "mode": "SUB",
+   "pageLayoutId": "96278",
+   "name": "ASG Workflow Footer",
+   "parentPageLayoutID": null,
+   "primaryTable": "Entity",
+   "isReadOnlyRecord": false
+  },
+  {
+   "mode": "SUB",
+   "pageLayoutId": "110158",
+   "name": "test",
+   "parentPageLayoutID": null,
+   "primaryTable": "Allowance",
+   "isReadOnlyRecord": false
+  },
+  {
+   "mode": "LIST",
+   "pageLayoutId": "96229",
+   "name": "ASG Approval - Expense Schedules",
+   "parentPageLayoutID": "&nbsp;&nbsp;",
+   "primaryTable": "Expense Schedule",
+   "isReadOnlyRecord": false
+  },
+  {
+   "mode": "LIST",
+   "pageLayoutId": "96232",
+   "name": "ASG Approval - Transactions",
+   "parentPageLayoutID": "&nbsp;&nbsp;",
+   "primaryTable": "Payment Transaction",
+   "isReadOnlyRecord": false
+  },
+  {
+   "mode": "LIST",
+   "pageLayoutId": "96207",
+   "name": "ASG ASC 842 Schedule",
+   "parentPageLayoutID": "Contract : Accounting Info : ASC 842 Rent Schedule&nbsp;&nbsp;",
+   "primaryTable": "Straight-Line Schedule",
+   "isReadOnlyRecord": false
+  },
+  {
+   "mode": "LIST",
+   "pageLayoutId": "96208",
+   "name": "ASG Contract Allowance",
+   "parentPageLayoutID": "Contract : Payment Info : Allowances&nbsp;&nbsp;",
+   "primaryTable": "Allowance",
+   "isReadOnlyRecord": false
+  },
+  {
+   "mode": "LIST",
+   "pageLayoutId": "96209",
+   "name": "ASG Contract Alternate Rent",
+   "parentPageLayoutID": "Contract : Payment Info : Alternate Rent&nbsp;&nbsp;",
+   "primaryTable": "Alternate Rent Schedule",
+   "isReadOnlyRecord": false
+  },
+  {
+   "mode": "LIST",
+   "pageLayoutId": "96210",
+   "name": "ASG Contract Amendments",
+   "parentPageLayoutID": "Contract : Abstract Info : Amendments&nbsp;&nbsp;",
+   "primaryTable": "Contract Amendment",
+   "isReadOnlyRecord": false
+  },
+  {
+   "mode": "LIST",
+   "pageLayoutId": "96211",
+   "name": "ASG Contract Co Tenancy",
+   "parentPageLayoutID": "Contract : Abstract Info : Co-Tenancy&nbsp;&nbsp;",
+   "primaryTable": "Co Tenancy",
+   "isReadOnlyRecord": false
+  },
+  {
+   "mode": "LIST",
+   "pageLayoutId": "96212",
+   "name": "ASG Contract Covenants",
+   "parentPageLayoutID": "Contract : Abstract Info : Covenants&nbsp;&nbsp;",
+   "primaryTable": "Covenant",
+   "isReadOnlyRecord": false
+  },
+  {
+   "mode": "LIST",
+   "pageLayoutId": "97725",
+   "name": "ASG Contract Expense Recovery",
+   "parentPageLayoutID": "Contract : Payment Info : Recoveries&nbsp;&nbsp;",
+   "primaryTable": "Expense Recovery",
+   "isReadOnlyRecord": false
+  },
+  {
+   "mode": "LIST",
+   "pageLayoutId": "97726",
+   "name": "ASG Contract Expense Recovery (Net)",
+   "parentPageLayoutID": "Contract : Payment Info : Recoveries&nbsp;&nbsp;",
+   "primaryTable": "Expense Recovery",
+   "isReadOnlyRecord": false
+  },
+  {
+   "mode": "LIST",
+   "pageLayoutId": "96221",
+   "name": "ASG Contract Expense Setup",
+   "parentPageLayoutID": "Contract : Payment Info : Recurring Expenses&nbsp;&nbsp;",
+   "primaryTable": "Expense Setup",
+   "isReadOnlyRecord": false
+  },
+  {
+   "mode": "LIST",
+   "pageLayoutId": "96234",
+   "name": "ASG Contract Expense Setup - Expense Schedule",
+   "parentPageLayoutID": "&nbsp;&nbsp;",
+   "primaryTable": "Expense Schedule",
+   "isReadOnlyRecord": false
+  },
+  {
+   "mode": "LIST",
+   "pageLayoutId": "96233",
+   "name": "ASG Contract Expense Setup - Vendor Allocation",
+   "parentPageLayoutID": "&nbsp;&nbsp;",
+   "primaryTable": "Expense Vendor Allocation",
+   "isReadOnlyRecord": false
+  },
+  {
+   "mode": "LIST",
+   "pageLayoutId": "96213",
+   "name": "ASG Contract Key Dates",
+   "parentPageLayoutID": "Contract : Abstract Info : Key Dates&nbsp;&nbsp;",
+   "primaryTable": "Key Date",
+   "isReadOnlyRecord": false
+  },
+  {
+   "mode": "LIST",
+   "pageLayoutId": "96223",
+   "name": "ASG Contract List",
+   "parentPageLayoutID": "&nbsp;&nbsp;",
+   "primaryTable": "Contract",
+   "isReadOnlyRecord": false
+  },
+  {
+   "mode": "LIST",
+   "pageLayoutId": "96235",
+   "name": "ASG Contract Payment Details - Allowance",
+   "parentPageLayoutID": "&nbsp;&nbsp;",
+   "primaryTable": "Allowance",
+   "isReadOnlyRecord": false
+  },
+  {
+   "mode": "LIST",
+   "pageLayoutId": "96228",
+   "name": "ASG Contract Payment Details - Alternate Rent",
+   "parentPageLayoutID": "&nbsp;&nbsp;",
+   "primaryTable": "Alternate Rent Schedule",
+   "isReadOnlyRecord": false
+  },
+  {
+   "mode": "LIST",
+   "pageLayoutId": "96226",
+   "name": "ASG Contract Payment Details - Breakpoints",
+   "parentPageLayoutID": "&nbsp;&nbsp;",
+   "primaryTable": "Percentage Rent Period",
+   "isReadOnlyRecord": false
+  },
+  {
+   "mode": "LIST",
+   "pageLayoutId": "96224",
+   "name": "ASG Contract Payment Details - Expense Recovery",
+   "parentPageLayoutID": "&nbsp;&nbsp;",
+   "primaryTable": "Expense Recovery",
+   "isReadOnlyRecord": false
+  },
+  {
+   "mode": "LIST",
+   "pageLayoutId": "96240",
+   "name": "ASG Contract Payment Details - Expense Setup",
+   "parentPageLayoutID": "&nbsp;&nbsp;",
+   "primaryTable": "Expense Setup",
+   "isReadOnlyRecord": false
+  },
+  {
+   "mode": "LIST",
+   "pageLayoutId": "96237",
+   "name": "ASG Contract Payment Details - Percent Rent",
+   "parentPageLayoutID": "&nbsp;&nbsp;",
+   "primaryTable": "Percentage Rent",
+   "isReadOnlyRecord": false
+  },
+  {
+   "mode": "LIST",
+   "pageLayoutId": "96231",
+   "name": "ASG Contract Payment Details - Rent Steps",
+   "parentPageLayoutID": "&nbsp;&nbsp;",
+   "primaryTable": "Expense Schedule",
+   "isReadOnlyRecord": false
+  },
+  {
+   "mode": "LIST",
+   "pageLayoutId": "96225",
+   "name": "ASG Contract Payment Details - Scheduled Offset",
+   "parentPageLayoutID": "&nbsp;&nbsp;",
+   "primaryTable": "Scheduled Offset",
+   "isReadOnlyRecord": false
+  },
+  {
+   "mode": "LIST",
+   "pageLayoutId": "97856",
+   "name": "ASG Contract Payment Details - Security Deposit",
+   "parentPageLayoutID": "Contract : Payment Info : Security Deposit&nbsp;&nbsp;",
+   "primaryTable": "Security Deposit",
+   "isReadOnlyRecord": false
+  },
+  {
+   "mode": "LIST",
+   "pageLayoutId": "96238",
+   "name": "ASG Contract Payment Details - Security Deposit",
+   "parentPageLayoutID": "&nbsp;&nbsp;",
+   "primaryTable": "Security Deposit",
+   "isReadOnlyRecord": false
+  },
+  {
+   "mode": "LIST",
+   "pageLayoutId": "96230",
+   "name": "ASG Contract Payment Details - Transactions",
+   "parentPageLayoutID": "&nbsp;&nbsp;",
+   "primaryTable": "Payment Transaction",
+   "isReadOnlyRecord": false
+  },
+  {
+   "mode": "LIST",
+   "pageLayoutId": "96214",
+   "name": "ASG Contract Payments",
+   "parentPageLayoutID": "Contract : Payment Info : Transactions&nbsp;&nbsp;",
+   "primaryTable": "Payment Transaction",
+   "isReadOnlyRecord": false
+  },
+  {
+   "mode": "LIST",
+   "pageLayoutId": "96222",
+   "name": "ASG Contract Percent Rent",
+   "parentPageLayoutID": "Contract : Payment Info : Percentage Rent&nbsp;&nbsp;",
+   "primaryTable": "Percentage Rent",
+   "isReadOnlyRecord": false
+  },
+  {
+   "mode": "LIST",
+   "pageLayoutId": "96239",
+   "name": "ASG Contract Percent Rent - Breakpoints",
+   "parentPageLayoutID": "&nbsp;&nbsp;",
+   "primaryTable": "Percentage Rent Breakpoint",
+   "isReadOnlyRecord": false
+  },
+  {
+   "mode": "LIST",
+   "pageLayoutId": "96227",
+   "name": "ASG Contract Percent Rent - Schedule",
+   "parentPageLayoutID": "&nbsp;&nbsp;",
+   "primaryTable": "Sales Period",
+   "isReadOnlyRecord": false
+  },
+  {
+   "mode": "LIST",
+   "pageLayoutId": "96215",
+   "name": "ASG Contract Receipts",
+   "parentPageLayoutID": "Contract : Payment Info : Receipts&nbsp;&nbsp;",
+   "primaryTable": "Payment Receipt",
+   "isReadOnlyRecord": false
+  },
+  {
+   "mode": "LIST",
+   "pageLayoutId": "96216",
+   "name": "ASG Contract Responsibilities",
+   "parentPageLayoutID": "Contract : Abstract Info : Responsibilities&nbsp;&nbsp;",
+   "primaryTable": "Responsibility",
+   "isReadOnlyRecord": false
+  },
+  {
+   "mode": "LIST",
+   "pageLayoutId": "96217",
+   "name": "ASG Contract Sales History",
+   "parentPageLayoutID": "Contract : Payment Info : Sales&nbsp;&nbsp;",
+   "primaryTable": "Sales",
+   "isReadOnlyRecord": false
+  },
+  {
+   "mode": "LIST",
+   "pageLayoutId": "96218",
+   "name": "ASG Contract Terms",
+   "parentPageLayoutID": "Contract : Abstract Info : Terms&nbsp;&nbsp;",
+   "primaryTable": "Contract Term",
+   "isReadOnlyRecord": false
+  },
+  {
+   "mode": "LIST",
+   "pageLayoutId": "96236",
+   "name": "ASG Covenant List View",
+   "parentPageLayoutID": "&nbsp;&nbsp;",
+   "primaryTable": "Covenant",
+   "isReadOnlyRecord": false
+  },
+  {
+   "mode": "LIST",
+   "pageLayoutId": "96219",
+   "name": "ASG Employers",
+   "parentPageLayoutID": "Administration : Dashboard : Manage Employers&nbsp;&nbsp;",
+   "primaryTable": "Employer",
+   "isReadOnlyRecord": false
+  },
+  {
+   "mode": "LIST",
+   "pageLayoutId": "96241",
+   "name": "ASG Facility List",
+   "parentPageLayoutID": "&nbsp;&nbsp;",
+   "primaryTable": "Facility",
+   "isReadOnlyRecord": false
+  },
+  {
+   "mode": "LIST",
+   "pageLayoutId": "96220",
+   "name": "ASG SL Summary",
+   "parentPageLayoutID": "Contract : Accounting Info : Straight-Line Rent&nbsp;&nbsp;",
+   "primaryTable": "Straight-Line Schedule",
+   "isReadOnlyRecord": false
+  },
+  {
+   "mode": "LIST",
+   "pageLayoutId": "110187",
+   "name": "TABLE",
+   "parentPageLayoutID": "Contract : Abstract Info : Co-Tenancy&nbsp;&nbsp;",
+   "primaryTable": "Contract",
+   "isReadOnlyRecord": false
+  },
+  {
+   "mode": "LIST",
+   "pageLayoutId": "110156",
+   "name": "test",
+   "parentPageLayoutID": "&nbsp;&nbsp;",
+   "primaryTable": "Allowance",
+   "isReadOnlyRecord": false
+  }
+ ],
+ "adminToolList": [
+  {
+   "text": "Manage Company",
+   "href": "/en/admin/FirmEdit.jsp?FirmID=3158"
+  },
+  {
+   "text": "Manage Schedule Templates",
+   "href": "/en/admin/TaskTemplateEdit.jsp?includeType=Manage&BOType=TaskTemplate"
+  },
+  {
+   "text": "Manage Milestone Timeline",
+   "href": "/en/admin/ProcessTimelineEdit.jsp"
+  },
+  {
+   "text": "Manage Binder Templates",
+   "href": "/en/CommitteeDocuments/BinderTemplateEdit.jsp"
+  },
+  {
+   "text": "Manage Forms",
+   "href": "/en/admin/FirmCodeEdit.jsp?&includeType=Manage&TableType=2035&tableName=Manage Forms"
+  },
+  {
+   "text": "Manage Custom Lists",
+   "href": "/en/admin/CustomListEdit.jsp"
+  },
+  {
+   "text": "Manage Parts and Inventory",
+   "href": "/en/lease/PartEdit.jsp"
+  },
+  {
+   "text": "Manage Work Flows",
+   "href": "/en/workflow/WorkFlowTemplateEdit.jsp"
+  },
+  {
+   "text": "Manage Page Layouts",
+   "href": "/en/pagebuilder/SummaryEntityPageLayoutEdit.jsp"
+  },
+  {
+   "text": "Manage Data Fields",
+   "href": "/en/pagebuilder/ReportGroupAvailableFieldEdit.jsp"
+  },
+  {
+   "text": "Manage Dashboard Reports",
+   "href": "/en/reports/ManageDashboardModules.jsp"
+  },
+  {
+   "text": "Import Data",
+   "href": "/en/admin/Messenger.jsp"
+  },
+  {
+   "text": "Import Best Practice Templates",
+   "href": "/en/admin/BestPracticeTemplates.jsp"
+  },
+  {
+   "text": "Export Configuration",
+   "href": "/en/admin/MessengerExportData.jsp"
+  },
+  {
+   "text": "Job Log",
+   "href": "/en/admin/JobLogEdit.jsp?type=joblog"
+  },
+  {
+   "text": "Manage Top Menu",
+   "href": "/en/admin/ManageTopMenu.jsp"
+  },
+  {
+   "text": "Manage Firm Dictionary",
+   "href": "/en/admin/Dictionary.jsp"
+  },
+  {
+   "text": "Manage Bid Package Templates",
+   "href": "/en/admin/BidPackageTemplate.jsp"
+  },
+  {
+   "text": "Manage Budget Templates",
+   "href": "/en/budget/BudgetTemplateEdit.jsp"
+  },
+  {
+   "text": "Manage Budget Views",
+   "href": "/en/budget/BudgetLayoutView.jsp"
+  },
+  {
+   "text": "Manage Budget Types",
+   "href": "/en/budget/BudgetColumnTypeEdit.jsp"
+  },
+  {
+   "text": "Manage Budget Summary Page",
+   "href": "/en/budget/BudgetSummaryEdit.jsp"
+  },
+  {
+   "text": "Manage Budget Index Variables",
+   "href": "/en/budget/BudgetIndexEdit.jsp"
+  },
+  {
+   "text": "Manage Exchange Rates",
+   "href": "/en/admin/ManageCurrencyRates.jsp"
+  },
+  {
+   "text": "Manage Discount Rates",
+   "href": "/en/admin/ManageDiscountRates.jsp"
+  },
+  {
+   "text": "Manage CPI Data",
+   "href": "/en/admin/ManageCPIData.jsp"
+  },
+  {
+   "text": "Manage Firm Drop Downs",
+   "href": "/en/admin/FirmCodeList.jsp"
+  },
+  {
+   "text": "Client Drop Downs",
+   "href": "/en/admin/CustomCodeTableEdit.jsp"
+  },
+  {
+   "text": "Manage Portfolios/Capital Programs",
+   "href": "/en/admin/ProgramEdit.jsp"
+  },
+  {
+   "text": "Manage Regions/Org Chart",
+   "href": "/en/admin/OrgChartEdit.jsp"
+  },
+  {
+   "text": "Manage Fiscal Calendar",
+   "href": "/en/admin/ManageFiscalPeriod.jsp"
+  },
+  {
+   "text": "Manage Holiday Calendar",
+   "href": "/en/admin/ManageHolidayCalendar.jsp"
+  },
+  {
+   "text": "Manage Members/Contacts",
+   "href": "/en/admin/ContactEdit.jsp"
+  },
+  {
+   "text": "Manage Employer Members",
+   "href": "/en/admin/ManageEmployerMembers.jsp"
+  },
+  {
+   "text": "Manage Employers",
+   "href": "/en/admin/EmployerEdit.jsp"
+  },
+  {
+   "text": "Manage Vendors",
+   "href": "/en/admin/VendorActivate.jsp"
+  },
+  {
+   "text": "Manage Membership",
+   "href": "/en/admin/ManageOneMemberManyProjects.jsp"
+  },
+  {
+   "text": "Manage Security",
+   "href": "/en/admin/SecurityPageAccess.jsp"
+  },
+  {
+   "text": "Job Function Code",
+   "href": "javascript:"
+  },
+  {
+   "text": "Job Title Code",
+   "href": "javascript:"
+  },
+  {
+   "text": "User Class Code",
+   "href": "javascript:"
+  },
+  {
+   "text": "Manage Facilities",
+   "href": "/en/admin/FacilityEditForm.jsp"
+  },
+  {
+   "text": "Manage Contracts",
+   "href": "/en/admin/ContractEdit.jsp"
+  },
+  {
+   "text": "Manage Locations",
+   "href": "/en/admin/LocationEdit.jsp"
+  },
+  {
+   "text": "Manage Complex/Center Details",
+   "href": "/en/admin/ComplexEdit.jsp"
+  },
+  {
+   "text": "Manage Organizations",
+   "href": "/en/admin/OrganizationEdit.jsp?AdminPage=true"
+  },
+  {
+   "text": "Manage Folder Templates",
+   "href": "/en/admin/FolderTemplateEdit.jsp"
+  },
+  {
+   "text": "Document Content Code",
+   "href": "javascript:"
+  },
+  {
+   "text": "Document Type Code",
+   "href": "javascript:"
+  },
+  {
+   "text": "View Object Model",
+   "href": "/en/admin/ShowObjectDetails.jsp"
+  },
+  {
+   "text": "View Data Model / Data Values (experimental)",
+   "href": "/en/test/walkHierarchy.jsp"
+  },
+  {
+   "text": "Audit Reports",
+   "href": "/en/reports/AuditReport.jsp"
+  },
+  {
+   "text": "Email Log",
+   "href": "/en/reports/EMailLogs.jsp"
+  },
+  {
+   "text": "Report Log",
+   "href": "/en/admin/JobLogEdit.jsp?type=reportlog"
+  },
+  {
+   "text": "Export Schema",
+   "href": "javascript:"
+  },
+  {
+   "text": "Modify Straight Line Status",
+   "href": "/en/admin/lxadmin/SLDemoTweaks.jsp"
+  },
+  {
+   "text": "Data Conversion Cleaner",
+   "href": "/en/admin/lxadmin/DataLoadTweaks.jsp"
+  },
+  {
+   "text": "Test Email Address",
+   "href": "/en/admin/lxadmin/EmailTest.jsp"
+  },
+  {
+   "text": "RESTful WebService Docs",
+   "href": "/en/test/RESTful.jsp"
+  },
+  {
+   "text": "GraphQL Explorer",
+   "href": "/en/admin/graphql.jsp"
+  },
+  {
+   "text": "Generate Enterprise Report File",
+   "href": "/en/admin/GenBaseReport.jsp"
+  },
+  {
+   "text": "Layout Changes",
+   "href": "/en/admin/ShowLayoutChanges.jsp"
+  },
+  {
+   "text": "Delete Entities",
+   "href": "/en/admin/lxadmin/DeleteEntities.jsp"
+  }
+ ]
+}

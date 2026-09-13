@@ -1,0 +1,666 @@
+{
+ "firm": "(ASG)BBW",
+ "build": "26.09.0.113",
+ "captured": "2026-09-13",
+ "source": "SummaryEntityPageLayoutEdit.jsp?mode={SEP,SUB,LIST} bulk JSON (ajaxList=true, limit=5000)",
+ "totals": {
+  "SEP": 15,
+  "SUB": 32,
+  "LIST": 46,
+  "all": 93
+ },
+ "note": "SUB layouts carry no ParentPageLayoutID - sub-pages attach to a parent layout, not to navigation (0 of 32 have one).",
+ "layouts": [
+  {
+   "mode": "SEP",
+   "pageLayoutId": 98921,
+   "name": "ASG Breakpoint Schedule",
+   "navigation": "Contract : Payment Info : Percentage Rent",
+   "primaryTable": "Percentage Rent Period"
+  },
+  {
+   "mode": "SEP",
+   "pageLayoutId": 98924,
+   "name": "ASG Common Area Maintenance",
+   "navigation": "Contract : Abstract Info : Abstract Details",
+   "primaryTable": "Contract"
+  },
+  {
+   "mode": "SEP",
+   "pageLayoutId": 98925,
+   "name": "ASG Contract Abstract Details",
+   "navigation": "Contract : Abstract Info : Abstract Details",
+   "primaryTable": "Contract"
+  },
+  {
+   "mode": "SEP",
+   "pageLayoutId": 98926,
+   "name": "ASG Contract Payment Details",
+   "navigation": "Contract : Payment Info : Payment Details",
+   "primaryTable": "Contract"
+  },
+  {
+   "mode": "SEP",
+   "pageLayoutId": 98927,
+   "name": "ASG Contract Summary",
+   "navigation": "Contract : Details : Summary",
+   "primaryTable": "Contract"
+  },
+  {
+   "mode": "SEP",
+   "pageLayoutId": 98923,
+   "name": "ASG Cotenancy Language",
+   "navigation": "Contract : Abstract Info : Co-Tenancy",
+   "primaryTable": "Contract"
+  },
+  {
+   "mode": "SEP",
+   "pageLayoutId": 98928,
+   "name": "ASG Delivery Requirements",
+   "navigation": "Contract : Abstract Info : Abstract Details",
+   "primaryTable": "Contract"
+  },
+  {
+   "mode": "SEP",
+   "pageLayoutId": 98929,
+   "name": "ASG Facility Summary",
+   "navigation": "Facility : Details : Summary",
+   "primaryTable": "Facility"
+  },
+  {
+   "mode": "SEP",
+   "pageLayoutId": 98930,
+   "name": "ASG Funds and Expenses",
+   "navigation": "Contract : Abstract Info : Abstract Details",
+   "primaryTable": "Contract"
+  },
+  {
+   "mode": "SEP",
+   "pageLayoutId": 98931,
+   "name": "ASG Last Deferred SL Entry",
+   "navigation": "Contract : Accounting Info : Straight-Line Rent",
+   "primaryTable": "Contract"
+  },
+  {
+   "mode": "SEP",
+   "pageLayoutId": 98932,
+   "name": "ASG Lease Logs",
+   "navigation": "Contract : Details : Summary",
+   "primaryTable": "Contract"
+  },
+  {
+   "mode": "SEP",
+   "pageLayoutId": 98933,
+   "name": "ASG Location Summary",
+   "navigation": "Location : Details : Summary",
+   "primaryTable": "Location"
+  },
+  {
+   "mode": "SEP",
+   "pageLayoutId": 98934,
+   "name": "ASG Percent Rent Schedule",
+   "navigation": "Contract : Payment Info : Percentage Rent",
+   "primaryTable": "Percentage Rent Period"
+  },
+  {
+   "mode": "SEP",
+   "pageLayoutId": 98935,
+   "name": "ASG Portfolio Summary",
+   "navigation": "Portfolio : Details : Summary",
+   "primaryTable": "Portfolio"
+  },
+  {
+   "mode": "SEP",
+   "pageLayoutId": 99140,
+   "name": "ASG Real Estate Taxes",
+   "navigation": "Contract : Abstract Info : Abstract Details",
+   "primaryTable": "Contract"
+  },
+  {
+   "mode": "SUB",
+   "pageLayoutId": 98858,
+   "name": "ASG Accounting Schedule Details",
+   "navigation": "",
+   "primaryTable": "Contract"
+  },
+  {
+   "mode": "SUB",
+   "pageLayoutId": 98874,
+   "name": "ASG Co Tenancy",
+   "navigation": "",
+   "primaryTable": "Contract"
+  },
+  {
+   "mode": "SUB",
+   "pageLayoutId": 98875,
+   "name": "ASG Common Area Maintenance",
+   "navigation": "",
+   "primaryTable": "Contract"
+  },
+  {
+   "mode": "SUB",
+   "pageLayoutId": 98876,
+   "name": "ASG Contract Critical Dates",
+   "navigation": "",
+   "primaryTable": "Contract"
+  },
+  {
+   "mode": "SUB",
+   "pageLayoutId": 98877,
+   "name": "ASG Contract Facility Information",
+   "navigation": "",
+   "primaryTable": "Contract"
+  },
+  {
+   "mode": "SUB",
+   "pageLayoutId": 98878,
+   "name": "ASG Contract Firm Information",
+   "navigation": "",
+   "primaryTable": "Contract"
+  },
+  {
+   "mode": "SUB",
+   "pageLayoutId": 98879,
+   "name": "ASG Contract Header",
+   "navigation": "",
+   "primaryTable": "Contract"
+  },
+  {
+   "mode": "SUB",
+   "pageLayoutId": 98880,
+   "name": "ASG Contract Location Information",
+   "navigation": "",
+   "primaryTable": "Contract"
+  },
+  {
+   "mode": "SUB",
+   "pageLayoutId": 98881,
+   "name": "ASG Contract Log Header",
+   "navigation": "",
+   "primaryTable": "Contract"
+  },
+  {
+   "mode": "SUB",
+   "pageLayoutId": 98882,
+   "name": "ASG Contract Space Information",
+   "navigation": "",
+   "primaryTable": "Contract"
+  },
+  {
+   "mode": "SUB",
+   "pageLayoutId": 98883,
+   "name": "ASG Contract Wizard",
+   "navigation": "",
+   "primaryTable": "Contract"
+  },
+  {
+   "mode": "SUB",
+   "pageLayoutId": 98884,
+   "name": "ASG Contract Wizard Step 2",
+   "navigation": "",
+   "primaryTable": "Contract"
+  },
+  {
+   "mode": "SUB",
+   "pageLayoutId": 98885,
+   "name": "ASG Contract Wizard Step 3",
+   "navigation": "",
+   "primaryTable": "Contract"
+  },
+  {
+   "mode": "SUB",
+   "pageLayoutId": 98886,
+   "name": "ASG Contract Wizard Step 4",
+   "navigation": "",
+   "primaryTable": "Contract"
+  },
+  {
+   "mode": "SUB",
+   "pageLayoutId": 98887,
+   "name": "ASG Contract Wizard Step 5",
+   "navigation": "",
+   "primaryTable": "Contract"
+  },
+  {
+   "mode": "SUB",
+   "pageLayoutId": 98891,
+   "name": "ASG Delivery Requirements",
+   "navigation": "",
+   "primaryTable": "Contract"
+  },
+  {
+   "mode": "SUB",
+   "pageLayoutId": 98936,
+   "name": "ASG Documents Form Field",
+   "navigation": "",
+   "primaryTable": "Entity"
+  },
+  {
+   "mode": "SUB",
+   "pageLayoutId": 98895,
+   "name": "ASG Facility Address",
+   "navigation": "",
+   "primaryTable": "Facility"
+  },
+  {
+   "mode": "SUB",
+   "pageLayoutId": 98896,
+   "name": "ASG Facility Header",
+   "navigation": "",
+   "primaryTable": "Facility"
+  },
+  {
+   "mode": "SUB",
+   "pageLayoutId": 98898,
+   "name": "ASG Facility Location Information",
+   "navigation": "",
+   "primaryTable": "Facility"
+  },
+  {
+   "mode": "SUB",
+   "pageLayoutId": 98897,
+   "name": "ASG Facility Space Information",
+   "navigation": "",
+   "primaryTable": "Facility"
+  },
+  {
+   "mode": "SUB",
+   "pageLayoutId": 99141,
+   "name": "ASG Facility Wizard",
+   "navigation": "",
+   "primaryTable": "Facility"
+  },
+  {
+   "mode": "SUB",
+   "pageLayoutId": 98894,
+   "name": "ASG Funds and Expenses",
+   "navigation": "",
+   "primaryTable": "Contract"
+  },
+  {
+   "mode": "SUB",
+   "pageLayoutId": 100867,
+   "name": "ASG Hours of Operation",
+   "navigation": "",
+   "primaryTable": "Covenant"
+  },
+  {
+   "mode": "SUB",
+   "pageLayoutId": 102629,
+   "name": "ASG Lease Abstract - Funds and Expenses",
+   "navigation": "",
+   "primaryTable": "Contract"
+  },
+  {
+   "mode": "SUB",
+   "pageLayoutId": 98903,
+   "name": "ASG Location Address",
+   "navigation": "",
+   "primaryTable": "Location"
+  },
+  {
+   "mode": "SUB",
+   "pageLayoutId": 98904,
+   "name": "ASG Location Area Information",
+   "navigation": "",
+   "primaryTable": "Location"
+  },
+  {
+   "mode": "SUB",
+   "pageLayoutId": 98905,
+   "name": "ASG Location Financial Information",
+   "navigation": "",
+   "primaryTable": "Location"
+  },
+  {
+   "mode": "SUB",
+   "pageLayoutId": 98902,
+   "name": "ASG Location Header",
+   "navigation": "",
+   "primaryTable": "Location"
+  },
+  {
+   "mode": "SUB",
+   "pageLayoutId": 99142,
+   "name": "ASG Location Wizard",
+   "navigation": "",
+   "primaryTable": "Location"
+  },
+  {
+   "mode": "SUB",
+   "pageLayoutId": 98890,
+   "name": "ASG Real Estate Taxes",
+   "navigation": "",
+   "primaryTable": "Contract"
+  },
+  {
+   "mode": "SUB",
+   "pageLayoutId": 98937,
+   "name": "ASG Workflow Footer",
+   "navigation": "",
+   "primaryTable": "Entity"
+  },
+  {
+   "mode": "LIST",
+   "pageLayoutId": 99146,
+   "name": "ASG Approval - Expense Schedules",
+   "navigation": "",
+   "primaryTable": "Expense Schedule"
+  },
+  {
+   "mode": "LIST",
+   "pageLayoutId": 99147,
+   "name": "ASG Approval - Transactions",
+   "navigation": "",
+   "primaryTable": "Payment Transaction"
+  },
+  {
+   "mode": "LIST",
+   "pageLayoutId": 98859,
+   "name": "ASG ASC 842 Schedule",
+   "navigation": "Contract : Accounting Info : ASC 842 Rent Schedule",
+   "primaryTable": "Straight-Line Schedule"
+  },
+  {
+   "mode": "LIST",
+   "pageLayoutId": 98860,
+   "name": "ASG Contract Allowance",
+   "navigation": "Contract : Payment Info : Allowances",
+   "primaryTable": "Allowance"
+  },
+  {
+   "mode": "LIST",
+   "pageLayoutId": 102775,
+   "name": "ASG Contract Allowance Transaction",
+   "navigation": "",
+   "primaryTable": "Allowance Transaction"
+  },
+  {
+   "mode": "LIST",
+   "pageLayoutId": 98861,
+   "name": "ASG Contract Alternate Rent",
+   "navigation": "Contract : Payment Info : Alternate Rent",
+   "primaryTable": "Alternate Rent Schedule"
+  },
+  {
+   "mode": "LIST",
+   "pageLayoutId": 98862,
+   "name": "ASG Contract Amendments",
+   "navigation": "Contract : Abstract Info : Amendments",
+   "primaryTable": "Contract Amendment"
+  },
+  {
+   "mode": "LIST",
+   "pageLayoutId": 98863,
+   "name": "ASG Contract Cotenants",
+   "navigation": "Contract : Abstract Info : Co-Tenancy",
+   "primaryTable": "Co Tenancy"
+  },
+  {
+   "mode": "LIST",
+   "pageLayoutId": 98864,
+   "name": "ASG Contract Covenants",
+   "navigation": "Contract : Abstract Info : Covenants",
+   "primaryTable": "Covenant"
+  },
+  {
+   "mode": "LIST",
+   "pageLayoutId": 99143,
+   "name": "ASG Contract Expense Recovery",
+   "navigation": "Contract : Payment Info : Recoveries",
+   "primaryTable": "Expense Recovery"
+  },
+  {
+   "mode": "LIST",
+   "pageLayoutId": 99144,
+   "name": "ASG Contract Expense Recovery (Net)",
+   "navigation": "Contract : Payment Info : Recoveries",
+   "primaryTable": "Expense Recovery"
+  },
+  {
+   "mode": "LIST",
+   "pageLayoutId": 99051,
+   "name": "ASG Contract Expense Setup",
+   "navigation": "Contract : Payment Info : Recurring Expenses",
+   "primaryTable": "Expense Setup"
+  },
+  {
+   "mode": "LIST",
+   "pageLayoutId": 99050,
+   "name": "ASG Contract Expense Setup - Expense Schedule",
+   "navigation": "",
+   "primaryTable": "Expense Schedule"
+  },
+  {
+   "mode": "LIST",
+   "pageLayoutId": 99049,
+   "name": "ASG Contract Expense Setup - Vendor Allocation",
+   "navigation": "",
+   "primaryTable": "Expense Vendor Allocation"
+  },
+  {
+   "mode": "LIST",
+   "pageLayoutId": 98865,
+   "name": "ASG Contract Key Dates",
+   "navigation": "Contract : Abstract Info : Key Dates",
+   "primaryTable": "Key Date"
+  },
+  {
+   "mode": "LIST",
+   "pageLayoutId": 98918,
+   "name": "ASG Contract List",
+   "navigation": "",
+   "primaryTable": "Contract"
+  },
+  {
+   "mode": "LIST",
+   "pageLayoutId": 98909,
+   "name": "ASG Contract Payment Details - Allowance",
+   "navigation": "",
+   "primaryTable": "Allowance"
+  },
+  {
+   "mode": "LIST",
+   "pageLayoutId": 98910,
+   "name": "ASG Contract Payment Details - Alternate Rent",
+   "navigation": "",
+   "primaryTable": "Alternate Rent Schedule"
+  },
+  {
+   "mode": "LIST",
+   "pageLayoutId": 98908,
+   "name": "ASG Contract Payment Details - Breakpoints",
+   "navigation": "",
+   "primaryTable": "Percentage Rent Period"
+  },
+  {
+   "mode": "LIST",
+   "pageLayoutId": 98911,
+   "name": "ASG Contract Payment Details - Expense Recovery",
+   "navigation": "",
+   "primaryTable": "Expense Recovery"
+  },
+  {
+   "mode": "LIST",
+   "pageLayoutId": 98916,
+   "name": "ASG Contract Payment Details - Expense Setup",
+   "navigation": "",
+   "primaryTable": "Expense Setup"
+  },
+  {
+   "mode": "LIST",
+   "pageLayoutId": 98914,
+   "name": "ASG Contract Payment Details - Percent Rent",
+   "navigation": "",
+   "primaryTable": "Percentage Rent"
+  },
+  {
+   "mode": "LIST",
+   "pageLayoutId": 98917,
+   "name": "ASG Contract Payment Details - Rent Steps",
+   "navigation": "",
+   "primaryTable": "Expense Schedule"
+  },
+  {
+   "mode": "LIST",
+   "pageLayoutId": 98912,
+   "name": "ASG Contract Payment Details - Scheduled Offset",
+   "navigation": "",
+   "primaryTable": "Scheduled Offset"
+  },
+  {
+   "mode": "LIST",
+   "pageLayoutId": 98866,
+   "name": "ASG Contract Payment Details - Security Deposit",
+   "navigation": "Contract : Payment Info : Security Deposit",
+   "primaryTable": "Security Deposit"
+  },
+  {
+   "mode": "LIST",
+   "pageLayoutId": 98915,
+   "name": "ASG Contract Payment Details - Security Deposit",
+   "navigation": "",
+   "primaryTable": "Security Deposit"
+  },
+  {
+   "mode": "LIST",
+   "pageLayoutId": 98907,
+   "name": "ASG Contract Payment Details - Transactions",
+   "navigation": "",
+   "primaryTable": "Payment Transaction"
+  },
+  {
+   "mode": "LIST",
+   "pageLayoutId": 98867,
+   "name": "ASG Contract Payments",
+   "navigation": "Contract : Payment Info : Transactions",
+   "primaryTable": "Payment Transaction"
+  },
+  {
+   "mode": "LIST",
+   "pageLayoutId": 99145,
+   "name": "ASG Contract Percent Rent",
+   "navigation": "Contract : Payment Info : Percentage Rent",
+   "primaryTable": "Percentage Rent"
+  },
+  {
+   "mode": "LIST",
+   "pageLayoutId": 98913,
+   "name": "ASG Contract Percent Rent - Breakpoints",
+   "navigation": "",
+   "primaryTable": "Percentage Rent Breakpoint"
+  },
+  {
+   "mode": "LIST",
+   "pageLayoutId": 98920,
+   "name": "ASG Contract Percent Rent - Schedule",
+   "navigation": "",
+   "primaryTable": "Sales Period"
+  },
+  {
+   "mode": "LIST",
+   "pageLayoutId": 98868,
+   "name": "ASG Contract Receipts",
+   "navigation": "Contract : Payment Info : Receipts",
+   "primaryTable": "Payment Receipt"
+  },
+  {
+   "mode": "LIST",
+   "pageLayoutId": 98869,
+   "name": "ASG Contract Responsibilities",
+   "navigation": "Contract : Abstract Info : Responsibilities",
+   "primaryTable": "Responsibility"
+  },
+  {
+   "mode": "LIST",
+   "pageLayoutId": 98870,
+   "name": "ASG Contract Sales History",
+   "navigation": "Contract : Payment Info : Sales",
+   "primaryTable": "Sales"
+  },
+  {
+   "mode": "LIST",
+   "pageLayoutId": 98871,
+   "name": "ASG Contract Terms",
+   "navigation": "Contract : Abstract Info : Terms",
+   "primaryTable": "Contract Term"
+  },
+  {
+   "mode": "LIST",
+   "pageLayoutId": 98906,
+   "name": "ASG Covenant List View",
+   "navigation": "",
+   "primaryTable": "Covenant"
+  },
+  {
+   "mode": "LIST",
+   "pageLayoutId": 98872,
+   "name": "ASG Employers",
+   "navigation": "Administration : Dashboard : Manage Employers",
+   "primaryTable": "Employer"
+  },
+  {
+   "mode": "LIST",
+   "pageLayoutId": 98919,
+   "name": "ASG Facility List",
+   "navigation": "",
+   "primaryTable": "Facility"
+  },
+  {
+   "mode": "LIST",
+   "pageLayoutId": 102506,
+   "name": "ASG Lease Abstract - Contract Term",
+   "navigation": "",
+   "primaryTable": "Contract Term"
+  },
+  {
+   "mode": "LIST",
+   "pageLayoutId": 102250,
+   "name": "ASG Lease Abstract - Covenants",
+   "navigation": "",
+   "primaryTable": "Covenant"
+  },
+  {
+   "mode": "LIST",
+   "pageLayoutId": 102251,
+   "name": "ASG Lease Abstract - Expense Schedule",
+   "navigation": "",
+   "primaryTable": "Expense Schedule"
+  },
+  {
+   "mode": "LIST",
+   "pageLayoutId": 102252,
+   "name": "ASG Lease Abstract - Expense Setup",
+   "navigation": "",
+   "primaryTable": "Expense Setup"
+  },
+  {
+   "mode": "LIST",
+   "pageLayoutId": 102266,
+   "name": "ASG Lease Abstract - Key Dates",
+   "navigation": "",
+   "primaryTable": "Key Date"
+  },
+  {
+   "mode": "LIST",
+   "pageLayoutId": 102109,
+   "name": "ASG Lease Abstract - Percent Rent",
+   "navigation": "",
+   "primaryTable": "Percentage Rent"
+  },
+  {
+   "mode": "LIST",
+   "pageLayoutId": 98873,
+   "name": "ASG SL Summary",
+   "navigation": "Contract : Accounting Info : Straight-Line Rent",
+   "primaryTable": "Straight-Line Schedule"
+  },
+  {
+   "mode": "LIST",
+   "pageLayoutId": 102270,
+   "name": "zdelete",
+   "navigation": "",
+   "primaryTable": "Comparison Report Item"
+  }
+ ]
+}

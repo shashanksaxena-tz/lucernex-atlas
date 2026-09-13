@@ -10,5 +10,6 @@
 <nav><a href="../index.html">Overview</a><a href="../atlas.html#/map?set=feature">Feature map</a>
 <a href="../atlas.html">Interactive app</a>
 <a href="../entities/index.html">Record types</a><a href="../rules/index.html">Rules</a>
+<a href="../research/index.html">Research</a>
 <a href="../questions.html">Open questions</a></nav></header>
 <main><p class="crumb"><a href="../index.html">Atlas</a> &rsaquo; <a href="index.html">Rules</a> &rsaquo; ACC-R-029</p><h1 class="mono">ACC-R-029</h1><p class="sub">Lease Accounting &amp; Payments &middot; GL account denormalization</p><span class="tag der">Derived</span><p class="lead">On creating each period row, the schedule type&#x27;s twenty account numbers are copied onto it unchanged.</p><p>- Trigger: `SLPeriod` row creation. - Inputs: the governing schedule type&#x27;s `ExportAcct1Number` … `ExportAcct20Number`. - Output: copied verbatim onto `SLPeriod.ExportAcct1Number` … `ExportAcct20Number`. - Confidence: Derived — the column sets are identical in name and count on the code tables and on `SLPeriod`, and both carry the same vendor definition (*&quot;Export Accounts are tied to GL accounts in your Enterprise Resource Planning (ERP) System&quot;*).</p><p style="font-size:11.5px;color:var(--faint);margin-top:18px">Source: modules/accounting/rules.md</p></main></body></html>

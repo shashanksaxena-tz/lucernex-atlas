@@ -119,7 +119,7 @@ plausible from field naming and rollup structure, not confirmed by any screen sh
 ## 3. Capital projects vs. contracts — the other half of the brief's question
 
 `Project` and `Contract` are both `ProjectEntity` subtype roots (570 fields on `Contract`, 111 on
-`Project`), both carry budgets, schedules ([`Task`/`TaskGroup`/`TaskItem`](scheduling.md) —
+`Project`), both carry budgets, schedules ([`Task`/`TaskGroup`/`TaskItem`](../projects-capital/scheduling.md) —
 `projects-capital`) and workflows, and both can reference a `Facility` (`Project.FacilityID`,
 `Contract.FacilityID` — [`../facilities-locations/README.md`](../facilities-locations/README.md)).
 **They are not the same kind of thing and nothing forces one through the other:**

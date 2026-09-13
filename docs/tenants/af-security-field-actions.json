@@ -1,0 +1,395 @@
+{
+ "firm": "(ASG)American Freight",
+ "firmID": 3158,
+ "build": "26.09.0.113",
+ "captured": "2026-09-13",
+ "source": "/en/admin/SecurityActions.jsp and /en/admin/SecurityFieldSecurity.jsp - the Actions and Field Security tabs of Manage Security. GET only; nothing selected, clicked or saved.",
+ "tabRoutes": {
+  "Page Access": "/en/admin/SecurityPageAccess.jsp",
+  "Actions": "/en/admin/SecurityActions.jsp",
+  "Field Security": "/en/admin/SecurityFieldSecurity.jsp",
+  "Budget Columns": "/en/admin/SecurityBudget.jsp"
+ },
+ "fieldSecurity": {
+  "size": "4,997,036 bytes - 6,553 field nodes, 26,212 radio inputs (4 per node).",
+  "accessVocabulary": [
+   "NoAccess",
+   "View",
+   "Edit",
+   "Default"
+  ],
+  "hasDedicatedReadOnlyLevel": false,
+  "answerToTheReadOnlyQuestion": "Observed. Field Security has NO distinct 'ReadOnly' access level - its vocabulary is the same four values as Page Access and Actions. **But read-only-ness IS expressible here, as `View`.** Granting `View` on a field lets a user class see the field without editing it, which is read-only in effect. So the capability exists; it simply is not spelled 'ReadOnly'.",
+  "whyTheFieldCatalogDisagrees": "Derived. The catalog's `ReadOnly = No` on all 6,158 leaves and Field Security's per-class `View` are measuring DIFFERENT things, which is why the catalog looked wrong. The catalog column is a property of the field DEFINITION (is this field inherently non-editable for everyone), whereas read-only-ness in practice is a per-user-class GRANT. A field can be universally editable by definition and still be read-only for eight of ten user classes. The catalog is not necessarily in error - it answers a question nobody was asking.",
+  "caution": "The strings `Is ReadOnly?` and `Read Only?` DO appear in this page, but they are the NAMES OF DATA FIELDS being secured (alongside `Allow UI Edit?`, `Is Inactive?`), not security options. Do not mistake them for an access level.",
+  "defaultSelectedClass": "System Administrator (7885) - note this tab defaults to a DIFFERENT user class than Page Access, which defaults to Default Security (7884). Always read the returned <select> to confirm which class a value belongs to.",
+  "userClassCount": 10
+ },
+ "actions": {
+  "count": 70,
+  "accessVocabulary": [
+   "NoAccess",
+   "View",
+   "Edit",
+   "Default"
+  ],
+  "note": "Observed. 71 action rows. Vocabulary is NoAccess/View/Edit/Default - there is NO `Delete` here, unlike Page Access which has five options including Delete. Actions govern operations/verbs rather than records.",
+  "answersTheCanTheySeeButNotDoQuestion": "Yes - this is exactly the surface that separates seeing a record from performing an operation on it. `Create Contract`, `Create Equipment Contract`, `Convert Site To Project`, `Condition Bids`, `Allow Import Data Action`, `Allow Vendor Update`, `Allow WebDAV Access` are all independently securable per user class, separately from Page Access to the underlying record.",
+  "equipmentContractRelevant": [
+   "Create Equipment Contract",
+   "Default access to Equipment Contracts for Portfolio Members"
+  ],
+  "list": [
+   {
+    "action": "Allow Import Data Action",
+    "field": "SecurityFieldId_8244",
+    "defaultSecurityValue": "Default"
+   },
+   {
+    "action": "Allow Locked Status for Budgets",
+    "field": "SecurityFieldId_8245",
+    "defaultSecurityValue": "Default"
+   },
+   {
+    "action": "Allow My Portfolio",
+    "field": "SecurityFieldId_8246",
+    "defaultSecurityValue": "Default"
+   },
+   {
+    "action": "Allow Selected Status for Budgets",
+    "field": "SecurityFieldId_8247",
+    "defaultSecurityValue": "Default"
+   },
+   {
+    "action": "Allow Unlocked Status for Budgets",
+    "field": "SecurityFieldId_8248",
+    "defaultSecurityValue": "Default"
+   },
+   {
+    "action": "Allow Unselected Status for Budgets",
+    "field": "SecurityFieldId_8249",
+    "defaultSecurityValue": "Default"
+   },
+   {
+    "action": "Allow Vendor Update",
+    "field": "SecurityFieldId_8250",
+    "defaultSecurityValue": "Default"
+   },
+   {
+    "action": "Allow WebDAV Access",
+    "field": "SecurityFieldId_8251",
+    "defaultSecurityValue": "Default"
+   },
+   {
+    "action": "Condition Bids",
+    "field": "SecurityFieldId_8252",
+    "defaultSecurityValue": "Default"
+   },
+   {
+    "action": "Convert Site To Project",
+    "field": "SecurityFieldId_8253",
+    "defaultSecurityValue": "Default"
+   },
+   {
+    "action": "Create Capital Program",
+    "field": "SecurityFieldId_8254",
+    "defaultSecurityValue": "Default"
+   },
+   {
+    "action": "Create Capital Project",
+    "field": "SecurityFieldId_8255",
+    "defaultSecurityValue": "Default"
+   },
+   {
+    "action": "Create Capital Project For Facility",
+    "field": "SecurityFieldId_8256",
+    "defaultSecurityValue": "Default"
+   },
+   {
+    "action": "Create Contract",
+    "field": "SecurityFieldId_8257",
+    "defaultSecurityValue": "Default"
+   },
+   {
+    "action": "Create Equipment Contract",
+    "field": "SecurityFieldId_8258",
+    "defaultSecurityValue": "Default"
+   },
+   {
+    "action": "Create Facility",
+    "field": "SecurityFieldId_8259",
+    "defaultSecurityValue": "Default"
+   },
+   {
+    "action": "Create Facility From Project",
+    "field": "SecurityFieldId_8260",
+    "defaultSecurityValue": "Default"
+   },
+   {
+    "action": "Create Location",
+    "field": "SecurityFieldId_8261",
+    "defaultSecurityValue": "Default"
+   },
+   {
+    "action": "Create Opening Project",
+    "field": "SecurityFieldId_8262",
+    "defaultSecurityValue": "Default"
+   },
+   {
+    "action": "Create Parcel",
+    "field": "SecurityFieldId_8263",
+    "defaultSecurityValue": "Default"
+   },
+   {
+    "action": "Create Portfolio",
+    "field": "SecurityFieldId_8264",
+    "defaultSecurityValue": "Default"
+   },
+   {
+    "action": "Create Prototype",
+    "field": "SecurityFieldId_8265",
+    "defaultSecurityValue": "Default"
+   },
+   {
+    "action": "Create Public Reports",
+    "field": "SecurityFieldId_8266",
+    "defaultSecurityValue": "Default"
+   },
+   {
+    "action": "Create Related Work Order",
+    "field": "SecurityFieldId_8267",
+    "defaultSecurityValue": "Default"
+   },
+   {
+    "action": "Create Service Request",
+    "field": "SecurityFieldId_8268",
+    "defaultSecurityValue": "Default"
+   },
+   {
+    "action": "Create Site",
+    "field": "SecurityFieldId_8269",
+    "defaultSecurityValue": "Default"
+   },
+   {
+    "action": "Default access to Capital Projects for Program Members",
+    "field": "SecurityFieldId_8270",
+    "defaultSecurityValue": "Default"
+   },
+   {
+    "action": "Default access to Contracts for Portfolio Members",
+    "field": "SecurityFieldId_8271",
+    "defaultSecurityValue": "Default"
+   },
+   {
+    "action": "Default access to Equipment Contracts for Portfolio Members",
+    "field": "SecurityFieldId_8272",
+    "defaultSecurityValue": "Default"
+   },
+   {
+    "action": "Default access to Facilities for Portfolio Members",
+    "field": "SecurityFieldId_8273",
+    "defaultSecurityValue": "Default"
+   },
+   {
+    "action": "Default access to Locations for Portfolio Members",
+    "field": "SecurityFieldId_8274",
+    "defaultSecurityValue": "Default"
+   },
+   {
+    "action": "Default access to Opening Projects for Portfolio Members",
+    "field": "SecurityFieldId_8275",
+    "defaultSecurityValue": "Default"
+   },
+   {
+    "action": "Default access to Parcels for Portfolio Members",
+    "field": "SecurityFieldId_8276",
+    "defaultSecurityValue": "Default"
+   },
+   {
+    "action": "Default access to Prototypes for Portfolio Members",
+    "field": "SecurityFieldId_8277",
+    "defaultSecurityValue": "Default"
+   },
+   {
+    "action": "Default access to Sites for Portfolio Members",
+    "field": "SecurityFieldId_8278",
+    "defaultSecurityValue": "Default"
+   },
+   {
+    "action": "Delete Budget",
+    "field": "SecurityFieldId_8279",
+    "defaultSecurityValue": "Default"
+   },
+   {
+    "action": "Delete Entity and All Associated Data (no recovery option)",
+    "field": "SecurityFieldId_8280",
+    "defaultSecurityValue": "Default"
+   },
+   {
+    "action": "Login As (Job Function System Admin only)",
+    "field": "SecurityFieldId_8281",
+    "defaultSecurityValue": "Default"
+   },
+   {
+    "action": "Manage All Schedule Items",
+    "field": "SecurityFieldId_8282",
+    "defaultSecurityValue": "Default"
+   },
+   {
+    "action": "Manage All Schedule Items if Manager",
+    "field": "SecurityFieldId_8283",
+    "defaultSecurityValue": "Default"
+   },
+   {
+    "action": "Manage Default Dashboards",
+    "field": "SecurityFieldId_8284",
+    "defaultSecurityValue": "Default"
+   },
+   {
+    "action": "Manage RE Plan",
+    "field": "SecurityFieldId_8285",
+    "defaultSecurityValue": "Default"
+   },
+   {
+    "action": "Manage Report Folders",
+    "field": "SecurityFieldId_8286",
+    "defaultSecurityValue": "Default"
+   },
+   {
+    "action": "Receive Equipment Alerts",
+    "field": "SecurityFieldId_8287",
+    "defaultSecurityValue": "Default"
+   },
+   {
+    "action": "Receive Lease Alerts",
+    "field": "SecurityFieldId_8288",
+    "defaultSecurityValue": "Default"
+   },
+   {
+    "action": "Set Capital Program To Dead",
+    "field": "SecurityFieldId_8289",
+    "defaultSecurityValue": "Default"
+   },
+   {
+    "action": "Set Capital Program To Inactive",
+    "field": "SecurityFieldId_8290",
+    "defaultSecurityValue": "Default"
+   },
+   {
+    "action": "Set Capital Project To Dead",
+    "field": "SecurityFieldId_8291",
+    "defaultSecurityValue": "Default"
+   },
+   {
+    "action": "Set Capital Project To Inactive",
+    "field": "SecurityFieldId_8292",
+    "defaultSecurityValue": "Default"
+   },
+   {
+    "action": "Set Contract To Dead",
+    "field": "SecurityFieldId_8293",
+    "defaultSecurityValue": "Default"
+   },
+   {
+    "action": "Set Contract To Inactive",
+    "field": "SecurityFieldId_8294",
+    "defaultSecurityValue": "Default"
+   },
+   {
+    "action": "Set Equipment Contract To Dead",
+    "field": "SecurityFieldId_8295",
+    "defaultSecurityValue": "Default"
+   },
+   {
+    "action": "Set Equipment Contract To Inactive",
+    "field": "SecurityFieldId_8296",
+    "defaultSecurityValue": "Default"
+   },
+   {
+    "action": "Set Facility To Dead",
+    "field": "SecurityFieldId_8297",
+    "defaultSecurityValue": "Default"
+   },
+   {
+    "action": "Set Facility To Inactive",
+    "field": "SecurityFieldId_8298",
+    "defaultSecurityValue": "Default"
+   },
+   {
+    "action": "Set Location To Dead",
+    "field": "SecurityFieldId_8299",
+    "defaultSecurityValue": "Default"
+   },
+   {
+    "action": "Set Location To Inactive",
+    "field": "SecurityFieldId_8300",
+    "defaultSecurityValue": "Default"
+   },
+   {
+    "action": "Set Opening Project To Dead",
+    "field": "SecurityFieldId_8301",
+    "defaultSecurityValue": "Default"
+   },
+   {
+    "action": "Set Opening Project To Inactive",
+    "field": "SecurityFieldId_8302",
+    "defaultSecurityValue": "Default"
+   },
+   {
+    "action": "Set Parcel To Dead",
+    "field": "SecurityFieldId_8303",
+    "defaultSecurityValue": "Default"
+   },
+   {
+    "action": "Set Parcel To Inactive",
+    "field": "SecurityFieldId_8304",
+    "defaultSecurityValue": "Default"
+   },
+   {
+    "action": "Set Portfolio To Dead",
+    "field": "SecurityFieldId_8305",
+    "defaultSecurityValue": "Default"
+   },
+   {
+    "action": "Set Portfolio To Inactive",
+    "field": "SecurityFieldId_8306",
+    "defaultSecurityValue": "Default"
+   },
+   {
+    "action": "Set Prototype To Dead",
+    "field": "SecurityFieldId_8307",
+    "defaultSecurityValue": "Default"
+   },
+   {
+    "action": "Set Prototype To Inactive",
+    "field": "SecurityFieldId_8308",
+    "defaultSecurityValue": "Default"
+   },
+   {
+    "action": "Set Site To Dead",
+    "field": "SecurityFieldId_8309",
+    "defaultSecurityValue": "Default"
+   },
+   {
+    "action": "Set Site To Inactive",
+    "field": "SecurityFieldId_8310",
+    "defaultSecurityValue": "Default"
+   },
+   {
+    "action": "Task Association",
+    "field": "SecurityFieldId_8311",
+    "defaultSecurityValue": "Default"
+   },
+   {
+    "action": "Update/Change Job Title",
+    "field": "SecurityFieldId_8312",
+    "defaultSecurityValue": "Default"
+   },
+   {
+    "action": "View Portfolio/Program Documents",
+    "field": "SecurityFieldId_8313",
+    "defaultSecurityValue": "Default"
+   }
+  ]
+ }
+}

@@ -1,0 +1,405 @@
+{
+ "_firm": "(ASG)BBW  train-bbw.lucernex.com",
+ "_captured": "2026-09-13",
+ "_evidence": "Observed. /en/admin/CustomCodeTableEdit.jsp for the table list; /en/admin/CustomCodeFieldEdit.jsp?CustomCodeTableID={id}&BOType=CustomCodeField then its grid storeUrl for the values.",
+ "_method": "The grid store needs BOType=CustomCodeField ON THE PAGE URL so the emitted storeUrl carries it. Without BOType the store returns the literal string 'null' - the same trap af-tracker hit on /servlet/BOList. The fdName token (BOListExtEdit_NNN) is stable per grid, not per page load.",
+ "customCodeTables": {
+  "count": "38",
+  "columns": [
+   "LxBOID",
+   "currencySymbol",
+   "currencyDigits",
+   "LxBOName",
+   "CustomCodeTableName",
+   "Description",
+   "ParentCustomCodeTableID",
+   "isReadOnlyRecord"
+  ],
+  "fourthColumnAnswer": "The fourth column truncated as 'Smar...' in screenshot 28 is ParentCustomCodeTableID - the cascading/dependent drop-down parent.",
+  "dependentDropDownsInUse": "NO. All 38 have ParentCustomCodeTableID empty. Not one firm-defined drop-down in BBW uses the cascading feature. Observed - this settles whether dependent drop-downs are used here.",
+  "allReadWrite": "All 38 have isReadOnlyRecord=false, i.e. firm-editable.",
+  "tables": [
+   {
+    "customCodeTableID": "7967",
+    "name": "ASC 842 Month",
+    "description": "ASC 842 Month",
+    "parentCustomCodeTableID": null,
+    "isReadOnlyRecord": false
+   },
+   {
+    "customCodeTableID": "7966",
+    "name": "ASC 842 Year",
+    "description": "ASC 842 Year",
+    "parentCustomCodeTableID": null,
+    "isReadOnlyRecord": false
+   },
+   {
+    "customCodeTableID": "7724",
+    "name": "Brands",
+    "description": "Brands",
+    "parentCustomCodeTableID": null,
+    "isReadOnlyRecord": false
+   },
+   {
+    "customCodeTableID": "7858",
+    "name": "Change Request Area",
+    "description": "Lucernex Change Request Workflow",
+    "parentCustomCodeTableID": null,
+    "isReadOnlyRecord": false
+   },
+   {
+    "customCodeTableID": "7813",
+    "name": "Co-Tenancy Violation Alt Rent Sunset",
+    "description": "",
+    "parentCustomCodeTableID": null,
+    "isReadOnlyRecord": false
+   },
+   {
+    "customCodeTableID": "7814",
+    "name": "Co-Tenancy Violation Alt Rent Sunset Landlord Option",
+    "description": "",
+    "parentCustomCodeTableID": null,
+    "isReadOnlyRecord": false
+   },
+   {
+    "customCodeTableID": "7815",
+    "name": "Co-Tenancy Violation Option to Term",
+    "description": "",
+    "parentCustomCodeTableID": null,
+    "isReadOnlyRecord": false
+   },
+   {
+    "customCodeTableID": "7812",
+    "name": "Co-Tenancy Violation Type",
+    "description": "",
+    "parentCustomCodeTableID": null,
+    "isReadOnlyRecord": false
+   },
+   {
+    "customCodeTableID": "7846",
+    "name": "Contingency Trigger",
+    "description": "",
+    "parentCustomCodeTableID": null,
+    "isReadOnlyRecord": false
+   },
+   {
+    "customCodeTableID": "7725",
+    "name": "Cost Center",
+    "description": "Cost Center",
+    "parentCustomCodeTableID": null,
+    "isReadOnlyRecord": false
+   },
+   {
+    "customCodeTableID": "7736",
+    "name": "Funds Type",
+    "description": "Funds Type",
+    "parentCustomCodeTableID": null,
+    "isReadOnlyRecord": false
+   },
+   {
+    "customCodeTableID": "7726",
+    "name": "Guarantor",
+    "description": "Guarantor",
+    "parentCustomCodeTableID": null,
+    "isReadOnlyRecord": false
+   },
+   {
+    "customCodeTableID": "7737",
+    "name": "Increase Type",
+    "description": "Increase Type",
+    "parentCustomCodeTableID": null,
+    "isReadOnlyRecord": false
+   },
+   {
+    "customCodeTableID": "7738",
+    "name": "Lease Admin Request Type",
+    "description": "Lease Admin Request Type",
+    "parentCustomCodeTableID": null,
+    "isReadOnlyRecord": false
+   },
+   {
+    "customCodeTableID": "7727",
+    "name": "Lease Status",
+    "description": "Lease Status",
+    "parentCustomCodeTableID": null,
+    "isReadOnlyRecord": false
+   },
+   {
+    "customCodeTableID": "7722",
+    "name": "Lease Term Cap Type",
+    "description": "Lease Term Cap Type",
+    "parentCustomCodeTableID": null,
+    "isReadOnlyRecord": false
+   },
+   {
+    "customCodeTableID": "7914",
+    "name": "Lease Type",
+    "description": "Lease Admin Request Workflow",
+    "parentCustomCodeTableID": null,
+    "isReadOnlyRecord": false
+   },
+   {
+    "customCodeTableID": "7728",
+    "name": "Lease Year",
+    "description": "Lease Year",
+    "parentCustomCodeTableID": null,
+    "isReadOnlyRecord": false
+   },
+   {
+    "customCodeTableID": "7723",
+    "name": "Month List",
+    "description": "Month List",
+    "parentCustomCodeTableID": null,
+    "isReadOnlyRecord": false
+   },
+   {
+    "customCodeTableID": "7734",
+    "name": "ONCOT Frequency",
+    "description": "ONCOT Frequency",
+    "parentCustomCodeTableID": null,
+    "isReadOnlyRecord": false
+   },
+   {
+    "customCodeTableID": "7735",
+    "name": "ONCOT Remedy",
+    "description": "ONCOT Remedy",
+    "parentCustomCodeTableID": null,
+    "isReadOnlyRecord": false
+   },
+   {
+    "customCodeTableID": "7739",
+    "name": "OpEx Type",
+    "description": "OpEx Type",
+    "parentCustomCodeTableID": null,
+    "isReadOnlyRecord": false
+   },
+   {
+    "customCodeTableID": "7719",
+    "name": "Payment Method",
+    "description": "Payment Method",
+    "parentCustomCodeTableID": null,
+    "isReadOnlyRecord": false
+   },
+   {
+    "customCodeTableID": "7867",
+    "name": "QC Pass/Fail",
+    "description": "Used on QC Form",
+    "parentCustomCodeTableID": null,
+    "isReadOnlyRecord": false
+   },
+   {
+    "customCodeTableID": "7866",
+    "name": "QC Yes/No",
+    "description": "Used on QC Form",
+    "parentCustomCodeTableID": null,
+    "isReadOnlyRecord": false
+   },
+   {
+    "customCodeTableID": "7730",
+    "name": "Radius Unit",
+    "description": "Radius Unit",
+    "parentCustomCodeTableID": null,
+    "isReadOnlyRecord": false
+   },
+   {
+    "customCodeTableID": "7816",
+    "name": "RE Director",
+    "description": "",
+    "parentCustomCodeTableID": null,
+    "isReadOnlyRecord": false
+   },
+   {
+    "customCodeTableID": "7740",
+    "name": "Rent Payment Type",
+    "description": "Rent Payment Type Workflow",
+    "parentCustomCodeTableID": null,
+    "isReadOnlyRecord": false
+   },
+   {
+    "customCodeTableID": "7741",
+    "name": "RLExpense",
+    "description": "RLExpense",
+    "parentCustomCodeTableID": null,
+    "isReadOnlyRecord": false
+   },
+   {
+    "customCodeTableID": "7732",
+    "name": "RLStatus",
+    "description": "RLStatus",
+    "parentCustomCodeTableID": null,
+    "isReadOnlyRecord": false
+   },
+   {
+    "customCodeTableID": "7721",
+    "name": "Section Status",
+    "description": "Section Status",
+    "parentCustomCodeTableID": null,
+    "isReadOnlyRecord": false
+   },
+   {
+    "customCodeTableID": "7742",
+    "name": "SVAccount",
+    "description": "SVAccount",
+    "parentCustomCodeTableID": null,
+    "isReadOnlyRecord": false
+   },
+   {
+    "customCodeTableID": "7743",
+    "name": "SVType",
+    "description": "SVType",
+    "parentCustomCodeTableID": null,
+    "isReadOnlyRecord": false
+   },
+   {
+    "customCodeTableID": "7819",
+    "name": "Tenant Allowance Build Type",
+    "description": "Tenant Allowance Build Type",
+    "parentCustomCodeTableID": null,
+    "isReadOnlyRecord": false
+   },
+   {
+    "customCodeTableID": "7729",
+    "name": "Tenant Legal Name",
+    "description": "Tenant Legal Name",
+    "parentCustomCodeTableID": null,
+    "isReadOnlyRecord": false
+   },
+   {
+    "customCodeTableID": "7731",
+    "name": "Termination Right",
+    "description": "Termination Right",
+    "parentCustomCodeTableID": null,
+    "isReadOnlyRecord": false
+   },
+   {
+    "customCodeTableID": "7744",
+    "name": "User Request Type",
+    "description": "User Request Type",
+    "parentCustomCodeTableID": null,
+    "isReadOnlyRecord": false
+   },
+   {
+    "customCodeTableID": "7720",
+    "name": "Yes/No",
+    "description": "Yes/No",
+    "parentCustomCodeTableID": null,
+    "isReadOnlyRecord": false
+   }
+  ]
+ },
+ "leaseStatus_CONTRACT_LIFECYCLE": {
+  "_headline": "ASG DOES track lease lifecycle in a firm-defined drop-down, not in the platform Contract Status Code. This substantially answers the contract-lifecycle question.",
+  "customCodeTableID": 7727,
+  "valueCount": 7,
+  "values": [
+   "Accounting Purposes Only",
+   "Closed",
+   "Closed - Active",
+   "Future Possession",
+   "Open",
+   "Possession",
+   "Possession - Paying Rent"
+  ],
+  "comparisonToBRD24": {
+   "brd24Sequence": [
+    "Open",
+    "Active",
+    "Possession",
+    "Paying Rent",
+    "Closed"
+   ],
+   "matched": {
+    "Open": "Open (exact)",
+    "Possession": "Possession (exact)",
+    "Paying Rent": "'Possession - Paying Rent' (compound)",
+    "Closed": "Closed (exact)"
+   },
+   "notMatched": {
+    "Active": "No standalone 'Active' value. 'Active' appears only inside the compound 'Closed - Active'."
+   },
+   "extraBeyondBRD24": [
+    "Accounting Purposes Only",
+    "Future Possession"
+   ],
+   "verdict": "4 of BRD-24's 5 stages are present, one only as a compound. BBW adds 2 stages BRD-24 does not name. So the BRD lifecycle is close to, but not identical with, what the tenant actually runs."
+  },
+  "orderIsNotStored": "SortOrder is null on every value, so the drop-down renders ALPHABETICALLY, not in lifecycle order. The sequence Open -> Possession -> Paying Rent -> Closed exists only as a convention in users' heads; the platform stores no ordering. A rebuild that models this as an ordered state machine is adding structure the source system does not have.",
+  "consequenceForRebuild": "Lifecycle is a FIRM-CONFIGURED code list, not a platform concept. ASG Edge+ must either model it as first-class (and accept it differs per tenant) or migrate these seven values explicitly. The platform Contract Status Code (TableType 2094, three values: Active / AI Abstracted / Inactive) is a different and much coarser axis - both exist simultaneously."
+ },
+ "leaseAdminRequestType_DRIVES_CONDITIONAL_FIELDS": {
+  "_headline": "This is the source list for Issue.LAR_RequestType, the single field driving 44 of 54 conditional-field criteria clauses across the tenant.",
+  "customCodeTableID": 7738,
+  "valueCount": 13,
+  "values": [
+   "Amendment",
+   "Cotenancy",
+   "Default",
+   "Estoppel",
+   "New Lease",
+   "Notice",
+   "Option",
+   "Payment Approval",
+   "Payment History",
+   "Percent Rent",
+   "Sales History",
+   "Store Update",
+   "Vendor Change"
+  ],
+  "crossCheck": "Every value referenced in the captured conditionalFieldsConfig blobs - Estoppel, New Lease, Vendor Change, Amendment - is present in this list. Confirms the conditional rules key off this firm-defined table.",
+  "fragility": "crtVal1 in conditionalFieldsConfig stores the DISPLAY LABEL, not the id. Renaming any of these 13 values silently breaks every rule referencing it. 'Estoppel' alone appears in roughly 20 captured rules."
+ },
+ "otherValueSets": {
+  "User Request Type": {
+   "customCodeTableID": 7744,
+   "count": 3,
+   "values": [
+    "Add User",
+    "Deactivate User",
+    "Modify User"
+   ]
+  },
+  "Lease Type": {
+   "customCodeTableID": 7914,
+   "count": 3,
+   "values": [
+    "Capital",
+    "Non-Capital",
+    "Not Applicable"
+   ]
+  },
+  "RLStatus": {
+   "customCodeTableID": 7732,
+   "count": 5,
+   "values": [
+    "Complete",
+    "Do Not Owe",
+    "Info Requested",
+    "Issue",
+    "Review"
+   ]
+  },
+  "Section Status": {
+   "customCodeTableID": 7721,
+   "count": 5,
+   "values": [
+    "Active",
+    "Deleted",
+    "Inactive",
+    "Not Applicable",
+    "Pending"
+   ]
+  },
+  "Change Request Area": {
+   "customCodeTableID": 7858,
+   "count": 6,
+   "values": [
+    "Drop Down List",
+    "Folders",
+    "Integrations",
+    "Reports",
+    "Summary Pages",
+    "Workflows"
+   ]
+  }
+ }
+}

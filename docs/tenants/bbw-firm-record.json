@@ -1,0 +1,536 @@
+{
+ "_firm": "(ASG)BBW",
+ "firmID": 3159,
+ "build": "26.09.0.113",
+ "_captured": "2026-09-13",
+ "_source": "/en/admin/FirmEdit.jsp (Manage Company) - full form scrape",
+ "_method": "Label div and value share ONE <td>: <td><div id='{Field}_label' class=requiredFieldLabel>Label</div>Value</td>. The value is the td text with the label div removed - NOT a sibling cell. A nextElementSibling approach silently returns the NEXT field's label+value and produced plausible-looking but wrong pairs on the first attempt.",
+ "comparisonTenant": "(ASG)American Freight firmID 3158, same build",
+ "fieldCount": 68,
+ "afFieldCount": 71,
+ "_headline": "BBW's Allow Equipment Contracts? is ALSO 'Yes'. The entitlement flag is Yes at BOTH tenants, yet only BBW renders the Equipment Contract root. The flag is definitively NOT the discriminator - af-tracker's falsification from AF alone is confirmed from the other side.",
+ "entitlementFlags": {
+  "Enable Unsealed Bidding?": "false",
+  "Is Test Firm?": "true",
+  "Allow Documents?": "Yes",
+  "Allow Data Integration?": "Yes",
+  "Is Audit Enabled?": "true",
+  "Allow Advanced Reports?": "Yes",
+  "Allow Portfolio?": "Yes",
+  "Allow Capital Programs?": "No",
+  "Allow Sites?": "No",
+  "Allow Opening Projects?": "No",
+  "Allow Capital Projects?": "No",
+  "Allow Prototypes?": "No",
+  "Allow Facilities?": "Yes",
+  "Allow Locations?": "Yes",
+  "Allow Parcels?": "No",
+  "Allow Contracts?": "Yes",
+  "Allow Log In As Member?": "true",
+  "Allow AI Lease Abstraction": "",
+  "Allow Equipment Contracts?": "Yes",
+  "Allow RETransactions?": "No",
+  "Allow LX Invoice": "No",
+  "Allow Mobile App": "No",
+  "Allow Analytics": "",
+  "Allow Project Cost Tracking": ""
+ },
+ "entitlementDiffVsAF": [
+  {
+   "flag": "Is Audit Enabled?",
+   "americanFreight": "<absent>",
+   "bbw": "true"
+  },
+  {
+   "flag": "Is Test Firm?",
+   "americanFreight": "<absent>",
+   "bbw": "true"
+  }
+ ],
+ "entitlementsIdentical": false,
+ "setupPageFields": "NONE. Zero matches for /Setup Page/i in the rendered page, confirming af-tracker's finding at AF. The object-catalog claim that Firm holds per-module default page-layout assignments is not observable on this screen in either tenant.",
+ "fieldsOnlyInBBW": [],
+ "fieldsOnlyInAF": [
+  "DefaultAutoPushForecastEndDate",
+  "EntityNavigationMode",
+  "LxFirmID"
+ ],
+ "fields": [
+  {
+   "field": "FirmName",
+   "label": "Firm Name",
+   "control": "readonly",
+   "value": "(ASG)BBW",
+   "mandatory": true
+  },
+  {
+   "field": "Phone",
+   "label": "Phone",
+   "control": "input",
+   "value": "614.423.5800",
+   "mandatory": true
+  },
+  {
+   "field": "FiscalYearEnd",
+   "label": "Fiscal Year End",
+   "control": "readonly",
+   "value": "December 31",
+   "mandatory": false
+  },
+  {
+   "field": "LoginFirmName",
+   "label": "Login Firm Name",
+   "control": "readonly",
+   "value": "bbw",
+   "mandatory": true
+  },
+  {
+   "field": "StreetAddress1",
+   "label": "Address",
+   "control": "input",
+   "value": "501 W Schrock Rd",
+   "mandatory": true
+  },
+  {
+   "field": "StreetAddress2",
+   "label": "Address 2",
+   "control": "input",
+   "value": "Ste 201",
+   "mandatory": false
+  },
+  {
+   "field": "StreetAddress3",
+   "label": "Address 3",
+   "control": "input",
+   "value": "",
+   "mandatory": false
+  },
+  {
+   "field": "StreetAddress4",
+   "label": "Address 4",
+   "control": "input",
+   "value": "",
+   "mandatory": false
+  },
+  {
+   "field": "City",
+   "label": "City",
+   "control": "input",
+   "value": "Columbus",
+   "mandatory": true
+  },
+  {
+   "field": "CountryID",
+   "label": "Country",
+   "control": "readonly",
+   "value": "",
+   "mandatory": true
+  },
+  {
+   "field": "IStateProvinceCountryID",
+   "label": "State",
+   "control": "readonly",
+   "value": "",
+   "mandatory": true
+  },
+  {
+   "field": "PostalCode",
+   "label": "PostalCode",
+   "control": "input",
+   "value": "43081",
+   "mandatory": true
+  },
+  {
+   "field": "CodeDefaultFolderSecurityID",
+   "label": "Default Folder Security",
+   "control": "readonly",
+   "value": "",
+   "mandatory": true
+  },
+  {
+   "field": "json_DownloadNameNoVersion",
+   "label": "Download without appending version",
+   "control": "radio",
+   "value": "false",
+   "mandatory": false
+  },
+  {
+   "field": "MaxDocumentStorageGB",
+   "label": "Max Document Storage (GB)",
+   "control": "readonly",
+   "value": "",
+   "mandatory": false
+  },
+  {
+   "field": "DBDocumentStorageGB",
+   "label": "Actual Storage (GB)",
+   "control": "readonly",
+   "value": "81.90",
+   "mandatory": false
+  },
+  {
+   "field": "FromEMailAddress",
+   "label": "From Email",
+   "control": "input",
+   "value": "ASG_bbw_LxNotifications@lucernex.com",
+   "mandatory": true
+  },
+  {
+   "field": "DefaultWorkWeekends",
+   "label": "Work Weekends? (default for new schedules)",
+   "control": "radio",
+   "value": "false",
+   "mandatory": true
+  },
+  {
+   "field": "UseOrgChartForLocation",
+   "label": "Apply Org Chart when creating Locations",
+   "control": "radio",
+   "value": "true",
+   "mandatory": true
+  },
+  {
+   "field": "EMailAddressFilter",
+   "label": "Email Filter (GLOBAL, NONE, <comma-delimited list>)",
+   "control": "input",
+   "value": "@consultasg.com, @entrustsoft.in, @eximiusbpo.com, @ntrustinfotech.com",
+   "mandatory": false
+  },
+  {
+   "field": "DefaultHolidayScheduleID",
+   "label": "Holiday Calendar (default for new schedules)",
+   "control": "select",
+   "value": "",
+   "mandatory": false
+  },
+  {
+   "field": "UseOrgChartForREContract",
+   "label": "Apply Org Chart when creating RE Contracts",
+   "control": "radio",
+   "value": "true",
+   "mandatory": true
+  },
+  {
+   "field": "RecentNews",
+   "label": "Recent News",
+   "control": "input",
+   "value": "Welcome to Lucernex!",
+   "mandatory": true
+  },
+  {
+   "field": "UseOrgChartForEquipContract",
+   "label": "Apply Org Chart when creating Equipment Contracts",
+   "control": "radio",
+   "value": "true",
+   "mandatory": true
+  },
+  {
+   "field": "defaultCopyParentFolderSec",
+   "label": "Child Folder to inherit Parent Security?",
+   "control": "radio",
+   "value": "true",
+   "mandatory": true
+  },
+  {
+   "field": "json_sFTPLogs",
+   "label": "sFTP Job Logs:",
+   "control": "radio",
+   "value": "false",
+   "mandatory": true
+  },
+  {
+   "field": "CodeAllowedEMailSourceID",
+   "label": "Email into Lucernex",
+   "control": "readonly",
+   "value": "",
+   "mandatory": true
+  },
+  {
+   "field": "InboundEMailFolderName",
+   "label": "Email Attachment Folder",
+   "control": "select",
+   "value": "E-mailed Documents",
+   "mandatory": false
+  },
+  {
+   "field": "EnableUnsealedBidding",
+   "label": "Enable Unsealed Bidding?",
+   "control": "radio",
+   "value": "false",
+   "mandatory": true
+  },
+  {
+   "field": "LxIDName",
+   "label": "Lx ID Name",
+   "control": "readonly",
+   "value": "(ASG)BBW",
+   "mandatory": true
+  },
+  {
+   "field": "CodeProductTypeID",
+   "label": "Product Type",
+   "control": "readonly",
+   "value": "Enterprise",
+   "mandatory": true
+  },
+  {
+   "field": "IsTestFirm",
+   "label": "Is Test Firm?",
+   "control": "radio",
+   "value": "true",
+   "mandatory": true
+  },
+  {
+   "field": "LockOutUsers",
+   "label": "Lock Out Users?",
+   "control": "radio",
+   "value": "false",
+   "mandatory": true
+  },
+  {
+   "field": "json_GASB_Firm",
+   "label": "GASB Firm",
+   "control": "readonly",
+   "value": "",
+   "mandatory": true
+  },
+  {
+   "field": "json_GASB_Firm_Text",
+   "label": "Replace with",
+   "control": "readonly",
+   "value": "",
+   "mandatory": false
+  },
+  {
+   "field": "AllowDocumentFunctionality",
+   "label": "Allow Documents?",
+   "control": "readonly",
+   "value": "Yes",
+   "mandatory": true
+  },
+  {
+   "field": "AllowDataIntegration",
+   "label": "Allow Data Integration?",
+   "control": "readonly",
+   "value": "Yes",
+   "mandatory": true
+  },
+  {
+   "field": "IsAuditEnabled",
+   "label": "Is Audit Enabled?",
+   "control": "radio",
+   "value": "true",
+   "mandatory": true
+  },
+  {
+   "field": "AllowAdvancedReports",
+   "label": "Allow Advanced Reports?",
+   "control": "readonly",
+   "value": "Yes",
+   "mandatory": true
+  },
+  {
+   "field": "json_IgnoreTaskRelations",
+   "label": "Ignore Schedule Task Relationships?",
+   "control": "readonly",
+   "value": "",
+   "mandatory": true
+  },
+  {
+   "field": "json_SessionTimeout",
+   "label": "Inactive Session Timeout (Minutes)",
+   "control": "readonly",
+   "value": "100",
+   "mandatory": true
+  },
+  {
+   "field": "AllowPortfolioFunctionality",
+   "label": "Allow Portfolio?",
+   "control": "readonly",
+   "value": "Yes",
+   "mandatory": true
+  },
+  {
+   "field": "AllowCapProgramFunctionality",
+   "label": "Allow Capital Programs?",
+   "control": "readonly",
+   "value": "No",
+   "mandatory": true
+  },
+  {
+   "field": "AllowSiteFunctionality",
+   "label": "Allow Sites?",
+   "control": "readonly",
+   "value": "No",
+   "mandatory": true
+  },
+  {
+   "field": "AllowOpenProjectFunctionality",
+   "label": "Allow Opening Projects?",
+   "control": "readonly",
+   "value": "No",
+   "mandatory": true
+  },
+  {
+   "field": "AllowCapProjectFunctionality",
+   "label": "Allow Capital Projects?",
+   "control": "readonly",
+   "value": "No",
+   "mandatory": true
+  },
+  {
+   "field": "json_ActiveSessionTimeout",
+   "label": "Maximum Session Timeout (Hours)",
+   "control": "readonly",
+   "value": "0",
+   "mandatory": true
+  },
+  {
+   "field": "AllowPrototypeFunctionality",
+   "label": "Allow Prototypes?",
+   "control": "readonly",
+   "value": "No",
+   "mandatory": true
+  },
+  {
+   "field": "AllowFacilityFunctionality",
+   "label": "Allow Facilities?",
+   "control": "readonly",
+   "value": "Yes",
+   "mandatory": true
+  },
+  {
+   "field": "AllowLocationFunctionality",
+   "label": "Allow Locations?",
+   "control": "readonly",
+   "value": "Yes",
+   "mandatory": true
+  },
+  {
+   "field": "AllowParcelFunctionality",
+   "label": "Allow Parcels?",
+   "control": "readonly",
+   "value": "No",
+   "mandatory": true
+  },
+  {
+   "field": "AllowContractFunctionality",
+   "label": "Allow Contracts?",
+   "control": "readonly",
+   "value": "Yes",
+   "mandatory": true
+  },
+  {
+   "field": "AllowLoginAsMember",
+   "label": "Allow Log In As Member?",
+   "control": "radio",
+   "value": "true",
+   "mandatory": true
+  },
+  {
+   "field": "json_AllowAILeaseAbstraction",
+   "label": "Allow AI Lease Abstraction",
+   "control": "readonly",
+   "value": "",
+   "mandatory": true
+  },
+  {
+   "field": "json_RequireSSL",
+   "label": "Force Secure Site",
+   "control": "readonly",
+   "value": "",
+   "mandatory": false
+  },
+  {
+   "field": "FirmURLPrefix",
+   "label": "Url Prefix (Only IT Enables)",
+   "control": "readonly",
+   "value": "train-bbw",
+   "mandatory": false
+  },
+  {
+   "field": "json_ColorScheme",
+   "label": "Color Scheme",
+   "control": "select",
+   "value": "Blue",
+   "mandatory": true
+  },
+  {
+   "field": "AllowEquipmentContractFunctionality",
+   "label": "Allow Equipment Contracts?",
+   "control": "readonly",
+   "value": "Yes",
+   "mandatory": true
+  },
+  {
+   "field": "AllowRETransactionFunctionality",
+   "label": "Allow RETransactions?",
+   "control": "readonly",
+   "value": "No",
+   "mandatory": true
+  },
+  {
+   "field": "AllowLxInvoice",
+   "label": "Allow LX Invoice",
+   "control": "readonly",
+   "value": "No",
+   "mandatory": true
+  },
+  {
+   "field": "GoLiveDate",
+   "label": "Go Live Date",
+   "control": "readonly",
+   "value": "22/05/2024",
+   "mandatory": false
+  },
+  {
+   "field": "IsBillEnabled",
+   "label": "Billing Enabled?",
+   "control": "readonly",
+   "value": "No",
+   "mandatory": true
+  },
+  {
+   "field": "SalesforceID",
+   "label": "Salesforce Account ID",
+   "control": "readonly",
+   "value": "0014400001pCc6wAAC",
+   "mandatory": false
+  },
+  {
+   "field": "json_DocumentUploadLimit",
+   "label": "Document Upload Limit (MBytes)",
+   "control": "readonly",
+   "value": "500",
+   "mandatory": true
+  },
+  {
+   "field": "AllowMobileApp",
+   "label": "Allow Mobile App",
+   "control": "readonly",
+   "value": "No",
+   "mandatory": true
+  },
+  {
+   "field": "json_AllowAnalytics",
+   "label": "Allow Analytics",
+   "control": "readonly",
+   "value": "",
+   "mandatory": true
+  },
+  {
+   "field": "json_AllowProjectCostTracking",
+   "label": "Allow Project Cost Tracking",
+   "control": "readonly",
+   "value": "",
+   "mandatory": true
+  },
+  {
+   "field": "json_ReportFilterFailureEmail",
+   "label": "Report Filter Failure Email",
+   "control": "readonly",
+   "value": "",
+   "mandatory": false
+  }
+ ]
+}

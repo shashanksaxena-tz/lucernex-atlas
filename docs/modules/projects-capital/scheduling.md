@@ -153,3 +153,30 @@ phases — it is the mechanism behind `ProjectEntity.CurrentMilestone`/`NextMile
    (milestone list vs. schedule network) entirely parallel with no cross-reference at all? No FK
    connects them in the schema, which argues for "entirely parallel," but this was not independently
    verified against a live screen.
+
+## The working calendar — holidays and "crashing"
+
+**Observed**, from the `Manage Holiday Calendar` screen's own on-screen help
+(`/en/admin/ManageHolidayCalendar.jsp`,
+`bbw-admin/32-manage-holiday-calendar.jpg`):
+
+> *"Holiday days are used when determining task completion dates. If a schedule is not 'crashed' then
+> weekends and holidays will not be used when determining task dates from lead/lag or duration
+> values."*
+
+**Derived.** The scheduling engine resolves a task's dates against a **working calendar**, and a
+schedule carries a flag — "crashed" — that switches that off so durations run through weekends and
+holidays. So `TaskPredecessor` lead/lag and task durations are in **working days by default, calendar
+days when crashed**.
+
+**Observed.** A holiday calendar is a named record scoped to `Portfolios / Programs` — columns
+`Calendar Name` and `Portfolios / Programs`. **`(ASG)BBW` holds none**, so no working calendar is
+configured in that tenant.
+
+**Derived.** This is the only place in the product where holidays are used, and it is a *scheduling*
+concern rather than an accounting one — the lease-accounting engine's periods come from the fiscal
+calendar instead ([`../../features/reference-data/`](../../features/reference-data/)). Capital
+projects are **out of scope** for ASG Edge+, so this behaviour is out of scope with them.
+
+**Open.** Where the "crashed" flag lives is unobserved — it is not among the fields surfaced on
+`Task`, `TaskGroup` or `TaskItem` in this corpus.

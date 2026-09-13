@@ -6,8 +6,9 @@ discriminator. Two things follow, and both matter more than the catalogue itself
 
 1. **`TableType=2035` is `Issue Type Code`** — and `Manage Forms` opens
    `FirmCodeEdit.jsp?includeType=Manage&TableType=2035&tableName=Manage Forms`. **A "Form" is an
-   Issue Type.** The four form types are four rows in the Issue Type code table, and the record a
-   form produces is an `Issue`.
+   Issue Type.** The form types are rows in the Issue Type code table, and the record a
+   form produces is an `Issue`. *(Count corrected: **four** in `(ASG)American Freight`, **six** in
+   `(ASG)BBW` — see [`../features/workflows-forms/`](../features/workflows-forms/).)*
 2. **The IDs fall in two bands**, 2000–2190 and 3000–3016, and the split is not arbitrary. The
    3000-band tables are the ones whose rows carry *behaviour* (`CodeExpenseType` has 31 fields
    including schedule-routing foreign keys); the 2000-band are mostly plain lookups.
@@ -15,6 +16,13 @@ discriminator. Two things follow, and both matter more than the catalogue itself
 Captured 2026-09-10 from `/en/admin/FirmCodeList.jsp`, tenant `(ASG)American Freight`, build
 `26.08.0.46`. Read-only: no code table or value was created, edited or deleted.
 Confidence: **Observed** throughout unless stated.
+
+**A later full sweep of all 207 tables on build `26.09.0.113`** —
+[`../tenants/af-code-table-actions.json`](../tenants/af-code-table-actions.json), analysed in
+[`../features/drop-downs-code-tables/`](../features/drop-downs-code-tables/) — adds the value census
+(**73 tables populated, 134 empty, 1,140 values**), establishes that `delete` is gated by a
+server-supplied `isReadOnlyRecord` boolean rather than a reference count, and **corrects two claims
+in this document**. Both corrections are annotated in place below.
 
 ## Why "a Form is an Issue Type" is the important finding
 
@@ -122,11 +130,17 @@ one schedule type across, not a matrix.
 
 Columns: `Name`, `Description`, `Inactive`.
 
-| Name | Description | Row actions |
-|---|---|---|
-| `AI Abstracted` | AI Abstracted | edit, delete |
-| `Active` | Active | **edit only — no delete** |
-| `Inactive` | Inactive | edit, delete |
+| Name | Description | Row actions (build `26.08.0.46`) | Row actions (build `26.09.0.113`) |
+|---|---|---|---|
+| `AI Abstracted` | AI Abstracted | edit, delete | **edit only — changed** |
+| `Active` | Active | **edit only — no delete** | edit only — unchanged |
+| `Inactive` | Inactive | edit, delete | edit, delete — unchanged |
+
+> **Correction, 2026-09-13.** The right-hand column is a re-capture of the *same tenant* on build
+> `26.09.0.113` ([`../tenants/af-code-table-actions.json`](../tenants/af-code-table-actions.json)),
+> and `AI Abstracted` lost its `delete` action across the upgrade. Nobody edited this table. Two
+> conclusions below are affected — see the annotations. Full analysis:
+> [`../features/drop-downs-code-tables/`](../features/drop-downs-code-tables/).
 
 Two observations here.
 
@@ -135,8 +149,23 @@ means the platform protects at least one status value as system-required. A rebu
 notion of an undeletable seeded value, and it interacts directly with ASG Edge+'s `D-07` /
 `DeactivationPolicy` question.
 
-**`AI Abstracted` is a tenant-added status.** ASG has extended the contract lifecycle to record that
-a contract was abstracted by AI rather than by a person. This is not in any BRD reviewed so far and
+**~~`AI Abstracted` is a tenant-added status.~~ Withdrawn — its provenance is now uncertain.** On
+build `26.09.0.113` `AI Abstracted` is protected from deletion in **every one of the four tables it
+appears in** (`2094` Contract Status, `2107` Facility Status, `2157` Covenant Status, `2181`
+Security Deposit Status), and **American Freight now matches BBW** — the tenant difference recorded
+earlier vanished with the upgrade.
+
+**What is Observed is narrow: the flag changed across a build, in a tenant where nobody edited this
+table.** Under the best-supported *(and unconfirmed)* reading of `isReadOnlyRecord` — that it marks
+platform-seeded, vendor-owned rows — `AI Abstracted` would be vendor-shipped rather than ASG-added,
+which would fit Accruent shipping AI lease abstraction as a platform feature in `26.09`; a live
+Atlas/RocketClub abstraction pipeline does exist
+([`../features/import-export/`](../features/import-export/)). That chain is **Inferred**. The honest
+position is that the original claim is **no longer supported**, not that it has been reversed. It is
+struck through below rather than deleted, so the error is not silently rewritten.
+
+~~ASG has extended the contract lifecycle to record that
+a contract was abstracted by AI rather than by a person.~~ This is not in any BRD reviewed so far and
 is worth raising — it says the abstraction process already has an automated path in production, and
 the rebuild's Lease Admin Request workflow (whose step 2 is "Abstract Lease Document") will need to
 represent the same distinction.

@@ -1,0 +1,123 @@
+{
+ "firm": "(ASG)American Freight",
+ "firmID": 3158,
+ "build": "26.09.0.113",
+ "captured": "2026-09-13",
+ "question": "Q-BBW-12 - what suppresses a navigation root when all known gates are open? Must explain BOTH `Equipment Contract` AND `Program`.",
+ "candidateAnswer": "A navigation root renders if and only if the firm holds AT LEAST ONE record of that root's ProjectEntity type. Row count - not licensing, not menu structure, not page access.",
+ "status": "**CONFIRMED** across both tenants. Q-BBW-12 is answered.",
+ "method": "GET /rest/businessObject/{Type}/details?fields=ProjectEntityTypeName&$top=5000 per root type. GET only.",
+ "keyDiscovery": "Observed. AF's `Program` TABLE rows carry ProjectEntityTypeName = **`Portfolio`**, not `Program`. So the menu structure named `Portfolio` (id 924) matches 3 real entities, while the separate structure named `Program` (id 3851) matches ZERO - nothing at AF is typed `Program`. That is why `Program` does not render, and it is invisible unless you read the type name rather than the table name.",
+ "evidence": [
+  {
+   "root": "Portfolio",
+   "restType": "Program",
+   "entityTypeName": "Portfolio",
+   "rows": 3,
+   "renders": true
+  },
+  {
+   "root": "Location",
+   "restType": "Location",
+   "entityTypeName": "Location",
+   "rows": 400,
+   "renders": true
+  },
+  {
+   "root": "Facility",
+   "restType": "Facility",
+   "entityTypeName": "Facility",
+   "rows": 36,
+   "renders": true
+  },
+  {
+   "root": "Contract",
+   "restType": "Contract",
+   "entityTypeName": "Contract",
+   "rows": 2,
+   "renders": true
+  },
+  {
+   "root": "Program",
+   "restType": "Program",
+   "entityTypeName": "Program",
+   "rows": 0,
+   "renders": false,
+   "note": "ANOMALY 1 EXPLAINED - zero entities typed `Program`; the Program table's rows are typed `Portfolio`."
+  },
+  {
+   "root": "Equipment Contract",
+   "restType": "EquipmentContract",
+   "entityTypeName": "EquipmentContract",
+   "rows": 0,
+   "renders": false,
+   "note": "ANOMALY 2 EXPLAINED - zero EquipmentContract records at AF."
+  },
+  {
+   "root": "Parcel",
+   "restType": "Parcel",
+   "rows": 0,
+   "renders": false
+  },
+  {
+   "root": "Prototype",
+   "restType": "Prototype",
+   "rows": 0,
+   "renders": false
+  },
+  {
+   "root": "Project",
+   "restType": "Project",
+   "rows": 0,
+   "renders": false
+  },
+  {
+   "root": "Capital Project",
+   "restType": "CapitalProject",
+   "rows": 0,
+   "renders": false
+  },
+  {
+   "root": "Site",
+   "restType": "Site",
+   "rows": null,
+   "renders": false,
+   "note": "`Site` is not even a valid REST objectType at AF - HTTP 400 'Specified objectType [Site] is unknown'. Consistent with never rendering."
+  }
+ ],
+ "whyThisBeatsTheOtherHypotheses": {
+  "notTheEntitlementFlag": "`Allow Equipment Contracts?` = Yes at BOTH tenants (AF confirmed by me, BBW confirmed by bbw-tracker), yet only BBW renders the root. The flag cannot discriminate. Row count can.",
+  "notTypeRegistration": "DECISIVE: `EquipmentContract` IS a valid REST objectType at AF - GET returns HTTP 200 with 0 rows, not the HTTP 400 'unknown objectType' that `Site`, `Equipment` and `OpeningProject` return. So the type is registered at AF and the root still does not render. Registration is not the gate; POPULATION is.",
+  "notMenuStructure": "The full `Equipment Contract` structure (id 41087, 5 groups, 64 nodes) is present in AF's Manage Top Menu.",
+  "notPageAccess": "`Equipment Contract` page access is granted for 8 of 10 AF user classes, at the same level as `Contract`.",
+  "explainsBothAnomalies": "This is the only candidate so far that accounts for `Program` as well as `Equipment Contract`. Any hypothesis explaining only Equipment Contract is at best half an answer."
+ },
+ "theDecisiveTest": {
+  "ask": "bbw-tracker: GET /rest/businessObject/EquipmentContract/details?fields=ProjectEntityTypeName&$top=5 at BBW.",
+  "confirms": "If BBW returns >=1 row, the hypothesis is confirmed from both directions and Q-BBW-12 closes: the root renders because BBW has equipment contracts and AF does not.",
+  "refutes": "If BBW returns 0 rows and still renders the root, row-count is REFUTED and the mechanism is something else again.",
+  "secondCheck": "Also worth running at BBW: does anything there carry ProjectEntityTypeName=`Program`? If BBW renders a `Program` root, it should - and if BBW also hides `Program` with zero such rows, that is a second independent confirmation."
+ },
+ "caveat": "Labelled Inferred. This is an 11-for-11 CORRELATION at a single tenant, not a demonstrated mechanism - I cannot see the server-side rendering code. A tenant with the flag on, the type registered and zero rows that STILL renders the root would refute it. The Equipment Contract case is what makes it more than coincidence: it is the one root where the entitlement flag and the row count disagree, and the observed behaviour follows the row count.",
+ "crossTenantConfirmation": {
+  "date": "2026-09-13",
+  "af": {
+   "equipmentContractRecords": 0,
+   "rootRenders": false
+  },
+  "bbw": {
+   "equipmentContractRecords": 1,
+   "rootRenders": true,
+   "source": "bbw-tracker, docs/tenants/bbw-navigation-gate.json"
+  },
+  "verifiedThreeWays": [
+   "bbw-tracker's method verbatim: GET /rest/businessObject/Contract/details?fields=ContractName,ProjectEntityTypeName&$top=3000 -> 2 rows at AF, BOTH ProjectEntityTypeName='Contract'. Zero matches for /equip/i.",
+   "Dedicated endpoint: GET /rest/businessObject/EquipmentContract/details -> HTTP 200, 0 rows.",
+   "Space-form control: GET /rest/businessObject/Equipment%20Contract/details -> HTTP 400 'Specified objectType [Equipment Contract] is unknown', confirming the no-space form is the correct objectType and its 0 is a true zero, not a spelling miss."
+  ],
+  "theDecisiveComparison": "Equipment Contract is the ONLY root where the entitlement flag is identical across tenants but behaviour differs: `Allow Equipment Contracts?` = Yes at BOTH, same build 26.09.0.113, same menu structure present, page access granted at AF for 8 of 10 user classes - and the root renders only at BBW. The single variable that differs is the record count: BBW 1, AF 0.",
+  "thresholdIsExistenceNotVolume": "bbw-tracker's Program control settles this: BBW renders normally on 2 records, identically to roots backed by 2,000+. So the gate is >=1, not 'meaningfully populated'.",
+  "whyThisIsNotCircular": "Record existence could in principle be a CONSEQUENCE of visibility rather than a cause - nobody creates records for a module they cannot see. Equipment Contract escapes that circularity because AF HAS the entitlement and could have created one. My own finding strengthens it further: the `EquipmentContract` objectType is REGISTERED and live at AF (HTTP 200 with 0 rows, versus HTTP 400 'unknown objectType' for `Site`, `Equipment` and `OpeningProject`). The type is addressable at AF; only the records are absent."
+ },
+ "programCaveat": "Care needed when reading the Program row. At AF the `Program` TABLE holds 3 rows, but they are typed ProjectEntityTypeName='Portfolio' - which is what makes the `Portfolio` root (menu structure 924) render. NOTHING at AF is typed 'Program', and the separate `Program` menu structure (3851) stays hidden. Neither tenant renders a root literally named `Program`. So 'Program: 2 records -> renders' at BBW means the PORTFOLIO root, not a Program root. Reading the table name instead of the type name inverts this."
+}

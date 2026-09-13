@@ -1,10 +1,19 @@
 # Workflow, Approval & Task Engine — module overview
 
+> **Correction, 2026-09-13.** This document was written from `(ASG)American Freight` alone, where
+> there are 4 workflows and 4 form types. A second tenant, `(ASG)BBW`, has **13 workflow templates,
+> 62 steps and 6 form types** ([`../../tenants/bbw-workflow-steps.json`](../../tenants/bbw-workflow-steps.json)),
+> which **refutes the 1:1 Form↔Workflow claim** made below and in several sibling files. The
+> corrected model is in [`../../features/workflows-forms/`](../../features/workflows-forms/). The
+> *shape* findings — step-numbered, ordinal, no branch/merge, layout-per-step — survive the second
+> tenant unchanged; only the cardinality claims do not. Counts below are AF's, and are correct for AF.
+
 **Stated up front.** Lucernex's workflow engine is a *step-numbered, template-instantiated approval
 router*, not a general-purpose BPM engine. **The live tenant confirms the shape:** four workflows
-exist, they carry 19 steps between them, every step is ordinal (1..N), and no branch, merge or
-parallel construct is visible anywhere in the configuration
-(**Observed**, `../layouts-and-forms/forms-vs-pages-vs-layouts.md`). A `WorkFlowTemplate` owns an
+exist in `(ASG)American Freight`, they carry 19 steps between them, every step is ordinal (1..N), and
+no branch, merge or parallel construct is visible anywhere in the configuration
+(**Observed**, `../layouts-and-forms/forms-vs-pages-vs-layouts.md`). `(ASG)BBW` carries 13 templates
+and 62 steps, and the same shape findings hold there. A `WorkFlowTemplate` owns an
 ordered list of `WorkFlowTemplateStep` rows keyed by an integer `StepNumber`; each step publishes a
 menu of `WorkFlowTemplateStepAction` buttons; each action is a **declarative bundle of Boolean
 flags** — approve or deny, jump to step *N*, restart this step, close the workflow, spawn another
@@ -28,13 +37,20 @@ The three object families in scope are distinct and must not be conflated:
 
 All three routes are **Observed** — `../../admin/004-company-administration.md` lines 57-66.
 
-**Form and Work Flow are 1:1.** `Manage Forms` and `Manage Work Flows` list exactly the same four
-names, and every Form type reports `WORK FLOW field set? = Yes` (**Observed**,
-`../layouts-and-forms/forms-vs-pages-vs-layouts.md`). The Form is the record; the Work Flow is its
-process. `CodeIssueType.IsWorkFlow` is the column behind that checkbox — a reading that was
-Inferred before the live capture and is now **Observed**.
+**~~Form and Work Flow are 1:1.~~ Corrected — they are not.** In `(ASG)American Freight`
+`Manage Forms` and `Manage Work Flows` list the same four names, and every Form type reports
+`WORK FLOW field set? = Yes` (**Observed**, `../layouts-and-forms/forms-vs-pages-vs-layouts.md`) —
+so 1:1 was a reasonable reading of that tenant. It does not generalise. In `(ASG)BBW` only **4 of
+13** workflow templates share a name with a form type, **9** workflows have no matching form, and
+**2** form types (`Change Request`, `QC Request`) have no workflow at all — so `IsWorkFlow = Yes for
+every form type` is also not a product rule. Full evidence and the corrected model:
+[`../../features/workflows-forms/`](../../features/workflows-forms/).
 
-## The four live workflows
+The Form is still the record and the Work Flow still its process; `CodeIssueType.IsWorkFlow` is
+still the column behind the checkbox. What changes is the cardinality — **do not build a foreign key
+that assumes one workflow per form type.**
+
+## The four live workflows *(American Freight)*
 
 **Observed** — `../layouts-and-forms/forms-vs-pages-vs-layouts.md`. These are ASG's real, running
 processes and they are the best available statement of what the rebuild must support.

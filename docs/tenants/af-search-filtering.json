@@ -1,0 +1,59 @@
+{
+ "firm": "(ASG)American Freight",
+ "firmID": 3158,
+ "build": "26.09.0.113",
+ "captured": "2026-09-13",
+ "scope": "Grid search/filter/sort/paging behaviour, read from live ExtJS component configuration rather than by clicking menus.",
+ "method": "Ext.ComponentQuery.query('grid') -> column definitions (`filter` config), store proxy (storeUrl, remoteSort/remoteFilter, pageSize) and paging toolbar. No filter menu was opened - see `notEnumerated`.",
+ "filterTypesObserved": {
+  "values": [
+   "string",
+   "date",
+   "boolean"
+  ],
+  "byExample": {
+   "string": "Name, Job Type, Status, Input File, Log File, ProjectEntityName",
+   "date": "Start Time, End Time",
+   "boolean": "Current Status (Inactive)"
+  },
+  "reading": "Observed. Filtering is declared PER COLUMN in the grid definition via a `filter: {type: ...}` config. Columns without that config (e.g. the Actions/EditDeleteLink column and the row-expander) are not filterable at all."
+ },
+ "notEnumerated": "The OPERATORS offered inside each filter menu (contains / before-after-on / greater-less) were NOT enumerated - that needs the menu to be opened, which is a UI interaction I did not perform under the read-only remit. What is established is the filter TYPE per column, which determines which operator set appears.",
+ "sortingAndPaging": {
+  "remoteSort": true,
+  "remoteFilter": true,
+  "defaultPageSize": 15,
+  "pagingToolbar": [
+   "first",
+   "prev",
+   "page-number input",
+   "next",
+   "last",
+   "refresh",
+   "page-size selector",
+   "display text"
+  ],
+  "reading": "Observed. `remoteSort: true` means sorting is SERVER-SIDE - the store re-requests from storeUrl rather than sorting the loaded page. So sorting and paging act on the whole result set, not just the visible 15 rows. A page-size selector is present, so the user can change page size at runtime."
+ },
+ "storeUrl": "/servlet/BOList - all admin grids share one list servlet, parameterised by BOType plus a per-page-load `fdName` token. Filter/sort state travels as query parameters to that servlet, which confirms filter state is SERVER-SIDE, not client-side.",
+ "columnsAreLayoutDriven": "NOT established at AF. I could not reach a genuine end-user `PLForm.jsp` list: `ContractEdit.jsp` and `LocationEdit.jsp` both redirect to `EntityActivate.jsp` (an activate/reset grid), and nav tree nodes carry no static href to build a PLForm URL from. So whether a user can add columns at runtime, and whether visible columns equal the LIST layout's fields, remains UNANSWERED - it needs a populated end-user list, which BBW is better placed to supply.",
+ "savedFilters": "A toolbar button labelled **`Entity Filters..`** exists alongside `Search` / `Close Search`, which suggests named/saved filters - but I did not open it, so treat the existence as Observed and the behaviour as unknown.",
+ "gridsSampled": [
+  {
+   "screen": "Job Log",
+   "total": 0,
+   "columns": 11
+  },
+  {
+   "screen": "Entity Activate (via LocationEdit)",
+   "total": 406,
+   "columns": 7
+  },
+  {
+   "screen": "Manage Firm Drop Downs",
+   "total": 207,
+   "columns": 2
+  }
+ ],
+ "cautionForScreenshots": "These admin screens are ExtJS VIEWPORT apps - the document is ~1000px tall and grids scroll INTERNALLY. A full-page screenshot shows one screenful of any grid regardless of capture height. Never infer row counts from an image; use the totals in this file."
+}

@@ -276,6 +276,60 @@ object in the top ten is out of scope.
 | `Region` | **1 field declared**, yet 12 distinct objects point at it across 34 columns (`RegionID`, `RootRegionID`, `SubRegionID` on the same rows) — one of the most-referenced objects in the product, from a table the export barely describes. |
 | `AuditTable`, `BudgetTemplate`, `CommitteePackage`, `DocumentMarkup`, `EMailSentLog`, `EntityTemplate`, `FolderTemplate`, `IssueSubmittal`, `LeaseAudit`, `LinkBudgetIndexBLI`, `LinkBudgetViewBLI`, `LinkPEMemberCodeJobTitle`, `LinkRegionManager`, `LinkTaskDocument`, `Notify`, `Region`, `ScratchPad`, `TaskTemplate` | Declared with **1 field**. Either the export truncates them, or they are pure key-only join/marker tables. Unresolved — see Open questions. |
 
+## Tables in the platform picker but not in this catalogue
+
+**Derived, 2026-09-13.** This catalogue derives from `ShowObjectDetails.jsp`, so **every table that
+viewer refuses is absent from it by construction, not by oversight.** The `ShowObjectDetails` picker
+offers **227** tables; joining on **physical name** (never on UI label — see the warning below),
+**31** are absent here, and the composition matters far more than the count:
+
+| Group | Count | Status |
+|---|---:|---|
+| Refused by the viewer (*"Data for that table not supported"*) | **25** | **Recoverable over REST** — `GET /rest/businessObject/{type}/lxid/{id}?deep=true`. The `Page Layout` trio was obtained this way; see [`../features/page-layouts/`](../features/page-layouts/) |
+| `Punch List` family | 4 | **Out of scope** — census entries below only |
+| Genuine in-scope omissions | **2** | `ChangeManage`, `VirtualTemplateMember` — one field each |
+
+**So the in-scope catalogue gap is two single-field tables.** The business-object census is
+essentially complete for in-scope work.
+
+> **Warning: never join this catalogue on UI label.** The UI systematically renames objects,
+> especially computed views. A label-based diff reports **18** apparent absences where a
+> physical-name diff reports **6** — the twelve differences include `General Entity Info`
+> (`ProjectEntity`), `Development Target` (`DevelopmentSlot`), `Schedule Template`
+> (`VirtualTemplateSchedule`) and eight further `Virtual*` period projections presented under
+> business names. `ProjectEntity` is the one that matters most, being the universal entity supertype.
+
+### `Punch List` — out of scope, census entries only
+
+**Observed.** Four tables, 33 fields between them, fully captured in
+[`../tenants/bbw-platform-tables.json`](../tenants/bbw-platform-tables.json).
+
+| sqlTableID | Object | Physical | Fields | Purpose |
+|---:|---|---|---:|---|
+| `3197` | Punch List | `PunchList` | 10 | A snagging list against a project or facility |
+| `3198` | Punch List Assignee | `PunchListAssignee` | 5 | Who a punch list is assigned to |
+| `3199` | Punch List Task | `PunchListTask` | 13 | One defect item on a punch list |
+| `3200` | Punch List Task Assignee | `PunchListTaskAssignee` | 5 | Who a defect item is assigned to |
+
+**Why out of scope.** A search of all 38 approved BRDs returns **zero** files for `punch` /
+`punch list`, `snag`, `defect list` or `site survey`, verified against a control term. More
+decisively than the absence: two BRDs describe the existing ASG Edge system — *"the deal-making and
+**construction management** platform"* — as a **separate product** that ASG Edge+ integrates with and
+migrates away from. Punch List is snagging, i.e. construction management, so the BRDs actively place
+it in another system rather than merely omitting it. Treated here as the 27 Budgeting / Bid /
+Cost-Tracking objects are: census and FK-graph completeness only, no analysis.
+
+### The two genuine in-scope omissions
+
+| sqlTableID | Object | Physical | Fields |
+|---:|---|---|---:|
+| `2460` | Change Manage | `ChangeManage` | 1 |
+| `3004` | Member Template | `VirtualTemplateMember` | 1 |
+
+**Derived.** Both are single-field objects, and `VirtualTemplateMember` fits the `VirtualTemplate*`
+pattern already noted in open question 1 — a projection whose stored column is the only one exported.
+Neither is likely to carry weight, but both should be confirmed rather than assumed.
+
 ## Open questions
 
 1. **The 18 one-field objects.** `BudgetTemplate`, `TaskTemplate` and `FolderTemplate` each declare
@@ -291,7 +345,9 @@ object in the top ten is out of scope.
 3. **28 objects have no Manage Data Fields entry at all** (no `LeafTable` match in `_crossmap.tsv`),
    including `Security`, `TaskGroup`, `TaskItem`, `NonMember` and both `*FullImport` objects. Are
    they simply not user-configurable, or is the Data Fields capture incomplete for them?
-4. `AuditColumn` and `AuditTable` describe a separate audit-log model, yet **162 of 223 objects
+4. **What are `ChangeManage` and `VirtualTemplateMember`?** One field each, and the only two in-scope
+   tables the picker exposes that this catalogue lacks.
+5. `AuditColumn` and `AuditTable` describe a separate audit-log model, yet **162 of 223 objects
    also carry inline `CreatedByID`/`ModifiedByID` columns** (161 have `ModifiedByID`, only 79 have
    `CreatedByID` — so most objects record who last touched a row but not who made it). Which is
    authoritative? This is the same choice ASG Edge+'s open ADR-0020 question poses (in-transaction

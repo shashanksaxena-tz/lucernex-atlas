@@ -1,0 +1,617 @@
+{
+ "firm": "(ASG)BBW",
+ "build": "26.09.0.113",
+ "captured": "2026-09-13",
+ "note": "Approver identities deliberately omitted - they are real individuals. Only approverCount is recorded.",
+ "templateCount": 13,
+ "totalSteps": 62,
+ "observedTypeValues": [
+  "Form"
+ ],
+ "observedApprovalLevels": [
+  "Ad Hoc",
+  "Member"
+ ],
+ "templates": [
+  {
+   "template": "ASC 842 Tracking",
+   "workFlowTemplateID": 2475,
+   "description": "",
+   "stepCount": 2,
+   "steps": [
+    {
+     "step": 1,
+     "stepName": "Review ASC 842 Report (BBW)",
+     "formOrTask": "ASC Review ASC 842 Tracking (BBW)(Approvers)",
+     "type": "Form",
+     "approvalLevel": "Member",
+     "approverCount": 5
+    },
+    {
+     "step": 2,
+     "stepName": "Review ASC 842 Report (ASG)",
+     "formOrTask": "ASC Review ASC 842 Tracking (ASG)(Approvers)",
+     "type": "Form",
+     "approvalLevel": "Member",
+     "approverCount": 3
+    }
+   ]
+  },
+  {
+   "template": "Cotenancy Update",
+   "workFlowTemplateID": 2478,
+   "description": "",
+   "stepCount": 2,
+   "steps": [
+    {
+     "step": 1,
+     "stepName": "Review Cotenancy Update",
+     "formOrTask": "COT Review Cotenancy Update(Approvers)",
+     "type": "Form",
+     "approvalLevel": "Member",
+     "approverCount": 2
+    },
+    {
+     "step": 2,
+     "stepName": "Finalize Cotenancy Update",
+     "formOrTask": "COT Finalize Cotenancy Update(Approvers)",
+     "type": "Form",
+     "approvalLevel": "Member",
+     "approverCount": 3
+    }
+   ]
+  },
+  {
+   "template": "Implementation Workflow - Document Abstraction",
+   "workFlowTemplateID": 2401,
+   "description": "",
+   "stepCount": 2,
+   "steps": [
+    {
+     "step": 1,
+     "stepName": "Abstract Lease Documents",
+     "formOrTask": "IWF Abstract Lease Documents(Approvers)",
+     "type": "Form",
+     "approvalLevel": "Member",
+     "approverCount": 3
+    },
+    {
+     "step": 2,
+     "stepName": "Review Lease Abstract",
+     "formOrTask": "IWF Review Lease Abstract(Approvers)",
+     "type": "Form",
+     "approvalLevel": "Member",
+     "approverCount": 2
+    }
+   ]
+  },
+  {
+   "template": "Implementation Workflow - Financial Abstraction",
+   "workFlowTemplateID": 2402,
+   "description": "",
+   "stepCount": 6,
+   "steps": [
+    {
+     "step": 1,
+     "stepName": "Set up Recurring Expenses",
+     "formOrTask": "IWF Set Up Recurring Expenses(Approvers)",
+     "type": "Form",
+     "approvalLevel": "Ad Hoc",
+     "approverCount": 0
+    },
+    {
+     "step": 2,
+     "stepName": "Review Recurring Expenses",
+     "formOrTask": "IWF Review Recurring Expenses(Approvers)",
+     "type": "Form",
+     "approvalLevel": "Member",
+     "approverCount": 2
+    },
+    {
+     "step": 3,
+     "stepName": "Set Up Percent Rent",
+     "formOrTask": "IWF Set Up Percent Rent(Approvers)",
+     "type": "Form",
+     "approvalLevel": "Ad Hoc",
+     "approverCount": 0
+    },
+    {
+     "step": 4,
+     "stepName": "Review Percent Rent",
+     "formOrTask": "IWF Review Percent Rent(Approvers)",
+     "type": "Form",
+     "approvalLevel": "Member",
+     "approverCount": 2
+    },
+    {
+     "step": 5,
+     "stepName": "Set Up ASC 842 Schedules",
+     "formOrTask": "IWF Set Up ASC 842 Schedules(Approvers)",
+     "type": "Form",
+     "approvalLevel": null,
+     "approverCount": 0
+    },
+    {
+     "step": 6,
+     "stepName": "Final Review of Financial Abstract",
+     "formOrTask": "IWF Review Financial Abstract(Approvers)",
+     "type": "Form",
+     "approvalLevel": "Member",
+     "approverCount": 2
+    }
+   ]
+  },
+  {
+   "template": "Lease Admin Request",
+   "workFlowTemplateID": 2472,
+   "description": "",
+   "stepCount": 8,
+   "steps": [
+    {
+     "step": 1,
+     "stepName": "Initial Review of Lease Admin Request",
+     "formOrTask": "LAR Initial Review of Lease Admin Request(Approvers)",
+     "type": "Form",
+     "approvalLevel": "Member",
+     "approverCount": 4
+    },
+    {
+     "step": 2,
+     "stepName": "Abstract Lease Document",
+     "formOrTask": "LAR Abstract Lease Document(Approvers)",
+     "type": "Form",
+     "approvalLevel": "Member",
+     "approverCount": 3
+    },
+    {
+     "step": 3,
+     "stepName": "ASG Review of Lease Abstract",
+     "formOrTask": "LAR ASG Review of Lease Abstract(Approvers)",
+     "type": "Form",
+     "approvalLevel": "Member",
+     "approverCount": 2
+    },
+    {
+     "step": 4,
+     "stepName": "Client Review of Lease Abstract",
+     "formOrTask": "LAR Client Review of Lease Abstract(Approvers)",
+     "type": "Form",
+     "approvalLevel": "Member",
+     "approverCount": 3
+    },
+    {
+     "step": 5,
+     "stepName": "Finalize Lease Admin Request",
+     "formOrTask": "LAR Finalize Lease Admin Request(Approvers)",
+     "type": "Form",
+     "approvalLevel": "Member",
+     "approverCount": 2
+    },
+    {
+     "step": 6,
+     "stepName": "Finalize Lease Admin Request (Option)",
+     "formOrTask": "LAR Finalize Lease Admin Request(Approvers)",
+     "type": "Form",
+     "approvalLevel": "Member",
+     "approverCount": 3
+    },
+    {
+     "step": 7,
+     "stepName": "Complete Lease Admin Request",
+     "formOrTask": "LAR Complete Lease Admin Request(Approvers)",
+     "type": "Form",
+     "approvalLevel": "Member",
+     "approverCount": 3
+    },
+    {
+     "step": 8,
+     "stepName": "Client Review of Estoppel",
+     "formOrTask": "LAR Submit Lease Admin Request(Approvers)",
+     "type": "Form",
+     "approvalLevel": "Member",
+     "approverCount": 2
+    }
+   ]
+  },
+  {
+   "template": "Lease Admin Request v1",
+   "workFlowTemplateID": 2399,
+   "description": "Workflow has been archived and replaced on 09.22.25",
+   "stepCount": 8,
+   "steps": [
+    {
+     "step": 1,
+     "stepName": "Initial Review of Lease Admin Request",
+     "formOrTask": "LAR Initial Review of Lease Admin Request(Approvers)",
+     "type": "Form",
+     "approvalLevel": "Member",
+     "approverCount": 2
+    },
+    {
+     "step": 2,
+     "stepName": "Abstract Lease Document",
+     "formOrTask": "LAR Abstract Lease Document(Approvers)",
+     "type": "Form",
+     "approvalLevel": "Member",
+     "approverCount": 3
+    },
+    {
+     "step": 3,
+     "stepName": "ASG Review of Lease Abstract",
+     "formOrTask": "LAR ASG Review of Lease Abstract(Approvers)",
+     "type": "Form",
+     "approvalLevel": "Member",
+     "approverCount": 2
+    },
+    {
+     "step": 4,
+     "stepName": "Client Review of Lease Abstract",
+     "formOrTask": "LAR Client Review of Lease Abstract(Approvers)",
+     "type": "Form",
+     "approvalLevel": "Member",
+     "approverCount": 3
+    },
+    {
+     "step": 5,
+     "stepName": "Finalize Lease Admin Request",
+     "formOrTask": "LAR Finalize Lease Admin Request(Approvers)",
+     "type": "Form",
+     "approvalLevel": "Member",
+     "approverCount": 2
+    },
+    {
+     "step": 6,
+     "stepName": "Finalize Lease Admin Request (Option)",
+     "formOrTask": "LAR Finalize Lease Admin Request(Approvers)",
+     "type": "Form",
+     "approvalLevel": "Member",
+     "approverCount": 3
+    },
+    {
+     "step": 7,
+     "stepName": "Complete Lease Admin Request",
+     "formOrTask": "LAR Complete Lease Admin Request(Approvers)",
+     "type": "Form",
+     "approvalLevel": "Member",
+     "approverCount": 2
+    },
+    {
+     "step": 8,
+     "stepName": "Client Review of Estoppel",
+     "formOrTask": "LAR Submit Lease Admin Request(Approvers)",
+     "type": "Form",
+     "approvalLevel": "Member",
+     "approverCount": 2
+    }
+   ]
+  },
+  {
+   "template": "Lease Admin Request v2",
+   "workFlowTemplateID": 2468,
+   "description": "Workflow has been archived and replaced on 03.26.26",
+   "stepCount": 10,
+   "steps": [
+    {
+     "step": 1,
+     "stepName": "Initial Review of Lease Admin Request",
+     "formOrTask": "LAR Initial Review of Lease Admin Request(Approvers)",
+     "type": "Form",
+     "approvalLevel": "Member",
+     "approverCount": 2
+    },
+    {
+     "step": 2,
+     "stepName": "Abstract Lease Document",
+     "formOrTask": "LAR Abstract Lease Document(Approvers)",
+     "type": "Form",
+     "approvalLevel": "Member",
+     "approverCount": 3
+    },
+    {
+     "step": 3,
+     "stepName": "ASG Review of Lease Abstract",
+     "formOrTask": "LAR ASG Review of Lease Abstract(Approvers)",
+     "type": "Form",
+     "approvalLevel": "Member",
+     "approverCount": 2
+    },
+    {
+     "step": 4,
+     "stepName": "Client Review of Financial Abstract",
+     "formOrTask": "LAR Client Review of Lease Abstract(Approvers)",
+     "type": "Form",
+     "approvalLevel": "Member",
+     "approverCount": 3
+    },
+    {
+     "step": 5,
+     "stepName": "ASG Review of Contract Dates",
+     "formOrTask": "LAR ASG Review of Lease Abstract(Approvers)",
+     "type": "Form",
+     "approvalLevel": "Member",
+     "approverCount": 2
+    },
+    {
+     "step": 6,
+     "stepName": "Client Review of Lease Abstract",
+     "formOrTask": "LAR Client Review of Lease Abstract(Approvers)",
+     "type": "Form",
+     "approvalLevel": "Member",
+     "approverCount": 3
+    },
+    {
+     "step": 7,
+     "stepName": "Finalize Lease Admin Request",
+     "formOrTask": "LAR Finalize Lease Admin Request(Approvers)",
+     "type": "Form",
+     "approvalLevel": "Member",
+     "approverCount": 2
+    },
+    {
+     "step": 8,
+     "stepName": "Finalize Lease Admin Request (Option)",
+     "formOrTask": "LAR Finalize Lease Admin Request(Approvers)",
+     "type": "Form",
+     "approvalLevel": "Member",
+     "approverCount": 3
+    },
+    {
+     "step": 9,
+     "stepName": "Complete Lease Admin Request",
+     "formOrTask": "LAR Complete Lease Admin Request(Approvers)",
+     "type": "Form",
+     "approvalLevel": "Member",
+     "approverCount": 2
+    },
+    {
+     "step": 10,
+     "stepName": "Client Review of Estoppel",
+     "formOrTask": "LAR Submit Lease Admin Request(Approvers)",
+     "type": "Form",
+     "approvalLevel": "Member",
+     "approverCount": 2
+    }
+   ]
+  },
+  {
+   "template": "Lease Date Review",
+   "workFlowTemplateID": 2473,
+   "description": "",
+   "stepCount": 2,
+   "steps": [
+    {
+     "step": 1,
+     "stepName": "Initial Review of Date Changes",
+     "formOrTask": "DR Initial Review of Lease Date Changes(Approvers)",
+     "type": "Form",
+     "approvalLevel": "Member",
+     "approverCount": 3
+    },
+    {
+     "step": 2,
+     "stepName": "Review Lease Abstract",
+     "formOrTask": "DR Legal Review of Lease Abstract(Approvers)",
+     "type": "Form",
+     "approvalLevel": "Member",
+     "approverCount": 3
+    }
+   ]
+  },
+  {
+   "template": "Lucernex Change Request",
+   "workFlowTemplateID": 2469,
+   "description": "",
+   "stepCount": 6,
+   "steps": [
+    {
+     "step": 1,
+     "stepName": "Review Change Request",
+     "formOrTask": "LxCR Review Change Request (ASG IT)(Approvers)",
+     "type": "Form",
+     "approvalLevel": "Member",
+     "approverCount": 1
+    },
+    {
+     "step": 2,
+     "stepName": "Review/Approve Change Request",
+     "formOrTask": "LxCR Review/Approve Change Request(Approvers)",
+     "type": "Form",
+     "approvalLevel": "Member",
+     "approverCount": 3
+    },
+    {
+     "step": 3,
+     "stepName": "Configure Changes (Train)",
+     "formOrTask": "LxCR Complete Change Request(Approvers)",
+     "type": "Form",
+     "approvalLevel": "Member",
+     "approverCount": 1
+    },
+    {
+     "step": 4,
+     "stepName": "Validate/Test Changes",
+     "formOrTask": "LxCR Validate Change Request(Approvers)",
+     "type": "Form",
+     "approvalLevel": "Ad Hoc",
+     "approverCount": 0
+    },
+    {
+     "step": 5,
+     "stepName": "Configure Changes (Prod)",
+     "formOrTask": "LxCR Complete Change Request(Approvers)",
+     "type": "Form",
+     "approvalLevel": "Member",
+     "approverCount": 1
+    },
+    {
+     "step": 6,
+     "stepName": "Review Change Request Decision",
+     "formOrTask": "LxCR Review Change Request Decision(Approvers)",
+     "type": "Form",
+     "approvalLevel": "Ad Hoc",
+     "approverCount": 0
+    }
+   ]
+  },
+  {
+   "template": "Lucernex Change Request v1",
+   "workFlowTemplateID": 2463,
+   "description": "Archived and replaced with new workflow on 10.02.25",
+   "stepCount": 5,
+   "steps": [
+    {
+     "step": 1,
+     "stepName": "Review Change Request",
+     "formOrTask": "LxCR Review Change Request (ASG IT)(Approvers)",
+     "type": "Form",
+     "approvalLevel": "Member",
+     "approverCount": 1
+    },
+    {
+     "step": 2,
+     "stepName": "Review/Approve Change Request",
+     "formOrTask": "LxCR Review/Approve Change Request(Approvers)",
+     "type": "Form",
+     "approvalLevel": "Member",
+     "approverCount": 3
+    },
+    {
+     "step": 3,
+     "stepName": "Complete Change Request",
+     "formOrTask": "LxCR Complete Change Request(Approvers)",
+     "type": "Form",
+     "approvalLevel": "Member",
+     "approverCount": 1
+    },
+    {
+     "step": 4,
+     "stepName": "Validate Change Request",
+     "formOrTask": "LxCR Validate Change Request(Approvers)",
+     "type": "Form",
+     "approvalLevel": "Ad Hoc",
+     "approverCount": 0
+    },
+    {
+     "step": 5,
+     "stepName": "Review Change Request Decision",
+     "formOrTask": "LxCR Review Change Request Decision(Approvers)",
+     "type": "Form",
+     "approvalLevel": "Ad Hoc",
+     "approverCount": 0
+    }
+   ]
+  },
+  {
+   "template": "User Request",
+   "workFlowTemplateID": 2400,
+   "description": "",
+   "stepCount": 2,
+   "steps": [
+    {
+     "step": 1,
+     "stepName": "Complete User Request",
+     "formOrTask": "UR Complete User Request(Approvers)",
+     "type": "Form",
+     "approvalLevel": "Member",
+     "approverCount": 2
+    },
+    {
+     "step": 2,
+     "stepName": "Submit Revisions",
+     "formOrTask": "UR Submit User Request(Approvers)",
+     "type": "Form",
+     "approvalLevel": "Ad Hoc",
+     "approverCount": 0
+    }
+   ]
+  },
+  {
+   "template": "Vendor Change (Notice)",
+   "workFlowTemplateID": 2461,
+   "description": "",
+   "stepCount": 4,
+   "steps": [
+    {
+     "step": 1,
+     "stepName": "Review Vendor Change Notice (ASG)",
+     "formOrTask": "VCN Review Vendor Change (ASG)(Approvers)",
+     "type": "Form",
+     "approvalLevel": "Member",
+     "approverCount": 14
+    },
+    {
+     "step": 2,
+     "stepName": "Review Vendor Change Notice (Client)",
+     "formOrTask": "VCN Review Vendor Change (Client)(Approvers)",
+     "type": "Form",
+     "approvalLevel": "Member",
+     "approverCount": 3
+    },
+    {
+     "step": 3,
+     "stepName": "Vendor Integration Complete",
+     "formOrTask": "VCN Vendor Integration Complete(Approvers)",
+     "type": "Form",
+     "approvalLevel": "Member",
+     "approverCount": 2
+    },
+    {
+     "step": 4,
+     "stepName": "Complete Vendor Change Notice",
+     "formOrTask": "VCN Complete Vendor Change(Approvers)",
+     "type": "Form",
+     "approvalLevel": "Member",
+     "approverCount": 14
+    }
+   ]
+  },
+  {
+   "template": "Vendor Changes (Integration)",
+   "workFlowTemplateID": 2418,
+   "description": "",
+   "stepCount": 5,
+   "steps": [
+    {
+     "step": 1,
+     "stepName": "Submit Vendor Changes",
+     "formOrTask": "VC Submit Vendor Changes(Approvers)",
+     "type": "Form",
+     "approvalLevel": "Member",
+     "approverCount": 2
+    },
+    {
+     "step": 2,
+     "stepName": "Review Vendor Changes (BBW)",
+     "formOrTask": "VC Review Vendor Changes (BBW)(Approvers)",
+     "type": "Form",
+     "approvalLevel": "Member",
+     "approverCount": 2
+    },
+    {
+     "step": 3,
+     "stepName": "Review Vendor Changes (ASG)",
+     "formOrTask": "VC Review Vendor Changes (ASG)(Approvers)",
+     "type": "Form",
+     "approvalLevel": "Member",
+     "approverCount": 2
+    },
+    {
+     "step": 4,
+     "stepName": "Import Vendor Changes",
+     "formOrTask": "VC Submit Vendor Changes(Approvers)",
+     "type": "Form",
+     "approvalLevel": "Member",
+     "approverCount": 2
+    },
+    {
+     "step": 5,
+     "stepName": "Vendor Changes Complete",
+     "formOrTask": "VC Review Vendor Changes (ASG)(Approvers)",
+     "type": "Form",
+     "approvalLevel": "Member",
+     "approverCount": 2
+    }
+   ]
+  }
+ ]
+}

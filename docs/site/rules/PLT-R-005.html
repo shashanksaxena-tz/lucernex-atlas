@@ -10,5 +10,6 @@
 <nav><a href="../index.html">Overview</a><a href="../atlas.html#/map?set=feature">Feature map</a>
 <a href="../atlas.html">Interactive app</a>
 <a href="../entities/index.html">Record types</a><a href="../rules/index.html">Rules</a>
+<a href="../research/index.html">Research</a>
 <a href="../questions.html">Open questions</a></nav></header>
 <main><p class="crumb"><a href="../index.html">Atlas</a> &rsaquo; <a href="index.html">Rules</a> &rsaquo; PLT-R-005</p><h1 class="mono">PLT-R-005</h1><p class="sub">Platform &amp; Tenancy &middot; Global/Firm scope is a column, not a second schema</p><span class="tag obs">Observed</span><p>- Trigger: A tenant customises the field registry, or reads `GlobalProperty`. - Input: `IsGlobal` + `FirmID` on `ReportGroupAvailableField`/`ReportGroupData`; `FirmID` alone on `GlobalProperty`. - Condition: — - Effect: Tenant-specific configuration and platform-default configuration live in the same table, discriminated by a boolean/text pair, not partitioned physically. - Confidence: Observed — `udf-registry.md`, `../reporting/report-field-registry.md`. ## Security</p><p style="font-size:11.5px;color:var(--faint);margin-top:18px">Source: modules/platform-tenancy/rules.md</p></main></body></html>

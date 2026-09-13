@@ -1,0 +1,247 @@
+{
+ "_purpose": "A single scripted pass to recover field detail for the 25 tables /en/admin/ShowObjectDetails.jsp refuses with 'Data for that table not supported'. Run in place of 25 improvised lookups.",
+ "_firm": "(ASG)BBW  train-bbw.lucernex.com",
+ "_captured": "2026-09-13",
+ "_restTypeTokenIsVerified": "The {restType} token is the physical object name from the refusal page. Verified for three of the 25 - PageLayout, PageLayoutField and PageLayoutFilter all resolved as REST types under exactly that spelling, and GET /rest/firm/types returns 227 names matching the 227 sqlTableID picker options one-for-one. Inferred for the other 22, which share the same naming convention. If a token 404s, re-derive it from GET /rest/firm/types rather than guessing a variant.",
+ "_procedure": {
+  "1": "Count probe first: GET /rest/businessObject/{restType}?fields=lxid returns {businessObjectLinks:[...]}. Its length is the row count. This makes zero-row detection AUTOMATIC rather than guessed - do not skip it.",
+  "2": "If the count is 0, record the table as EXISTS-BUT-EMPTY and move on. That is a real finding, not a failure, and it is exactly what PageLayoutFilter turned out to be.",
+  "3": "If the count is greater than 0, take any lxID from the links array and deep-fetch it. Column names in the returned JSON are the physical column names.",
+  "4": "Union the columns across two or three records per table where rows allow - the serialiser omits unpopulated columns, so one record under-reports."
+ },
+ "_CAVEAT_lowerBoundNotSchema": "Anything recovered this way is a LOWER BOUND ON THE SCHEMA, NOT THE SCHEMA. The REST serialiser emits only columns that are POPULATED on the record sampled. ShowObjectDetails lists the DECLARED schema including empty columns; REST cannot. A column absent from a REST-derived list may still exist. Label these captures accordingly and never present them as complete table definitions.",
+ "_secondCaveat": "Foreign keys serialise as nested reference objects {'#text','@lxID','@clientID','@href'} rather than scalars, so a FK column looks like an object in the JSON. Count it as one column, not four.",
+ "_expectedYield": "12 of the 25 are flagged zeroRowLikely, one of them observed. If those priors hold, expect roughly 13 tables to yield field detail and 12 to be recorded as empty. The priors are Inferred except PageLayoutFilter and should not be trusted ahead of the count probe - they exist only to order the run, not to pre-empt it.",
+ "totals": {
+  "refusedTables": 25,
+  "zeroRowLikely": 12,
+  "expectedToYieldFields": 13
+ },
+ "tables": [
+  {
+   "sqlTableID": "2885",
+   "uiName": "App Activity Log",
+   "restType": "AppActivityLog",
+   "step1_countProbe": "GET /rest/businessObject/AppActivityLog?fields=lxid",
+   "step2_deepFetch": "GET /rest/businessObject/AppActivityLog/lxid/{lxID}?deep=true&wantClientID=true",
+   "zeroRowLikely": false,
+   "zeroRowNote": null
+  },
+  {
+   "sqlTableID": "2871",
+   "uiName": "Audit Master",
+   "restType": "AuditMaster",
+   "step1_countProbe": "GET /rest/businessObject/AuditMaster?fields=lxid",
+   "step2_deepFetch": "GET /rest/businessObject/AuditMaster/lxid/{lxID}?deep=true&wantClientID=true",
+   "zeroRowLikely": false,
+   "zeroRowNote": null
+  },
+  {
+   "sqlTableID": "2517",
+   "uiName": "Committee Package Template",
+   "restType": "CommitteePackageTemplate",
+   "step1_countProbe": "GET /rest/businessObject/CommitteePackageTemplate?fields=lxid",
+   "step2_deepFetch": "GET /rest/businessObject/CommitteePackageTemplate/lxid/{lxID}?deep=true&wantClientID=true",
+   "zeroRowLikely": true,
+   "zeroRowNote": "Committee/bid packages are part of the out-of-scope Bid area; BBW is a lease-admin tenant."
+  },
+  {
+   "sqlTableID": "2605",
+   "uiName": "Custom Code Table",
+   "restType": "CustomCodeTable",
+   "step1_countProbe": "GET /rest/businessObject/CustomCodeTable?fields=lxid",
+   "step2_deepFetch": "GET /rest/businessObject/CustomCodeTable/lxid/{lxID}?deep=true&wantClientID=true",
+   "zeroRowLikely": false,
+   "zeroRowNote": null
+  },
+  {
+   "sqlTableID": "2519",
+   "uiName": "Dashboard",
+   "restType": "Dashboard",
+   "step1_countProbe": "GET /rest/businessObject/Dashboard?fields=lxid",
+   "step2_deepFetch": "GET /rest/businessObject/Dashboard/lxid/{lxID}?deep=true&wantClientID=true",
+   "zeroRowLikely": false,
+   "zeroRowNote": null
+  },
+  {
+   "sqlTableID": "2821",
+   "uiName": "Excel Server Status",
+   "restType": "ExcelServerStatus",
+   "step1_countProbe": "GET /rest/businessObject/ExcelServerStatus?fields=lxid",
+   "step2_deepFetch": "GET /rest/businessObject/ExcelServerStatus/lxid/{lxID}?deep=true&wantClientID=true",
+   "zeroRowLikely": true,
+   "zeroRowNote": "Excel integration service tables - runtime infrastructure, may be empty in a training tenant."
+  },
+  {
+   "sqlTableID": "2822",
+   "uiName": "Excel Service Log",
+   "restType": "ExcelServiceLog",
+   "step1_countProbe": "GET /rest/businessObject/ExcelServiceLog?fields=lxid",
+   "step2_deepFetch": "GET /rest/businessObject/ExcelServiceLog/lxid/{lxID}?deep=true&wantClientID=true",
+   "zeroRowLikely": true,
+   "zeroRowNote": "As above."
+  },
+  {
+   "sqlTableID": "2823",
+   "uiName": "Excel Service Queue",
+   "restType": "ExcelServiceQueue",
+   "step1_countProbe": "GET /rest/businessObject/ExcelServiceQueue?fields=lxid",
+   "step2_deepFetch": "GET /rest/businessObject/ExcelServiceQueue/lxid/{lxID}?deep=true&wantClientID=true",
+   "zeroRowLikely": true,
+   "zeroRowNote": "As above - a queue table is empty whenever nothing is in flight."
+  },
+  {
+   "sqlTableID": "2531",
+   "uiName": "Favorite Link",
+   "restType": "FavoriteLink",
+   "step1_countProbe": "GET /rest/businessObject/FavoriteLink?fields=lxid",
+   "step2_deepFetch": "GET /rest/businessObject/FavoriteLink/lxid/{lxID}?deep=true&wantClientID=true",
+   "zeroRowLikely": false,
+   "zeroRowNote": null
+  },
+  {
+   "sqlTableID": "2878",
+   "uiName": "Global Property Section",
+   "restType": "GlobalPropertySection",
+   "step1_countProbe": "GET /rest/businessObject/GlobalPropertySection?fields=lxid",
+   "step2_deepFetch": "GET /rest/businessObject/GlobalPropertySection/lxid/{lxID}?deep=true&wantClientID=true",
+   "zeroRowLikely": true,
+   "zeroRowNote": "Platform-level property grouping; may be seeded rather than firm-populated."
+  },
+  {
+   "sqlTableID": "3051",
+   "uiName": "Grid Preference",
+   "restType": "GridPreference",
+   "step1_countProbe": "GET /rest/businessObject/GridPreference?fields=lxid",
+   "step2_deepFetch": "GET /rest/businessObject/GridPreference/lxid/{lxID}?deep=true&wantClientID=true",
+   "zeroRowLikely": false,
+   "zeroRowNote": null
+  },
+  {
+   "sqlTableID": "3068",
+   "uiName": "Information Overlay",
+   "restType": "InformationOverlay",
+   "step1_countProbe": "GET /rest/businessObject/InformationOverlay?fields=lxid",
+   "step2_deepFetch": "GET /rest/businessObject/InformationOverlay/lxid/{lxID}?deep=true&wantClientID=true",
+   "zeroRowLikely": true,
+   "zeroRowNote": "Optional UI help overlays; often unused."
+  },
+  {
+   "sqlTableID": "2802",
+   "uiName": "Job Log",
+   "restType": "JobLog",
+   "step1_countProbe": "GET /rest/businessObject/JobLog?fields=lxid",
+   "step2_deepFetch": "GET /rest/businessObject/JobLog/lxid/{lxID}?deep=true&wantClientID=true",
+   "zeroRowLikely": false,
+   "zeroRowNote": null
+  },
+  {
+   "sqlTableID": "2549",
+   "uiName": "Link Comm Pkg Templ Doc Content",
+   "restType": "LinkCommPkgTemplDocContent",
+   "step1_countProbe": "GET /rest/businessObject/LinkCommPkgTemplDocContent?fields=lxid",
+   "step2_deepFetch": "GET /rest/businessObject/LinkCommPkgTemplDocContent/lxid/{lxID}?deep=true&wantClientID=true",
+   "zeroRowLikely": true,
+   "zeroRowNote": "Child of CommitteePackageTemplate; empty if the parent is."
+  },
+  {
+   "sqlTableID": "2594",
+   "uiName": "Link Region Market",
+   "restType": "LinkRegionMarket",
+   "step1_countProbe": "GET /rest/businessObject/LinkRegionMarket?fields=lxid",
+   "step2_deepFetch": "GET /rest/businessObject/LinkRegionMarket/lxid/{lxID}?deep=true&wantClientID=true",
+   "zeroRowLikely": true,
+   "zeroRowNote": "Region/market linkage; depends on whether the firm uses regions."
+  },
+  {
+   "sqlTableID": "2562",
+   "uiName": "Map Client Budget",
+   "restType": "MapClientBudget",
+   "step1_countProbe": "GET /rest/businessObject/MapClientBudget?fields=lxid",
+   "step2_deepFetch": "GET /rest/businessObject/MapClientBudget/lxid/{lxID}?deep=true&wantClientID=true",
+   "zeroRowLikely": true,
+   "zeroRowNote": "Budget mapping - Budgeting is out of scope for this tenant."
+  },
+  {
+   "sqlTableID": "2644",
+   "uiName": "Notify Template",
+   "restType": "NotifyTemplate",
+   "step1_countProbe": "GET /rest/businessObject/NotifyTemplate?fields=lxid",
+   "step2_deepFetch": "GET /rest/businessObject/NotifyTemplate/lxid/{lxID}?deep=true&wantClientID=true",
+   "zeroRowLikely": false,
+   "zeroRowNote": null
+  },
+  {
+   "sqlTableID": "2645",
+   "uiName": "Notify Template Member",
+   "restType": "NotifyTemplateMember",
+   "step1_countProbe": "GET /rest/businessObject/NotifyTemplateMember?fields=lxid",
+   "step2_deepFetch": "GET /rest/businessObject/NotifyTemplateMember/lxid/{lxID}?deep=true&wantClientID=true",
+   "zeroRowLikely": false,
+   "zeroRowNote": null
+  },
+  {
+   "sqlTableID": "2611",
+   "uiName": "Page Layout",
+   "restType": "PageLayout",
+   "step1_countProbe": "GET /rest/businessObject/PageLayout?fields=lxid",
+   "step2_deepFetch": "GET /rest/businessObject/PageLayout/lxid/{lxID}?deep=true&wantClientID=true",
+   "zeroRowLikely": false,
+   "zeroRowNote": null
+  },
+  {
+   "sqlTableID": "2612",
+   "uiName": "Page Layout Field",
+   "restType": "PageLayoutField",
+   "step1_countProbe": "GET /rest/businessObject/PageLayoutField?fields=lxid",
+   "step2_deepFetch": "GET /rest/businessObject/PageLayoutField/lxid/{lxID}?deep=true&wantClientID=true",
+   "zeroRowLikely": false,
+   "zeroRowNote": null
+  },
+  {
+   "sqlTableID": "2613",
+   "uiName": "Page Layout Filter",
+   "restType": "PageLayoutFilter",
+   "step1_countProbe": "GET /rest/businessObject/PageLayoutFilter?fields=lxid",
+   "step2_deepFetch": "GET /rest/businessObject/PageLayoutFilter/lxid/{lxID}?deep=true&wantClientID=true",
+   "zeroRowLikely": true,
+   "zeroRowNote": "OBSERVED zero rows - GET /rest/businessObject/PageLayoutFilter returned an empty businessObjectLinks array, and no PageLayoutFilter child appeared on any of 134 deep-serialised layouts. PageLayout.RunModeFilters is 0 on every layout."
+  },
+  {
+   "sqlTableID": "3177",
+   "uiName": "Pgp Config",
+   "restType": "PgpConfig",
+   "step1_countProbe": "GET /rest/businessObject/PgpConfig?fields=lxid",
+   "step2_deepFetch": "GET /rest/businessObject/PgpConfig/lxid/{lxID}?deep=true&wantClientID=true",
+   "zeroRowLikely": true,
+   "zeroRowNote": "PGP key configuration for file transfer; likely unconfigured."
+  },
+  {
+   "sqlTableID": "2629",
+   "uiName": "Scheduled Job",
+   "restType": "ScheduledJob",
+   "step1_countProbe": "GET /rest/businessObject/ScheduledJob?fields=lxid",
+   "step2_deepFetch": "GET /rest/businessObject/ScheduledJob/lxid/{lxID}?deep=true&wantClientID=true",
+   "zeroRowLikely": false,
+   "zeroRowNote": null
+  },
+  {
+   "sqlTableID": "3093",
+   "uiName": "Scratch Pad Section",
+   "restType": "ScratchPadSection",
+   "step1_countProbe": "GET /rest/businessObject/ScratchPadSection?fields=lxid",
+   "step2_deepFetch": "GET /rest/businessObject/ScratchPadSection/lxid/{lxID}?deep=true&wantClientID=true",
+   "zeroRowLikely": true,
+   "zeroRowNote": "Free-form scratch notes; user-generated, often empty."
+  },
+  {
+   "sqlTableID": "2625",
+   "uiName": "Work Flow Template Step Member",
+   "restType": "WorkFlowTemplateStepMember",
+   "step1_countProbe": "GET /rest/businessObject/WorkFlowTemplateStepMember?fields=lxid",
+   "step2_deepFetch": "GET /rest/businessObject/WorkFlowTemplateStepMember/lxid/{lxID}?deep=true&wantClientID=true",
+   "zeroRowLikely": false,
+   "zeroRowNote": null
+  }
+ ]
+}

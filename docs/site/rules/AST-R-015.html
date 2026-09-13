@@ -10,5 +10,6 @@
 <nav><a href="../index.html">Overview</a><a href="../atlas.html#/map?set=feature">Feature map</a>
 <a href="../atlas.html">Interactive app</a>
 <a href="../entities/index.html">Record types</a><a href="../rules/index.html">Rules</a>
+<a href="../research/index.html">Research</a>
 <a href="../questions.html">Open questions</a></nav></header>
 <main><p class="crumb"><a href="../index.html">Atlas</a> &rsaquo; <a href="index.html">Rules</a> &rsaquo; AST-R-015</p><h1 class="mono">AST-R-015</h1><p class="sub">Assets, Equipment &amp; Maintenance &middot; The parts catalog carries no per-location stock</p><span class="tag der">Derived</span><p>Input: `Part.QuantityOnHand`, `.QuantityOnOrder`, `.ParLevel`, `.OrderToLevel` — single counters on the catalog record, with no `FacilityID`/warehouse column anywhere in this module. Effect: A tenant with parts stocked at multiple locations has one firm-wide count per part, not one per location. Confidence: Derived (exhaustive field-list read, `../../data-fields/part.md`).</p><p style="font-size:11.5px;color:var(--faint);margin-top:18px">Source: modules/assets-equipment/rules.md</p></main></body></html>

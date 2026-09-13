@@ -10,5 +10,6 @@
 <nav><a href="../index.html">Overview</a><a href="../atlas.html#/map?set=feature">Feature map</a>
 <a href="../atlas.html">Interactive app</a>
 <a href="../entities/index.html">Record types</a><a href="../rules/index.html">Rules</a>
+<a href="../research/index.html">Research</a>
 <a href="../questions.html">Open questions</a></nav></header>
 <main><p class="crumb"><a href="../index.html">Atlas</a> &rsaquo; <a href="index.html">Rules</a> &rsaquo; DOC-R-010</p><h1 class="mono">DOC-R-010</h1><p class="sub">Documents, Folders &amp; Correspondence &middot; DocumentMarkup does not persist markup content in this schema</p><span class="tag obs">Observed</span><p>Input: `DocumentMarkup`&#x27;s only field is `ProjectEntityID`; `Document.HasMarkups` is a boolean flag with no visible source of truth for what the markup actually is. Effect: A rebuild cannot port markup annotation data from this schema — it is not captured here, by either genuine product architecture (stored elsewhere) or export limitation. Confidence: Observed (field absence, exhaustive); the explanation for the absence is unresolved — see `data-model.md`.</p><p style="font-size:11.5px;color:var(--faint);margin-top:18px">Source: modules/documents-folders/rules.md</p></main></body></html>

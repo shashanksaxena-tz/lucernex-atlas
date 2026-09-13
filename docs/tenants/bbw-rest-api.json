@@ -1,0 +1,7205 @@
+{
+ "_firm": "(ASG)BBW  train-bbw.lucernex.com",
+ "_captured": "2026-09-13",
+ "_evidence": "Observed. The spec was fetched live from the tenant; the live probes were executed read-only with GET only.",
+ "_authNote": "No authentication token of any kind was read, captured or recorded. /en/test/RESTful.jsp renders live Basic and JWT tokens; every extraction here was structure-only (element names, component types, spec text) and all live calls rode the existing browser session cookie.",
+ "howFound": {
+  "1": "/en/test/RESTful.jsp is an ExtJS page, not static HTML. Its record-type pickers are ExtJS components: splitbuttons 'Record Sets' (menucheckitems base / wantCodeTables / wantIssues), 'Core Fields' (coreRequired / coreEditable / coreReadOnly), 'Firm Fields' (firmEditable / firmReadOnly), a tagfield 'typeFld' (Types, 227 entries) and a 'Load' button (Ext id button-1019).",
+  "2": "Load does not call a generator endpoint. The page embeds an iframe at /swagger/index.html, i.e. stock Swagger UI; the pickers only filter what that UI displays.",
+  "3": "Swagger UI is configured with url = '/rest/api-docs/swagger'. That path returns the full OpenAPI 3.0.1 document as YAML (132,839 bytes). Fetching it directly makes the whole interactive exercise unnecessary.",
+  "conclusion": "Derived: the REST contract is fully self-describing at GET /rest/api-docs/swagger. No need to drive the UI."
+ },
+ "api": {
+  "openapi": "3.0.1",
+  "title": "Lucernex API",
+  "version": "1.0.0",
+  "server": "https://train-bbw.lucernex.com/rest",
+  "securitySchemesDeclaredInSpec": [],
+  "securityNote": "The spec declares NO securitySchemes. Authentication is out-of-band: the RESTful.jsp page offers a Basic Authentication token and a JWT Bearer token for copy-paste. Observed (labels only)."
+ },
+ "headline": "WRITE VERBS EXIST. 160 operations over 141 paths: 104 GET, 40 POST, 7 PUT, 9 DELETE. The corpus's 617-GraphQL-queries-vs-3-mutations picture does not describe the REST surface, which is fully CRUD.",
+ "totals": {
+  "paths": 141,
+  "operations": 160,
+  "verbCounts": {
+   "GET": 104,
+   "PUT": 7,
+   "DELETE": 9,
+   "POST": 40
+  },
+  "tags": 11,
+  "schemas": 25
+ },
+ "tags": [
+  {
+   "name": "/adapter-config",
+   "description": "Admin: manage lease-abstraction adapter mapping config files"
+  },
+  {
+   "name": "/atlas-api",
+   "description": "Fetch and import lease records from the Atlas (RocketClub) API"
+  },
+  {
+   "name": "/audit",
+   "description": "Audit trail queries"
+  },
+  {
+   "name": "/businessObject",
+   "description": "BusinessObject operations"
+  },
+  {
+   "name": "/firm",
+   "description": "Bulk record imports"
+  },
+  {
+   "name": "/i18n",
+   "description": "i18n resource bundle"
+  },
+  {
+   "name": "/membership",
+   "description": "membership resource bundle"
+  },
+  {
+   "name": "/task",
+   "description": "Task operations"
+  },
+  {
+   "name": "/tasks",
+   "description": "Tasks operations"
+  },
+  {
+   "name": "/vendor-lease",
+   "description": "Import vendor-abstracted lease data via the adapter transformation pipeline"
+  },
+  {
+   "name": "/workFlowStep/{WorkFlowStepID}",
+   "description": "WorkFlowStep operations"
+  }
+ ],
+ "genericCrudSurface": {
+  "_note": "Every one of the 227 record types is addressable through this one generic controller. {objectType} is the REST type name from GET /rest/firm/types.",
+  "endpoints": [
+   {
+    "method": "GET",
+    "path": "/businessObject/{objectType}",
+    "purpose": "list links (lxID, objectType, name, href)"
+   },
+   {
+    "method": "GET",
+    "path": "/businessObject/{objectType}/details",
+    "purpose": "FIQL query; 'fields' is REQUIRED; $skip/$top paging; 413 when too many records"
+   },
+   {
+    "method": "GET",
+    "path": "/businessObject/{objectType}/lxid/{lxID}",
+    "purpose": "read one by primary key; deep, includes, excludes, wantClientID, wantLxID"
+   },
+   {
+    "method": "GET",
+    "path": "/businessObject/{objectType}/clientid/{clientID}",
+    "purpose": "read one by client identifier"
+   },
+   {
+    "method": "POST",
+    "path": "/businessObject/{objectType}",
+    "purpose": "CREATE (or update when ?allowUpdate=true)"
+   },
+   {
+    "method": "PUT",
+    "path": "/businessObject/{objectType}",
+    "purpose": "UPDATE"
+   },
+   {
+    "method": "POST",
+    "path": "/businessObject/{parentObjectType}/{parentID}",
+    "purpose": "CREATE CHILD under a parent record"
+   },
+   {
+    "method": "DELETE",
+    "path": "/businessObject/{objectType}/lxid/{lxID}",
+    "purpose": "DELETE by primary key"
+   },
+   {
+    "method": "DELETE",
+    "path": "/businessObject/{objectType}/clientid/{clientID}",
+    "purpose": "DELETE by client identifier"
+   }
+  ],
+  "writeBodySchema": "BusinessObject \u2014 {botype (required), clientID, href, match, projectEntityName, modifiedByID, modified, uuid, updateOnly, fields:[Field], extSubFields:[Field], children:[BusinessObject]}. Both application/json and application/xml are accepted.",
+  "writeResponseSchema": "ImportResults \u2014 {successes:[ImportSuccess], errors:[ImportError]}. Note it is a BULK-style result envelope even for a single record, and a 200 can therefore carry errors; do not treat HTTP 200 as success without reading errors[].",
+  "clientIDIsTheImportKey": "BOMapClientRecordID (UI label '<Object> ClientID') is the addressable /clientid/ key. Derived, from the field definition in bbw-platform-tables.json."
+ },
+ "liveProbes": {
+  "_method": "GET only, same-origin session cookie, values discarded \u2014 shapes recorded, not data.",
+  "GET /rest/firm/types": {
+   "status": 200,
+   "typeCount": 227,
+   "categories": {
+    "Base": 227
+   },
+   "note": "227 types, exactly matching the 227 entries in the ShowObjectDetails sqlTableID picker \u2014 including AppActivityLog and AuditMaster, which ShowObjectDetails itself refuses to describe. So the REST layer exposes record types the object-model viewer hides."
+  },
+  "GET /rest/businessObject/Contract?fields=href,lxid,name,objecttype": {
+   "status": 200,
+   "linkCount": 2190,
+   "itemKeys": [
+    "lxID",
+    "objectType",
+    "name",
+    "href"
+   ]
+  },
+  "GET /rest/businessObject/Contract/details?fields=ContractName&$top=1": {
+   "status": 200,
+   "responseShape": "{ \"Contract\": [ { \"@lxID\": number, \"ProjectEntityName\": string, \"ContractName\": string } ] }",
+   "note": "The response is keyed by objectType; the primary key comes back as the attribute-style key '@lxID'. ProjectEntityName is returned unrequested."
+  },
+  "GET /rest/businessObject/Contract/details?fields=lxid,...": {
+   "status": 400,
+   "body": "lxid is not a valid field of objectType Contract",
+   "note": "'fields' takes physical field names as listed in bbw-platform-tables.json; lxid is addressable only via the '@lxID' response key and the /lxid/{lxID} path."
+  }
+ },
+ "schemas": {
+  "BusinessObjectLink": {
+   "required": null,
+   "properties": {
+    "lxID": {
+     "type": "integer",
+     "format": "int32",
+     "ref": null,
+     "description": "Lucernex primary key"
+    },
+    "objectType": {
+     "type": "string",
+     "format": null,
+     "ref": null,
+     "description": "Record type"
+    },
+    "name": {
+     "type": "string",
+     "format": null,
+     "ref": null,
+     "description": "Unique name if the record is a project entity"
+    },
+    "href": {
+     "type": "string",
+     "format": null,
+     "ref": null,
+     "description": "REST URL which returns details of this record"
+    }
+   }
+  },
+  "BusinessObjectLinks": {
+   "required": null,
+   "properties": {
+    "businessObjectLinks": {
+     "type": "array",
+     "format": null,
+     "ref": "#/components/schemas/BusinessObjectLink",
+     "description": "List of BusinessObjectLink instances"
+    }
+   }
+  },
+  "AuditInfo": {
+   "required": null,
+   "properties": {
+    "createdBy": {
+     "type": "string",
+     "format": null,
+     "ref": null,
+     "description": null
+    },
+    "createdDate": {
+     "type": "string",
+     "format": "date-time",
+     "ref": null,
+     "description": null
+    },
+    "action": {
+     "type": "string",
+     "format": null,
+     "ref": null,
+     "description": null
+    },
+    "entityName": {
+     "type": "string",
+     "format": null,
+     "ref": null,
+     "description": null
+    },
+    "entityID": {
+     "type": "integer",
+     "format": "int32",
+     "ref": null,
+     "description": null
+    },
+    "tableName": {
+     "type": "string",
+     "format": null,
+     "ref": null,
+     "description": null
+    },
+    "fieldName": {
+     "type": "string",
+     "format": null,
+     "ref": null,
+     "description": null
+    },
+    "oldValue": {
+     "type": "string",
+     "format": null,
+     "ref": null,
+     "description": null
+    },
+    "newValue": {
+     "type": "string",
+     "format": null,
+     "ref": null,
+     "description": null
+    },
+    "udf": {
+     "type": "boolean",
+     "format": null,
+     "ref": null,
+     "description": null
+    }
+   }
+  },
+  "ExtResponse": {
+   "required": null,
+   "properties": {
+    "success": {
+     "type": "boolean",
+     "format": null,
+     "ref": null,
+     "description": null
+    },
+    "message": {
+     "type": "string",
+     "format": null,
+     "ref": null,
+     "description": null
+    },
+    "data": {
+     "type": "object",
+     "format": null,
+     "ref": null,
+     "description": null
+    }
+   }
+  },
+  "ImportError": {
+   "required": null,
+   "properties": {
+    "objectType": {
+     "type": "string",
+     "format": null,
+     "ref": null,
+     "description": null
+    },
+    "clientID": {
+     "type": "string",
+     "format": null,
+     "ref": null,
+     "description": null
+    },
+    "lxID": {
+     "type": "string",
+     "format": null,
+     "ref": null,
+     "description": null
+    },
+    "entityUniqueID": {
+     "type": "string",
+     "format": null,
+     "ref": null,
+     "description": null
+    },
+    "projectEntityID": {
+     "type": "string",
+     "format": null,
+     "ref": null,
+     "description": null
+    },
+    "entityName": {
+     "type": "string",
+     "format": null,
+     "ref": null,
+     "description": null
+    },
+    "lookup": {
+     "type": "boolean",
+     "format": null,
+     "ref": null,
+     "description": null
+    },
+    "fatal": {
+     "type": "boolean",
+     "format": null,
+     "ref": null,
+     "description": null
+    },
+    "message": {
+     "type": "string",
+     "format": null,
+     "ref": null,
+     "description": null
+    },
+    "position": {
+     "type": "integer",
+     "format": "int32",
+     "ref": null,
+     "description": null
+    }
+   }
+  },
+  "ImportResults": {
+   "required": null,
+   "properties": {
+    "successes": {
+     "type": "array",
+     "format": null,
+     "ref": "#/components/schemas/ImportSuccess",
+     "description": null
+    },
+    "errors": {
+     "type": "array",
+     "format": null,
+     "ref": "#/components/schemas/ImportError",
+     "description": null
+    }
+   }
+  },
+  "ImportSuccess": {
+   "required": null,
+   "properties": {
+    "objectType": {
+     "type": "string",
+     "format": null,
+     "ref": null,
+     "description": null
+    },
+    "clientID": {
+     "type": "string",
+     "format": null,
+     "ref": null,
+     "description": null
+    },
+    "lxID": {
+     "type": "string",
+     "format": null,
+     "ref": null,
+     "description": null
+    },
+    "entityUniqueID": {
+     "type": "string",
+     "format": null,
+     "ref": null,
+     "description": null
+    },
+    "projectEntityID": {
+     "type": "string",
+     "format": null,
+     "ref": null,
+     "description": null
+    },
+    "entityName": {
+     "type": "string",
+     "format": null,
+     "ref": null,
+     "description": null
+    },
+    "create": {
+     "type": "boolean",
+     "format": null,
+     "ref": null,
+     "description": null
+    },
+    "delete": {
+     "type": "boolean",
+     "format": null,
+     "ref": null,
+     "description": null
+    },
+    "update": {
+     "type": "boolean",
+     "format": null,
+     "ref": null,
+     "description": null
+    }
+   }
+  },
+  "BusinessObject": {
+   "required": [
+    "botype"
+   ],
+   "properties": {
+    "href": {
+     "type": "string",
+     "format": null,
+     "ref": null,
+     "description": "REST URL of this resource instance"
+    },
+    "match": {
+     "type": "string",
+     "format": null,
+     "ref": null,
+     "description": "match employer only by clientID"
+    },
+    "clientID": {
+     "type": "string",
+     "format": null,
+     "ref": null,
+     "description": "Client provided record identifier"
+    },
+    "projectEntityName": {
+     "type": "string",
+     "format": null,
+     "ref": null,
+     "description": "Project entity name"
+    },
+    "modifiedByID": {
+     "type": "integer",
+     "format": "int32",
+     "ref": null,
+     "description": "Identifies last user who modified business object"
+    },
+    "modified": {
+     "type": "string",
+     "format": "date-time",
+     "ref": null,
+     "description": "Specifies when business object was last modified"
+    },
+    "children": {
+     "type": "array",
+     "format": null,
+     "ref": "#/components/schemas/BusinessObject",
+     "description": "Associated business objects"
+    },
+    "fields": {
+     "type": "array",
+     "format": null,
+     "ref": "#/components/schemas/Field",
+     "description": "Record's set of fields"
+    },
+    "botype": {
+     "type": "string",
+     "format": null,
+     "ref": null,
+     "description": "Record type"
+    },
+    "uuid": {
+     "type": "string",
+     "format": null,
+     "ref": null,
+     "description": null
+    },
+    "updateOnly": {
+     "type": "boolean",
+     "format": null,
+     "ref": null,
+     "description": null
+    },
+    "extSubFields": {
+     "type": "array",
+     "format": null,
+     "ref": "#/components/schemas/Field",
+     "description": "Client extension sub-fields"
+    }
+   }
+  },
+  "Field": {
+   "required": null,
+   "properties": {
+    "name": {
+     "type": "string",
+     "format": null,
+     "ref": null,
+     "description": "Field name"
+    },
+    "value": {
+     "type": "string",
+     "format": null,
+     "ref": null,
+     "description": "Field value"
+    }
+   }
+  },
+  "IDField": {
+   "required": null,
+   "properties": {}
+  },
+  "CodeTableEntry": {
+   "required": null,
+   "properties": {
+    "bundleID": {
+     "type": "integer",
+     "format": "int32",
+     "ref": null,
+     "description": null
+    },
+    "id": {
+     "type": "integer",
+     "format": "int32",
+     "ref": null,
+     "description": null
+    },
+    "href": {
+     "type": "string",
+     "format": null,
+     "ref": null,
+     "description": null
+    },
+    "inactive": {
+     "type": "boolean",
+     "format": null,
+     "ref": null,
+     "description": null
+    },
+    "shortName": {
+     "type": "string",
+     "format": null,
+     "ref": null,
+     "description": null
+    },
+    "longName": {
+     "type": "string",
+     "format": null,
+     "ref": null,
+     "description": null
+    },
+    "parentBundleID": {
+     "type": "integer",
+     "format": "int32",
+     "ref": null,
+     "description": null
+    },
+    "parentID": {
+     "type": "integer",
+     "format": "int32",
+     "ref": null,
+     "description": null
+    }
+   }
+  },
+  "Document": {
+   "required": null,
+   "properties": {
+    "author_name": {
+     "type": "string",
+     "format": null,
+     "ref": null,
+     "description": null
+    },
+    "base_name": {
+     "type": "string",
+     "format": null,
+     "ref": null,
+     "description": null
+    },
+    "content": {
+     "type": "string",
+     "format": null,
+     "ref": null,
+     "description": null
+    },
+    "content_type": {
+     "type": "string",
+     "format": null,
+     "ref": null,
+     "description": null
+    },
+    "file_created_date": {
+     "type": "string",
+     "format": "date-time",
+     "ref": null,
+     "description": null
+    },
+    "folder": {
+     "type": "string",
+     "format": null,
+     "ref": null,
+     "description": null
+    },
+    "id": {
+     "type": "string",
+     "format": null,
+     "ref": null,
+     "description": null
+    },
+    "description": {
+     "type": "string",
+     "format": null,
+     "ref": null,
+     "description": null
+    },
+    "code_document_type": {
+     "type": "string",
+     "format": null,
+     "ref": null,
+     "description": null
+    },
+    "version": {
+     "type": "integer",
+     "format": "int32",
+     "ref": null,
+     "description": null
+    },
+    "last_modified": {
+     "type": "string",
+     "format": "date-time",
+     "ref": null,
+     "description": null
+    },
+    "pe_id": {
+     "type": "integer",
+     "format": "int32",
+     "ref": null,
+     "description": null
+    },
+    "pe_name": {
+     "type": "string",
+     "format": null,
+     "ref": null,
+     "description": null
+    },
+    "pe_type": {
+     "type": "string",
+     "format": null,
+     "ref": null,
+     "description": null
+    },
+    "category": {
+     "type": "string",
+     "format": null,
+     "ref": null,
+     "description": null
+    },
+    "title": {
+     "type": "array",
+     "format": null,
+     "ref": null,
+     "description": null
+    }
+   }
+  },
+  "BOType": {
+   "required": null,
+   "properties": {
+    "category": {
+     "type": "string",
+     "format": null,
+     "ref": null,
+     "description": null
+    },
+    "weight": {
+     "type": "integer",
+     "format": "int32",
+     "ref": null,
+     "description": null
+    },
+    "name": {
+     "type": "string",
+     "format": null,
+     "ref": null,
+     "description": null
+    }
+   }
+  },
+  "Types": {
+   "required": null,
+   "properties": {
+    "types": {
+     "type": "array",
+     "format": null,
+     "ref": "#/components/schemas/BOType",
+     "description": null
+    }
+   }
+  },
+  "DocumentImportResult": {
+   "required": null,
+   "properties": {
+    "message": {
+     "type": "string",
+     "format": null,
+     "ref": null,
+     "description": null
+    },
+    "documentID": {
+     "type": "integer",
+     "format": "int32",
+     "ref": null,
+     "description": null
+    },
+    "folderID": {
+     "type": "integer",
+     "format": "int32",
+     "ref": null,
+     "description": null
+    }
+   }
+  },
+  "BigDecimalParameter": {
+   "required": null,
+   "properties": {
+    "bigDecimal": {
+     "type": "number",
+     "format": null,
+     "ref": null,
+     "description": null
+    }
+   }
+  },
+  "DateParameter": {
+   "required": null,
+   "properties": {
+    "date": {
+     "type": "string",
+     "format": "date-time",
+     "ref": null,
+     "description": null
+    }
+   }
+  },
+  "DateTimeParameter": {
+   "required": null,
+   "properties": {
+    "date": {
+     "type": "string",
+     "format": "date-time",
+     "ref": null,
+     "description": null
+    }
+   }
+  },
+  "ProjectEntity": {
+   "required": null,
+   "properties": {
+    "lxID": {
+     "type": "integer",
+     "format": "int32",
+     "ref": null,
+     "description": null
+    },
+    "clientID": {
+     "type": "string",
+     "format": null,
+     "ref": null,
+     "description": null
+    },
+    "entityName": {
+     "type": "string",
+     "format": null,
+     "ref": null,
+     "description": null
+    },
+    "projectEntityID": {
+     "type": "integer",
+     "format": "int32",
+     "ref": null,
+     "description": null
+    }
+   }
+  },
+  "Property": {
+   "required": null,
+   "properties": {
+    "key": {
+     "type": "string",
+     "format": null,
+     "ref": null,
+     "description": null
+    },
+    "value": {
+     "type": "object",
+     "format": null,
+     "ref": null,
+     "description": null
+    }
+   }
+  },
+  "ScheduleNotificationBean": {
+   "required": null,
+   "properties": {
+    "notificationName": {
+     "type": "string",
+     "format": null,
+     "ref": null,
+     "description": null
+    },
+    "alertType": {
+     "type": "integer",
+     "format": "int32",
+     "ref": null,
+     "description": null
+    },
+    "notificationDays": {
+     "type": "integer",
+     "format": "int32",
+     "ref": null,
+     "description": null
+    },
+    "sendEmailToMembers": {
+     "type": "boolean",
+     "format": null,
+     "ref": null,
+     "description": null
+    },
+    "sendAlertToMembers": {
+     "type": "boolean",
+     "format": null,
+     "ref": null,
+     "description": null
+    },
+    "notificationMembersList": {
+     "type": "array",
+     "format": null,
+     "ref": null,
+     "description": null
+    },
+    "notificationMessage": {
+     "type": "string",
+     "format": null,
+     "ref": null,
+     "description": null
+    }
+   }
+  },
+  "ImportCounts": {
+   "required": null,
+   "properties": {
+    "boType": {
+     "type": "string",
+     "format": null,
+     "ref": null,
+     "description": null
+    },
+    "creates": {
+     "type": "integer",
+     "format": "int32",
+     "ref": null,
+     "description": null
+    },
+    "deletes": {
+     "type": "integer",
+     "format": "int32",
+     "ref": null,
+     "description": null
+    },
+    "updates": {
+     "type": "integer",
+     "format": "int32",
+     "ref": null,
+     "description": null
+    },
+    "warnings": {
+     "type": "integer",
+     "format": "int32",
+     "ref": null,
+     "description": null
+    },
+    "failures": {
+     "type": "integer",
+     "format": "int32",
+     "ref": null,
+     "description": null
+    },
+    "processed": {
+     "type": "integer",
+     "format": "int32",
+     "ref": null,
+     "description": null
+    }
+   }
+  },
+  "Options": {
+   "required": null,
+   "properties": {
+    "includes": {
+     "type": "array",
+     "format": null,
+     "ref": null,
+     "description": "Set of ANT like include patterns"
+    },
+    "excludes": {
+     "type": "array",
+     "format": null,
+     "ref": null,
+     "description": "Set of ANT like excludes patterns"
+    },
+    "deep": {
+     "type": "boolean",
+     "format": null,
+     "ref": null,
+     "description": "Do we produce a deep object tree or shallow?"
+    },
+    "stopOn1st": {
+     "type": "boolean",
+     "format": null,
+     "ref": null,
+     "description": "Stop processing input file on 1st error?"
+    },
+    "renderFirmDefinedFields": {
+     "type": "boolean",
+     "format": null,
+     "ref": null,
+     "description": "Should the firm defined fields be included?"
+    },
+    "renderClientID": {
+     "type": "boolean",
+     "format": null,
+     "ref": null,
+     "description": "Should the clientID field be rendered to XML?"
+    },
+    "renderLxID": {
+     "type": "boolean",
+     "format": null,
+     "ref": null,
+     "description": "Should the LxID field be rendered to XML?"
+    },
+    "renderViewOnlyFields": {
+     "type": "boolean",
+     "format": null,
+     "ref": null,
+     "description": "Should the XML include the view only fields?"
+    },
+    "exportDependencies": {
+     "type": "boolean",
+     "format": null,
+     "ref": null,
+     "description": "Flag to determine if dependencies should be exported"
+    },
+    "publicKey": {
+     "type": "string",
+     "format": null,
+     "ref": null,
+     "description": "PGP public key to be used when encrypting the response"
+    },
+    "datamart": {
+     "type": "boolean",
+     "format": null,
+     "ref": null,
+     "description": "Are we rendering for a datamart use case?"
+    },
+    "includeReferencedRootItems": {
+     "type": "boolean",
+     "format": null,
+     "ref": null,
+     "description": "Export related items (old-style default is true for datamart)?"
+    },
+    "batchID": {
+     "type": "string",
+     "format": null,
+     "ref": null,
+     "description": null
+    },
+    "maxAuditTableID": {
+     "type": "integer",
+     "format": "int64",
+     "ref": null,
+     "description": "Last PK for Audit table (fetch all records modified after/on)"
+    },
+    "mostRecentModifiedDate": {
+     "type": "string",
+     "format": "date-time",
+     "ref": null,
+     "description": "Modified Date (fetch all records modified after/on)"
+    },
+    "exportDependenciesBldr": {
+     "type": null,
+     "format": null,
+     "ref": "#/components/schemas/Options",
+     "description": null
+    }
+   }
+  },
+  "Task": {
+   "required": [
+    "name"
+   ],
+   "properties": {
+    "name": {
+     "type": "string",
+     "format": null,
+     "ref": null,
+     "description": "Unique task identifying name"
+    },
+    "href": {
+     "type": "string",
+     "format": null,
+     "ref": null,
+     "description": "REST URL of this resource instance"
+    },
+    "firmName": {
+     "type": "string",
+     "format": null,
+     "ref": null,
+     "description": "Name of firm which owns this task"
+    },
+    "createdBy": {
+     "type": "string",
+     "format": null,
+     "ref": null,
+     "description": "Username who created the task"
+    },
+    "created": {
+     "type": "string",
+     "format": "date-time",
+     "ref": null,
+     "description": "When was the task created"
+    },
+    "started": {
+     "type": "string",
+     "format": "date-time",
+     "ref": null,
+     "description": "When did the task start execution"
+    },
+    "finished": {
+     "type": "string",
+     "format": "date-time",
+     "ref": null,
+     "description": "When did the task finish execution"
+    },
+    "triggerType": {
+     "type": "string",
+     "format": null,
+     "ref": null,
+     "description": "Scheduling trigger type"
+    },
+    "delaySeconds": {
+     "type": "integer",
+     "format": "int32",
+     "ref": null,
+     "description": "If triggerType is Delayed, then this specifies how long before starting"
+    },
+    "cronExpression": {
+     "type": "string",
+     "format": null,
+     "ref": null,
+     "description": "If triggerType is Cron, then this specifies the cron scheduling expression"
+    },
+    "state": {
+     "type": "string",
+     "format": null,
+     "ref": null,
+     "description": "Task state"
+    },
+    "totalRecordCount": {
+     "type": "integer",
+     "format": "int32",
+     "ref": null,
+     "description": "Total count of records to process"
+    },
+    "processedRecordCount": {
+     "type": "integer",
+     "format": "int32",
+     "ref": null,
+     "description": "Count of records processed so far"
+    },
+    "jobClass": {
+     "type": "string",
+     "format": null,
+     "ref": null,
+     "description": "Classname of job which implements this task"
+    },
+    "jobArgument": {
+     "type": "string",
+     "format": null,
+     "ref": null,
+     "description": "Job execution argument which can be most anything"
+    },
+    "options": {
+     "type": null,
+     "format": null,
+     "ref": "#/components/schemas/Options",
+     "description": null
+    },
+    "encodedObject": {
+     "type": "string",
+     "format": null,
+     "ref": null,
+     "description": "Optional encoded object to process."
+    },
+    "inputFile": {
+     "type": "string",
+     "format": null,
+     "ref": null,
+     "description": "Input file to process if there is one"
+    },
+    "inputFormat": {
+     "type": "string",
+     "format": null,
+     "ref": null,
+     "description": "Input file format"
+    },
+    "outputFile": {
+     "type": "string",
+     "format": null,
+     "ref": null,
+     "description": "Generated output file if there is one"
+    },
+    "runTime": {
+     "type": "integer",
+     "format": "int64",
+     "ref": null,
+     "description": "Number of milliseconds task ran before finishing"
+    },
+    "successCount": {
+     "type": "integer",
+     "format": "int32",
+     "ref": null,
+     "description": "Number of successes encountered executing job"
+    },
+    "warningCount": {
+     "type": "integer",
+     "format": "int32",
+     "ref": null,
+     "description": "Number of warnings encountered executing job"
+    },
+    "errorCount": {
+     "type": "integer",
+     "format": "int32",
+     "ref": null,
+     "description": "Number of errors encountered executing job"
+    },
+    "importResults": {
+     "type": null,
+     "format": null,
+     "ref": "#/components/schemas/ImportResults",
+     "description": null
+    },
+    "exceptionStack": {
+     "type": "string",
+     "format": null,
+     "ref": null,
+     "description": "Execution exception stack if one was thrown"
+    },
+    "resultsSummary": {
+     "type": "string",
+     "format": null,
+     "ref": null,
+     "description": "Summary of processing results."
+    },
+    "rawPayloadJson": {
+     "type": "string",
+     "format": null,
+     "ref": null,
+     "description": "Raw JSON payload from Atlas API"
+    },
+    "transformedJson": {
+     "type": "string",
+     "format": null,
+     "ref": null,
+     "description": "Transformed canonical JSON after processing"
+    },
+    "importCounts": {
+     "type": "object",
+     "format": null,
+     "ref": null,
+     "description": null
+    },
+    "percentProcessed": {
+     "type": "integer",
+     "format": "int32",
+     "ref": null,
+     "description": null
+    },
+    "runAsDifferentUser": {
+     "type": "boolean",
+     "format": null,
+     "ref": null,
+     "description": null
+    },
+    "criticalImportBusinessHoursAlertSent": {
+     "type": "boolean",
+     "format": null,
+     "ref": null,
+     "description": null
+    }
+   }
+  },
+  "IDListField": {
+   "required": null,
+   "properties": {
+    "idFields": {
+     "type": "array",
+     "format": null,
+     "ref": "#/components/schemas/IDField",
+     "description": "List of IDField elements"
+    }
+   }
+  }
+ },
+ "operations": [
+  {
+   "method": "GET",
+   "path": "/adapter-config/{vendorId}/{fileName}",
+   "operationId": "getConfigFile",
+   "summary": "Download the effective config file for a vendor entity",
+   "description": "Returns the JSON content of the effective config file. External filesystem override is served if present; otherwise the classpath default is returned. Requires PS/LX admin.",
+   "tag": "/adapter-config",
+   "parameters": [
+    {
+     "name": "vendorId",
+     "in": "path",
+     "required": true,
+     "type": "string",
+     "description": "Vendor ID (e.g. atlas, inhouse)"
+    },
+    {
+     "name": "fileName",
+     "in": "path",
+     "required": true,
+     "type": "string",
+     "description": "Config file name (e.g. facility.json)"
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "200": {
+     "description": "JSON config file content",
+     "schema": null
+    },
+    "400": {
+     "description": "Invalid vendorId or fileName",
+     "schema": null
+    },
+    "403": {
+     "description": "Insufficient privileges",
+     "schema": null
+    },
+    "404": {
+     "description": "Config file not found",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "PUT",
+   "path": "/adapter-config/{vendorId}/{fileName}",
+   "operationId": "putConfigFile",
+   "summary": "Upload an external override for a vendor config file",
+   "description": "Saves the request body as an external filesystem override, which takes precedence over the classpath default on the next import without requiring a WAR redeployment. The body must be valid JSON. Requires PS/LX admin.",
+   "tag": "/adapter-config",
+   "parameters": [
+    {
+     "name": "vendorId",
+     "in": "path",
+     "required": true,
+     "type": "string",
+     "description": "Vendor ID (e.g. atlas, inhouse)"
+    },
+    {
+     "name": "fileName",
+     "in": "path",
+     "required": true,
+     "type": "string",
+     "description": "Config file name (e.g. facility.json)"
+    }
+   ],
+   "requestBody": {
+    "contentTypes": [
+     "application/json"
+    ],
+    "schema": "string",
+    "required": false
+   },
+   "responses": {
+    "200": {
+     "description": "Config file saved",
+     "schema": null
+    },
+    "400": {
+     "description": "Invalid JSON, vendorId, or fileName",
+     "schema": null
+    },
+    "403": {
+     "description": "Insufficient privileges",
+     "schema": null
+    },
+    "409": {
+     "description": "No external config directory configured (set iwms.adapter.config.dir or LxConfigDir)",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "DELETE",
+   "path": "/adapter-config/{vendorId}/{fileName}",
+   "operationId": "deleteConfigFile",
+   "summary": "Remove an external config override, reverting to the classpath default",
+   "description": "Deletes the external filesystem override for the specified file. After deletion the classpath default bundled in the WAR is used again. Requires PS/LX admin.",
+   "tag": "/adapter-config",
+   "parameters": [
+    {
+     "name": "vendorId",
+     "in": "path",
+     "required": true,
+     "type": "string",
+     "description": "Vendor ID (e.g. atlas, inhouse)"
+    },
+    {
+     "name": "fileName",
+     "in": "path",
+     "required": true,
+     "type": "string",
+     "description": "Config file name (e.g. facility.json)"
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "200": {
+     "description": "External override deleted",
+     "schema": null
+    },
+    "400": {
+     "description": "Invalid vendorId or fileName",
+     "schema": null
+    },
+    "403": {
+     "description": "Insufficient privileges",
+     "schema": null
+    },
+    "404": {
+     "description": "No external override exists for this file",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/adapter-config/firms/{firmId}/{vendorId}/{fileName}",
+   "operationId": "getFirmConfigFile",
+   "summary": "Download the effective firm-specific config file",
+   "description": "Returns the JSON content of the config file resolved for the given tenant. Firm-specific external override is served first; then common external; then classpath default. X-Config-Source header indicates which tier was used. Requires PS/LX admin.",
+   "tag": "/adapter-config",
+   "parameters": [
+    {
+     "name": "firmId",
+     "in": "path",
+     "required": true,
+     "type": "string",
+     "description": "Firm ID (positive integer)"
+    },
+    {
+     "name": "vendorId",
+     "in": "path",
+     "required": true,
+     "type": "string",
+     "description": "Vendor ID (e.g. atlas, inhouse)"
+    },
+    {
+     "name": "fileName",
+     "in": "path",
+     "required": true,
+     "type": "string",
+     "description": "Config file name (e.g. facility.json)"
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "200": {
+     "description": "JSON config file content",
+     "schema": null
+    },
+    "400": {
+     "description": "Invalid firmId, vendorId, or fileName",
+     "schema": null
+    },
+    "403": {
+     "description": "Insufficient privileges",
+     "schema": null
+    },
+    "404": {
+     "description": "Config file not found",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "PUT",
+   "path": "/adapter-config/firms/{firmId}/{vendorId}/{fileName}",
+   "operationId": "putFirmConfigFile",
+   "summary": "Upload a firm-specific config override",
+   "description": "Saves the request body as a firm-specific external filesystem override that takes precedence over both the common external override and the classpath default for the given tenant. The body must be valid JSON. Requires PS/LX admin.",
+   "tag": "/adapter-config",
+   "parameters": [
+    {
+     "name": "firmId",
+     "in": "path",
+     "required": true,
+     "type": "string",
+     "description": "Firm ID (positive integer)"
+    },
+    {
+     "name": "vendorId",
+     "in": "path",
+     "required": true,
+     "type": "string",
+     "description": "Vendor ID (e.g. atlas, inhouse)"
+    },
+    {
+     "name": "fileName",
+     "in": "path",
+     "required": true,
+     "type": "string",
+     "description": "Config file name (e.g. facility.json)"
+    }
+   ],
+   "requestBody": {
+    "contentTypes": [
+     "application/json"
+    ],
+    "schema": "string",
+    "required": false
+   },
+   "responses": {
+    "200": {
+     "description": "Firm config file saved",
+     "schema": null
+    },
+    "400": {
+     "description": "Invalid JSON, firmId, vendorId, or fileName",
+     "schema": null
+    },
+    "403": {
+     "description": "Insufficient privileges",
+     "schema": null
+    },
+    "409": {
+     "description": "No external config directory configured",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "DELETE",
+   "path": "/adapter-config/firms/{firmId}/{vendorId}/{fileName}",
+   "operationId": "deleteFirmConfigFile",
+   "summary": "Remove a firm-specific config override",
+   "description": "Deletes the firm-specific external filesystem override for the specified file. After deletion the common external override (if present) or the classpath default is used for this tenant. Requires PS/LX admin.",
+   "tag": "/adapter-config",
+   "parameters": [
+    {
+     "name": "firmId",
+     "in": "path",
+     "required": true,
+     "type": "string",
+     "description": "Firm ID (positive integer)"
+    },
+    {
+     "name": "vendorId",
+     "in": "path",
+     "required": true,
+     "type": "string",
+     "description": "Vendor ID (e.g. atlas, inhouse)"
+    },
+    {
+     "name": "fileName",
+     "in": "path",
+     "required": true,
+     "type": "string",
+     "description": "Config file name (e.g. facility.json)"
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "200": {
+     "description": "Firm override deleted",
+     "schema": null
+    },
+    "400": {
+     "description": "Invalid firmId, vendorId, or fileName",
+     "schema": null
+    },
+    "403": {
+     "description": "Insufficient privileges",
+     "schema": null
+    },
+    "404": {
+     "description": "No firm override exists for this file",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/adapter-config/{vendorId}/files",
+   "operationId": "listFiles",
+   "summary": "List config files for a vendor",
+   "description": "Returns metadata for each expected config file, indicating whether an external filesystem override is active or the classpath default is in use. Requires PS/LX admin.",
+   "tag": "/adapter-config",
+   "parameters": [
+    {
+     "name": "vendorId",
+     "in": "path",
+     "required": true,
+     "type": "string",
+     "description": "Vendor ID (e.g. atlas, inhouse)"
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "200": {
+     "description": "Array of file-metadata objects",
+     "schema": null
+    },
+    "400": {
+     "description": "Invalid vendorId",
+     "schema": null
+    },
+    "403": {
+     "description": "Insufficient privileges",
+     "schema": null
+    },
+    "404": {
+     "description": "Vendor not registered",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/adapter-config/firms/{firmId}/{vendorId}/files",
+   "operationId": "listFirmFiles",
+   "summary": "List firm-specific config files for a vendor",
+   "description": "Returns metadata for each expected config file, indicating whether a firm-specific external override, a common external override, or the classpath default is in use for the given tenant. Requires PS/LX admin.",
+   "tag": "/adapter-config",
+   "parameters": [
+    {
+     "name": "firmId",
+     "in": "path",
+     "required": true,
+     "type": "string",
+     "description": "Firm ID (positive integer)"
+    },
+    {
+     "name": "vendorId",
+     "in": "path",
+     "required": true,
+     "type": "string",
+     "description": "Vendor ID (e.g. atlas, inhouse)"
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "200": {
+     "description": "Array of file-metadata objects",
+     "schema": null
+    },
+    "400": {
+     "description": "Invalid firmId or vendorId",
+     "schema": null
+    },
+    "403": {
+     "description": "Insufficient privileges",
+     "schema": null
+    },
+    "404": {
+     "description": "Vendor not registered",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/adapter-config/vendors",
+   "operationId": "listVendors",
+   "summary": "List registered vendor adapter IDs",
+   "description": "Returns the vendor IDs of all adapters registered at startup (e.g. \"atlas\", \"inhouse\"). Requires PS/LX admin.",
+   "tag": "/adapter-config",
+   "parameters": [],
+   "requestBody": null,
+   "responses": {
+    "200": {
+     "description": "Array of vendor ID strings",
+     "schema": "array"
+    },
+    "403": {
+     "description": "Insufficient privileges",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "POST",
+   "path": "/atlas-api/import/{leaseId}",
+   "operationId": "importOne",
+   "summary": "Fetch a single lease from the Atlas API and import it into iWMS",
+   "description": "Fetches one lease by its Atlas ID, transforms it, and persists it.",
+   "tag": "/atlas-api",
+   "parameters": [
+    {
+     "name": "Authorization",
+     "in": "header",
+     "required": true,
+     "type": "string",
+     "description": "Bearer <token> for the LX-IWMS API"
+    },
+    {
+     "name": "leaseId",
+     "in": "path",
+     "required": true,
+     "type": "integer",
+     "description": "Atlas lease integer ID"
+    },
+    {
+     "name": "allowUpdate",
+     "in": "query",
+     "required": false,
+     "type": "boolean",
+     "description": null
+    },
+    {
+     "name": "dryRun",
+     "in": "query",
+     "required": false,
+     "type": "boolean",
+     "description": null
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "200": {
+     "description": "{ imported: 1, failed: 0, results: [...] }",
+     "schema": null
+    },
+    "400": {
+     "description": "Missing or invalid Authorization header",
+     "schema": null
+    },
+    "401": {
+     "description": "Not authenticated to iWMS",
+     "schema": null
+    },
+    "502": {
+     "description": "Atlas API call failed",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "POST",
+   "path": "/atlas-api/import/{leaseId}/async",
+   "operationId": "importOneAsync",
+   "summary": "Schedule asynchronous Atlas lease import",
+   "description": "Queues a background task that fetches, transforms, and persists one Atlas lease.",
+   "tag": "/atlas-api",
+   "parameters": [
+    {
+     "name": "Authorization",
+     "in": "header",
+     "required": false,
+     "type": "string",
+     "description": "Bearer <token> for the LX-IWMS API"
+    },
+    {
+     "name": "leaseId",
+     "in": "path",
+     "required": true,
+     "type": "integer",
+     "description": "Atlas lease integer ID"
+    },
+    {
+     "name": "createNew",
+     "in": "query",
+     "required": false,
+     "type": "boolean",
+     "description": null
+    },
+    {
+     "name": "persist",
+     "in": "query",
+     "required": false,
+     "type": "boolean",
+     "description": null
+    },
+    {
+     "name": "existingContractLxID",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": null
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "200": {
+     "description": "Task scheduled",
+     "schema": null
+    },
+    "400": {
+     "description": "Invalid request",
+     "schema": null
+    },
+    "401": {
+     "description": "Not authenticated",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/atlas-api/contracts",
+   "operationId": "listContracts",
+   "summary": "List active contracts for Atlas update-existing import",
+   "description": "Returns active contracts visible to the current user for selecting an existing contract during Atlas lease import.",
+   "tag": "/atlas-api",
+   "parameters": [
+    {
+     "name": "q",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": null
+    },
+    {
+     "name": "start",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": null
+    },
+    {
+     "name": "limit",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": null
+    },
+    {
+     "name": "filter",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": null
+    },
+    {
+     "name": "sort",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": null
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "200": {
+     "description": "Accessible contract list",
+     "schema": null
+    },
+    "401": {
+     "description": "Not authenticated to iWMS",
+     "schema": null
+    },
+    "403": {
+     "description": "AI Lease Abstraction access not granted",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/atlas-api/leases",
+   "operationId": "listLeases",
+   "summary": "List all leases from the Atlas API",
+   "description": "Proxies the Atlas lease list endpoint and returns the raw JSON for display in the Your Leases grid. Requires AI Lease Abstraction access.",
+   "tag": "/atlas-api",
+   "parameters": [],
+   "requestBody": null,
+   "responses": {
+    "200": {
+     "description": "Raw Atlas API lease list",
+     "schema": null
+    },
+    "401": {
+     "description": "Not authenticated to iWMS",
+     "schema": null
+    },
+    "403": {
+     "description": "AI Lease Abstraction access not granted",
+     "schema": null
+    },
+    "502": {
+     "description": "Atlas API call failed",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/atlas-api/import/events/{taskName}",
+   "operationId": "streamImportEvents",
+   "summary": "Stream Atlas import progress events",
+   "description": "SSE stream for Atlas lease import task updates.",
+   "tag": "/atlas-api",
+   "parameters": [
+    {
+     "name": "taskName",
+     "in": "path",
+     "required": true,
+     "type": "string",
+     "description": "Task name returned from async start endpoint"
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "default": {
+     "description": "default response",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "POST",
+   "path": "/atlas-api/sync",
+   "operationId": "syncAll",
+   "summary": "Fetch all leases from the Atlas API and import them into iWMS",
+   "description": "Calls the Atlas Lease Abstraction API, transforms each lease through the adapter pipeline, and persists the result. Requires an Atlas API bearer token in the Authorization header.",
+   "tag": "/atlas-api",
+   "parameters": [
+    {
+     "name": "Authorization",
+     "in": "header",
+     "required": true,
+     "type": "string",
+     "description": "Bearer <token> for the LX-IWMS API"
+    },
+    {
+     "name": "allowUpdate",
+     "in": "query",
+     "required": false,
+     "type": "boolean",
+     "description": null
+    },
+    {
+     "name": "dryRun",
+     "in": "query",
+     "required": false,
+     "type": "boolean",
+     "description": null
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "200": {
+     "description": "{ imported: int, failed: int, results: [...] }",
+     "schema": null
+    },
+    "400": {
+     "description": "Missing or invalid Authorization header",
+     "schema": null
+    },
+    "401": {
+     "description": "Not authenticated to iWMS",
+     "schema": null
+    },
+    "502": {
+     "description": "Atlas API call failed",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/audit/auditInfo",
+   "operationId": "fetchAuditInfo",
+   "summary": "Fetch audit information",
+   "description": null,
+   "tag": "/audit",
+   "parameters": [
+    {
+     "name": "loginName",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": null
+    },
+    {
+     "name": "tableName",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": null
+    },
+    {
+     "name": "objectID",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": null
+    },
+    {
+     "name": "projectEntityID",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": null
+    },
+    {
+     "name": "beginDate",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": null
+    },
+    {
+     "name": "endDate",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": null
+    },
+    {
+     "name": "accessorName",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": null
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "200": {
+     "description": "Audit information retrieved successfully",
+     "schema": "#/components/schemas/AuditInfo"
+    },
+    "404": {
+     "description": "ProjectEntity not found",
+     "schema": "#/components/schemas/ExtResponse"
+    },
+    "500": {
+     "description": "Internal server error",
+     "schema": "#/components/schemas/ExtResponse"
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/audit/{maxAuditTableID}",
+   "operationId": "fetchChanges",
+   "summary": "Query table audit trail",
+   "description": null,
+   "tag": "/audit",
+   "parameters": [
+    {
+     "name": "maxAuditTableID",
+     "in": "path",
+     "required": true,
+     "type": "integer",
+     "description": "AuditTable max ID"
+    },
+    {
+     "name": "sortAsc",
+     "in": "query",
+     "required": false,
+     "type": "boolean",
+     "description": "Sort by time of change in ascending order"
+    },
+    {
+     "name": "synchronous",
+     "in": "query",
+     "required": false,
+     "type": "boolean",
+     "description": "Execute query synchronous or via Quartz job"
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "200": {
+     "description": "Audit trail report",
+     "schema": "string"
+    },
+    "404": {
+     "description": "Specified maxAuditTableID not found",
+     "schema": "string"
+    },
+    "500": {
+     "description": "Internal server error",
+     "schema": "#/components/schemas/ExtResponse"
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/audit",
+   "operationId": "fetchFieldChanges",
+   "summary": "Query table audit trail",
+   "description": null,
+   "tag": "/audit",
+   "parameters": [
+    {
+     "name": "objectType",
+     "in": "query",
+     "required": true,
+     "type": "string",
+     "description": "Record type"
+    },
+    {
+     "name": "lxID",
+     "in": "query",
+     "required": true,
+     "type": "integer",
+     "description": "Primary Key"
+    },
+    {
+     "name": "lastModified",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "Last modified timestamp"
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "200": {
+     "description": "Audit trail report",
+     "schema": "string"
+    },
+    "500": {
+     "description": "Internal server error",
+     "schema": "#/components/schemas/ExtResponse"
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/audit/maxAuditTableID",
+   "operationId": "fetchMaxAuditTrailID",
+   "summary": "Query max(AuditTableID)",
+   "description": null,
+   "tag": "/audit",
+   "parameters": [],
+   "requestBody": null,
+   "responses": {
+    "200": {
+     "description": "Value of max(AuditTableID)",
+     "schema": "string"
+    },
+    "500": {
+     "description": "Internal server error",
+     "schema": "#/components/schemas/ExtResponse"
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/audit/{peid}/{lastModified}",
+   "operationId": "fetchProjectEntityChangedRecords",
+   "summary": "Query audit table for record groups and types that changed for an identified ProjectEntity",
+   "description": null,
+   "tag": "/audit",
+   "parameters": [
+    {
+     "name": "peid",
+     "in": "path",
+     "required": true,
+     "type": "integer",
+     "description": "ProjectEntity ID"
+    },
+    {
+     "name": "lastModified",
+     "in": "path",
+     "required": true,
+     "type": "string",
+     "description": "Last modified timestamp n ISO 8601 format"
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "200": {
+     "description": "Audit trail report",
+     "schema": "string"
+    },
+    "404": {
+     "description": "ProjectEntity not found",
+     "schema": "#/components/schemas/ExtResponse"
+    },
+    "500": {
+     "description": "Internal server error",
+     "schema": "#/components/schemas/ExtResponse"
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/boList",
+   "operationId": "fetchRecords",
+   "summary": null,
+   "description": null,
+   "tag": null,
+   "parameters": [
+    {
+     "name": "showUpdateAssignment",
+     "in": "query",
+     "required": false,
+     "type": "boolean",
+     "description": null
+    },
+    {
+     "name": "projectEntityID",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": null
+    },
+    {
+     "name": "inPanel",
+     "in": "query",
+     "required": false,
+     "type": "boolean",
+     "description": null
+    },
+    {
+     "name": "ajaxList",
+     "in": "query",
+     "required": false,
+     "type": "boolean",
+     "description": null
+    },
+    {
+     "name": "ajax",
+     "in": "query",
+     "required": false,
+     "type": "boolean",
+     "description": null
+    },
+    {
+     "name": "popupList",
+     "in": "query",
+     "required": false,
+     "type": "boolean",
+     "description": null
+    },
+    {
+     "name": "fdName",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": null
+    },
+    {
+     "name": "searchTextKey",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": null
+    },
+    {
+     "name": "BOType",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": null
+    },
+    {
+     "name": "volumnSearchText",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": null
+    },
+    {
+     "name": "page",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": null
+    },
+    {
+     "name": "start",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": null
+    },
+    {
+     "name": "limit",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": null
+    },
+    {
+     "name": "filter",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": null
+    },
+    {
+     "name": "sort",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": null
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "default": {
+     "description": "default response",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "POST",
+   "path": "/boList",
+   "operationId": "addAllMembers",
+   "summary": null,
+   "description": null,
+   "tag": null,
+   "parameters": [],
+   "requestBody": {
+    "contentTypes": [
+     "application/x-www-form-urlencoded"
+    ],
+    "schema": null,
+    "required": false
+   },
+   "responses": {
+    "default": {
+     "description": "default response",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/budgetViewAssignments/{budgetViewID}",
+   "operationId": "getBudgetViewAssignments",
+   "summary": null,
+   "description": null,
+   "tag": null,
+   "parameters": [
+    {
+     "name": "budgetViewID",
+     "in": "path",
+     "required": true,
+     "type": "integer",
+     "description": null
+    },
+    {
+     "name": "sort",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": null
+    },
+    {
+     "name": "start",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": null
+    },
+    {
+     "name": "limit",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": null
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "default": {
+     "description": "default response",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/businessObject/{objectType}",
+   "operationId": "fetchBusinessObjectLinks",
+   "summary": "Find set of BusinessObjectLinks",
+   "description": "Find set of BusinessObjectLinks of the specified record type",
+   "tag": "/businessObject",
+   "parameters": [
+    {
+     "name": "maxAuditTableID",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": "AuditTable ID"
+    },
+    {
+     "name": "lastModifiedValue",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "Last modified timestamp in ISO 8601 format"
+    },
+    {
+     "name": "fields",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "Comma separated field names (href, lxid, name, objecttype)"
+    },
+    {
+     "name": "datamart",
+     "in": "query",
+     "required": false,
+     "type": "boolean",
+     "description": "Is query from datamart?"
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "200": {
+     "description": "Found record(s)",
+     "schema": "#/components/schemas/BusinessObjectLinks"
+    },
+    "500": {
+     "description": "Internal server error",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "PUT",
+   "path": "/businessObject/{objectType}",
+   "operationId": "update",
+   "summary": "Updates {objectType} record",
+   "description": null,
+   "tag": "/businessObject",
+   "parameters": [],
+   "requestBody": {
+    "contentTypes": [
+     "application/xml",
+     "application/json"
+    ],
+    "schema": "#/components/schemas/BusinessObject",
+    "required": true
+   },
+   "responses": {
+    "200": {
+     "description": "Record updated",
+     "schema": "#/components/schemas/ImportResults"
+    },
+    "404": {
+     "description": "Record not found",
+     "schema": null
+    },
+    "500": {
+     "description": "Internal server error",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "POST",
+   "path": "/businessObject/{objectType}",
+   "operationId": "create",
+   "summary": "Creates/Updates {objectType} record",
+   "description": null,
+   "tag": "/businessObject",
+   "parameters": [
+    {
+     "name": "allowUpdate",
+     "in": "query",
+     "required": false,
+     "type": "boolean",
+     "description": "Allow update of existing record"
+    }
+   ],
+   "requestBody": {
+    "contentTypes": [
+     "application/xml",
+     "application/json"
+    ],
+    "schema": "#/components/schemas/BusinessObject",
+    "required": true
+   },
+   "responses": {
+    "200": {
+     "description": "Created/updated record",
+     "schema": "#/components/schemas/ImportResults"
+    },
+    "400": {
+     "description": "Bad request",
+     "schema": null
+    },
+    "500": {
+     "description": "Internal server error",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "POST",
+   "path": "/businessObject/{parentObjectType}/{parentID}",
+   "operationId": "createChild",
+   "summary": null,
+   "description": null,
+   "tag": "/businessObject",
+   "parameters": [
+    {
+     "name": "parentObjectType",
+     "in": "path",
+     "required": true,
+     "type": "string",
+     "description": null
+    },
+    {
+     "name": "parentID",
+     "in": "path",
+     "required": true,
+     "type": "string",
+     "description": null
+    }
+   ],
+   "requestBody": {
+    "contentTypes": [
+     "application/xml",
+     "application/json"
+    ],
+    "schema": "#/components/schemas/BusinessObject",
+    "required": false
+   },
+   "responses": {
+    "default": {
+     "description": "default response",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/businessObject/{objectType}/clientid/{clientID}",
+   "operationId": "findByClientID",
+   "summary": "Find {objectType} record by clientID",
+   "description": "Finds the {objectType} record identified by the specified client defined identifier string",
+   "tag": "/businessObject",
+   "parameters": [
+    {
+     "name": "clientID",
+     "in": "path",
+     "required": true,
+     "type": "string",
+     "description": "Unique client ID"
+    },
+    {
+     "name": "deep",
+     "in": "query",
+     "required": false,
+     "type": "boolean",
+     "description": "Deep/shallow serialization"
+    },
+    {
+     "name": "wantClientID",
+     "in": "query",
+     "required": false,
+     "type": "boolean",
+     "description": "Want clientID attribute"
+    },
+    {
+     "name": "wantLxID",
+     "in": "query",
+     "required": false,
+     "type": "boolean",
+     "description": "Want lxID attribute"
+    },
+    {
+     "name": "includes",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "Includes pattern"
+    },
+    {
+     "name": "excludes",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "Excludes pattern"
+    },
+    {
+     "name": "download",
+     "in": "query",
+     "required": false,
+     "type": "boolean",
+     "description": "Download file"
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "200": {
+     "description": "Found record",
+     "schema": null
+    },
+    "404": {
+     "description": "Record not found",
+     "schema": null
+    },
+    "500": {
+     "description": "Internal server error",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "DELETE",
+   "path": "/businessObject/{objectType}/clientid/{clientID}",
+   "operationId": "deleteByClientID",
+   "summary": "Delete {objectType} record by clientID",
+   "description": "Deletes the {objectType} record identified by the specified client defined identifier string",
+   "tag": "/businessObject",
+   "parameters": [
+    {
+     "name": "clientID",
+     "in": "path",
+     "required": true,
+     "type": "string",
+     "description": "Primary Key"
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "200": {
+     "description": "Record deleted",
+     "schema": "#/components/schemas/ImportResults"
+    },
+    "404": {
+     "description": "Record not found",
+     "schema": null
+    },
+    "500": {
+     "description": "Internal server error",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/businessObject/{objectType}/lxid/{lxID}",
+   "operationId": "findByLxID",
+   "summary": "Find {objectType} record by lxID",
+   "description": "Finds the {objectType} record identified by the specified integer primary key value",
+   "tag": "/businessObject",
+   "parameters": [
+    {
+     "name": "lxID",
+     "in": "path",
+     "required": true,
+     "type": "integer",
+     "description": "Primary Key"
+    },
+    {
+     "name": "deep",
+     "in": "query",
+     "required": false,
+     "type": "boolean",
+     "description": "Deep/shallow serialization"
+    },
+    {
+     "name": "wantClientID",
+     "in": "query",
+     "required": false,
+     "type": "boolean",
+     "description": "Want clientID attribute"
+    },
+    {
+     "name": "wantLxID",
+     "in": "query",
+     "required": false,
+     "type": "boolean",
+     "description": "Want lxID attribute"
+    },
+    {
+     "name": "includes",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "Includes pattern"
+    },
+    {
+     "name": "excludes",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "Excludes pattern"
+    },
+    {
+     "name": "download",
+     "in": "query",
+     "required": false,
+     "type": "boolean",
+     "description": "Download file"
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "200": {
+     "description": "Found record",
+     "schema": null
+    },
+    "404": {
+     "description": "Record not found",
+     "schema": null
+    },
+    "500": {
+     "description": "Internal server error",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "DELETE",
+   "path": "/businessObject/{objectType}/lxid/{lxID}",
+   "operationId": "deleteByLxID",
+   "summary": "Delete {objectType} record by lxID",
+   "description": "Deletes the {objectType} record identified by the specified integer primary key value",
+   "tag": "/businessObject",
+   "parameters": [
+    {
+     "name": "lxID",
+     "in": "path",
+     "required": true,
+     "type": "integer",
+     "description": "Primary Key"
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "200": {
+     "description": "Record deleted",
+     "schema": "#/components/schemas/ImportResults"
+    },
+    "404": {
+     "description": "Record not found",
+     "schema": null
+    },
+    "500": {
+     "description": "Internal server error",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/businessObject/{objectType}/details",
+   "operationId": "fetchBusinessObjectDetails",
+   "summary": "Find set of {objectType} records via FIQL",
+   "description": "Find set of {objectType} records which satisfy the query criteria as specified by the 'fiql' argument. Additionally the set of fields provided in the response can be limited to those defined by the 'fields' argument.",
+   "tag": "/businessObject",
+   "parameters": [
+    {
+     "name": "fiql",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "Record filter"
+    },
+    {
+     "name": "fields",
+     "in": "query",
+     "required": true,
+     "type": "string",
+     "description": "Comma separated field names"
+    },
+    {
+     "name": "$skip",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": "Number of records to skip"
+    },
+    {
+     "name": "$top",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": "Limit on number of records returned"
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "200": {
+     "description": "Founds record",
+     "schema": null
+    },
+    "400": {
+     "description": "Bad request",
+     "schema": null
+    },
+    "413": {
+     "description": "Too many records returned",
+     "schema": null
+    },
+    "500": {
+     "description": "Internal server error",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/cluster/asyncTasks",
+   "operationId": "queryAsyncTasks",
+   "summary": "Query async tasks",
+   "description": null,
+   "tag": null,
+   "parameters": [],
+   "requestBody": null,
+   "responses": {
+    "200": {
+     "description": "AsyncTask records",
+     "schema": null
+    },
+    "400": {
+     "description": "Hazelcast disabled",
+     "schema": null
+    },
+    "500": {
+     "description": "Internal server error",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "DELETE",
+   "path": "/cluster/asyncTasks",
+   "operationId": "evictOldAsyncTasks",
+   "summary": "Evict old async tasks",
+   "description": null,
+   "tag": null,
+   "parameters": [
+    {
+     "name": "minutes",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": null
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "200": {
+     "description": "Old AsyncTask records evicted",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/cluster/scheduledJob/id/{jobID}",
+   "operationId": "fetchScheduledJobByID",
+   "summary": "Query scheduled job state",
+   "description": "Query scheduled job state by ID in the execution queue",
+   "tag": null,
+   "parameters": [
+    {
+     "name": "jobID",
+     "in": "path",
+     "required": true,
+     "type": "integer",
+     "description": "Primary Key"
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "200": {
+     "description": "Success",
+     "schema": null
+    },
+    "400": {
+     "description": "Cluster node is not the job scheduler",
+     "schema": null
+    },
+    "404": {
+     "description": "Specified job is not queued for execution",
+     "schema": null
+    },
+    "500": {
+     "description": "Internal server error",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/cluster/scheduledJob/name/{name}",
+   "operationId": "fetchScheduledJobByName",
+   "summary": "Query scheduled job state",
+   "description": "Query scheduled job state by name in the execution queue",
+   "tag": null,
+   "parameters": [
+    {
+     "name": "name",
+     "in": "path",
+     "required": true,
+     "type": "string",
+     "description": "Schedule Name"
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "200": {
+     "description": "Success",
+     "schema": null
+    },
+    "400": {
+     "description": "Cluster node is not the job scheduler",
+     "schema": null
+    },
+    "404": {
+     "description": "Specified job is not queued for execution",
+     "schema": null
+    },
+    "500": {
+     "description": "Internal server error",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/cluster/scheduledJobs",
+   "operationId": "fetchScheduledJobs",
+   "summary": null,
+   "description": null,
+   "tag": null,
+   "parameters": [
+    {
+     "name": "page",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": null
+    },
+    {
+     "name": "start",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": null
+    },
+    {
+     "name": "limit",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": null
+    },
+    {
+     "name": "filter",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": null
+    },
+    {
+     "name": "sort",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": null
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "default": {
+     "description": "default response",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/cluster/members",
+   "operationId": "findMembers",
+   "summary": "Finds all cluster member",
+   "description": "Finds all hazelcast members",
+   "tag": null,
+   "parameters": [],
+   "requestBody": null,
+   "responses": {
+    "200": {
+     "description": "Found members",
+     "schema": null
+    },
+    "400": {
+     "description": "Hazelcast disabled or has no members",
+     "schema": null
+    },
+    "500": {
+     "description": "Internal server error",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/cluster/asyncTask/{name}",
+   "operationId": "queryAsyncTask",
+   "summary": "Query async task",
+   "description": null,
+   "tag": null,
+   "parameters": [
+    {
+     "name": "name",
+     "in": "path",
+     "required": true,
+     "type": "string",
+     "description": "Task identifier"
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "200": {
+     "description": "AsyncTask record",
+     "schema": null
+    },
+    "400": {
+     "description": "Hazelcast not enabled",
+     "schema": null
+    },
+    "404": {
+     "description": "Task not found",
+     "schema": null
+    },
+    "500": {
+     "description": "Internal server error",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/cluster/stats",
+   "operationId": "queryStats",
+   "summary": "Query cluster statistics",
+   "description": "Query cluster statistics",
+   "tag": null,
+   "parameters": [],
+   "requestBody": null,
+   "responses": {
+    "200": {
+     "description": "Reported cluster stats",
+     "schema": null
+    },
+    "400": {
+     "description": "Hazelcast disabled",
+     "schema": null
+    },
+    "500": {
+     "description": "Internal server error",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/cluster/rejoin",
+   "operationId": "rejoin",
+   "summary": "Rejoin the hazelcast grid",
+   "description": "Rejoin the hazelcast grid",
+   "tag": null,
+   "parameters": [],
+   "requestBody": null,
+   "responses": {
+    "200": {
+     "description": "Rejoined the hazelcast grid",
+     "schema": null
+    },
+    "400": {
+     "description": "Hazelcast disabled or has no members",
+     "schema": null
+    },
+    "500": {
+     "description": "Internal server error",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "POST",
+   "path": "/cluster/reportBuilder",
+   "operationId": "removeReportBuilder",
+   "summary": null,
+   "description": null,
+   "tag": null,
+   "parameters": [],
+   "requestBody": {
+    "contentTypes": [
+     "*/*"
+    ],
+    "schema": null,
+    "required": false
+   },
+   "responses": {
+    "default": {
+     "description": "default response",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "DELETE",
+   "path": "/cluster/scheduledJob/{jobID}",
+   "operationId": "unscheduleJob",
+   "summary": "Unschedule/cancel an identified job",
+   "description": null,
+   "tag": null,
+   "parameters": [
+    {
+     "name": "jobID",
+     "in": "path",
+     "required": true,
+     "type": "integer",
+     "description": "Primary Key"
+    },
+    {
+     "name": "cancel",
+     "in": "query",
+     "required": false,
+     "type": "boolean",
+     "description": "should we just cancel the currently executing scheduled job vs unschedule future executions"
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "200": {
+     "description": "Success",
+     "schema": null
+    },
+    "400": {
+     "description": "Hazelcast clustering is disabled or not the job scheduler",
+     "schema": null
+    },
+    "404": {
+     "description": "Specified job is not queued for execution",
+     "schema": null
+    },
+    "500": {
+     "description": "Internal server error",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "POST",
+   "path": "/cluster/upload",
+   "operationId": "uploadFile",
+   "summary": null,
+   "description": null,
+   "tag": null,
+   "parameters": [],
+   "requestBody": {
+    "contentTypes": [
+     "multipart/form-data"
+    ],
+    "schema": null,
+    "required": false
+   },
+   "responses": {
+    "default": {
+     "description": "default response",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "PUT",
+   "path": "/codeTableEntry",
+   "operationId": "update_1",
+   "summary": null,
+   "description": null,
+   "tag": null,
+   "parameters": [],
+   "requestBody": {
+    "contentTypes": [
+     "application/xml",
+     "application/json"
+    ],
+    "schema": "#/components/schemas/CodeTableEntry",
+    "required": false
+   },
+   "responses": {
+    "default": {
+     "description": "default response",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "POST",
+   "path": "/codeTableEntry",
+   "operationId": "create_1",
+   "summary": null,
+   "description": null,
+   "tag": null,
+   "parameters": [],
+   "requestBody": {
+    "contentTypes": [
+     "application/xml",
+     "application/json"
+    ],
+    "schema": "#/components/schemas/CodeTableEntry",
+    "required": false
+   },
+   "responses": {
+    "default": {
+     "description": "default response",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/codeTableEntry/{bundleID}/{entryID}",
+   "operationId": "findByPK",
+   "summary": null,
+   "description": null,
+   "tag": null,
+   "parameters": [
+    {
+     "name": "bundleID",
+     "in": "path",
+     "required": true,
+     "type": "integer",
+     "description": null
+    },
+    {
+     "name": "entryID",
+     "in": "path",
+     "required": true,
+     "type": "integer",
+     "description": null
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "default": {
+     "description": "default response",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "DELETE",
+   "path": "/codeTableEntry/{bundleID}/{entryID}",
+   "operationId": "delete",
+   "summary": null,
+   "description": null,
+   "tag": null,
+   "parameters": [
+    {
+     "name": "bundleID",
+     "in": "path",
+     "required": true,
+     "type": "integer",
+     "description": "Code Table Bundle ID"
+    },
+    {
+     "name": "entryID",
+     "in": "path",
+     "required": true,
+     "type": "integer",
+     "description": "Code Table Entry ID"
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "default": {
+     "description": "default response",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/deletions",
+   "operationId": "findAll",
+   "summary": null,
+   "description": null,
+   "tag": null,
+   "parameters": [
+    {
+     "name": "maxAuditTableID",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": null
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "default": {
+     "description": "default response",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "POST",
+   "path": "/documents/scheduletask/{taskID}",
+   "operationId": "attachDocumentToScheduleTask",
+   "summary": null,
+   "description": null,
+   "tag": null,
+   "parameters": [
+    {
+     "name": "taskID",
+     "in": "path",
+     "required": true,
+     "type": "integer",
+     "description": "Task ID"
+    }
+   ],
+   "requestBody": {
+    "contentTypes": [
+     "*/*"
+    ],
+    "schema": null,
+    "required": true
+   },
+   "responses": {
+    "default": {
+     "description": "default response",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/documents/count",
+   "operationId": "count",
+   "summary": null,
+   "description": null,
+   "tag": null,
+   "parameters": [
+    {
+     "name": "query",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": null
+    },
+    {
+     "name": "autoIndex",
+     "in": "query",
+     "required": false,
+     "type": "boolean",
+     "description": null
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "default": {
+     "description": "default response",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "POST",
+   "path": "/documents/indexJob/{objectType}/clientid/{clientID}",
+   "operationId": "createIndexJobForClientID",
+   "summary": null,
+   "description": null,
+   "tag": null,
+   "parameters": [
+    {
+     "name": "objectType",
+     "in": "path",
+     "required": true,
+     "type": "string",
+     "description": "Record type"
+    },
+    {
+     "name": "clientID",
+     "in": "path",
+     "required": true,
+     "type": "string",
+     "description": "Unique client ID"
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "default": {
+     "description": "default response",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "POST",
+   "path": "/documents/indexJob/{objectType}/lxid/{lxID}",
+   "operationId": "createIndexJobForLxID",
+   "summary": null,
+   "description": null,
+   "tag": null,
+   "parameters": [
+    {
+     "name": "objectType",
+     "in": "path",
+     "required": true,
+     "type": "string",
+     "description": "Record type"
+    },
+    {
+     "name": "lxID",
+     "in": "path",
+     "required": true,
+     "type": "integer",
+     "description": "Primary Key"
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "default": {
+     "description": "default response",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "POST",
+   "path": "/documents/indexJob/peid/{peID}",
+   "operationId": "createIndexJobForPeID",
+   "summary": null,
+   "description": null,
+   "tag": null,
+   "parameters": [
+    {
+     "name": "peID",
+     "in": "path",
+     "required": true,
+     "type": "integer",
+     "description": "ProjectEntity ID"
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "default": {
+     "description": "default response",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "POST",
+   "path": "/documents/ocrJob/{objectType}/clientid/{clientID}",
+   "operationId": "createOCRJobForClientID",
+   "summary": null,
+   "description": null,
+   "tag": null,
+   "parameters": [
+    {
+     "name": "objectType",
+     "in": "path",
+     "required": true,
+     "type": "string",
+     "description": "Record type"
+    },
+    {
+     "name": "clientID",
+     "in": "path",
+     "required": true,
+     "type": "string",
+     "description": "Unique client ID"
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "default": {
+     "description": "default response",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "POST",
+   "path": "/documents/ocrJob/{objectType}/lxid/{lxID}",
+   "operationId": "createOCRJobForLxID",
+   "summary": null,
+   "description": null,
+   "tag": null,
+   "parameters": [
+    {
+     "name": "objectType",
+     "in": "path",
+     "required": true,
+     "type": "string",
+     "description": "Record type"
+    },
+    {
+     "name": "lxID",
+     "in": "path",
+     "required": true,
+     "type": "integer",
+     "description": "Primary Key"
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "default": {
+     "description": "default response",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "POST",
+   "path": "/documents/ocrJob/peid/{peID}",
+   "operationId": "createOCRJobForPeID",
+   "summary": null,
+   "description": null,
+   "tag": null,
+   "parameters": [
+    {
+     "name": "peID",
+     "in": "path",
+     "required": true,
+     "type": "integer",
+     "description": "ProjectEntity ID"
+    },
+    {
+     "name": "memberUUID",
+     "in": "path",
+     "required": true,
+     "type": "string",
+     "description": "Hazelcast member UUID"
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "default": {
+     "description": "default response",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/documents/download/{documentID}",
+   "operationId": "downloadDocument",
+   "summary": null,
+   "description": null,
+   "tag": null,
+   "parameters": [
+    {
+     "name": "documentID",
+     "in": "path",
+     "required": true,
+     "type": "integer",
+     "description": null
+    },
+    {
+     "name": "fileName",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": null
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "default": {
+     "description": "default response",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "POST",
+   "path": "/documents/zipped",
+   "operationId": "downloadDocuments",
+   "summary": null,
+   "description": null,
+   "tag": null,
+   "parameters": [],
+   "requestBody": {
+    "contentTypes": [
+     "application/json"
+    ],
+    "schema": "array",
+    "required": false
+   },
+   "responses": {
+    "default": {
+     "description": "default response",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/documents/expenseDropdowns",
+   "operationId": "getExpenseDropdowns",
+   "summary": null,
+   "description": null,
+   "tag": null,
+   "parameters": [],
+   "requestBody": null,
+   "responses": {
+    "default": {
+     "description": "default response",
+     "schema": "#/components/schemas/ResponseEntityObject"
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/documents/portfolioExpenseDropdowns",
+   "operationId": "getPortfolioExpenseDropdowns",
+   "summary": null,
+   "description": null,
+   "tag": null,
+   "parameters": [
+    {
+     "name": "programID",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": null
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "default": {
+     "description": "default response",
+     "schema": "#/components/schemas/ResponseEntityObject"
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/documents/recoveryDropdowns",
+   "operationId": "getRecoveryDropdowns",
+   "summary": null,
+   "description": null,
+   "tag": null,
+   "parameters": [],
+   "requestBody": null,
+   "responses": {
+    "default": {
+     "description": "default response",
+     "schema": "#/components/schemas/ResponseEntityObject"
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/documents/staleIndex/{objectType}/lxid/{lxID}",
+   "operationId": "indexingNeeded",
+   "summary": null,
+   "description": null,
+   "tag": null,
+   "parameters": [
+    {
+     "name": "objectType",
+     "in": "path",
+     "required": true,
+     "type": "string",
+     "description": "Record type"
+    },
+    {
+     "name": "lxID",
+     "in": "path",
+     "required": true,
+     "type": "integer",
+     "description": "Primary Key"
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "default": {
+     "description": "default response",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/documents",
+   "operationId": "searchFieldsViaStandardQueryParser",
+   "summary": "Search document fields",
+   "description": null,
+   "tag": null,
+   "parameters": [
+    {
+     "name": "offset",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": null
+    },
+    {
+     "name": "limit",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": null
+    },
+    {
+     "name": "fields",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": null
+    },
+    {
+     "name": "query",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": null
+    },
+    {
+     "name": "filter",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": null
+    },
+    {
+     "name": "sort",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": null
+    },
+    {
+     "name": "filename",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": null
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "200": {
+     "description": "Performed requested query",
+     "schema": null
+    },
+    "400": {
+     "description": "SOLR search disabled",
+     "schema": null
+    },
+    "500": {
+     "description": "Internal server error",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "POST",
+   "path": "/documents",
+   "operationId": "queryFacet",
+   "summary": null,
+   "description": null,
+   "tag": null,
+   "parameters": [],
+   "requestBody": {
+    "contentTypes": [
+     "*/*"
+    ],
+    "schema": null,
+    "required": false
+   },
+   "responses": {
+    "default": {
+     "description": "default response",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/documents/{objectType}/clientid/{clientID}",
+   "operationId": "searchByRecordTypeAndClientID",
+   "summary": "Search documents via SOLR",
+   "description": null,
+   "tag": null,
+   "parameters": [
+    {
+     "name": "objectType",
+     "in": "path",
+     "required": true,
+     "type": "string",
+     "description": "Record type"
+    },
+    {
+     "name": "clientID",
+     "in": "path",
+     "required": true,
+     "type": "string",
+     "description": "Unique client ID"
+    },
+    {
+     "name": "offset",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": "Record offset for page"
+    },
+    {
+     "name": "limit",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": "Number of record for page"
+    },
+    {
+     "name": "fields",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "Desired field names"
+    },
+    {
+     "name": "query",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "Record query"
+    },
+    {
+     "name": "filter",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "Record filter"
+    },
+    {
+     "name": "sort",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "Sort records by"
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "200": {
+     "description": "Performed requested query",
+     "schema": null
+    },
+    "400": {
+     "description": "SOLR search disabled",
+     "schema": null
+    },
+    "404": {
+     "description": "Unable to find identified ProjectEntity",
+     "schema": null
+    },
+    "500": {
+     "description": "Internal server error",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/documents/{objectType}/lxid/{lxID}",
+   "operationId": "searchByRecordTypeAndLxID",
+   "summary": "Search documents via SOLR",
+   "description": null,
+   "tag": null,
+   "parameters": [
+    {
+     "name": "objectType",
+     "in": "path",
+     "required": true,
+     "type": "string",
+     "description": "Record type"
+    },
+    {
+     "name": "lxID",
+     "in": "path",
+     "required": true,
+     "type": "integer",
+     "description": "Primary Key"
+    },
+    {
+     "name": "offset",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": "Record offset for page"
+    },
+    {
+     "name": "limit",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": "Number of record for page"
+    },
+    {
+     "name": "fields",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "Desired field names"
+    },
+    {
+     "name": "query",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "Record query"
+    },
+    {
+     "name": "filter",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "Record filter"
+    },
+    {
+     "name": "sort",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "Sort records by"
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "200": {
+     "description": "Performed requested query",
+     "schema": null
+    },
+    "400": {
+     "description": "SOLR search disabled",
+     "schema": null
+    },
+    "404": {
+     "description": "Unable to find identified ProjectEntity",
+     "schema": null
+    },
+    "500": {
+     "description": "Internal server error",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/documents/dismax",
+   "operationId": "searchFieldsViaDisMaxQueryParser",
+   "summary": "Search document fields",
+   "description": null,
+   "tag": null,
+   "parameters": [
+    {
+     "name": "offset",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": null
+    },
+    {
+     "name": "limit",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": null
+    },
+    {
+     "name": "fields",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": null
+    },
+    {
+     "name": "query",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": null
+    },
+    {
+     "name": "filter",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": null
+    },
+    {
+     "name": "sort",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": null
+    },
+    {
+     "name": "qf",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": null
+    },
+    {
+     "name": "mm",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": null
+    },
+    {
+     "name": "pf",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": null
+    },
+    {
+     "name": "ps",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": null
+    },
+    {
+     "name": "qs",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": null
+    },
+    {
+     "name": "tie",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": null
+    },
+    {
+     "name": "bq",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": null
+    },
+    {
+     "name": "bf",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": null
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "200": {
+     "description": "Performed requested query",
+     "schema": null
+    },
+    "400": {
+     "description": "SOLR search disabled",
+     "schema": null
+    },
+    "500": {
+     "description": "Internal server error",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/entity/search/{searchText}",
+   "operationId": "search",
+   "summary": null,
+   "description": null,
+   "tag": null,
+   "parameters": [
+    {
+     "name": "searchText",
+     "in": "path",
+     "required": true,
+     "type": "string",
+     "description": null
+    },
+    {
+     "name": "includeSites",
+     "in": "query",
+     "required": false,
+     "type": "boolean",
+     "description": null
+    },
+    {
+     "name": "includeProjects",
+     "in": "query",
+     "required": false,
+     "type": "boolean",
+     "description": null
+    },
+    {
+     "name": "includeCapProjects",
+     "in": "query",
+     "required": false,
+     "type": "boolean",
+     "description": null
+    },
+    {
+     "name": "includeFacilities",
+     "in": "query",
+     "required": false,
+     "type": "boolean",
+     "description": null
+    },
+    {
+     "name": "includeLocations",
+     "in": "query",
+     "required": false,
+     "type": "boolean",
+     "description": null
+    },
+    {
+     "name": "includeParcels",
+     "in": "query",
+     "required": false,
+     "type": "boolean",
+     "description": null
+    },
+    {
+     "name": "includeReContracts",
+     "in": "query",
+     "required": false,
+     "type": "boolean",
+     "description": null
+    },
+    {
+     "name": "includeEquipContracts",
+     "in": "query",
+     "required": false,
+     "type": "boolean",
+     "description": null
+    },
+    {
+     "name": "includePortfolios",
+     "in": "query",
+     "required": false,
+     "type": "boolean",
+     "description": null
+    },
+    {
+     "name": "includeCapPrograms",
+     "in": "query",
+     "required": false,
+     "type": "boolean",
+     "description": null
+    },
+    {
+     "name": "programID",
+     "in": "query",
+     "required": false,
+     "type": "array",
+     "description": null
+    },
+    {
+     "name": "regionID",
+     "in": "query",
+     "required": false,
+     "type": "array",
+     "description": null
+    },
+    {
+     "name": "marketID",
+     "in": "query",
+     "required": false,
+     "type": "array",
+     "description": null
+    },
+    {
+     "name": "stateID",
+     "in": "query",
+     "required": false,
+     "type": "array",
+     "description": null
+    },
+    {
+     "name": "country",
+     "in": "query",
+     "required": false,
+     "type": "array",
+     "description": null
+    },
+    {
+     "name": "city",
+     "in": "query",
+     "required": false,
+     "type": "array",
+     "description": null
+    },
+    {
+     "name": "postalCode",
+     "in": "query",
+     "required": false,
+     "type": "array",
+     "description": null
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "default": {
+     "description": "default response",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/fieldGroup/fields",
+   "operationId": "fetchFields",
+   "summary": null,
+   "description": null,
+   "tag": null,
+   "parameters": [
+    {
+     "name": "groupID",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": null
+    },
+    {
+     "name": "wantGlobals",
+     "in": "query",
+     "required": false,
+     "type": "boolean",
+     "description": null
+    },
+    {
+     "name": "wantUDFs",
+     "in": "query",
+     "required": false,
+     "type": "boolean",
+     "description": null
+    },
+    {
+     "name": "page",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": null
+    },
+    {
+     "name": "start",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": null
+    },
+    {
+     "name": "limit",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": null
+    },
+    {
+     "name": "filter",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": null
+    },
+    {
+     "name": "sort",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": null
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "default": {
+     "description": "default response",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/fieldGroup/groups",
+   "operationId": "fetchGroups",
+   "summary": null,
+   "description": null,
+   "tag": null,
+   "parameters": [
+    {
+     "name": "wantOnlyGlobals",
+     "in": "query",
+     "required": false,
+     "type": "boolean",
+     "description": null
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "default": {
+     "description": "default response",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/firm/types",
+   "operationId": "getBOTypes",
+   "summary": "Returns a list of boTypes",
+   "description": null,
+   "tag": "/firm",
+   "parameters": [
+    {
+     "name": "query",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": null
+    },
+    {
+     "name": "wantBase",
+     "in": "query",
+     "required": false,
+     "type": "boolean",
+     "description": null
+    },
+    {
+     "name": "wantCodeTables",
+     "in": "query",
+     "required": false,
+     "type": "boolean",
+     "description": null
+    },
+    {
+     "name": "wantIssues",
+     "in": "query",
+     "required": false,
+     "type": "boolean",
+     "description": null
+    },
+    {
+     "name": "wantClientLists",
+     "in": "query",
+     "required": false,
+     "type": "boolean",
+     "description": null
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "200": {
+     "description": "List of matching boTypes",
+     "schema": "#/components/schemas/Types"
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/firm/roots/cached/{firmID}",
+   "operationId": "getIsCached",
+   "summary": "Return true if firm is cached",
+   "description": null,
+   "tag": "/firm",
+   "parameters": [
+    {
+     "name": "firmID",
+     "in": "path",
+     "required": true,
+     "type": "integer",
+     "description": null
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "default": {
+     "description": "default response",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "POST",
+   "path": "/firm/document",
+   "operationId": "importDocument",
+   "summary": "Import Document",
+   "description": "Imports a document file to a specified project entity",
+   "tag": "/firm",
+   "parameters": [
+    {
+     "name": "authoredByPersonID",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": null
+    },
+    {
+     "name": "authorName",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "LxID of document author Person"
+    },
+    {
+     "name": "folderID",
+     "in": "query",
+     "required": true,
+     "type": "integer",
+     "description": "Name of document author"
+    },
+    {
+     "name": "folderPath",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "LxID of Folder to receive document"
+    },
+    {
+     "name": "documentTypeID",
+     "in": "query",
+     "required": true,
+     "type": "integer",
+     "description": "Document folder path to receive document"
+    },
+    {
+     "name": "documentType",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "LxID of CodeDocumentType record"
+    },
+    {
+     "name": "description",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "Short-name of CodeDocumentType record"
+    },
+    {
+     "name": "projectEntityID",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": "Description of document file"
+    },
+    {
+     "name": "createDate",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "PeID of project entity to receive document"
+    },
+    {
+     "name": "autoCheckin",
+     "in": "query",
+     "required": false,
+     "type": "boolean",
+     "description": "When was the document file created"
+    },
+    {
+     "name": "allowUpdate",
+     "in": "query",
+     "required": false,
+     "type": "boolean",
+     "description": "Checkin the document file"
+    },
+    {
+     "name": "readyForRelease",
+     "in": "query",
+     "required": false,
+     "type": "boolean",
+     "description": "Allow future updates to document?"
+    }
+   ],
+   "requestBody": {
+    "contentTypes": [
+     "multipart/form-data"
+    ],
+    "schema": null,
+    "required": false
+   },
+   "responses": {
+    "200": {
+     "description": "Successful Import",
+     "schema": "#/components/schemas/DocumentImportResult"
+    },
+    "400": {
+     "description": "Invalid Request",
+     "schema": "#/components/schemas/DocumentImportResult"
+    },
+    "500": {
+     "description": "Internal server error",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "POST",
+   "path": "/firm/signature",
+   "operationId": "importESignature",
+   "summary": null,
+   "description": null,
+   "tag": "/firm",
+   "parameters": [],
+   "requestBody": {
+    "contentTypes": [
+     "multipart/form-data"
+    ],
+    "schema": null,
+    "required": false
+   },
+   "responses": {
+    "default": {
+     "description": "default response",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "POST",
+   "path": "/firm",
+   "operationId": "importFirm",
+   "summary": "Import data",
+   "description": "This is a FORM post which can be file upload ('file' form parameter) or XML text ('xml' form parameter)",
+   "tag": "/firm",
+   "parameters": [
+    {
+     "name": "synchronous",
+     "in": "query",
+     "required": true,
+     "type": "boolean",
+     "description": "Block until import complete?"
+    },
+    {
+     "name": "stopOnError",
+     "in": "query",
+     "required": false,
+     "type": "boolean",
+     "description": "Stop processing on the 1st error encountered"
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "200": {
+     "description": "If synchronous == true",
+     "schema": null
+    },
+    "202": {
+     "description": "If synchronous == false",
+     "schema": null
+    },
+    "500": {
+     "description": "Internal server error",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "PUT",
+   "path": "/firm/pin",
+   "operationId": "updateESignaturePin",
+   "summary": null,
+   "description": null,
+   "tag": "/firm",
+   "parameters": [],
+   "requestBody": {
+    "contentTypes": [
+     "application/x-www-form-urlencoded"
+    ],
+    "schema": null,
+    "required": false
+   },
+   "responses": {
+    "default": {
+     "description": "default response",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/fiscalPeriod",
+   "operationId": "calculateFiscalPeriod",
+   "summary": null,
+   "description": null,
+   "tag": null,
+   "parameters": [
+    {
+     "name": "programID",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": "Limit to identified Program"
+    },
+    {
+     "name": "when",
+     "in": "query",
+     "required": true,
+     "type": "string",
+     "description": "Date to check"
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "default": {
+     "description": "default response",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "POST",
+   "path": "/guardrails/override/disable",
+   "operationId": "disable",
+   "summary": "Disable the guardrail emergency override (LxAdmin only)",
+   "description": null,
+   "tag": null,
+   "parameters": [],
+   "requestBody": null,
+   "responses": {
+    "200": {
+     "description": "Override disabled",
+     "schema": null
+    },
+    "403": {
+     "description": "Caller is not LxAdmin",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "POST",
+   "path": "/guardrails/override/enable",
+   "operationId": "enable",
+   "summary": "Enable the guardrail emergency override (LxAdmin only)",
+   "description": null,
+   "tag": null,
+   "parameters": [
+    {
+     "name": "reason",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": null
+    },
+    {
+     "name": "durationHours",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": null
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "200": {
+     "description": "Override enabled",
+     "schema": null
+    },
+    "400": {
+     "description": "Missing/invalid reason or duration",
+     "schema": null
+    },
+    "403": {
+     "description": "Caller is not LxAdmin",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/guardrails/override/status",
+   "operationId": "getStatus",
+   "summary": "Get emergency override status for the caller's firm",
+   "description": null,
+   "tag": null,
+   "parameters": [],
+   "requestBody": null,
+   "responses": {
+    "200": {
+     "description": "Returned override status",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/i18n/currency/{fromCurrency}/{toCurrency}/{value}",
+   "operationId": "convertCurrency",
+   "summary": null,
+   "description": "Performs currency conversion",
+   "tag": "/i18n",
+   "parameters": [
+    {
+     "name": "fromCurrency",
+     "in": "path",
+     "required": true,
+     "type": "string",
+     "description": "Source currency code"
+    },
+    {
+     "name": "toCurrency",
+     "in": "path",
+     "required": true,
+     "type": "string",
+     "description": "Target currency code"
+    },
+    {
+     "name": "value",
+     "in": "path",
+     "required": true,
+     "type": null,
+     "description": "Currency value to convert"
+    },
+    {
+     "name": "contractID",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": "Use Contract exchange rate"
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "200": {
+     "description": "Successful currency conversion",
+     "schema": null
+    },
+    "404": {
+     "description": "Specified currency or contract not found",
+     "schema": null
+    },
+    "500": {
+     "description": "Internal server error",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/i18n/currency/{value}",
+   "operationId": "formatCurrency",
+   "summary": null,
+   "description": "Returns formatted currency value",
+   "tag": "/i18n",
+   "parameters": [
+    {
+     "name": "value",
+     "in": "path",
+     "required": true,
+     "type": null,
+     "description": "Currency value to format"
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "200": {
+     "description": "Successful currency formatting",
+     "schema": null
+    },
+    "500": {
+     "description": "Internal server error",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/i18n/date/{value}",
+   "operationId": "formatDate",
+   "summary": "Returns formatted date value",
+   "description": null,
+   "tag": "/i18n",
+   "parameters": [
+    {
+     "name": "value",
+     "in": "path",
+     "required": true,
+     "type": null,
+     "description": "Date value to format"
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "200": {
+     "description": "Successful date formatting",
+     "schema": null
+    },
+    "500": {
+     "description": "Internal server error",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/i18n/datetime/{value}",
+   "operationId": "formatDateTime",
+   "summary": "Returns formatted date-time value",
+   "description": null,
+   "tag": "/i18n",
+   "parameters": [
+    {
+     "name": "value",
+     "in": "path",
+     "required": true,
+     "type": null,
+     "description": "Date-time value to format"
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "200": {
+     "description": "Successful date-time formatting",
+     "schema": null
+    },
+    "500": {
+     "description": "Internal server error",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/i18n/{format}",
+   "operationId": "translate",
+   "summary": null,
+   "description": "Returns a translation of a specified phrase",
+   "tag": "/i18n",
+   "parameters": [
+    {
+     "name": "format",
+     "in": "path",
+     "required": true,
+     "type": "string",
+     "description": "Message format string"
+    },
+    {
+     "name": "param",
+     "in": "query",
+     "required": false,
+     "type": "array",
+     "description": "Optional parameters"
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "200": {
+     "description": "Successful translation",
+     "schema": null
+    },
+    "500": {
+     "description": "Internal server error",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "POST",
+   "path": "/jwt/crue/refresh",
+   "operationId": "createCrueRefreshJWT",
+   "summary": "Creates a Lease AI JWT refresh token",
+   "description": "Creates a JWT token for Lease AI embedded auth exchange after validating user permissions",
+   "tag": null,
+   "parameters": [
+    {
+     "name": "target",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": null
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "200": {
+     "description": "Returned JWT token in ExtResponse.data",
+     "schema": null
+    },
+    "401": {
+     "description": "Lucernex inactive session has expired",
+     "schema": null
+    },
+    "403": {
+     "description": "User is not authorized for requested Lease AI target",
+     "schema": null
+    },
+    "500": {
+     "description": "Unable to create JWT token",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "POST",
+   "path": "/jwt/help",
+   "operationId": "createHelpJWT",
+   "summary": "Creates a JWT security token",
+   "description": "Creates a JWT security token based upon the currently authenticated IWMS user for use with a microservice",
+   "tag": null,
+   "parameters": [],
+   "requestBody": null,
+   "responses": {
+    "200": {
+     "description": "Found members",
+     "schema": null
+    },
+    "500": {
+     "description": "Internal server error",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "POST",
+   "path": "/jwt/invoicesService",
+   "operationId": "createInvoicesServiceJWT",
+   "summary": "Creates a JWT security token",
+   "description": "Creates a JWT security token based upon the currently authenticated IWMS user for use with a microservice",
+   "tag": null,
+   "parameters": [],
+   "requestBody": null,
+   "responses": {
+    "200": {
+     "description": "Found members",
+     "schema": null
+    },
+    "500": {
+     "description": "Internal server error",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "POST",
+   "path": "/jwt",
+   "operationId": "createUserJWT",
+   "summary": "Creates a JWT security token",
+   "description": "Creates a JWT security token based upon the currently authenticated IWMS user with an optional token expiration",
+   "tag": null,
+   "parameters": [
+    {
+     "name": "expiresOn",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": null
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "200": {
+     "description": "Returned JWT token",
+     "schema": null
+    },
+    "500": {
+     "description": "Internal server error",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "POST",
+   "path": "/jwt/crue/touch",
+   "operationId": "touchCrueSession",
+   "summary": "Touches Lease AI host-page activity",
+   "description": "Updates Lucernex last-page-viewed timestamps for Atlas embed host-page interactions",
+   "tag": null,
+   "parameters": [
+    {
+     "name": "target",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": null
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "200": {
+     "description": "Session touched",
+     "schema": null
+    },
+    "401": {
+     "description": "Lucernex inactive session has expired",
+     "schema": null
+    },
+    "403": {
+     "description": "User is not authorized for requested Lease AI target",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/loadlimits/config",
+   "operationId": "queryLoadLimitConfig",
+   "summary": "Query LoadLimit configuration",
+   "description": null,
+   "tag": null,
+   "parameters": [],
+   "requestBody": null,
+   "responses": {
+    "200": {
+     "description": "Returned LoadLimit configuration",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/loadlimits",
+   "operationId": "queryLoadLimitMetrics",
+   "summary": "Query LoadLimit metrics",
+   "description": null,
+   "tag": null,
+   "parameters": [],
+   "requestBody": null,
+   "responses": {
+    "200": {
+     "description": "Returned LoadLimit metrics",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/lookerapi/dashboards",
+   "operationId": "getDashboards",
+   "summary": null,
+   "description": null,
+   "tag": null,
+   "parameters": [],
+   "requestBody": null,
+   "responses": {
+    "default": {
+     "description": "default response",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/lookerapi/embedurl",
+   "operationId": "getEmbedURL",
+   "summary": null,
+   "description": null,
+   "tag": null,
+   "parameters": [
+    {
+     "name": "objectType",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": null
+    },
+    {
+     "name": "objectId",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": null
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "default": {
+     "description": "default response",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/lookerapi/explores",
+   "operationId": "getExplores",
+   "summary": null,
+   "description": null,
+   "tag": null,
+   "parameters": [],
+   "requestBody": null,
+   "responses": {
+    "default": {
+     "description": "default response",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/lookerapi/folders/{folderId}/dashboards",
+   "operationId": "getFolderDashboards",
+   "summary": null,
+   "description": null,
+   "tag": null,
+   "parameters": [
+    {
+     "name": "folderId",
+     "in": "path",
+     "required": true,
+     "type": "string",
+     "description": null
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "default": {
+     "description": "default response",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/lookerapi/folders/{folderId}/looks",
+   "operationId": "getFolderLooks",
+   "summary": null,
+   "description": null,
+   "tag": null,
+   "parameters": [
+    {
+     "name": "folderId",
+     "in": "path",
+     "required": true,
+     "type": "string",
+     "description": null
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "default": {
+     "description": "default response",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/lookerapi/folders",
+   "operationId": "getFolders",
+   "summary": null,
+   "description": null,
+   "tag": null,
+   "parameters": [],
+   "requestBody": null,
+   "responses": {
+    "default": {
+     "description": "default response",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/lookerapi/looks",
+   "operationId": "getLooks",
+   "summary": null,
+   "description": null,
+   "tag": null,
+   "parameters": [],
+   "requestBody": null,
+   "responses": {
+    "default": {
+     "description": "default response",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/lookerapi/treenodes",
+   "operationId": "getTreeNodes",
+   "summary": null,
+   "description": null,
+   "tag": null,
+   "parameters": [],
+   "requestBody": null,
+   "responses": {
+    "default": {
+     "description": "default response",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/lookerapi/dashboards/search",
+   "operationId": "searchDashboards",
+   "summary": null,
+   "description": null,
+   "tag": null,
+   "parameters": [],
+   "requestBody": null,
+   "responses": {
+    "default": {
+     "description": "default response",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/lookerapi/looks/search",
+   "operationId": "searchLooks",
+   "summary": null,
+   "description": null,
+   "tag": null,
+   "parameters": [],
+   "requestBody": null,
+   "responses": {
+    "default": {
+     "description": "default response",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "POST",
+   "path": "/msproject/uploadTemplate",
+   "operationId": "importMSProjectTemplate",
+   "summary": null,
+   "description": null,
+   "tag": null,
+   "parameters": [],
+   "requestBody": {
+    "contentTypes": [
+     "multipart/form-data"
+    ],
+    "schema": null,
+    "required": false
+   },
+   "responses": {
+    "default": {
+     "description": "default response",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/msproject",
+   "operationId": "processUploadedMSProject",
+   "summary": null,
+   "description": null,
+   "tag": null,
+   "parameters": [
+    {
+     "name": "selectedIDs",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": null
+    },
+    {
+     "name": "ignoreRelationships",
+     "in": "query",
+     "required": false,
+     "type": "boolean",
+     "description": null
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "default": {
+     "description": "default response",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "POST",
+   "path": "/msproject",
+   "operationId": "uploadMSProject",
+   "summary": null,
+   "description": null,
+   "tag": null,
+   "parameters": [
+    {
+     "name": "projectEntityID",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": null
+    }
+   ],
+   "requestBody": {
+    "contentTypes": [
+     "multipart/form-data"
+    ],
+    "schema": null,
+    "required": false
+   },
+   "responses": {
+    "default": {
+     "description": "default response",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "POST",
+   "path": "/msproject/importTemplate",
+   "operationId": "processUploadedMSProjectTemplate",
+   "summary": null,
+   "description": null,
+   "tag": null,
+   "parameters": [
+    {
+     "name": "selectedTaskNames",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": null
+    },
+    {
+     "name": "Description",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": null
+    },
+    {
+     "name": "IsValidForCapProgram",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": null
+    },
+    {
+     "name": "IsValidForCapProject",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": null
+    },
+    {
+     "name": "IsValidForContract",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": null
+    },
+    {
+     "name": "IsValidForEquipContract",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": null
+    },
+    {
+     "name": "IsValidForFacility",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": null
+    },
+    {
+     "name": "IsValidForLocation",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": null
+    },
+    {
+     "name": "IsValidForOpenProject",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": null
+    },
+    {
+     "name": "IsValidForParcel",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": null
+    },
+    {
+     "name": "IsValidForPortfolio",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": null
+    },
+    {
+     "name": "IsValidForPotentialProject",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": null
+    },
+    {
+     "name": "IsValidForPrototype",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": null
+    },
+    {
+     "name": "TemplateName",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": null
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "default": {
+     "description": "default response",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/membership/projectEntity/{peid}",
+   "operationId": "fetchMembers",
+   "summary": "Query ProjectEntity members",
+   "description": null,
+   "tag": "/membership",
+   "parameters": [
+    {
+     "name": "peid",
+     "in": "path",
+     "required": true,
+     "type": "integer",
+     "description": "ProjectEntity ID"
+    },
+    {
+     "name": "wantClientID",
+     "in": "query",
+     "required": false,
+     "type": "boolean",
+     "description": "Want clientID attribute"
+    },
+    {
+     "name": "wantLxID",
+     "in": "query",
+     "required": false,
+     "type": "boolean",
+     "description": "Want lxID attribute"
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "200": {
+     "description": "Success",
+     "schema": "string"
+    },
+    "404": {
+     "description": "Project Entity not found",
+     "schema": null
+    },
+    "500": {
+     "description": "Internal server error",
+     "schema": "string"
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/membership/member/{memberID}",
+   "operationId": "fetchProjectEntities",
+   "summary": "Query ProjectEntities for the specified member",
+   "description": null,
+   "tag": "/membership",
+   "parameters": [
+    {
+     "name": "memberID",
+     "in": "path",
+     "required": true,
+     "type": "integer",
+     "description": "Member ID"
+    },
+    {
+     "name": "wantClientID",
+     "in": "query",
+     "required": false,
+     "type": "boolean",
+     "description": "Want clientID attribute"
+    },
+    {
+     "name": "wantLxID",
+     "in": "query",
+     "required": false,
+     "type": "boolean",
+     "description": "Want lxID attribute"
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "200": {
+     "description": "Success",
+     "schema": "string"
+    },
+    "404": {
+     "description": "Member not found",
+     "schema": null
+    },
+    "500": {
+     "description": "Internal server error",
+     "schema": "string"
+    }
+   }
+  },
+  {
+   "method": "POST",
+   "path": "/membership/{objectType}/queueassignment",
+   "operationId": "processQueueAssignment",
+   "summary": "Creates/Updates {objectType} record",
+   "description": null,
+   "tag": "/membership",
+   "parameters": [
+    {
+     "name": "objectType",
+     "in": "path",
+     "required": true,
+     "type": "string",
+     "description": "Record type"
+    }
+   ],
+   "requestBody": {
+    "contentTypes": [
+     "application/xml",
+     "application/json"
+    ],
+    "schema": "#/components/schemas/ProjectEntity",
+    "required": true
+   },
+   "responses": {
+    "204": {
+     "description": "Process Queue Assignment",
+     "schema": "#/components/schemas/ImportResults"
+    },
+    "500": {
+     "description": "Internal server error",
+     "schema": "string"
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/mobilelayout/deletedfields",
+   "operationId": "fetchDeletedFields",
+   "summary": null,
+   "description": null,
+   "tag": null,
+   "parameters": [
+    {
+     "name": "pageLayoutID",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": null
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "default": {
+     "description": "default response",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/mobilelayout/fields",
+   "operationId": "fetchFields_1",
+   "summary": null,
+   "description": null,
+   "tag": null,
+   "parameters": [
+    {
+     "name": "pageLayoutID",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": null
+    },
+    {
+     "name": "reset",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": null
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "default": {
+     "description": "default response",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/pagelayoutfield/securityaccess",
+   "operationId": "getPageLayoutFieldSecurity",
+   "summary": null,
+   "description": null,
+   "tag": null,
+   "parameters": [
+    {
+     "name": "pageLayoutID",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": null
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "default": {
+     "description": "default response",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/pagelayoutfield",
+   "operationId": "getPageLayoutFields",
+   "summary": null,
+   "description": null,
+   "tag": null,
+   "parameters": [
+    {
+     "name": "pageLayoutID",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": null
+    },
+    {
+     "name": "layoutType",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": null
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "default": {
+     "description": "default response",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "POST",
+   "path": "/pagelayoutfield/dropdownvalues",
+   "operationId": "getSmartDropDownValues",
+   "summary": null,
+   "description": null,
+   "tag": null,
+   "parameters": [
+    {
+     "name": "lxFieldTypeID",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": null
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "default": {
+     "description": "default response",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/pageLayout/values/{pageLayoutID}",
+   "operationId": "getPageLayoutValues",
+   "summary": null,
+   "description": null,
+   "tag": null,
+   "parameters": [
+    {
+     "name": "pageLayoutID",
+     "in": "path",
+     "required": true,
+     "type": "integer",
+     "description": null
+    },
+    {
+     "name": "projectEntityID",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": null
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "default": {
+     "description": "default response",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "POST",
+   "path": "/pageLayout/values/{pageLayoutID}",
+   "operationId": "updatePageLayoutValues",
+   "summary": null,
+   "description": null,
+   "tag": null,
+   "parameters": [
+    {
+     "name": "pageLayoutID",
+     "in": "path",
+     "required": true,
+     "type": "integer",
+     "description": null
+    },
+    {
+     "name": "projectEntityID",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": null
+    }
+   ],
+   "requestBody": {
+    "contentTypes": [
+     "application/x-www-form-urlencoded"
+    ],
+    "schema": null,
+    "required": false
+   },
+   "responses": {
+    "default": {
+     "description": "default response",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/pageLayout/{pageLayoutType}",
+   "operationId": "getPageLayouts",
+   "summary": null,
+   "description": null,
+   "tag": null,
+   "parameters": [
+    {
+     "name": "pageLayoutType",
+     "in": "path",
+     "required": true,
+     "type": "string",
+     "description": null
+    },
+    {
+     "name": "projectEntityID",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": null
+    },
+    {
+     "name": "availableForMobile",
+     "in": "query",
+     "required": false,
+     "type": "boolean",
+     "description": null
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "default": {
+     "description": "default response",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "POST",
+   "path": "/pageLayout/action/{actionType}",
+   "operationId": "triggerCheckinCheckout",
+   "summary": null,
+   "description": null,
+   "tag": null,
+   "parameters": [
+    {
+     "name": "actionType",
+     "in": "path",
+     "required": true,
+     "type": "string",
+     "description": null
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "default": {
+     "description": "default response",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/payments/paymentTransactions",
+   "operationId": "queryPaymentTransactions",
+   "summary": "Query payment transactions",
+   "description": "Retrieve payment transactions filtered by contract ID, effective date, and expense type",
+   "tag": null,
+   "parameters": [
+    {
+     "name": "contractID",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": "Contract ID"
+    },
+    {
+     "name": "expenseType",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "Expense type"
+    },
+    {
+     "name": "expenseGroup",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "Expense group"
+    },
+    {
+     "name": "expenseCategory",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "Expense category"
+    },
+    {
+     "name": "effBeginDate",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "Effective begin date (yyyy-MM-dd)"
+    },
+    {
+     "name": "effEndDate",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "Effective end date (yyyy-MM-dd)"
+    },
+    {
+     "name": "dueBeginDate",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "Due begin date (yyyy-MM-dd)"
+    },
+    {
+     "name": "dueEndDate",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "Due end date (yyyy-MM-dd)"
+    },
+    {
+     "name": "postingBeginDate",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "Posting begin date (yyyy-MM-dd)"
+    },
+    {
+     "name": "postingEndDate",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "Posting end date (yyyy-MM-dd)"
+    },
+    {
+     "name": "processedFlag",
+     "in": "query",
+     "required": false,
+     "type": "boolean",
+     "description": "Processed flag"
+    },
+    {
+     "name": "vendorID",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": "Vendor ID"
+    },
+    {
+     "name": "internalRefNumber",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "Internal reference number"
+    },
+    {
+     "name": "invoiceNumber",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "Invoice number"
+    },
+    {
+     "name": "checkNumber",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "Check number"
+    },
+    {
+     "name": "arOptions",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": "AR options"
+    },
+    {
+     "name": "assetID",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": "Asset ID"
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "200": {
+     "description": "Successfully retrieved payment transactions",
+     "schema": null
+    },
+    "400": {
+     "description": "Invalid request parameters",
+     "schema": null
+    },
+    "401": {
+     "description": "Unauthorized access",
+     "schema": null
+    },
+    "404": {
+     "description": "No transactions found",
+     "schema": null
+    },
+    "500": {
+     "description": "Internal server error",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/photo",
+   "operationId": "downloadPhoto",
+   "summary": null,
+   "description": null,
+   "tag": null,
+   "parameters": [
+    {
+     "name": "projectEntityID",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": null
+    },
+    {
+     "name": "codeSQLTableID",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": null
+    },
+    {
+     "name": "objectID",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": null
+    },
+    {
+     "name": "photoType",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": null
+    },
+    {
+     "name": "baseName",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": null
+    },
+    {
+     "name": "imageHeight",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": null
+    },
+    {
+     "name": "imageWidth",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": null
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "default": {
+     "description": "default response",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "POST",
+   "path": "/photo",
+   "operationId": "importPhoto",
+   "summary": null,
+   "description": null,
+   "tag": null,
+   "parameters": [
+    {
+     "name": "projectEntityID",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": null
+    },
+    {
+     "name": "codeSQLTableID",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": null
+    },
+    {
+     "name": "objectID",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": null
+    },
+    {
+     "name": "photoType",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": null
+    },
+    {
+     "name": "baseName",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": null
+    }
+   ],
+   "requestBody": {
+    "contentTypes": [
+     "multipart/form-data"
+    ],
+    "schema": null,
+    "required": false
+   },
+   "responses": {
+    "default": {
+     "description": "default response",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "DELETE",
+   "path": "/photo",
+   "operationId": "removePhoto",
+   "summary": null,
+   "description": null,
+   "tag": null,
+   "parameters": [
+    {
+     "name": "projectEntityID",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": null
+    },
+    {
+     "name": "codeSQLTableID",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": null
+    },
+    {
+     "name": "objectID",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": null
+    },
+    {
+     "name": "photoType",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": null
+    },
+    {
+     "name": "baseName",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": null
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "default": {
+     "description": "default response",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/properties/azuremonitor",
+   "operationId": "getAzureMonitorProperties",
+   "summary": "Query Azure Monitor Properties",
+   "description": null,
+   "tag": null,
+   "parameters": [],
+   "requestBody": null,
+   "responses": {
+    "200": {
+     "description": "Returned properties for the azure monitor section",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/properties",
+   "operationId": "queryGroups",
+   "summary": "Query Property Groups",
+   "description": null,
+   "tag": null,
+   "parameters": [],
+   "requestBody": null,
+   "responses": {
+    "200": {
+     "description": "Returned set of property groups",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/properties/{group}",
+   "operationId": "queryProperties",
+   "summary": "Query Properties",
+   "description": null,
+   "tag": null,
+   "parameters": [
+    {
+     "name": "group",
+     "in": "path",
+     "required": true,
+     "type": "string",
+     "description": "Properties group"
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "200": {
+     "description": "Returned properties for the specified section",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "PUT",
+   "path": "/properties/{group}",
+   "operationId": "update_2",
+   "summary": "Updates a specified property",
+   "description": null,
+   "tag": null,
+   "parameters": [
+    {
+     "name": "group",
+     "in": "path",
+     "required": true,
+     "type": "string",
+     "description": "Properties group"
+    }
+   ],
+   "requestBody": {
+    "contentTypes": [
+     "application/json"
+    ],
+    "schema": "#/components/schemas/Property",
+    "required": true
+   },
+   "responses": {
+    "200": {
+     "description": "Property updated",
+     "schema": "#/components/schemas/ImportResults"
+    },
+    "404": {
+     "description": "Unknown property",
+     "schema": null
+    },
+    "500": {
+     "description": "Internal server error",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/reportBuilder/insert",
+   "operationId": "Insert",
+   "summary": null,
+   "description": null,
+   "tag": null,
+   "parameters": [
+    {
+     "name": "BuilderHashCode",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": null
+    },
+    {
+     "name": "name",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": null
+    },
+    {
+     "name": "row",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": null
+    },
+    {
+     "name": "col",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": null
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "default": {
+     "description": "default response",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/reportBuilder/addfield",
+   "operationId": "addField",
+   "summary": null,
+   "description": null,
+   "tag": null,
+   "parameters": [
+    {
+     "name": "BuilderHashCode",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": null
+    },
+    {
+     "name": "position",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": null
+    },
+    {
+     "name": "row",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": null
+    },
+    {
+     "name": "col",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": null
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "default": {
+     "description": "default response",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/reportBuilder/clearBuilderState",
+   "operationId": "clearReportBuilderState",
+   "summary": null,
+   "description": null,
+   "tag": null,
+   "parameters": [
+    {
+     "name": "BuilderHashCode",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": null
+    },
+    {
+     "name": "resetBuilder",
+     "in": "query",
+     "required": false,
+     "type": "boolean",
+     "description": null
+    },
+    {
+     "name": "ScheduledJobID",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": null
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "default": {
+     "description": "default response",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/reportBuilder/deletefield",
+   "operationId": "deleteField",
+   "summary": null,
+   "description": null,
+   "tag": null,
+   "parameters": [
+    {
+     "name": "BuilderHashCode",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": null
+    },
+    {
+     "name": "name",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": null
+    },
+    {
+     "name": "keepFiltered",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": null
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "default": {
+     "description": "default response",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/reportBuilder/columns",
+   "operationId": "fetchColumns",
+   "summary": null,
+   "description": null,
+   "tag": null,
+   "parameters": [
+    {
+     "name": "BuilderHashCode",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": null
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "default": {
+     "description": "default response",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/reportBuilder/includedfields",
+   "operationId": "getIncludedFields",
+   "summary": null,
+   "description": null,
+   "tag": null,
+   "parameters": [
+    {
+     "name": "BuilderHashCode",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": null
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "default": {
+     "description": "default response",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/reportBuilder/builderState",
+   "operationId": "getReportBuilderState",
+   "summary": null,
+   "description": null,
+   "tag": null,
+   "parameters": [
+    {
+     "name": "BuilderHashCode",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": null
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "default": {
+     "description": "default response",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/reportBuilder/movefield",
+   "operationId": "moveField",
+   "summary": null,
+   "description": null,
+   "tag": null,
+   "parameters": [
+    {
+     "name": "BuilderHashCode",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": null
+    },
+    {
+     "name": "name",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": null
+    },
+    {
+     "name": "position",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": null
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "default": {
+     "description": "default response",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/reportBuilder/restoreBuilderState",
+   "operationId": "restoreReportBuilderState",
+   "summary": null,
+   "description": null,
+   "tag": null,
+   "parameters": [
+    {
+     "name": "CurrentBuilderHashCode",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": null
+    },
+    {
+     "name": "OriginaldBuilderHashCode",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": null
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "default": {
+     "description": "default response",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "POST",
+   "path": "/reportBuilder/savefiltersettings",
+   "operationId": "saveFilterSettings",
+   "summary": null,
+   "description": null,
+   "tag": null,
+   "parameters": [
+    {
+     "name": "BuilderHashCode",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": null
+    }
+   ],
+   "requestBody": {
+    "contentTypes": [
+     "*/*"
+    ],
+    "schema": null,
+    "required": false
+   },
+   "responses": {
+    "default": {
+     "description": "default response",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/reportBuilder/save",
+   "operationId": "saveReport",
+   "summary": null,
+   "description": null,
+   "tag": null,
+   "parameters": [
+    {
+     "name": "BuilderHashCode",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": null
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "default": {
+     "description": "default response",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/reportBuilder/setAlignment",
+   "operationId": "setColumnAlignment",
+   "summary": null,
+   "description": null,
+   "tag": null,
+   "parameters": [
+    {
+     "name": "BuilderHashCode",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": null
+    },
+    {
+     "name": "fieldName",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": null
+    },
+    {
+     "name": "alignment",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": null
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "default": {
+     "description": "default response",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/reportBuilder/setcriteria",
+   "operationId": "setCriteria",
+   "summary": null,
+   "description": null,
+   "tag": null,
+   "parameters": [
+    {
+     "name": "BuilderHashCode",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": null
+    },
+    {
+     "name": "fieldName",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": null
+    },
+    {
+     "name": "specified",
+     "in": "query",
+     "required": false,
+     "type": "boolean",
+     "description": null
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "default": {
+     "description": "default response",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/reportBuilder/setsort",
+   "operationId": "setSortFilter",
+   "summary": null,
+   "description": null,
+   "tag": null,
+   "parameters": [
+    {
+     "name": "BuilderHashCode",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": null
+    },
+    {
+     "name": "fieldName",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": null
+    },
+    {
+     "name": "dir",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": null
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "default": {
+     "description": "default response",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/reportBuilder/updateSpan",
+   "operationId": "updateSpan",
+   "summary": null,
+   "description": null,
+   "tag": null,
+   "parameters": [
+    {
+     "name": "BuilderHashCode",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": null
+    },
+    {
+     "name": "widthOrHeight",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": null
+    },
+    {
+     "name": "direction",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": null
+    },
+    {
+     "name": "name",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "description": null
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "default": {
+     "description": "default response",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "POST",
+   "path": "/scheduleNotification/notification/{ProjectEntityID}",
+   "operationId": "createNotification",
+   "summary": null,
+   "description": null,
+   "tag": null,
+   "parameters": [
+    {
+     "name": "ProjectEntityID",
+     "in": "path",
+     "required": true,
+     "type": "integer",
+     "description": null
+    },
+    {
+     "name": "taskID",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": null
+    }
+   ],
+   "requestBody": {
+    "contentTypes": [
+     "application/json",
+     "application/xml"
+    ],
+    "schema": "#/components/schemas/ScheduleNotificationBean",
+    "required": false
+   },
+   "responses": {
+    "default": {
+     "description": "default response",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/scheduleNotification/notifications/lxid/{lxID}",
+   "operationId": "getNotification",
+   "summary": null,
+   "description": null,
+   "tag": null,
+   "parameters": [
+    {
+     "name": "lxID",
+     "in": "path",
+     "required": true,
+     "type": "integer",
+     "description": null
+    },
+    {
+     "name": "taskID",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": null
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "default": {
+     "description": "default response",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/scheduleNotification/notifications/{ProjectEntityID}",
+   "operationId": "getNotifications",
+   "summary": null,
+   "description": null,
+   "tag": null,
+   "parameters": [
+    {
+     "name": "ProjectEntityID",
+     "in": "path",
+     "required": true,
+     "type": "integer",
+     "description": null
+    },
+    {
+     "name": "taskID",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": null
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "default": {
+     "description": "default response",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "PUT",
+   "path": "/scheduleNotification/notification/{lxid}",
+   "operationId": "updateNotification",
+   "summary": null,
+   "description": null,
+   "tag": null,
+   "parameters": [
+    {
+     "name": "lxid",
+     "in": "path",
+     "required": true,
+     "type": "integer",
+     "description": null
+    },
+    {
+     "name": "taskID",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": null
+    },
+    {
+     "name": "ProjectEntityID",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": null
+    }
+   ],
+   "requestBody": {
+    "contentTypes": [
+     "application/json",
+     "application/xml"
+    ],
+    "schema": "#/components/schemas/ScheduleNotificationBean",
+    "required": false
+   },
+   "responses": {
+    "default": {
+     "description": "default response",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/scheduletask/securityaccess",
+   "operationId": "getSecurityAccess",
+   "summary": null,
+   "description": null,
+   "tag": null,
+   "parameters": [
+    {
+     "name": "projectEntityID",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": null
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "default": {
+     "description": "default response",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/script",
+   "operationId": "queryNames",
+   "summary": null,
+   "description": null,
+   "tag": null,
+   "parameters": [],
+   "requestBody": null,
+   "responses": {
+    "default": {
+     "description": "default response",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/script/{name}",
+   "operationId": "queryScript",
+   "summary": null,
+   "description": null,
+   "tag": null,
+   "parameters": [
+    {
+     "name": "name",
+     "in": "path",
+     "required": true,
+     "type": "string",
+     "description": null
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "default": {
+     "description": "default response",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/task/{name}",
+   "operationId": "findByName",
+   "summary": "Find identified Task",
+   "description": "Finds the Task identified by name",
+   "tag": "/task",
+   "parameters": [
+    {
+     "name": "name",
+     "in": "path",
+     "required": true,
+     "type": "string",
+     "description": "Task name"
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "200": {
+     "description": "Task found",
+     "schema": "string"
+    }
+   }
+  },
+  {
+   "method": "DELETE",
+   "path": "/task/{name}",
+   "operationId": "cancelByName",
+   "summary": "Cancels identified Task",
+   "description": "Cancels the previously scheduled task if found.",
+   "tag": "/task",
+   "parameters": [
+    {
+     "name": "name",
+     "in": "path",
+     "required": true,
+     "type": "string",
+     "description": "Task name"
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "200": {
+     "description": "Success",
+     "schema": "#/components/schemas/Task"
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/task/downloadJobFile/{filename}",
+   "operationId": "downloadJobFile",
+   "summary": "Downloads job log",
+   "description": "Downloads the specified ScheduledJob's log/input file",
+   "tag": "/task",
+   "parameters": [
+    {
+     "name": "filename",
+     "in": "path",
+     "required": true,
+     "type": "string",
+     "description": "Name of desired log/input file"
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "200": {
+     "description": "Success",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/task/download/{name}",
+   "operationId": "downloadResults",
+   "summary": "Downloads the Task's generated file",
+   "description": "\u2026",
+   "tag": "/task",
+   "parameters": [
+    {
+     "name": "name",
+     "in": "path",
+     "required": true,
+     "type": "string",
+     "description": "Task name"
+    },
+    {
+     "name": "gzip",
+     "in": "query",
+     "required": true,
+     "type": "boolean",
+     "description": "Want GZIP compression?"
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "200": {
+     "description": "Success",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/task/state/{name}",
+   "operationId": "fetchState",
+   "summary": "Fetches the Task state",
+   "description": "Returns the state of the specified task: [Waiting, Executing, Canceled, Finished, Failed]",
+   "tag": "/task",
+   "parameters": [
+    {
+     "name": "name",
+     "in": "path",
+     "required": true,
+     "type": "string",
+     "description": null
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "200": {
+     "description": "Success",
+     "schema": "string"
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/task/mine",
+   "operationId": "findLatestByOwner",
+   "summary": "Find user's latest Task",
+   "description": "Finds the latest Task owned by the authenticated user",
+   "tag": "/task",
+   "parameters": [],
+   "requestBody": null,
+   "responses": {
+    "200": {
+     "description": "Success",
+     "schema": "#/components/schemas/Task"
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/task/ping",
+   "operationId": "ping",
+   "summary": "Returns 'hello'",
+   "description": "Very light weight test of RESTful web-service accessibility",
+   "tag": "/task",
+   "parameters": [],
+   "requestBody": null,
+   "responses": {
+    "200": {
+     "description": "Success",
+     "schema": "string"
+    }
+   }
+  },
+  {
+   "method": "POST",
+   "path": "/task",
+   "operationId": "schedule",
+   "summary": "Creates Task",
+   "description": "Creates and schedules a Task for execution",
+   "tag": "/task",
+   "parameters": [],
+   "requestBody": {
+    "contentTypes": [
+     "application/x-www-form-urlencoded"
+    ],
+    "schema": null,
+    "required": false
+   },
+   "responses": {
+    "200": {
+     "description": "Success",
+     "schema": "#/components/schemas/Task"
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/task/sleep/{seconds}",
+   "operationId": "sleep",
+   "summary": "Sleep for a specified number of seconds",
+   "description": "Blocks call for a specified number of seconds",
+   "tag": "/task",
+   "parameters": [
+    {
+     "name": "seconds",
+     "in": "path",
+     "required": true,
+     "type": "integer",
+     "description": "Number of seconds to sleep"
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "200": {
+     "description": "Slept for X seconds",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "POST",
+   "path": "/vendor-lease/{vendorId}/import",
+   "operationId": "importVendorLease",
+   "summary": "Import a lease abstract from a vendor-specific JSON payload",
+   "description": "Transforms the vendor JSON through the registered adapter and persists the canonical result via the BusinessObject pipeline. The caller's firmID is used for firm-specific adapter config overrides. When dryRun=true the payload is validated only \u2014 nothing is persisted.",
+   "tag": "/vendor-lease",
+   "parameters": [
+    {
+     "name": "vendorId",
+     "in": "path",
+     "required": true,
+     "type": "string",
+     "description": "Registered adapter vendor ID (e.g. inhouse, atlas)"
+    },
+    {
+     "name": "allowUpdate",
+     "in": "query",
+     "required": false,
+     "type": "boolean",
+     "description": "Update existing records matched by clientID/lxID; default false"
+    },
+    {
+     "name": "dryRun",
+     "in": "query",
+     "required": false,
+     "type": "boolean",
+     "description": "Validate only \u2014 nothing is persisted; default false"
+    }
+   ],
+   "requestBody": {
+    "contentTypes": [
+     "application/json"
+    ],
+    "schema": "string",
+    "required": false
+   },
+   "responses": {
+    "200": {
+     "description": "Success: { importSuccesses: [...], importErrors: [...] }; or for dryRun: { valid: boolean, findings: [...] }",
+     "schema": null
+    },
+    "400": {
+     "description": "Invalid vendorId or empty request body",
+     "schema": null
+    },
+    "401": {
+     "description": "Not authenticated",
+     "schema": null
+    },
+    "404": {
+     "description": "No adapter registered for the given vendorId",
+     "schema": null
+    },
+    "422": {
+     "description": "Adapter transform failed \u2014 vendor JSON did not map cleanly",
+     "schema": null
+    }
+   }
+  },
+  {
+   "method": "GET",
+   "path": "/virtual/{virtualBOType}",
+   "operationId": "fetchVirtualRecordsForContract",
+   "summary": "Query virtual records for a Contract",
+   "description": null,
+   "tag": null,
+   "parameters": [
+    {
+     "name": "virtualBOType",
+     "in": "path",
+     "required": true,
+     "type": "string",
+     "description": "Last modified timestamp n ISO 8601 format"
+    },
+    {
+     "name": "contractID",
+     "in": "query",
+     "required": false,
+     "type": "integer",
+     "description": "Parent Contract ID"
+    }
+   ],
+   "requestBody": null,
+   "responses": {
+    "200": {
+     "description": "Audit trail report",
+     "schema": null
+    },
+    "400": {
+     "description": "Invalid virtual record type",
+     "schema": null
+    },
+    "500": {
+     "description": "Internal server error",
+     "schema": null
+    }
+   }
+  }
+ ]
+}

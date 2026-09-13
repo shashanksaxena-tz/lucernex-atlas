@@ -1,0 +1,391 @@
+{
+ "_firm": "(ASG)BBW  train-bbw.lucernex.com",
+ "_captured": "2026-09-13",
+ "_status": "RESOLVED. The layout-level required layer does not exist. See layer3_RESOLVED.",
+ "_scopeCaveat": "Derived from bbw-platform-tables.json, which is GLOBAL-FIELDS-ONLY (see _CAVEAT_GLOBAL_FIELDS_ONLY there). A firm field could carry its own required flag that is invisible here.",
+ "layer1_schemaRequired": {
+  "_evidence": "Observed. The 'Required?' column of /en/admin/ShowObjectDetails.jsp, across 202 readable tables.",
+  "totalRequiredFields": 603,
+  "meanPerTable": 2.99,
+  "tablesWithZeroRequired": 32,
+  "maxPerTable": 20,
+  "interpretation": "This layer is overwhelmingly SYSTEM plumbing, not business rules. BOMapClientRecordID - the import ClientID - is 'Required' in 133 of 202 tables, and the rest of the frequent names are ownership/audit columns (FirmID, CreatedByID, ModifiedByID, ProjectEntityID, ProjectEntityName, Inactive) or parent FKs (ContractID, ProgramID, ParcelID, IssueID). Mean 3.0 per table. It is close to useless as a description of what a user must fill in.",
+  "mostFrequentRequiredNames": [
+   {
+    "field": "BOMapClientRecordID",
+    "tables": 133
+   },
+   {
+    "field": "Inactive",
+    "tables": 18
+   },
+   {
+    "field": "IssueID",
+    "tables": 12
+   },
+   {
+    "field": "ProjectEntityID",
+    "tables": 11
+   },
+   {
+    "field": "ContractID",
+    "tables": 9
+   },
+   {
+    "field": "FirmID",
+    "tables": 9
+   },
+   {
+    "field": "ProjectEntityName",
+    "tables": 9
+   },
+   {
+    "field": "ProgramID",
+    "tables": 9
+   },
+   {
+    "field": "SequenceNumber",
+    "tables": 8
+   },
+   {
+    "field": "CreatedByID",
+    "tables": 8
+   },
+   {
+    "field": "ParcelID",
+    "tables": 7
+   },
+   {
+    "field": "ModifiedByID",
+    "tables": 5
+   },
+   {
+    "field": "MemberID",
+    "tables": 5
+   },
+   {
+    "field": "BeginDate",
+    "tables": 4
+   },
+   {
+    "field": "EndDate",
+    "tables": 4
+   },
+   {
+    "field": "BudgetColumnID",
+    "tables": 4
+   },
+   {
+    "field": "CodeMarketAreaID",
+    "tables": 4
+   },
+   {
+    "field": "RegionID",
+    "tables": 4
+   },
+   {
+    "field": "CodeContactTypeIDList",
+    "tables": 4
+   },
+   {
+    "field": "EmployerID",
+    "tables": 4
+   },
+   {
+    "field": "FirstName",
+    "tables": 4
+   },
+   {
+    "field": "LastName",
+    "tables": 4
+   },
+   {
+    "field": "AssetID",
+    "tables": 3
+   },
+   {
+    "field": "BudgetLineItemID",
+    "tables": 3
+   },
+   {
+    "field": "CodeSQLTableID",
+    "tables": 3
+   }
+  ],
+  "contract": {
+   "physical": "Contract",
+   "required": [
+    "BOMapClientRecordID",
+    "ContractName",
+    "CreatedByID",
+    "FirmID",
+    "Inactive",
+    "ProjectEntityID",
+    "ProjectEntityName"
+   ],
+   "note": "All 7 are system columns. Not one is a field a user types on the Summary screen. This is why the layout layer must exist."
+  }
+ },
+ "layer3_layoutRequired_OPEN": {
+  "status": "BLOCKED - session expired before the layout editor could be opened",
+  "whatIsKnown": "PageLayoutField has 20 columns (see bbw-layout-engine-tables.json) and NONE is named IsRequired. So kb-builder's read of docs/modules/layouts-and-forms/data-model.md is correct as far as column NAMES go.",
+  "leadingHypothesis": "DisplayOption1 and DisplayOption2, the two unexplained integer bitmask columns on PageLayoutField. Observed values so far are only 0 and 288. A required flag is exactly the kind of thing a bitmask column carries, and they are the only columns left that could hold it.",
+  "secondHypothesis": "PageLayoutField.JSONConfigText. 29 distinct keys were observed across the tenant and none is named 'required' - but the observed key set comes from the layouts sampled, not from the engine's full vocabulary.",
+  "exactTestToRun": "GET /rest/businessObject/PageLayout/lxid/98927?deep=true and compare DisplayOption1/DisplayOption2 (and JSONConfigText) for the PageLayoutField rows whose DisplayLabel is 'Contract Status' and 'Location' against the row for 'Master Contract'. If a bit differs consistently between asterisked and non-asterisked fields, that bit IS layout-required. This is a single request and needs no builder render.",
+  "whyThisBeatsTheUIRoute": "It reads the stored value rather than the rendered asterisk, so it distinguishes 'stored as required' from 'rendered red for some other reason'.",
+  "partialResult_98925": {
+   "_status": "PARTIAL and it WEAKENS my own hypothesis. Not decisive - see whyNotDecisive.",
+   "_evidence": "Observed. Full DisplayOption1/DisplayOption2 values for all 28 placements on PageLayoutID 98925 (ASG Contract Abstract Details, primary table Contract), from a deep REST serialisation captured before the session expired.",
+   "finding": "DisplayOption1/DisplayOption2 track the PLACEMENT KIND, not per-field required-ness. The values partition almost perfectly by what sort of thing is placed:",
+   "observedPartition": {
+    "StaticText (9 placements)": "D1=0, D2=288 - and one variant at D2=268435744, which is 288 + 268435456, i.e. the same static-text bits plus an independent bit 28.",
+    "SubEditForm (8 placements)": "D1=4112 or 4864, D2=0 or 1024 - sub-form embedding flags.",
+    "OneToManyList (5 placements)": "D1=0, D2=0.",
+    "ordinary data fields (6 placements)": "D1=0, D2=0 in EVERY case, including the three Firm_* fields.",
+    "one exception": "An EmployerID picker carries D1=268435456 (bit 28) - the same bit that appears on the one unusual StaticText, so bit 28 is an independent flag orthogonal to placement kind."
+   },
+   "whyThisWeakensTheHypothesis": "Every ordinary data field on this layout has D1=0 and D2=0. If layout-level required-ness were stored in these columns, at least some ordinary placements should carry a bit. None do. The columns look like RENDERING and STRUCTURAL flags keyed to placement type - static-text styling, sub-form behaviour - not a per-field required flag.",
+   "whyNotDecisive": "I do not know whether layout 98925 has ANY asterisked field. The asterisks were observed on 98927 (ASG Contract Summary), which I have not fetched. A layout with no required fields would produce exactly this all-zero pattern whether or not the hypothesis is true. This is the same trap as the earlier false negatives: a method validated only on a case with no data.",
+   "stillRequired": "Fetch 98927 and compare Contract Status and Location against Master Contract, as originally specified. If those three are also all-zero, DisplayOption is eliminated and the search moves on."
+  },
+  "alternativeToConsider": {
+   "reframe": "The asterisks in docs/admin/008 were observed in the LAYOUT EDITOR, not on the end-user form. An asterisk in the builder may not mean the same thing as an asterisk on a rendered form - it could mark 'this field is mandatory for the layout to function' or 'this placement cannot be removed' rather than 'the user must fill this in'. Worth confirming that the same two fields render with asterisks for an END USER before concluding a fourth required layer exists at all.",
+   "otherCandidates": [
+    "The RGAF (data field) definition itself, rather than the placement - i.e. required-ness attached to the field wherever it is used.",
+    "The primary table's own schema requirement propagated through the layout - but neither CodeContractStatusID nor LocationID is schema-required, so this does not explain those two.",
+    "A layout-level rule stored outside PageLayoutField entirely."
+   ]
+  },
+  "hypothesis2_JSONConfigText_ELIMINATED_for_98927": {
+   "_status": "ELIMINATED for the decisive layout. Observed.",
+   "finding": "PageLayoutID 98927 (ASG Contract Summary) WAS included in the 134-layout REST sweep. Its JSONConfigText key set is EMPTY - {} - across all 22 of its PageLayoutField rows. Not one placement on that layout carries any JSONConfigText content at all.",
+   "consequence": "Required-ness for 'Contract Status' and 'Location' on 98927 CANNOT be stored in JSONConfigText, because that column is empty for every field on the layout that paints them.",
+   "tenantWideCheck": {
+    "completeVocabulary": "29 distinct keys across all 134 readable layouts",
+    "keys": [
+     "ColumnWidthInList",
+     "NumberOfDecimals",
+     "AutoSizeColumnWidthForInitialContent",
+     "showNameAndDescription",
+     "ShowColumnTotal",
+     "EditModeDefaultValue",
+     "FieldScript",
+     "conditionalFieldsConfig",
+     "noLink",
+     "FieldValidationMinValue",
+     "MemoColumnNumber",
+     "FieldValidationMaxValue",
+     "DisableRowEditorInList",
+     "rowsPerPage",
+     "rowsPrintablePerPage",
+     "BOItemPopupWidth",
+     "popupHeight",
+     "popupWidth",
+     "NoGridWidths",
+     "IncludeInSearch",
+     "ListParentIDParam",
+     "ShowActiveInactive",
+     "MemoRowNumber",
+     "MemoMaxWidth",
+     "CLGridWidth",
+     "limitBy_CodeContactTypeID",
+     "limitBy_ExpenseTypeName",
+     "limitBy_CodeJobFunctionID",
+     "SLRecord_Type"
+    ],
+    "requiredLikeKeys": "NONE. No key across the entire tenant matches require/mandatory/optional/notnull/nullable.",
+    "note": "Per-placement VALIDATION does live in this blob - FieldValidationMinValue (42), FieldValidationMaxValue (29), EditModeDefaultValue (133) - which is what made it a plausible home for 'required'. But the vocabulary simply does not contain such a key anywhere in BBW."
+   },
+   "caveat": "This proves no BBW layout stores required-ness under a key matching those names. It does not prove the engine lacks the capability - an unused feature leaves no trace. But for the specific asterisks observed on 98927, it is eliminated."
+  },
+  "whereThisLeavesIt": {
+   "remainingCandidatesFor98927": [
+    "DisplayOption1 / DisplayOption2 on PageLayoutField - now the ONLY remaining candidate inside PageLayoutField. Confirmed to be a genuine bitfield (see bitfieldConfirmed). Untested on 98927.",
+    "The RGAF / data-field definition rather than the placement - required-ness attached to the field wherever used.",
+    "Outside PageLayoutField entirely.",
+    "Or the builder asterisk does not mean user-required at all - see alternativeToConsider."
+   ],
+   "theSharpTest": "Fetch 98927 deep. If Contract Status and Location carry a DisplayOption bit that Master Contract lacks, that bit is layout-required and the question is closed. If all three are 0/0 like every ordinary field on 98925, then required-ness is NOT stored in PageLayoutField at all - a strong negative that redirects the search to the data-field definition or to the meaning of the asterisk itself.",
+   "whyThisIsNowDecisiveEitherWay": "Before this check, a null result on DisplayOption would have been ambiguous because JSONConfigText remained open. With JSONConfigText eliminated for 98927, DisplayOption is the last candidate inside the table - so either outcome of the 98927 fetch is informative."
+  },
+  "bitfieldConfirmed": {
+   "_evidence": "Observed. Decomposition verified independently.",
+   "values": {
+    "0": [],
+    "288": [
+     5,
+     8
+    ],
+    "1024": [
+     10
+    ],
+    "4112": [
+     4,
+     12
+    ],
+    "4864": [
+     8,
+     9,
+     12
+    ],
+    "268435456": [
+     28
+    ],
+    "268435744": [
+     5,
+     8,
+     28
+    ]
+   },
+   "proof": "268435744 == 268435456 + 288 exactly, i.e. bit 28 set alongside the bits 5 and 8 that 288 already carries. Flags compose additively, which an enum or ordinal would not. At least seven distinct bits are in use: 4, 5, 8, 9, 10, 12, 28.",
+   "butNote": "On layout 98925 the bits partition cleanly by PLACEMENT KIND - StaticText, SubEditForm, OneToManyList - and all six ordinary data fields are 0/0. So the bits demonstrably encode something, but everything observed so far is explained by what KIND of thing is placed, not by whether a user must fill it in."
+  },
+  "betterTestTarget": {
+   "_credit": "Proposed by team-lead, relayed by kb-builder. Accepted - it is strictly better than 98927.",
+   "target": "The Manage Discount Rates LIST layout.",
+   "whyBetter": "98927 gives a 2-against-1 discriminator (Contract Status, Location asterisked; Master Contract not). The discount-rate grid gives 4-against-5 on ONE layout: Effective End Date*, Length Month (min)*, Length Month (max)*, Discount Rate* are asterisked; Country, State / Province, Portfolio, Accounting Method, Use Type are not. Nine placements, one layout, unambiguous split - a single differing bit isolates far more confidently.",
+   "andItFixesMyCaveat": "My 98925 result was uninformative because I did not know whether that layout had ANY asterisked field, so an all-zero pattern was consistent with both hypotheses. The discount-rate layout DEFINITELY has asterisked fields. An all-zero result there is therefore a REAL elimination, not an uninformative one. This is the control my 98925 test lacked.",
+   "pageLayoutID": "UNKNOWN - not in bbw-page-layouts.json (93 firm layouts) nor in the 134-layout sweep, so it is a platform-seeded admin layout outside both. Resolve it live by listing GET /rest/businessObject/PageLayout?fields=lxid,name and filtering name for /discount/i.",
+   "scriptStaged": "Q_required.js now does both in one pass: deep-fetches 98927, then discovers and deep-fetches every layout whose name matches /discount/i, capturing DisplayOption1, DisplayOption2, JSONConfigText and geometry per placement."
+  },
+  "_superseded": "Superseded by layer3_RESOLVED. All four candidates are now closed: schema (it IS the answer), RGAF catalogue (eliminated by team-lead), JSONConfigText (eliminated - empty on 98927), DisplayOption (eliminated - tracks data type, not obligation)."
+ },
+ "_CORRECTION_displayOptionValues": "An earlier note of mine said DisplayOption1/DisplayOption2 take 'only 0 and 288'. That was WRONG - it came from a key-union sample, not from the values. The real distinct set on a single layout (98925) is 0, 288, 1024, 4112, 4864, 268435456, 268435744.",
+ "layer2_dataFieldCatalog_vs_layer1_schema": {
+  "_evidence": "Observed. Join of docs/data-fields/all-fields.csv against bbw-platform-tables.json on (Entity, InternalName), restricted to Scope=Global so the populations are comparable.",
+  "_headline": "They are NOT 'one flag surfaced twice'. They agree 99.2% but disagree on exactly ONE coherent class, with zero exceptions - so they are two distinct flags that happen to coincide almost everywhere.",
+  "populations": {
+   "csvLeaves": 6158,
+   "scopeGlobal": 5953,
+   "scopeFirm": 205,
+   "csvRequiredYes": 637,
+   "csvRequiredYes_firmScope": 0,
+   "note": "All 637 catalogue-required leaves are Global scope. NOT ONE of the 205 Firm-scope leaves is Required=Yes - no firm field is ever required in BBW."
+  },
+  "join": {
+   "joined": 5496,
+   "agree": 5452,
+   "agreementRate": "99.2%",
+   "catalogYes_schemaNo": 42,
+   "schemaYes_catalogNo": 2,
+   "globalLeavesNotJoinable": 457
+  },
+  "theDisagreementIsSystematic": {
+   "catalogYes_schemaNo": "ALL 42 are parent foreign keys, with zero exceptions: 34 x ContractID (typed 'Contract ID') on child tables, and 8 x ProjectEntityID (typed 'Entity ID'). The data-field catalogue marks the parent link as Required; the schema does not.",
+   "schemaYes_catalogNo": "Both are ProjectEntity.CreatedByID and ProjectEntity.ModifiedByID - audit columns the storage layer requires but the catalogue does not surface as a user obligation.",
+   "interpretation": "These are two DIFFERENT obligations that mostly coincide. Schema-required means 'this column is NOT NULL at storage'. Catalogue-required means 'a user creating this record must supply this', which additionally covers parent linkage. Neither is a subset of the other - the 2 reverse cases prove that.",
+   "consequenceForRebuild": "ASG Edge+ needs BOTH rules, not one. A storage NOT NULL constraint will not express 'you must pick a parent Contract when creating an Allowance', and a UI-level required rule will not express the audit columns. Collapsing them into a single flag loses 44 obligations."
+  },
+  "correctionToPriorClaim": "An earlier suggestion that catalogue-required (637 of 6,158) and schema-required (603 of 6,487) are the same flag rested on the two totals being near-identical. The totals are near-identical, but that is not evidence of identity - the populations differ (my capture is global-only, the csv includes 205 firm leaves) and the residue is a coherent class rather than noise. The right statement is: near-total overlap, systematic divergence at the parent-linkage boundary."
+ },
+ "layer3_RESOLVED": {
+  "_evidence": "Observed. PageLayoutID 88572 ('Discount Rate') deep-serialised, joined against the DiscountRate schema (sqlTableID 3113) in bbw-platform-tables.json.",
+  "_headline": "THERE IS NO LAYOUT-LEVEL REQUIRED LAYER. The asterisk the builder paints is SCHEMA-required rendered in the UI. The four asterisked fields are exactly the four schema-required columns, with zero exceptions in either direction.",
+  "proof": {
+   "asterisked_4": [
+    {
+     "label": "Discount Rate",
+     "column": "DiscountRate",
+     "schemaRequired": true,
+     "DisplayOption1": 134234121,
+     "bits": [
+      0,
+      3,
+      14,
+      27
+     ]
+    },
+    {
+     "label": "Effective End Date",
+     "column": "EffectiveThroughDate",
+     "schemaRequired": true,
+     "DisplayOption1": 9,
+     "bits": [
+      0,
+      3
+     ]
+    },
+    {
+     "label": "Length (months) min",
+     "column": "MinSchedMons",
+     "schemaRequired": true,
+     "DisplayOption1": 134234113,
+     "bits": [
+      0,
+      14,
+      27
+     ]
+    },
+    {
+     "label": "Length (months) max",
+     "column": "MaxSchedMons",
+     "schemaRequired": true,
+     "DisplayOption1": 134234113,
+     "bits": [
+      0,
+      14,
+      27
+     ]
+    }
+   ],
+   "plain_6": [
+    {
+     "label": "Use Type",
+     "column": "CodeContractUseID",
+     "schemaRequired": false,
+     "DisplayOption1": 1
+    },
+    {
+     "label": "Country",
+     "column": "CountryID",
+     "schemaRequired": false,
+     "DisplayOption1": 1
+    },
+    {
+     "label": "State / Province",
+     "column": "StateProvinceIDList",
+     "schemaRequired": false,
+     "DisplayOption1": 1
+    },
+    {
+     "label": "Portfolio",
+     "column": "ProgramID",
+     "schemaRequired": false,
+     "DisplayOption1": 1
+    },
+    {
+     "label": "Accounting Method",
+     "column": "CodeAccountingMethodID",
+     "schemaRequired": false,
+     "DisplayOption1": 1
+    },
+    {
+     "label": "Notes",
+     "column": "Notes",
+     "schemaRequired": false,
+     "DisplayOption1": 1
+    }
+   ],
+   "match": "4 of 4 asterisked are schema-required; 6 of 6 plain are not. The DiscountRate table has exactly 4 required columns and they are exactly the 4 the builder marks."
+  },
+  "whyDisplayOptionIsNotTheAnswer": "The bits do NOT isolate required-ness. Bit 3 is set on Effective End Date and Discount Rate but NOT on the two Length fields; bits 14+27 are set on the two Length fields and Discount Rate but NOT on Effective End Date. No single bit covers the asterisked set. What the bits actually track is DATA TYPE - bits 14+27 appear on the three numeric/percentage fields and not on the date field. DisplayOption is a rendering bitfield, exactly as the 98925 evidence suggested; it is not where required-ness lives.",
+  "consequenceForRebuild": "ASG Edge+ does NOT need a per-placement required flag on its layout model. Required-ness is a property of the FIELD, resolved at paint time from the schema. A rebuild that adds an IsRequired column to its PageLayoutField equivalent would be modelling something the source product does not have.",
+  "_scopeOfTheProof": {
+   "whatTheDiscountRateResultDOESProve": "On an EDIT-capable grid, the asterisked set equals the schema-required set exactly: 4 of 4 asterisked are schema-required, 6 of 6 plain are not. That is POSITIVE evidence - asterisks were present and they matched. It stands unaffected by the eq-01 withdrawal.",
+   "whatItDoesNOTProve": "That no other mechanism could ALSO mark a field required somewhere else. It proves schema-required is sufficient to produce the asterisk on that grid, not that nothing else can.",
+   "theWithdrawnSupport": "I additionally cited the Equipment Contract Summary's 39 labels with zero required markers as support. kb-builder correctly pointed out that screen is VIEW MODE, where nothing would be marked regardless. Withdrawn - see bbw-equipment-contract.json.",
+   "remainingTest": "One record opened in EDIT mode, asterisked fields compared against that table's schema-required set. If they match as the discount-rate grid did, the three-layer model is confirmed on a second independent surface.",
+   "readOnlyCaution": "Opening an edit FORM is a GET and writes nothing, but some systems take a pessimistic lock on edit-open. That should be checked before doing it on a live tenant, and it is a decision for team-lead rather than an assumption for me."
+  }
+ },
+ "_98927_wasNeverAValidTest": {
+  "finding": "PageLayoutID 98927 does not contain Contract Status, Location or Master Contract as placements AT ALL. Its 22 placements are Notes, six action buttons (Approve Payments, Generate Rent, Extend Contracts, Delete Payments, Alternate Rent Wizard, Activate/Deactivate), five Sub Edit Forms, and six section headers.",
+  "implication": "Those three fields live inside SUB-LAYOUTS embedded via SubEditForm placements, not on 98927 itself. The test as originally specified - mine, and repeated by team-lead and kb-builder - could never have worked, because the rows it asked to compare do not exist on that layout. Nobody checked that the layout contained the fields before designing a comparison around them.",
+  "_evidence": "Observed - full 22-placement dump captured in this run."
+ },
+ "_openCounterexample": {
+  "issue": "docs/admin/008 reports Contract Status and Location painted red on ASG Contract Summary. Neither CodeContractStatusID nor LocationID is schema-required on Contract (whose 7 required columns are all system plumbing). If the asterisk is schema-required, that observation needs explaining.",
+  "likelyResolution": "Those fields are rendered from a sub-layout whose primary table is not Contract. The asterisk would then reflect THAT table's schema. Untested.",
+  "nextStep": "Deep-fetch the SubEditForm targets on 98927 and locate the placements for Contract Status and Location, then check the required flag on their own primary table."
+ }
+}

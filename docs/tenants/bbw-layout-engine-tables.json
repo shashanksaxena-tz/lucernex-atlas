@@ -1,0 +1,509 @@
+{
+ "_firm": "(ASG)BBW  train-bbw.lucernex.com",
+ "_captured": "2026-09-13",
+ "_purpose": "Field detail for the three layout-engine tables that /en/admin/ShowObjectDetails.jsp refuses to describe ('Data for that table not supported'). These are the tables ASG Edge+ needs to rebuild its layout engine.",
+ "_evidence": "Observed. Recovered from the REST serializer, GET /rest/businessObject/PageLayout/lxid/{id}?deep=true, across 134 of the tenant's 135 layouts. Corroborated against the admin edit forms.",
+ "_whyNotInObjectCatalog": "docs/data-model/object-catalog.md derives from ShowObjectDetails output, so every table that viewer refuses is absent from the catalog by construction, not by oversight. 25 of the 227 tables are refused; the layout trio is among them.",
+ "recoveryMethod": {
+  "primary": "GET /rest/businessObject/PageLayout/lxid/{pageLayoutID}?deep=true&wantClientID=true returns the PageLayout record with its PageLayoutField children fully serialised. Column names in that JSON are the physical column names.",
+  "corroboration": [
+   "GET /en/pagebuilder/SummaryEntityPageLayoutEdit.jsp?mode={SEP|SUB|LIST}&formSubmit=editBO&popupEdit=true&BOID={id} - the edit form's input names are PageLayout columns.",
+   "GET /en/reports/CustomReportFieldEdit.jsp?popupEdit=true&formSubmit=editBO&update=true&BOType=CustomObjectDel&CustomObjectDelID={cellHash}&showDateFields=true - the field-properties form; its inputs are PageLayoutField columns and json.* sub-keys."
+  ],
+  "caveat": "The REST serializer emits only columns that are POPULATED on the records sampled, so these lists are a lower bound on the physical schema. Foreign keys serialise as reference objects {'#text','@lxID','@clientID','@href'} rather than raw integers."
+ },
+ "tables": {
+  "PageLayout": {
+   "sqlTableID": "2611",
+   "refusedByObjectModelViewer": true,
+   "columnCount": 17,
+   "columns": [
+    {
+     "name": "EntitySelectionFilter",
+     "jsonType": "number",
+     "note": null
+    },
+    {
+     "name": "Description",
+     "jsonType": "string",
+     "note": null
+    },
+    {
+     "name": "AllowEdit",
+     "jsonType": "boolean",
+     "note": null
+    },
+    {
+     "name": "PageLayoutType",
+     "jsonType": "string",
+     "note": null
+    },
+    {
+     "name": "@clientID",
+     "jsonType": "string",
+     "note": null
+    },
+    {
+     "name": "IsGlobalReport",
+     "jsonType": "boolean",
+     "note": null
+    },
+    {
+     "name": "FirmID",
+     "jsonType": "ref",
+     "note": "reference to another record"
+    },
+    {
+     "name": "PageLayoutName",
+     "jsonType": "string",
+     "note": null
+    },
+    {
+     "name": "PrimaryCodeSQLTableID",
+     "jsonType": "ref",
+     "note": "reference to another record"
+    },
+    {
+     "name": "RunModeFilters",
+     "jsonType": "number",
+     "note": null
+    },
+    {
+     "name": "AllowUserCreate",
+     "jsonType": "boolean",
+     "note": null
+    },
+    {
+     "name": "ParentPageLayoutID",
+     "jsonType": "ref",
+     "note": "reference to another record"
+    },
+    {
+     "name": "@lxID",
+     "jsonType": "number",
+     "note": null
+    },
+    {
+     "name": "OutputType",
+     "jsonType": "string",
+     "note": null
+    },
+    {
+     "name": "PreviousPageLayoutID",
+     "jsonType": "ref",
+     "note": "reference to another record"
+    },
+    {
+     "name": "JSONConfigText",
+     "jsonType": "string",
+     "note": null
+    },
+    {
+     "name": "CodeIssueTypeID",
+     "jsonType": "ref",
+     "note": "reference to another record"
+    }
+   ],
+   "editFormInputs": {
+    "SEP": [
+     "formSubmit",
+     "lxUFK",
+     "popupEdit",
+     "inPanel",
+     "OnBOEditSuccessUrl",
+     "PreviousPageLayoutName",
+     "PageLayoutID",
+     "CodeCurrencyTypeID",
+     "ClientListRGDID",
+     "mode",
+     "PreviousPageLayoutID",
+     "RunModeFilters",
+     "FirmID",
+     "IsGlobalReport",
+     "ajax",
+     "CodeIssueTypeID",
+     "PageLayoutType",
+     "OutputType",
+     "EntitySelectionFilter",
+     "PageLayoutName",
+     "ParentPageLayoutID",
+     "PrimaryCodeSQLTableID",
+     "Description",
+     "AllowEdit",
+     "AllowEdit",
+     "URL",
+     "DuplicatePageLayoutID"
+    ],
+    "SUB": [
+     "formSubmit",
+     "lxUFK",
+     "popupEdit",
+     "inPanel",
+     "OnBOEditSuccessUrl",
+     "PageLayoutID",
+     "CodeCurrencyTypeID",
+     "ParentPageLayoutID",
+     "ClientListRGDID",
+     "mode",
+     "PreviousPageLayoutID",
+     "RunModeFilters",
+     "FirmID",
+     "IsGlobalReport",
+     "ajax",
+     "CodeIssueTypeID",
+     "PageLayoutType",
+     "OutputType",
+     "EntitySelectionFilter",
+     "PageLayoutName",
+     "PrimaryCodeSQLTableID",
+     "AllowEdit",
+     "AllowEdit",
+     "Description",
+     "DuplicatePageLayoutID"
+    ],
+    "LIST": [
+     "formSubmit",
+     "lxUFK",
+     "popupEdit",
+     "inPanel",
+     "OnBOEditSuccessUrl",
+     "PageLayoutID",
+     "CodeCurrencyTypeID",
+     "ClientListRGDID",
+     "mode",
+     "PreviousPageLayoutID",
+     "RunModeFilters",
+     "IsGlobalReport",
+     "FirmID",
+     "ajax",
+     "CodeIssueTypeID",
+     "PageLayoutType",
+     "OutputType",
+     "EntitySelectionFilter",
+     "PageLayoutName",
+     "ParentPageLayoutID",
+     "PrimaryCodeSQLTableID",
+     "Description",
+     "json_SL_LimitBy",
+     "json_AssetID_LimitBy",
+     "json_AssetList_LimitBy",
+     "AllowEdit",
+     "AllowEdit",
+     "json_NoGridWidths",
+     "DuplicatePageLayoutID"
+    ]
+   },
+   "notes": [
+    "CodeIssueTypeID is what makes a PageLayout a FORM layout - it binds the layout to an Issue Type. Summary/sub/list layouts leave it null.",
+    "PageLayoutType and OutputType are single-character discriminators (observed 'V' and 'L' on a summary layout).",
+    "ParentPageLayoutID is self-referential. PreviousPageLayoutID is a second self-reference and is a SEQUENCE pointer - it orders sibling layouts within one navigation node, e.g. Abstract Details -> CAM -> Delivery Requirements -> Funds and Expenses -> Real Estate Taxes. CORRECTED 2026-09-13: this note previously read 'used for versioning/duplication', which was my inference from the column NAME alone and was wrong.",
+    "JSONConfigText is a serialised JSON blob - this is the physical home of every 'json_*' input seen on the edit form. 87 of 134 layouts carry a non-empty one; observed keys: AssetID_LimitBy, AssetList_LimitBy, SL_LimitBy, NoGridWidths.",
+    "RunModeFilters and EntitySelectionFilter are integer bitmasks.",
+    "@clientID is BOMapClientRecordID, the import key."
+   ]
+  },
+  "PageLayoutField": {
+   "sqlTableID": "2612",
+   "refusedByObjectModelViewer": true,
+   "columnCount": 20,
+   "columns": [
+    {
+     "name": "EditFieldHeight",
+     "jsonType": "number",
+     "note": null
+    },
+    {
+     "name": "EditRowPosition",
+     "jsonType": "number",
+     "note": null
+    },
+    {
+     "name": "HeaderColumnPosition",
+     "jsonType": "number",
+     "note": null
+    },
+    {
+     "name": "ViewColumnPosition",
+     "jsonType": "number",
+     "note": null
+    },
+    {
+     "name": "DisplayOption2",
+     "jsonType": "number",
+     "note": null
+    },
+    {
+     "name": "DisplayOption1",
+     "jsonType": "number",
+     "note": null
+    },
+    {
+     "name": "@clientID",
+     "jsonType": "string",
+     "note": null
+    },
+    {
+     "name": "EditFieldWidth",
+     "jsonType": "number",
+     "note": null
+    },
+    {
+     "name": "ReportGroupAvailableFieldID",
+     "jsonType": "ref",
+     "note": "reference to another record"
+    },
+    {
+     "name": "JSONConfigText",
+     "jsonType": "string",
+     "note": null
+    },
+    {
+     "name": "PageLayoutID",
+     "jsonType": "ref",
+     "note": "reference to another record"
+    },
+    {
+     "name": "DisplayLabel",
+     "jsonType": "string",
+     "note": null
+    },
+    {
+     "name": "EditColumnPosition",
+     "jsonType": "number",
+     "note": null
+    },
+    {
+     "name": "SubPageLayoutID",
+     "jsonType": "ref",
+     "note": "reference to another record"
+    },
+    {
+     "name": "ViewFieldWidth",
+     "jsonType": "number",
+     "note": null
+    },
+    {
+     "name": "ViewRowPosition",
+     "jsonType": "number",
+     "note": null
+    },
+    {
+     "name": "ViewFieldHeight",
+     "jsonType": "number",
+     "note": null
+    },
+    {
+     "name": "@lxID",
+     "jsonType": "number",
+     "note": null
+    },
+    {
+     "name": "StaticText",
+     "jsonType": "string",
+     "note": null
+    },
+    {
+     "name": "FieldContext",
+     "jsonType": "string",
+     "note": null
+    }
+   ],
+   "fieldPropertiesFormInputs": [
+    "formSubmit",
+    "currentRowIndex",
+    "update",
+    "popupEdit",
+    "inPanel",
+    "OnBOEditSuccessUrl",
+    "CustomObjectDelID",
+    "IsIssueLayout",
+    "IsCLLayout",
+    "LabelName",
+    "countValueField",
+    "ShowTotalCount",
+    "ShowSum",
+    "ShowAvg",
+    "optionNoEscapeHtml",
+    "WrapMode",
+    "ShowJobTitle",
+    "ShowEmployer",
+    "ShowAddress",
+    "ShowPhone",
+    "ShowFax",
+    "ShowEmail",
+    "json_popupLink",
+    "json_ShowApVendorNumber",
+    "json_ShowEmployerVendorVal",
+    "json_sEMPLOYER_VENDOR_RGAF_ID",
+    "json_sBUDGET_INCLUDE_SELECTED_ONLY",
+    "json_summaryType",
+    "json_ExcludeAltRentRgaf",
+    "json_hideGridColumnNoHeader"
+   ],
+   "notes": [
+    "Geometry is stored as three parallel coordinate sets - Edit*, View* and Header* - so one row positions the field differently in edit, view and header contexts. EditRowPosition / EditColumnPosition / EditFieldWidth / EditFieldHeight, and the View* equivalents; -1 means 'not placed in that context'.",
+    "ReportGroupAvailableFieldID is the FK to the data-field catalogue (RGAF); it is the 'fieldKey' used by ConditionFilterEx.jsp. Pseudo-fields use it too: StaticText, OneToManyList.",
+    "SubPageLayoutID lets a field embed another PageLayout - this is how sub-pages attach.",
+    "DisplayOption1 / DisplayOption2 are integer bitmasks (observed 0 and 288).",
+    "JSONConfigText is the per-field JSON blob and is where conditionalFieldsConfig lives.",
+    "StaticText and FieldContext appear only on the field types that use them."
+   ],
+   "jsonConfigTextKeysAcrossTenant": [
+    {
+     "key": "ColumnWidthInList",
+     "fieldsUsingIt": 667
+    },
+    {
+     "key": "NumberOfDecimals",
+     "fieldsUsingIt": 231
+    },
+    {
+     "key": "AutoSizeColumnWidthForInitialContent",
+     "fieldsUsingIt": 163
+    },
+    {
+     "key": "showNameAndDescription",
+     "fieldsUsingIt": 153
+    },
+    {
+     "key": "ShowColumnTotal",
+     "fieldsUsingIt": 146
+    },
+    {
+     "key": "EditModeDefaultValue",
+     "fieldsUsingIt": 133
+    },
+    {
+     "key": "FieldScript",
+     "fieldsUsingIt": 67
+    },
+    {
+     "key": "conditionalFieldsConfig",
+     "fieldsUsingIt": 50
+    },
+    {
+     "key": "noLink",
+     "fieldsUsingIt": 45
+    },
+    {
+     "key": "FieldValidationMinValue",
+     "fieldsUsingIt": 42
+    },
+    {
+     "key": "MemoColumnNumber",
+     "fieldsUsingIt": 31
+    },
+    {
+     "key": "FieldValidationMaxValue",
+     "fieldsUsingIt": 29
+    },
+    {
+     "key": "DisableRowEditorInList",
+     "fieldsUsingIt": 27
+    },
+    {
+     "key": "rowsPerPage",
+     "fieldsUsingIt": 26
+    },
+    {
+     "key": "rowsPrintablePerPage",
+     "fieldsUsingIt": 21
+    },
+    {
+     "key": "BOItemPopupWidth",
+     "fieldsUsingIt": 13
+    },
+    {
+     "key": "popupHeight",
+     "fieldsUsingIt": 12
+    },
+    {
+     "key": "popupWidth",
+     "fieldsUsingIt": 12
+    },
+    {
+     "key": "NoGridWidths",
+     "fieldsUsingIt": 9
+    },
+    {
+     "key": "IncludeInSearch",
+     "fieldsUsingIt": 9
+    },
+    {
+     "key": "ListParentIDParam",
+     "fieldsUsingIt": 4
+    },
+    {
+     "key": "ShowActiveInactive",
+     "fieldsUsingIt": 3
+    },
+    {
+     "key": "MemoRowNumber",
+     "fieldsUsingIt": 3
+    },
+    {
+     "key": "MemoMaxWidth",
+     "fieldsUsingIt": 2
+    },
+    {
+     "key": "CLGridWidth",
+     "fieldsUsingIt": 2
+    },
+    {
+     "key": "limitBy_CodeContactTypeID",
+     "fieldsUsingIt": 1
+    },
+    {
+     "key": "limitBy_ExpenseTypeName",
+     "fieldsUsingIt": 1
+    },
+    {
+     "key": "limitBy_CodeJobFunctionID",
+     "fieldsUsingIt": 1
+    },
+    {
+     "key": "SLRecord_Type",
+     "fieldsUsingIt": 1
+    }
+   ]
+  },
+  "PageLayoutFilter": {
+   "sqlTableID": "2613",
+   "refusedByObjectModelViewer": true,
+   "columnCount": 0,
+   "columns": [],
+   "status": "EXISTS BUT EMPTY IN BBW",
+   "evidence": [
+    "It is a valid REST record type - it appears in GET /rest/firm/types alongside PageLayout and PageLayoutField.",
+    "GET /rest/businessObject/PageLayoutFilter returns {\"businessObjectLinks\":[]} - zero records in the tenant.",
+    "No PageLayoutFilter child array appeared on any of the 134 layouts deep-serialised."
+   ],
+   "conclusion": "Its columns cannot be recovered from BBW because the tenant holds no rows and the serializer emits only populated columns. Blocked, not guessed. To recover it, deep-serialise a PageLayout from a tenant that uses run-mode filters, or read PageLayout.RunModeFilters (an integer bitmask, 0 on every BBW layout) which is the flag that would drive filter rows."
+  }
+ },
+ "relatedRefusedTables": [
+  {
+   "sqlTableID": "2605",
+   "physical": "CustomCodeTable",
+   "note": "Also refused. Reachable as a REST type."
+  },
+  {
+   "sqlTableID": "2885",
+   "physical": "AppActivityLog",
+   "note": "Refused by ShowObjectDetails but present in GET /rest/firm/types."
+  },
+  {
+   "sqlTableID": "2871",
+   "physical": "AuditMaster",
+   "note": "Same."
+  }
+ ],
+ "crossCheck": "The REST type list (GET /rest/firm/types) returns exactly 227 names, matching the 227 sqlTableID options one-for-one - including all 25 that ShowObjectDetails refuses. So the REST layer is the better census source for those 25.",
+ "_CORRECTION_previousPageLayoutID": {
+  "corrected": "2026-09-13",
+  "was": "PreviousPageLayoutID is a second self-reference used for versioning/duplication.",
+  "now": "PreviousPageLayoutID is a sequence pointer that orders sibling layouts within a single navigation node.",
+  "evidence": "kb-builder joined the Previous Layout pairs listed by Export Configuration against the layout registry: 8 of 8 chained pairs share a navigation parent, and every multi-layout node resolves to exactly one ordered chain. Observed, by kb-builder, not by me.",
+  "whyIWasWrong": "I read the meaning off the column name - 'Previous' suggested a prior version - without testing it against what the pairs actually link. The chains link semantically distinct layouts in a reading order, not successive versions of one layout. Same failure mode as the label-vs-physical-name census diff and the 'only 0 and 288' note: a confident reading from a convenient signal instead of the data."
+ }
+}

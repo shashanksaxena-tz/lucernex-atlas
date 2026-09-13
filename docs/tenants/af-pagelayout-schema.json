@@ -1,0 +1,116 @@
+{
+ "firm": "(ASG)American Freight",
+ "firmID": 3158,
+ "build": "26.09.0.113",
+ "captured": "2026-09-13",
+ "purpose": "Option (C): close the 'REST emits only POPULATED columns' gap on the layout-engine tables by adding American Freight as a SECOND population sample, and confirm AF's schema viewer refuses the same tables.",
+ "method": "GET /rest/businessObject/PageLayout/lxid/{id}?deep=true&wantClientID=true across ALL 88 AF layouts, unioning every key seen. GET only. 88 of 88 succeeded, 0 failures.",
+ "schemaViewerRefusal": {
+  "result": "CONFIRMED IDENTICAL AT AF - all three layout tables refused with the same message.",
+  "probes": [
+   {
+    "sqlTableID": "2611",
+    "name": "Page Layout",
+    "refused": true,
+    "message": "Data for that table not supported"
+   },
+   {
+    "sqlTableID": "2612",
+    "name": "Page Layout Field",
+    "refused": true,
+    "message": "Data for that table not supported"
+   },
+   {
+    "sqlTableID": "2613",
+    "name": "Page Layout Filter",
+    "refused": true,
+    "message": "Data for that table not supported"
+   }
+  ],
+  "reading": "Observed. The refusal is a platform property, not a BBW quirk: AF refuses Page Layout (2611), Page Layout Field (2612) and Page Layout Filter (2613) with 'Data for that table not supported'."
+ },
+ "unionResult": {
+  "verdict": "The union does NOT extend the lower bound - American Freight contributes ZERO new columns.",
+  "pageLayout": {
+   "afScalarColumns": [
+    "@clientID",
+    "@lxID",
+    "AllowEdit",
+    "AllowUserCreate",
+    "Description",
+    "EntitySelectionFilter",
+    "FirmID",
+    "IsGlobalReport",
+    "JSONConfigText",
+    "OutputType",
+    "PageLayoutName",
+    "PageLayoutType",
+    "ParentPageLayoutID",
+    "PreviousPageLayoutID",
+    "PrimaryCodeSQLTableID",
+    "RunModeFilters"
+   ],
+   "afCount": 16,
+   "bbwCount": 17,
+   "inAFnotBBW": [],
+   "inBBWnotAF": [
+    "CodeIssueTypeID"
+   ]
+  },
+  "pageLayoutField": {
+   "afColumns": [
+    "@clientID",
+    "@lxID",
+    "DisplayLabel",
+    "DisplayOption1",
+    "DisplayOption2",
+    "EditColumnPosition",
+    "EditFieldHeight",
+    "EditFieldWidth",
+    "EditRowPosition",
+    "FieldContext",
+    "HeaderColumnPosition",
+    "JSONConfigText",
+    "PageLayoutID",
+    "ReportGroupAvailableFieldID",
+    "StaticText",
+    "SubPageLayoutID",
+    "ViewColumnPosition",
+    "ViewFieldHeight",
+    "ViewFieldWidth",
+    "ViewRowPosition"
+   ],
+   "afCount": 20,
+   "bbwCount": 20,
+   "inAFnotBBW": [],
+   "inBBWnotAF": [],
+   "identical": true
+  },
+  "interpretation": "Observed + Derived. PageLayoutField is IDENTICAL across both tenants - the same 20 columns. For PageLayout, AF yields 16 scalar columns against BBW's 17: AF is missing exactly one, **CodeIssueTypeID**, the column that marks a layout as a FORM layout. That is a POPULATION difference, not a schema difference - AF has no layout with a form type set, so the serialiser omits the column. BBW's list is a superset of AF's; together they still give 17.",
+  "whatThisMeansForTheGap": "Two independent tenants with different data produced no column BBW had not already seen. This does NOT prove 17/20 is the complete declared schema - a column unpopulated in BOTH tenants stays invisible - but it is real corroboration that the bound is tight. The lists can now be described as 'confirmed across two independent populations' rather than 'one tenant's lower bound'.",
+  "bonusFinding": "The single difference is itself informative: CodeIssueTypeID appearing only at BBW is direct evidence that form layouts are populated at BBW and unused at AF - consistent with AF's 4 form types against BBW's 6."
+ },
+ "alternativeRoutesChecked": {
+  "layoutEditorGrid": {
+   "fields": [
+    "LxBOID",
+    "currencySymbol",
+    "currencyDigits",
+    "LxBOName",
+    "PageLayoutName",
+    "ParentPageLayoutID",
+    "PrimaryCodeSQLTableName",
+    "isReadOnlyRecord",
+    "LxExtraListLink",
+    "expandedHtml"
+   ],
+   "verdict": "Adds nothing - the grid store exposes only a 10-key presentation subset, not underlying columns."
+  },
+  "showLayoutChanges": {
+   "len": 44117,
+   "storeUrl": null,
+   "verdict": "Adds nothing from a plain GET - an ExtJS shell with no inline storeUrl or column headers."
+  },
+  "graphql": "NOT ATTEMPTED. /en/admin/graphql.jsp is on CAPTURE-EXCLUSIONS.md (renders live tokens) and introspection needs POST, outside the read-only remit. Not needed - REST closed the question."
+ }
+}

@@ -10,5 +10,6 @@
 <nav><a href="../index.html">Overview</a><a href="../atlas.html#/map?set=feature">Feature map</a>
 <a href="../atlas.html">Interactive app</a>
 <a href="../entities/index.html">Record types</a><a href="../rules/index.html">Rules</a>
+<a href="../research/index.html">Research</a>
 <a href="../questions.html">Open questions</a></nav></header>
 <main><p class="crumb"><a href="../index.html">Atlas</a> &rsaquo; <a href="index.html">Rules</a> &rsaquo; CON-R-135</p><h1 class="mono">CON-R-135</h1><p class="sub">Contracts &amp; Leases &middot; 11. Typing and integrity rules for the rebuild (Constitution §4.4)</p><span class="tag obs">Observed</span><p class="lead">Any usage-based rent arithmetic: 6-decimal precision is required on unit rates; use BigDecimal with explicit scale and rounding mode, never a binary float.</p><div class="wrapt"><table><tbody><tr><td>Any usage-based rent arithmetic</td></tr><tr><td>`sTYPE_NUMBER_FRACTION6DIGITS` unit rates × large usage counts</td></tr><tr><td>6-decimal precision is required; binary floating point loses money here</td></tr><tr><td>`BigDecimal` with explicit scale and rounding mode</td></tr><tr><td>Observed</td></tr></tbody></table></div><p style="font-size:11.5px;color:var(--faint);margin-top:18px">Source: modules/contracts/rules.md</p></main></body></html>
