@@ -290,7 +290,15 @@ def main():
         md = open(os.path.join(DOCS, rel), encoding="utf-8").read()
         CUR["rel"] = rel
         body, toc = render(md)
-        dest = os.path.join(OUT, rel[:-3] + ".html")
+        # The landing page of each directory is index.html, written by this
+        # generator. A source doc whose name case-insensitively collides with it
+        # (INDEX.md, the corpus master index) would silently overwrite it on a
+        # case-insensitive filesystem and 404 on case-sensitive Pages.
+        out_rel = rel[:-3] + ".html"
+        if os.path.basename(out_rel).lower() == "index.html" and \
+                os.path.basename(rel) != "README.md":
+            out_rel = out_rel[:-len("index.html")] + "corpus-index.html"
+        dest = os.path.join(OUT, out_rel)
         os.makedirs(os.path.dirname(dest), exist_ok=True)
         depth = rel.count(os.sep)
         m = re.search(r"^#\s+(.+)$", md, re.M)
@@ -298,7 +306,7 @@ def main():
         title = re.sub(r"[`*]", "", title)
         open(dest, "w", encoding="utf-8").write(
             page(title, body, toc, f" &rsaquo; {e(title)}", depth))
-        built.append((rel, title, md.count(chr(10)) + 1))
+        built.append((out_rel[:-5] + ".md", title, md.count(chr(10)) + 1))
         # links of the form "../some-folder/" expect a directory index
         if os.path.basename(rel).lower() == "readme.md":
             shutil.copyfile(dest, os.path.join(os.path.dirname(dest), "index.html"))
