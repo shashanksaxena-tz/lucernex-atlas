@@ -62,6 +62,12 @@ EquipmentContract has no table. There is no EquipmentContract table in any inven
 
 The discount-rate table is empty in both tenants. The reference table that should supply the ASC 842 discount rate holds zero rows in both captured tenants, while the accounting engine runs. Where the rate actually comes from is unresolved, and it blocks the accounting rebuild.
 
+## Versions are a suffix
+
+*Observed · fact · source: `docs/features/workflows-forms/README.md`*
+
+Workflow versioning is a naming convention, not a feature. The live template is the unsuffixed one. A v1 or v2 suffix marks a superseded template, not a successive version, and the fact that it was archived is recorded only as free text in the grid's Description column — "Archived and replaced with new workflow on 10.02.25". There is no version field, so nothing can order them. This settles which Lease Admin Request is live, and the same holds for Lucernex Change Request.
+
 ## Fields are documented
 
 *Observed · fact · source: `docs/data-model/pg/bbw-field-inventory.csv`*

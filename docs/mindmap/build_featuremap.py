@@ -37,6 +37,9 @@ BY_ID = {r["id"]: r for r in RULES["rules"]}
 # the feature map states what those documents state, rather than a paraphrase.
 FEATURES = corpus.feature_areas()
 SHOTS = corpus.screenshots()
+# Where each capture is cited or embedded across the corpus. Strict: an
+# unresolvable reference fails this build rather than being skipped quietly.
+SHOT_REFS = corpus.shot_references()
 
 Q_BY_AREA = {}
 for _q in QUESTIONS["questions"]:
@@ -157,12 +160,46 @@ def questions_group(areas, mod):
     }
 
 
+def shot_caption(path):
+    """What a reader should notice in a capture.
+
+    Preference order: the caption somebody wrote on an embed, then the heading
+    the capture is cited under. Captions are long descriptive sentences by
+    design, so they belong here and never in a node label.
+    """
+    ref = SHOT_REFS.get(path) or {}
+    for _doc, _head, alt in ref.get("embeds", []):
+        if alt:
+            return alt
+    for _doc, head in ref.get("cites", []):
+        if head:
+            return head
+    return ""
+
+
+def shot_cited_in(path):
+    """The documents that cite or embed a capture — the screen-to-doc mapping."""
+    ref = SHOT_REFS.get(path) or {}
+    docs = [d for d, _h in ref.get("cites", [])] + [d for d, _h, _a in ref.get("embeds", [])]
+    seen, out = set(), []
+    for d in docs:
+        if d not in seen:
+            seen.add(d)
+            out.append(d)
+    return out
+
+
 def evidence_node(slugs, shot_dirs, mod):
     """What this feature's claims rest on: documents and captured screens."""
     docs = [FEATURES[s]["doc"] for s in slugs if s in FEATURES]
     shots = [f for d in shot_dirs for f in SHOTS.get(d, [])]
     if not docs and not shots:
         return None
+    # Captures showing a real person's name are counted but never handed
+    # downstream for rendering: a thumbnail surfaces the name far more
+    # prominently than the prose ever did, and the redaction decision is open.
+    public = [s for s in shots if not corpus.shot_is_private(s)]
+    held = len(shots) - len(public)
     bits = []
     if docs:
         bits.append("Written up in " + ", ".join(docs) + ".")
@@ -171,12 +208,21 @@ def evidence_node(slugs, shot_dirs, mod):
                     "not a description of them."
                     % (len(shots), ", ".join("docs/assets/screenshots/" + d
                                              for d in shot_dirs if SHOTS.get(d))))
-        bits.append("First few: " + ", ".join(os.path.basename(s) for s in shots[:6]) + ".")
+        cited = sum(1 for s in shots if SHOT_REFS.get(s))
+        bits.append("%d of them are cited by name in the documentation, which is what "
+                    "ties a capture to the screen it shows." % cited)
+    if held:
+        bits.append("%d are held back from being shown here: they contain a named "
+                    "individual, and whether those images get redacted is an open "
+                    "decision. They still count as evidence — the file is on disk and "
+                    "named in the docs — they are simply not thumbnailed." % held)
     return {
         "name": "Evidence", "kind": "fact", "conf": "observed", "mod": mod,
         "detail": " ".join(bits),
         "src": docs[0] if docs else "docs/assets/screenshots/",
-        "shots": shots[:24],
+        "shots": public[:24],
+        "shotCaps": {s: shot_caption(s) for s in public[:24] if shot_caption(s)},
+        "shotsHeld": held,
     }
 
 

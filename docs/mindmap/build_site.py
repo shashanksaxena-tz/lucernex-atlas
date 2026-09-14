@@ -31,6 +31,7 @@ import os
 import re
 import shutil
 
+import corpus
 import gate
 
 # --------------------------------------------------------------- branding
@@ -38,7 +39,10 @@ import gate
 # point of emission so it holds however the upstream data was generated.
 # Technical identifiers (LxRetail, lxID, Lx.ui.*) are already "Lx"-prefixed
 # and unaffected; only the bare product name is rewritten.
-_BRAND = re.compile(r"\bLucernex\b(?!\s*(?:IWMS|Atlas)\b)")
+# `Lucernex Change Request` is a workflow template name in the tenant's own
+# data — what a user reads on Manage Work Flows — so it is data, not branding,
+# and must survive verbatim. Same exemption as corpus.BRAND.
+_BRAND = re.compile(r"\bLucernex\b(?!\s*(?:IWMS|Atlas)\b)(?!\s+Change Request\b)")
 
 
 def brand(s):
@@ -169,6 +173,7 @@ dt{color:var(--muted);white-space:nowrap}dd{margin:0}
 .shots a:hover{border-color:var(--accent);text-decoration:none}
 .shots img{width:100%;display:block;background:var(--surface2)}
 .shots span{display:block;padding:5px 8px;font-size:10.5px;word-break:break-all}
+.shots i{display:block;font-style:normal;color:var(--ink2);font-size:11px;margin-top:3px;word-break:normal}
 """
 
 
@@ -199,7 +204,13 @@ def page(title, body, depth=0, crumb=""):
 # build_vault.py write into site/ too and run after this one; wiping SITE
 # wholesale deletes their output, which is easy to miss because the next
 # rebuild of *those* scripts silently restores it. Keep this list in sync.
-_OWNED_ELSEWHERE = ("research", "vault", "md")
+# Directories inside site/ that OTHER generators own and that run after this
+# one. They are stashed across the wipe; without this, a bare run of this
+# script silently deletes them and the damage only shows between runs.
+# Add any new generator's directory here. Do NOT add "md": this script
+# writes md/ itself, so preserving it would leave orphaned pages behind
+# whenever a node disappears.
+_OWNED_ELSEWHERE = ("research", "vault")
 _stash = os.path.join(DOCS, "_site_keep")
 if os.path.isdir(_stash):
     shutil.rmtree(_stash)
@@ -729,8 +740,17 @@ def feature_body(n, depth, md=False):
             elif detail:
                 out.append(detail)
                 out.append("")
-            if node.get("shots"):
-                out.extend(f"![{os.path.basename(sp)}](../../{sp})" for sp in node["shots"])
+            shown_md = [sp for sp in (node.get("shots") or [])
+                        if not corpus.shot_is_private(sp)]
+            caps_md = node.get("shotCaps") or {}
+            if shown_md:
+                out.extend("![%s](../../%s)" % (caps_md.get(sp) or os.path.basename(sp), sp)
+                           for sp in shown_md)
+                out.append("")
+            if node.get("shotsHeld"):
+                out.append("*%d further capture(s) withheld: they contain a named "
+                           "individual and the redaction decision is open.*"
+                           % node["shotsHeld"])
                 out.append("")
         else:
             out.append(f'<h{min(6, level + 2)}>{e(title)}</h{min(6, level + 2)}>')
@@ -744,13 +764,28 @@ def feature_body(n, depth, md=False):
             if node.get("src"):
                 out.append(f'<p style="font-size:11px;color:var(--faint)">Source: '
                            f'<code>{e(node["src"])}</code></p>')
-            # the captured screens themselves, not a list of their filenames
-            if node.get("shots"):
+            # The captured screens themselves, captioned with what the docs say
+            # to notice in them. shot_is_private is re-checked here even though
+            # the generator already filtered: a guard that only exists upstream
+            # is one refactor away from not existing.
+            shown = [sp for sp in (node.get("shots") or [])
+                     if not corpus.shot_is_private(sp)]
+            caps = node.get("shotCaps") or {}
+            if shown:
                 out.append('<div class="shots">' + "".join(
-                    f'<a href="{"../" * depth}../{e(sp)}">'
-                    f'<img loading="lazy" src="{"../" * depth}../{e(sp)}" alt="{e(os.path.basename(sp))}">'
-                    f'<span>{e(os.path.basename(sp))}</span></a>'
-                    for sp in node["shots"]) + '</div>')
+                    f'<a href="{"../" * depth}../{e(sp)}" title="{e(caps.get(sp, ""))}">'
+                    f'<img loading="lazy" src="{"../" * depth}../{e(sp)}" '
+                    f'alt="{e(caps.get(sp) or os.path.basename(sp))}">'
+                    f'<span>{e(os.path.basename(sp))}'
+                    + (f'<i>{e(caps[sp][:150])}</i>' if caps.get(sp) else '')
+                    + '</span></a>'
+                    for sp in shown) + '</div>')
+            if node.get("shotsHeld"):
+                out.append(f'<p style="font-size:11.5px;color:var(--muted)">'
+                           f'{node["shotsHeld"]} further capture'
+                           f'{"s are" if node["shotsHeld"] != 1 else " is"} not shown here: '
+                           f'they contain a named individual and the redaction decision is '
+                           f'open. They are on disk and cited in the documentation.</p>')
         for c in node.get("children") or []:
             walk(c, level + 1)
 

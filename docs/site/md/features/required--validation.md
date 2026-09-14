@@ -48,10 +48,10 @@ The required and validation manual is organised as: Layers 1 and 2 are two oblig
 
 *Observed · fact · source: `features/required-and-validation/README.md`*
 
-Written up in features/required-and-validation/README.md. 2 screen captures on disk, under docs/assets/screenshots/data-fields — the screens themselves, not a description of them. First few: manage-data-fields-firm.png, manage-data-fields-global.png.
+Written up in features/required-and-validation/README.md. 2 screen captures on disk, under docs/assets/screenshots/data-fields — the screens themselves, not a description of them. 2 of them are cited by name in the documentation, which is what ties a capture to the screen it shows.
 
-![manage-data-fields-firm.png](../../assets/screenshots/data-fields/manage-data-fields-firm.png)
-![manage-data-fields-global.png](../../assets/screenshots/data-fields/manage-data-fields-global.png)
+![The Firm Fields tab, the whole tenant-shaped layer -- 205 leaves against 5,953 global ones, 147 of them on Contract. Twenty-four groups, collapsed. The columns are the registry's own surface: Field Name, Form Field Type, Reqd?, Read Only?, Table Association, Default Value, and three attachability questions -- Valid For Portfolio or Capital Program?, Valid For Entity?, Valid For Issue?.](../../assets/screenshots/data-fields/manage-data-fields-firm.png)
+![Manage Data Fields on the Global Fields tab. The collapsed rows are ReportGroupData groups, not entities -- the grouping hierarchy that sits above the field registry, and the same tree that drives the layout editor's Available Fields palette and the In Group / And Sub-Group filters on Audit Reports.](../../assets/screenshots/data-fields/manage-data-fields-global.png)
 
 ## Open questions (9)
 

@@ -54,12 +54,12 @@ The search filtering manual is organised as: The list chrome, observed; Per-plac
 
 *Observed · fact · source: `features/import-export/README.md`*
 
-Written up in features/import-export/README.md, features/search-filtering/README.md. 4 screen captures on disk, under docs/assets/screenshots/data-model — the screens themselves, not a description of them. First few: object-model-contract-facilityid.jpg, object-model-contract-locationid-mastercontractid.jpg, object-model-paymenttransaction-vendorid.jpg, walk-hierarchy-re-contract-schema.jpg.
+Written up in features/import-export/README.md, features/search-filtering/README.md. 4 screen captures on disk, under docs/assets/screenshots/data-model — the screens themselves, not a description of them. 4 of them are cited by name in the documentation, which is what ties a capture to the screen it shows.
 
-![object-model-contract-facilityid.jpg](../../assets/screenshots/data-model/object-model-contract-facilityid.jpg)
-![object-model-contract-locationid-mastercontractid.jpg](../../assets/screenshots/data-model/object-model-contract-locationid-mastercontractid.jpg)
-![object-model-paymenttransaction-vendorid.jpg](../../assets/screenshots/data-model/object-model-paymenttransaction-vendorid.jpg)
-![walk-hierarchy-re-contract-schema.jpg](../../assets/screenshots/data-model/walk-hierarchy-re-contract-schema.jpg)
+![Contract schema table row: FacilityID, Type "Facility ID", UI Label "Facility"](../../assets/screenshots/data-model/object-model-contract-facilityid.jpg)
+![Contract schema table rows: LocationID (Type "Location ID") and MasterContractID (Type "Contract ID", self-referencing)](../../assets/screenshots/data-model/object-model-contract-locationid-mastercontractid.jpg)
+![PaymentTransaction schema table row: VendorID, Type "Employer ID", UI Label "Vendor"](../../assets/screenshots/data-model/object-model-paymenttransaction-vendorid.jpg)
+![walkHierarchy.jsp showing Contract as an aggregate root with ~70 nested owned child tables](../../assets/screenshots/data-model/walk-hierarchy-re-contract-schema.jpg)
 
 ## Open questions (83)
 

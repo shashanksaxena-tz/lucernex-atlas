@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>&quot;Rules — Layouts and forms&quot; &middot; Lx Vault</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="../../atlas.css">
+<link rel="stylesheet" href="../../research/research.css">
+<link rel="stylesheet" href="../vault.css">
+</head><body><style id="lxg">body{visibility:hidden}
+#lxgate{visibility:visible;position:fixed;inset:0;z-index:9999;display:flex;
+align-items:center;justify-content:center;background:#0f172a;
+font-family:'IBM Plex Sans',system-ui,sans-serif}
+#lxgate form{background:#fff;padding:30px 32px;border-radius:12px;width:310px;
+box-shadow:0 20px 60px rgba(0,0,0,.35)}
+#lxgate h2{margin:0 0 4px;font-size:19px;color:#0f172a}
+#lxgate p{margin:0 0 18px;font-size:12.5px;color:#64748b;line-height:1.5}
+#lxgate label{display:block;font-size:11px;text-transform:uppercase;
+letter-spacing:.07em;color:#64748b;margin:0 0 5px}
+#lxgate input{width:100%;box-sizing:border-box;padding:9px 11px;margin:0 0 14px;
+border:1px solid #cbd5e1;border-radius:7px;font-size:14px}
+#lxgate button{width:100%;padding:10px;border:0;border-radius:7px;
+background:#b4530a;color:#fff;font-size:14px;font-weight:600;cursor:pointer}
+#lxgate .err{color:#b91c1c;font-size:12px;margin:0 0 10px;display:none}</style>
+<div id="lxgate"><form onsubmit="return lxg(event)">
+<h2>Lx Atlas</h2>
+<p>Internal documentation. Not a security boundary &mdash; see
+<code>gate.py</code>.</p>
+<p class="err" id="lxge">Incorrect.</p>
+<label for="lxgu">User</label><input id="lxgu" autocomplete="username" autofocus>
+<label for="lxgp">Password</label><input id="lxgp" type="password"
+autocomplete="current-password">
+<button type="submit">Enter</button></form></div>
+<script>
+function lxgOpen(){var g=document.getElementById('lxgate');if(g)g.remove();
+var s=document.getElementById('lxg');if(s)s.remove();
+document.body.style.visibility='visible';}
+function lxg(ev){ev.preventDefault();
+if(document.getElementById('lxgu').value==='admin'&&
+   document.getElementById('lxgp').value==='admin'){
+ try{sessionStorage.setItem('lxg','1');}catch(e){}
+ lxgOpen();return false;}
+document.getElementById('lxge').style.display='block';return false;}
+try{if(sessionStorage.getItem('lxg')==='1')
+ document.addEventListener('DOMContentLoaded',lxgOpen);}catch(e){}
+</script>
+<header><b>Lx Atlas</b>
+<nav><a href="../../index.html">Overview</a><a href="../../atlas.html#/map?set=feature">Feature map</a>
+<a href="../../atlas.html">Interactive app</a>
+<a href="../../research/index.html">Research</a>
+<a href="../../research/screens.html">Screens</a>
+<a href="../index.html" class="on">Vault</a>
+<a href="../../questions.html">Open questions</a></nav></header>
+<main><p class="crumb"><a href="../../index.html">Atlas</a> &rsaquo;
+<a href="../index.html">Vault</a> &rsaquo; &quot;Rules — Layouts and forms&quot;</p><div class="fm"><span>rules</span><span>register</span><span>layouts-and-forms</span></div><h1 id="layouts-and-forms-rules">Layouts and forms rules</h1><p><strong><code>LAY-R-001…018 and LAY-R-101…202</code> · 88 rules defined</strong> · <a href="../modules/module-layouts-and-forms.html">module-layouts-and-forms</a></p><p>The full register is <a href="../../research/modules/layouts-and-forms/rules.html"><code>rules.md</code></a>. This note indexes the ones that carry their own page.</p><p><a href="rule-LAY-R-011.html">rule-LAY-R-011</a> · <a href="rule-LAY-R-101.html">rule-LAY-R-101</a> · <a href="rule-LAY-R-106.html">rule-LAY-R-106</a> · <a href="rule-LAY-R-110.html">rule-LAY-R-110</a> · <a href="rule-LAY-R-120.html">rule-LAY-R-120</a> · <a href="rule-LAY-R-130.html">rule-LAY-R-130</a> · <a href="rule-LAY-R-134.html">rule-LAY-R-134</a> · <a href="rule-LAY-R-161.html">rule-LAY-R-161</a> · <a href="rule-LAY-R-165.html">rule-LAY-R-165</a> · <a href="rule-LAY-R-166e.html">rule-LAY-R-166e</a> · <a href="rule-LAY-R-192.html">rule-LAY-R-192</a></p><p>Two numbering quirks worth knowing:</p><ul><li><strong><code>LAY-R-001</code>…<code>018</code> are referenced by range only.</strong> Their text lives in <a href="../../research/modules/layouts-and-forms/forms-vs-pages-vs-layouts.html"><code>forms-vs-pages-vs-layouts.md</code></a> and <a href="../../research/modules/layouts-and-forms/conditional-fields.html"><code>conditional-fields.md</code></a>.</li><li><strong>There is no <code>LAY-R-100</code>.</strong> That string appears only as a section heading.</li></ul><p>70 rules are stated in full in the module file; 88 including the 18 owned by siblings. <code>LAY-R-166a</code>…<code>e</code> are suffixed additions.</p><p>All registers: <strong>map-of-rules</strong></p><div class="backlinks"><b>Linked from &middot; 12</b><a href="../modules/module-layouts-and-forms.html">module-layouts-and-forms</a><a href="rule-LAY-R-011.html">rule-LAY-R-011</a><a href="rule-LAY-R-101.html">rule-LAY-R-101</a><a href="rule-LAY-R-106.html">rule-LAY-R-106</a><a href="rule-LAY-R-110.html">rule-LAY-R-110</a><a href="rule-LAY-R-120.html">rule-LAY-R-120</a><a href="rule-LAY-R-130.html">rule-LAY-R-130</a><a href="rule-LAY-R-134.html">rule-LAY-R-134</a><a href="rule-LAY-R-161.html">rule-LAY-R-161</a><a href="rule-LAY-R-165.html">rule-LAY-R-165</a><a href="rule-LAY-R-166e.html">rule-LAY-R-166e</a><a href="rule-LAY-R-192.html">rule-LAY-R-192</a></div></main></body></html>

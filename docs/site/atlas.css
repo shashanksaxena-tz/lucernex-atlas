@@ -69,3 +69,4 @@ dt{color:var(--muted);white-space:nowrap}dd{margin:0}
 .shots a:hover{border-color:var(--accent);text-decoration:none}
 .shots img{width:100%;display:block;background:var(--surface2)}
 .shots span{display:block;padding:5px 8px;font-size:10.5px;word-break:break-all}
+.shots i{display:block;font-style:normal;color:var(--ink2);font-size:11px;margin-top:3px;word-break:normal}

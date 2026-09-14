@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>&quot;Related Fields and the data model&quot; &middot; Lx Vault</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="../../atlas.css">
+<link rel="stylesheet" href="../../research/research.css">
+<link rel="stylesheet" href="../vault.css">
+</head><body><style id="lxg">body{visibility:hidden}
+#lxgate{visibility:visible;position:fixed;inset:0;z-index:9999;display:flex;
+align-items:center;justify-content:center;background:#0f172a;
+font-family:'IBM Plex Sans',system-ui,sans-serif}
+#lxgate form{background:#fff;padding:30px 32px;border-radius:12px;width:310px;
+box-shadow:0 20px 60px rgba(0,0,0,.35)}
+#lxgate h2{margin:0 0 4px;font-size:19px;color:#0f172a}
+#lxgate p{margin:0 0 18px;font-size:12.5px;color:#64748b;line-height:1.5}
+#lxgate label{display:block;font-size:11px;text-transform:uppercase;
+letter-spacing:.07em;color:#64748b;margin:0 0 5px}
+#lxgate input{width:100%;box-sizing:border-box;padding:9px 11px;margin:0 0 14px;
+border:1px solid #cbd5e1;border-radius:7px;font-size:14px}
+#lxgate button{width:100%;padding:10px;border:0;border-radius:7px;
+background:#b4530a;color:#fff;font-size:14px;font-weight:600;cursor:pointer}
+#lxgate .err{color:#b91c1c;font-size:12px;margin:0 0 10px;display:none}</style>
+<div id="lxgate"><form onsubmit="return lxg(event)">
+<h2>Lx Atlas</h2>
+<p>Internal documentation. Not a security boundary &mdash; see
+<code>gate.py</code>.</p>
+<p class="err" id="lxge">Incorrect.</p>
+<label for="lxgu">User</label><input id="lxgu" autocomplete="username" autofocus>
+<label for="lxgp">Password</label><input id="lxgp" type="password"
+autocomplete="current-password">
+<button type="submit">Enter</button></form></div>
+<script>
+function lxgOpen(){var g=document.getElementById('lxgate');if(g)g.remove();
+var s=document.getElementById('lxg');if(s)s.remove();
+document.body.style.visibility='visible';}
+function lxg(ev){ev.preventDefault();
+if(document.getElementById('lxgu').value==='admin'&&
+   document.getElementById('lxgp').value==='admin'){
+ try{sessionStorage.setItem('lxg','1');}catch(e){}
+ lxgOpen();return false;}
+document.getElementById('lxge').style.display='block';return false;}
+try{if(sessionStorage.getItem('lxg')==='1')
+ document.addEventListener('DOMContentLoaded',lxgOpen);}catch(e){}
+</script>
+<header><b>Lx Atlas</b>
+<nav><a href="../../index.html">Overview</a><a href="../../atlas.html#/map?set=feature">Feature map</a>
+<a href="../../atlas.html">Interactive app</a>
+<a href="../../research/index.html">Research</a>
+<a href="../../research/screens.html">Screens</a>
+<a href="../index.html" class="on">Vault</a>
+<a href="../../questions.html">Open questions</a></nav></header>
+<main><p class="crumb"><a href="../../index.html">Atlas</a> &rsaquo;
+<a href="../index.html">Vault</a> &rsaquo; &quot;Related Fields and the data model&quot;</p><div class="fm"><span>screen</span><span>administration</span><span>layouts</span><span>data-model</span><span class="ev">Observed</span></div><p><code>LayoutEditorAJAX.jsp · /en/admin/ShowObjectDetails.jsp · /en/test/walkHierarchy.jsp</code></p><p>!<a href="../../../../../../assets/screenshots/page-layouts/related-fields-top-level-list.jpg">Related Fields for Contract. Exactly eight related tables — and the self node exposes only 4 fields and 2 subgroups.</a> <code>docs/assets/screenshots/page-layouts/related-fields-top-level-list.jpg</code></p><p>!<a href="../../../../../../assets/screenshots/data-model/object-model-paymenttransaction-vendorid.jpg"><code>PaymentTransaction.VendorID</code> declared as type <code>Employer ID</code>. The column name and the type name disagree, and the type is right.</a> <code>docs/assets/screenshots/data-model/object-model-paymenttransaction-vendorid.jpg</code></p><p><strong>This screen is the evidence that Related Fields is a genuine FK-driven relational model</strong>, not a shared-label taxonomy — and that Lx&#x27;s <a href="../concepts/type-system.html">type-system</a> has <strong>first-class FK types named after their target table</strong>.</p><ul><li><a href="../entities/Contract.html">Contract</a> has <strong>307</strong> fields as the viewer reports it, against 570 in the census — see <a href="../findings/finding-firm-fields-are-physical-columns.html">finding-firm-fields-are-physical-columns</a>.</li><li><code>sqlTableID</code> values: Contract 2792, <a href="../entities/Facility.html">Facility</a> 2530, <a href="../entities/Location.html">Location</a> 2804, <a href="../entities/Employer.html">Employer</a> 2529, <a href="../entities/PaymentTransaction.html">PaymentTransaction</a> 2810, <a href="../entities/Complex.html">Complex</a> 2791.</li><li><strong><code>PaymentTransaction.VendorID</code> is typed <code>Employer ID</code></strong> — &quot;Vendor&quot; is a relabelled <a href="../entities/Employer.html">Employer</a> (<a href="../rules/rule-PPL-R-004.html">rule-PPL-R-004</a>).</li><li><code>walkHierarchy.jsp</code> nests <strong>~70 owned child tables under <a href="../entities/Contract.html">Contract</a></strong>; <a href="../entities/Facility.html">Facility</a>, <a href="../entities/Location.html">Location</a> and <a href="../entities/Organization.html">Organization</a> appear only as separate roots.</li></ul><p>!<a href="../../../../../../assets/screenshots/data-model/walk-hierarchy-re-contract-schema.jpg"><code>walkHierarchy.jsp</code> — ~70 child tables under one contract. This is what &quot;a contract is a small header plus twenty-five collections&quot; looks like in the schema.</a> <code>docs/assets/screenshots/data-model/walk-hierarchy-re-contract-schema.jpg</code></p><p>See <a href="../concepts/foreign-key-graph.html">foreign-key-graph</a> · <strong>screen-view-object-model</strong></p><p>All screens: <strong>map-of-screens</strong> · caveat: <a href="../concepts/caveat-viewport.html">caveat-viewport</a></p></main></body></html>

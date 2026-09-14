@@ -42,15 +42,15 @@ Navigation nodes and firm layouts share the PageLayoutID column and never collid
 
 *Observed · fact · source: `docs/assets/screenshots/`*
 
-8 screen captures on disk, under docs/assets/screenshots/navigation, docs/assets/screenshots/dashboard, docs/assets/screenshots/end-user — the screens themselves, not a description of them. First few: main-navigation-four-roots.jpg, admin-company-administration.png, dashboard-home-help-menu.png, asc842-rent-schedule.jpg, contract-summary-rendered.jpg, expense-setup-with-vendor-allocations.jpg.
+8 screen captures on disk, under docs/assets/screenshots/navigation, docs/assets/screenshots/dashboard, docs/assets/screenshots/end-user — the screens themselves, not a description of them. 7 of them are cited by name in the documentation, which is what ties a capture to the screen it shows.
 
-![main-navigation-four-roots.jpg](../../assets/screenshots/navigation/main-navigation-four-roots.jpg)
-![admin-company-administration.png](../../assets/screenshots/dashboard/admin-company-administration.png)
-![dashboard-home-help-menu.png](../../assets/screenshots/dashboard/dashboard-home-help-menu.png)
-![asc842-rent-schedule.jpg](../../assets/screenshots/end-user/asc842-rent-schedule.jpg)
-![contract-summary-rendered.jpg](../../assets/screenshots/end-user/contract-summary-rendered.jpg)
-![expense-setup-with-vendor-allocations.jpg](../../assets/screenshots/end-user/expense-setup-with-vendor-allocations.jpg)
-![generate-payments-dialog.jpg](../../assets/screenshots/end-user/generate-payments-dialog.jpg)
+![The main navigation, collapsed to its four roots](../../assets/screenshots/navigation/main-navigation-four-roots.jpg)
+![System Administrator Dashboard](../../assets/screenshots/dashboard/admin-company-administration.png)
+![Dashboard home with Help menu open](../../assets/screenshots/dashboard/dashboard-home-help-menu.png)
+![The ASC 842 rent schedule screen](../../assets/screenshots/end-user/asc842-rent-schedule.jpg)
+![A contract summary as an end user sees it](../../assets/screenshots/end-user/contract-summary-rendered.jpg)
+![Expense Setup with its vendor allocations and an empty schedule](../../assets/screenshots/end-user/expense-setup-with-vendor-allocations.jpg)
+![The Generate Payments dialog](../../assets/screenshots/end-user/generate-payments-dialog.jpg)
 ![payment-transactions-empty.jpg](../../assets/screenshots/end-user/payment-transactions-empty.jpg)
 
 ## Open questions (15)

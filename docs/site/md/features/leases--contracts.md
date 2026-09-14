@@ -54,31 +54,15 @@ The payee ('Vendor') is a relabelled Employer: the payment's vendor field is dec
 
 *Observed · fact · source: `docs/assets/screenshots/`*
 
-23 screen captures on disk, under docs/assets/screenshots/end-user, docs/assets/screenshots/bbw-enduser — the screens themselves, not a description of them. First few: asc842-rent-schedule.jpg, contract-summary-rendered.jpg, expense-setup-with-vendor-allocations.jpg, generate-payments-dialog.jpg, payment-transactions-empty.jpg, ct-01-contract.jpg.
+23 screen captures on disk, under docs/assets/screenshots/end-user, docs/assets/screenshots/bbw-enduser — the screens themselves, not a description of them. 11 of them are cited by name in the documentation, which is what ties a capture to the screen it shows. 18 are held back from being shown here: they contain a named individual, and whether those images get redacted is an open decision. They still count as evidence — the file is on disk and named in the docs — they are simply not thumbnailed.
 
-![asc842-rent-schedule.jpg](../../assets/screenshots/end-user/asc842-rent-schedule.jpg)
-![contract-summary-rendered.jpg](../../assets/screenshots/end-user/contract-summary-rendered.jpg)
-![expense-setup-with-vendor-allocations.jpg](../../assets/screenshots/end-user/expense-setup-with-vendor-allocations.jpg)
-![generate-payments-dialog.jpg](../../assets/screenshots/end-user/generate-payments-dialog.jpg)
+![The ASC 842 rent schedule screen](../../assets/screenshots/end-user/asc842-rent-schedule.jpg)
+![A contract summary as an end user sees it](../../assets/screenshots/end-user/contract-summary-rendered.jpg)
+![Expense Setup with its vendor allocations and an empty schedule](../../assets/screenshots/end-user/expense-setup-with-vendor-allocations.jpg)
+![The Generate Payments dialog](../../assets/screenshots/end-user/generate-payments-dialog.jpg)
 ![payment-transactions-empty.jpg](../../assets/screenshots/end-user/payment-transactions-empty.jpg)
-![ct-01-contract.jpg](../../assets/screenshots/bbw-enduser/ct-01-contract.jpg)
-![ct-02-details.jpg](../../assets/screenshots/bbw-enduser/ct-02-details.jpg)
-![ct-03-summary.jpg](../../assets/screenshots/bbw-enduser/ct-03-summary.jpg)
-![ct-04-abstract-info.jpg](../../assets/screenshots/bbw-enduser/ct-04-abstract-info.jpg)
-![ct-05-abstract-details.jpg](../../assets/screenshots/bbw-enduser/ct-05-abstract-details.jpg)
-![ct-12-co-tenancy.jpg](../../assets/screenshots/bbw-enduser/ct-12-co-tenancy.jpg)
-![ct-13-payment-info.jpg](../../assets/screenshots/bbw-enduser/ct-13-payment-info.jpg)
-![ct-14-payment-details.jpg](../../assets/screenshots/bbw-enduser/ct-14-payment-details.jpg)
-![ct-26-accounting-info.jpg](../../assets/screenshots/bbw-enduser/ct-26-accounting-info.jpg)
-![ct-27-accounting-details.jpg](../../assets/screenshots/bbw-enduser/ct-27-accounting-details.jpg)
-![ct-28-capital-lease-test.jpg](../../assets/screenshots/bbw-enduser/ct-28-capital-lease-test.jpg)
-![ct-32-accrual-info.jpg](../../assets/screenshots/bbw-enduser/ct-32-accrual-info.jpg)
-![ct-33-accrual-details.jpg](../../assets/screenshots/bbw-enduser/ct-33-accrual-details.jpg)
-![ct-36-percentage-rent-accruals.jpg](../../assets/screenshots/bbw-enduser/ct-36-percentage-rent-accruals.jpg)
-![eq-01-details-summary.jpg](../../assets/screenshots/bbw-enduser/eq-01-details-summary.jpg)
-![eq-02-abstract-details.jpg](../../assets/screenshots/bbw-enduser/eq-02-abstract-details.jpg)
-![eq-03-payment-details.jpg](../../assets/screenshots/bbw-enduser/eq-03-payment-details.jpg)
-![eq-04-accounting-details.jpg](../../assets/screenshots/bbw-enduser/eq-04-accounting-details.jpg)
+
+*18 further capture(s) withheld: they contain a named individual and the redaction decision is open.*
 
 ## Open questions (77)
 

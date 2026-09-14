@@ -48,32 +48,34 @@ The page layouts manual is organised as: Two tiers of PageLayoutID, in one table
 
 *Observed · fact · source: `features/page-layouts/README.md`*
 
-Written up in features/page-layouts/README.md. 131 screen captures on disk, under docs/assets/screenshots/page-layouts, docs/assets/screenshots/forms, docs/assets/screenshots/bbw-admin, docs/assets/screenshots/af-admin — the screens themselves, not a description of them. First few: facility-related-fields-no-contract.jpg, facility-summary-contracts-one-to-many-list.jpg, page-layouts-add-item-modal.png, page-layouts-available-fields-custom-lists-link.png, page-layouts-conditional-field-associations.png, page-layouts-contract-payments-edit-layout.png.
+Written up in features/page-layouts/README.md. 131 screen captures on disk, under docs/assets/screenshots/page-layouts, docs/assets/screenshots/forms, docs/assets/screenshots/bbw-admin, docs/assets/screenshots/af-admin — the screens themselves, not a description of them. 125 of them are cited by name in the documentation, which is what ties a capture to the screen it shows. 1 are held back from being shown here: they contain a named individual, and whether those images get redacted is an open decision. They still count as evidence — the file is on disk and named in the docs — they are simply not thumbnailed.
 
-![facility-related-fields-no-contract.jpg](../../assets/screenshots/page-layouts/facility-related-fields-no-contract.jpg)
-![facility-summary-contracts-one-to-many-list.jpg](../../assets/screenshots/page-layouts/facility-summary-contracts-one-to-many-list.jpg)
-![page-layouts-add-item-modal.png](../../assets/screenshots/page-layouts/page-layouts-add-item-modal.png)
-![page-layouts-available-fields-custom-lists-link.png](../../assets/screenshots/page-layouts/page-layouts-available-fields-custom-lists-link.png)
-![page-layouts-conditional-field-associations.png](../../assets/screenshots/page-layouts/page-layouts-conditional-field-associations.png)
-![page-layouts-contract-payments-edit-layout.png](../../assets/screenshots/page-layouts/page-layouts-contract-payments-edit-layout.png)
-![page-layouts-contract-payments-list-layout.png](../../assets/screenshots/page-layouts/page-layouts-contract-payments-list-layout.png)
-![page-layouts-edit-item-parent-tab-tree.png](../../assets/screenshots/page-layouts/page-layouts-edit-item-parent-tab-tree.png)
-![page-layouts-list-layout-not-applicable.png](../../assets/screenshots/page-layouts/page-layouts-list-layout-not-applicable.png)
+![Related Fields sidebar for the Facility layout, listing Company Items, Location, Milestones, Pro Forma Lease, Program Summary Information, Prototype, Purchase Management, Schedule, Site Survey, Summary Information — Contract is absent](../../assets/screenshots/page-layouts/facility-related-fields-no-contract.jpg)
+![ASG Facility Summary layout showing a Contracts section containing "ASG Contract List (One to Many List)"](../../assets/screenshots/page-layouts/facility-summary-contracts-one-to-many-list.jpg)
+![Add item for a new Summary Page, including "Initialize layout from existing layout"](../../assets/screenshots/page-layouts/page-layouts-add-item-modal.png)
+![The layout editor's Available Fields tree with Contract -> Custom Lists expanded. Only the Contract-scoped lists appear -- Default Log, Funds, Operating Expenses, Reconciliation Log, Savings Log. Client Request Log is absent because its primary table is Portfolio.](../../assets/screenshots/page-layouts/page-layouts-available-fields-custom-lists-link.png)
+![The layout editor for ASG Contract Summary. The asterisked, red-labelled fields are layer 3 in the act: Contract Status *, Contract Group *, Contract Type *, Contract Category *, Contract ID *, Contract Name *, Currency Type *, Location *, Lease Status *, and six of the Contract Critical Dates. Contract Name is required in layers 1 and 2 both; Contract Status and Location are required in neither, and Contract carries only 7 column-required fields and 3 catalog-required leaves in total -- so most of the asterisks on this screen are unaccounted for by the two layers whose storage is known.](../../assets/screenshots/page-layouts/page-layouts-conditional-field-associations.png)
+![ASG Contract Payments — Edit Layout, sectioned detail form with action buttons](../../assets/screenshots/page-layouts/page-layouts-contract-payments-edit-layout.png)
+![The List Layout tab on ASG Contract Payments, table PaymentTransaction. Thirteen column placements run left to right. Eight are red and asterisked -- Effective Date *, Effective End Date (Coverage End Date) *, Expense Group *, Expense Type *, Invoice Amount *, Primary Tax (Tax Amount #1) *, Due Date *, Vendor * -- and five are plain. The last chip is green and reads (Searchable, Hidden in grid): a placement that exists to be searched on and is not displayed.](../../assets/screenshots/page-layouts/page-layouts-contract-payments-list-layout.png)
+![Edit item — Parent Tab tree, Primary Table, Allow Edit, Portfolio scope](../../assets/screenshots/page-layouts/page-layouts-edit-item-parent-tab-tree.png)
+![List Layout not applicable for ASG Contract Summary](../../assets/screenshots/page-layouts/page-layouts-list-layout-not-applicable.png)
 ![page-layouts-setup-pages.png](../../assets/screenshots/page-layouts/page-layouts-setup-pages.png)
-![page-layouts-subpage-contract-header.png](../../assets/screenshots/page-layouts/page-layouts-subpage-contract-header.png)
-![related-fields-facility-info-expanded.jpg](../../assets/screenshots/page-layouts/related-fields-facility-info-expanded.jpg)
-![related-fields-top-level-list.jpg](../../assets/screenshots/page-layouts/related-fields-top-level-list.jpg)
-![manage-forms-expanded-all-layouts.jpg](../../assets/screenshots/forms/manage-forms-expanded-all-layouts.jpg)
-![manage-forms-index.jpg](../../assets/screenshots/forms/manage-forms-index.jpg)
-![01-manage-company.jpg](../../assets/screenshots/bbw-admin/01-manage-company.jpg)
-![02-manage-schedule-templates.jpg](../../assets/screenshots/bbw-admin/02-manage-schedule-templates.jpg)
-![03-manage-milestone-timeline.jpg](../../assets/screenshots/bbw-admin/03-manage-milestone-timeline.jpg)
-![04-manage-binder-templates.jpg](../../assets/screenshots/bbw-admin/04-manage-binder-templates.jpg)
-![05-manage-forms.jpg](../../assets/screenshots/bbw-admin/05-manage-forms.jpg)
-![06-manage-custom-lists.jpg](../../assets/screenshots/bbw-admin/06-manage-custom-lists.jpg)
-![07-manage-parts-and-inventory.jpg](../../assets/screenshots/bbw-admin/07-manage-parts-and-inventory.jpg)
-![08-manage-work-flows.jpg](../../assets/screenshots/bbw-admin/08-manage-work-flows.jpg)
-![09-manage-page-layouts.jpg](../../assets/screenshots/bbw-admin/09-manage-page-layouts.jpg)
+![ASG Contract Header sub-page — raw field grid, no title bar](../../assets/screenshots/page-layouts/page-layouts-subpage-contract-header.png)
+![Related Fields drilled into Facility's Facility Info subgroup, listing dozens of native Facility fields](../../assets/screenshots/page-layouts/related-fields-facility-info-expanded.jpg)
+![Related Fields sidebar expanded, showing Company Items, Contract, Facility, Location, Milestones, Program Summary Information, Schedule, Summary Information](../../assets/screenshots/page-layouts/related-fields-top-level-list.jpg)
+![Manage Forms expanded — every form type's layouts](../../assets/screenshots/forms/manage-forms-expanded-all-layouts.jpg)
+![Manage Forms — four form types, each with edit fields and add layout](../../assets/screenshots/forms/manage-forms-index.jpg)
+![2. Administration tools (57)](../../assets/screenshots/bbw-admin/01-manage-company.jpg)
+![2. Administration tools (57)](../../assets/screenshots/bbw-admin/02-manage-schedule-templates.jpg)
+![2. Administration tools (57)](../../assets/screenshots/bbw-admin/03-manage-milestone-timeline.jpg)
+![2. Administration tools (57)](../../assets/screenshots/bbw-admin/04-manage-binder-templates.jpg)
+![Manage Forms. Every row offers edit | delete | edit fields | add layout -- the identical action set Manage Custom Lists offers, because they are two views over one code table discriminated by CodeIssueType.IsWorkFlow.](../../assets/screenshots/bbw-admin/05-manage-forms.jpg)
+![2. Administration tools (57)](../../assets/screenshots/bbw-admin/06-manage-custom-lists.jpg)
+![2. Administration tools (57)](../../assets/screenshots/bbw-admin/07-manage-parts-and-inventory.jpg)
+![Manage Work Flows in BBW, all 13 rows -- the footer reads Displaying 1 - 13 of 13. Two things to read off it. The per-row actions are edit | delete | add task step | add form step, so a Task step is offered on every template and taken on none. And the Description column, empty on nine rows, carries a free-text archive note on exactly the versioned ones.](../../assets/screenshots/bbw-admin/08-manage-work-flows.jpg)
+![2. Administration tools (57)](../../assets/screenshots/bbw-admin/09-manage-page-layouts.jpg)
+
+*1 further capture(s) withheld: they contain a named individual and the redaction decision is open.*
 
 ## Open questions (34)
 

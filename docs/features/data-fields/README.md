@@ -92,7 +92,7 @@ expression, a binding to a custom code table, or a binding to a Custom List. Thi
 generic "extra attributes" bag. Any rebuild that models firm extensions as untyped key/value pairs
 is strictly less capable than what ASG already uses.
 
-### The definition is solved; the value store is not
+### Definition and value store — both solved, and they are in different places
 
 **Definitions — solved, and already documented.** A firm field is a **row in
 `ReportGroupAvailableField` (RGAF)**, the one shared field registry
@@ -128,8 +128,8 @@ flowchart LR
         C5["conditionalFieldsConfig.scriptName"]
     end
 
-    subgraph OPEN["NOT solved -- the value store"]
-        Q["Where does a Firm_ field's VALUE get written?<br/><br/>Candidate A: a real physical column on the<br/>entity's table, added per firm.<br/>Candidate B: a generic value table.<br/><br/>Neither confirmed. The three schema inventories<br/>union to 254 tables and none is complete."]
+    subgraph STORE["Solved -- the value store"]
+        Q["A real physical column on the entity's own table,<br/>named for the field: allowance.Firm_AllowCostPSF<br/>Not an EAV table, not a JSON blob.<br/><br/>Confirmed per field by the PG mapping in<br/>bbw-field-inventory.csv -- see below."]
     end
 
     RGAF --> C1
@@ -137,14 +137,27 @@ flowchart LR
     RGAF --> C3
     RGAF --> C4
     RGAF --> C5
-    RGAF -.->|"the definition says WHAT.<br/>Nothing observed says WHERE."| Q
+    RGAF -.->|"definition here, value there"| Q
+    Q ==>|"so adding a firm field is a DDL<br/>operation on a tenant's table"| DDL["Database-per-tenant"]
 ```
 
-**Derived, and it is the consequence that matters.** If a `Firm_` field is a **real column**, then
-adding a custom field is a **DDL operation on a tenant's table** — which forces database-per-tenant,
-or at least schema-per-tenant, and makes the Hub/Spoke decision for you. If it is a generic value
-table, it does not. **The two answers have opposite architectural consequences**, which is why this
-is recorded as the open question it is rather than assumed either way.
+**A third, per-field confirmation.** [`../../data-model/pg/bbw-field-inventory.csv`](../../data-model/pg/bbw-field-inventory.csv)
+carries a `PG Table` / `PG Column` pair for every field. Of its **311** `Firm_` fields, **295 map to
+a physical column of the same name**, spread across **23 physical tables**; 265 of those sit on
+tables the replication loader has created and populated. The mapping is 1:1 and by name — there is no
+indirection layer anywhere in it.
+
+**Carry the caveat with the number.** That file's `PG Table Status` column describes **one
+replication loader's coverage of `lxr_drp_bbw`**, not Lx's own schema. `ProjectEntity` is a fair
+warning: **107 of its 108 fields read `Not created yet — no data`** in a tenant with thousands of
+contracts, which says the loader has not built that table — not that the product lacks it. Read the
+status column as *Observed of the loader*; read the `PG Column` mapping as evidence about the source
+schema, since a loader that creates a column called `Firm_AllowCostPSF` is reflecting one.
+
+**And do not treat it as a fourth independent source.** The inventory is the same export as the
+223-object census — 222 objects and 7,368 fields against the census's 223 and 7,421, both carrying
+the same `Firm_` names. It adds the **per-field physical mapping** the census only gave per object.
+It is a sharper reading of one source, not a second witness.
 
 | *(schema viewer)* Functional Field? | **`IsFunctional`** |
 | The group tree | `ReportGroupDataID`, `ParentReportGroupDataID`, `HierarchyName` |

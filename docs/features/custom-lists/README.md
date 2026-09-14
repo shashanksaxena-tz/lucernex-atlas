@@ -174,6 +174,42 @@ product are physical columns, and a custom list is a firm extension. But the cen
 unexplained either way, and the procurement and budget columns suggest `ClientListRow` also serves
 purposes unrelated to custom lists. **Recorded as open rather than resolved.**
 
+**A per-field physical mapping is now available, and it cuts against the analogy rather than for
+it.** [`../../data-model/pg/bbw-field-inventory.csv`](../../data-model/pg/bbw-field-inventory.csv)
+carries a `PG Table` / `PG Column` pair for every field in the census:
+
+| | In the inventory | Physical column of the same name |
+|---|---:|---:|
+| `Firm_*` fields | **311** across 23 tables | **295** |
+| `CRL_*`, `OpEx*`, `LAR_*` fields | **0** | — |
+| `ClientListRow`'s own columns | 24 | 24, none prefixed |
+
+**Derived.** The `Firm_` precedent reading 2 leans on is now confirmed at the level of individual
+columns — a firm extension really is a real, same-named column on the entity's own table
+([`../data-fields/`](../data-fields/#definition-and-value-store--both-solved-and-they-are-in-different-places)).
+**`ClientListRow` demonstrably does not do that.** So the two firm-extension mechanisms are *not* the
+same mechanism, and "custom lists work like `Firm_` fields because both are firm extensions" is a
+weaker argument than it looked.
+
+> **Do not count this as a second witness, and this caveat is the point.** The inventory is the
+> **same export** as the 223-object census — 222 objects and 7,368 fields against 223 and 7,421, the
+> same `Firm_` names, the same absent `CRL_` ones. It states the census's silence more precisely; it
+> does not independently confirm it. Two readings of one source are still one source, and this
+> document's whole difficulty is that the source is silent.
+
+**Carry one more caveat if you cite that file.** Its `PG Table Status` column describes a
+**replication loader's** coverage of `lxr_drp_bbw`, not Lx's schema. All 24 `ClientListRow` columns
+read `Not created yet — no data`, which means the loader has not built that table — **not** that the
+rows do not exist. `ProjectEntity` shows the same status on 107 of 108 fields in a tenant with
+thousands of contracts, which is proof that the status column cannot be read as a statement about
+the product.
+
+**The test is unchanged and still cheap:** deep-serialise one custom-list row through REST. A
+returned `CRL_CompleteDate` settles reading 2; a returned `SubValue3` settles reading 1. No offline
+artefact can answer it, because every offline artefact traces to the one export that omits these
+fields.
+
+
 **The test**, and it needs no UI: deep-serialise one custom-list row —
 `GET /rest/businessObject/ClientListRow/lxid/{id}?deep=true`. The REST serializer emits populated
 columns under their physical names, so a returned `CRL_CompleteDate` settles it for reading 2 and a

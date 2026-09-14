@@ -305,6 +305,11 @@ def entity_notes_for(o, name, mod_id):
     # not silently lost; do not re-add them here unless the census gains them.
     # --- from the field inventory: the physical mapping, and the loader's reach
     oi = OINV.get(name)
+    cat_req_set = {fn for (en, fn), c in FIELDS.items()
+                   if en == name and c["required"]}
+    inv_req_set = {fn for (en, fn), r in INV.items()
+                   if en == name and r["required"]}
+    cat_req = len(cat_req_set)
     if oi:
         if oi["tables"]:
             many = len(oi["tables"]) > 1
@@ -324,11 +329,15 @@ def entity_notes_for(o, name, mod_id):
             out.append([
                 "Two counts of its physical tables", CONF_OBS,
                 "The object census counts %d physical tables for this record; the field "
-                "inventory names %d (%s). The census reads the exported schema, the inventory "
-                "reads one replication loader's configuration, so a table the loader does not "
-                "write is invisible to the second count. Settle which you mean before quoting "
-                "either." % (o.get("physical_table_count", 1), len(oi["tables"]),
-                             ", ".join(oi["tables"]))])
+                "inventory names %d (%s). These are not two witnesses — they are the SAME "
+                "export read two ways (222 of 223 objects and 7,273 fields in common), so "
+                "the gap is a difference of reading, not of evidence: the census reads the "
+                "exported schema, the inventory reads one replication loader's "
+                "configuration, and a table the loader does not write is invisible to the "
+                "second count. Settle which you mean before quoting either, and do not cite "
+                "them as though they corroborate each other."
+                % (o.get("physical_table_count", 1), len(oi["tables"]),
+                   ", ".join(oi["tables"]))])
         if oi["db"] == ["lxr_drp_bbw"]:
             out.append([
                 "A per-tenant database name", CONF_DER,
@@ -341,15 +350,23 @@ def entity_notes_for(o, name, mod_id):
                 % (oi["defined"], plural(oi["defined"])), CONF_OBS,
                 "%d of this record's %d inventoried fields have prose written by the vendor "
                 "saying what the field is for. Open any field node to read it — this is the "
-                "one source in the corpus that explains fields rather than listing them."
+                "one reading of the corpus that explains fields rather than listing them. "
+                "It is a sharper reading of the same export the object census comes from, "
+                "not a second source: where it agrees with the census that is one fact "
+                "stated twice, not two facts."
                 % (oi["defined"], oi["fields"])])
-        if oi["required"]:
+        if oi["required"] or cat_req:
+            both = len(cat_req_set & inv_req_set)
             out.append([
-                "%d field%s marked required" % (oi["required"], plural(oi["required"])), CONF_OBS,
-                "The inventory marks %d of this record's fields Required. Across the whole "
-                "inventory that is 606 fields, which independently corroborates the 603 the "
-                "corpus had derived from the Data Fields catalogue — two sources, arrived at "
-                "separately, agreeing to within three." % oi["required"]])
+                "Required: the two captures disagree", CONF_OBS,
+                "The field inventory marks %d of this record's fields required; the Data "
+                "Fields catalogue marks %d; %d appear in both. These two ARE separate "
+                "captures — the catalogue is the Manage Data Fields screen, the inventory is "
+                "the object export — so the disagreement is real and not a reading artefact. "
+                "Estate-wide it is 606 against 637 with only 515 shared, so 213 fields are "
+                "required according to exactly one of them. A rebuild that picks one capture "
+                "and ignores the other silently drops obligations."
+                % (oi["required"], cat_req, both)])
         not_created = oi["status"].get("Not created yet — no data", 0)
         if not_created and not_created >= oi["fields"] * 0.5:
             loader_notes = sorted(oi["notes"], key=lambda k: -oi["notes"][k])[:2]

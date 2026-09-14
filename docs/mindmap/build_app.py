@@ -27,7 +27,10 @@ import re
 # point of emission so it holds however the upstream data was generated.
 # Technical identifiers (LxRetail, lxID, Lx.ui.*) are already "Lx"-prefixed
 # and unaffected; only the bare product name is rewritten.
-_BRAND = re.compile(r"\bLucernex\b(?!\s*(?:IWMS|Atlas)\b)")
+# `Lucernex Change Request` is a workflow template name in the tenant's own
+# data — what a user reads on Manage Work Flows — so it is data, not branding,
+# and must survive verbatim. Same exemption as corpus.BRAND.
+_BRAND = re.compile(r"\bLucernex\b(?!\s*(?:IWMS|Atlas)\b)(?!\s+Change Request\b)")
 
 
 def brand(s):

@@ -78,7 +78,7 @@ One accounting field changes meaning by magnitude: it is read as a percentage fr
 
 *Observed · fact · source: `docs/assets/screenshots/`*
 
-1 screen captures on disk, under docs/assets/screenshots/accounting — the screens themselves, not a description of them. First few: asc842-schedule-type-code-values.jpg.
+1 screen captures on disk, under docs/assets/screenshots/accounting — the screens themselves, not a description of them. 0 of them are cited by name in the documentation, which is what ties a capture to the screen it shows.
 
 ![asc842-schedule-type-code-values.jpg](../../assets/screenshots/accounting/asc842-schedule-type-code-values.jpg)
 

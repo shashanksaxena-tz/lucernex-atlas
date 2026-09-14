@@ -87,6 +87,11 @@ def rewrite(href):
         return e(base[:-3] + ".html" + anchor)
     if base.endswith("/"):
         return e(base + "index.html" + anchor)
+    if base.endswith(".html"):
+        # Already a resolved page link — build_vault.py hands these over after
+        # resolving wikilinks itself. Re-pointing them at the docs root would
+        # break every one.
+        return e(base + anchor)
     # non-markdown: resolve against the source doc, then climb out of research/
     srcdir = os.path.dirname(CUR["rel"])
     target = os.path.normpath(os.path.join(srcdir, base)) if srcdir else os.path.normpath(base)
@@ -324,6 +329,27 @@ def main():
         # links of the form "../some-folder/" expect a directory index
         if os.path.basename(rel).lower() == "readme.md":
             shutil.copyfile(dest, os.path.join(os.path.dirname(dest), "index.html"))
+
+    # Emit a directory index wherever the source folder had no README, so
+    # links of the form "../modules/" resolve instead of 404ing.
+    bydir = {}
+    for rel, title, lines in built:
+        bydir.setdefault(os.path.dirname(rel), []).append((rel, title, lines))
+    for d, rows in sorted(bydir.items()):
+        if not d:
+            continue
+        idx = os.path.join(OUT, d, "index.html")
+        if os.path.exists(idx):
+            continue
+        depth = d.count(os.sep) + 1
+        lb = [f"<h1>{e(d)}</h1><p class='lead'>{len(rows)} documents in this folder.</p>",
+              "<div class='denselist'>"]
+        for rel, title, lines in sorted(rows, key=lambda x: x[1]):
+            lb.append(f'<a href="{os.path.basename(rel)[:-3]}.html">{e(title[:56])}'
+                      f'<span>{lines:,}</span></a>')
+        lb.append("</div>")
+        open(idx, "w", encoding="utf-8").write(
+            page(d, "".join(lb), None, f" &rsaquo; {e(d)}", depth))
 
     # ----- index
     counts = {}

@@ -42,7 +42,7 @@ Rules are stored as an opaque JSON blob, one per target field. Cheap to write, i
 
 *Observed · fact · source: `docs/assets/screenshots/`*
 
-2 screen captures on disk, under docs/assets/screenshots/conditional-fields — the screens themselves, not a description of them. First few: conditional-filter-editor-contract-header.jpg, conditional-filter-standalone-no-host.jpg.
+2 screen captures on disk, under docs/assets/screenshots/conditional-fields — the screens themselves, not a description of them. 2 of them are cited by name in the documentation, which is what ties a capture to the screen it shows.
 
-![conditional-filter-editor-contract-header.jpg](../../assets/screenshots/conditional-fields/conditional-filter-editor-contract-header.jpg)
-![conditional-filter-standalone-no-host.jpg](../../assets/screenshots/conditional-fields/conditional-filter-standalone-no-host.jpg)
+![The Conditional Filter dialog, open on the ASG Contract Header sub-page of the ASG Contract Summary layout](../../assets/screenshots/conditional-fields/conditional-filter-editor-contract-header.jpg)
+![ConditionFilterEx.jsp loaded standalone — renders the sentence but no grid, because the host page's Lx namespace is absent](../../assets/screenshots/conditional-fields/conditional-filter-standalone-no-host.jpg)

@@ -27,13 +27,25 @@ DOCS = os.path.dirname(HERE)
 # The product name is withheld from user-visible prose. Technical identifiers
 # (LxRetail, lxID, table and column names) are code and are left alone; this
 # only rewrites the branding word when it appears as running text.
-BRAND = re.compile(r"\bLucernex\b")
+#
+# The lookahead protects DATA, not branding. `Lucernex Change Request` is the
+# name of a workflow template in the tenant's own records — it is what a user
+# reads on the Manage Work Flows screen — so rewriting it would make the map
+# disagree with the product. Same reasoning as leaving `IsLucernexAdministrator`
+# alone: a value a user can see is evidence, not a brand mention.
+BRAND = re.compile(r"\bLucernex\b(?!\s+Change Request\b)")
+
+# Tenant-data strings that contain the vendor name and must survive verbatim.
+# Kept as a list so the next one is a one-line addition rather than a new regex.
+BRAND_EXEMPT = ("Lucernex Change Request",)
 
 
 def debrand(s):
-    """Replace the vendor product name with `Lx` in prose."""
+    """Replace the vendor product name with `Lx` in prose, leaving data alone."""
     if not s:
         return s
+    # collapse the two-word product names first, so they do not become "Lx IWMS"
+    s = s.replace("Lucernex IWMS", "Lx").replace("Lucernex Atlas", "Lx Atlas")
     return BRAND.sub("Lx", s)
 
 
@@ -300,25 +312,140 @@ def feature_headings(slug):
 
 # ---------------------------------------------------------------- screenshots
 
+# The walk and the slug below are deliberately the same join that
+# docs/tools/build_coverage.py uses (its screenshots section), so the maps, the
+# coverage scoreboard and the docs all key off ONE resolver rather than three.
+# Two rules that a naive glob gets wrong, both learned the hard way:
+#   * captures are .jpg AND .png — globbing *.png loses about 60% of them,
+#     including every bbw-admin, af-admin and bbw-enduser capture;
+#   * there are non-image files under the tree (.omc state), so any path
+#     component starting with "." is skipped.
+# Filenames are unstable and directory names are stable: bbw-admin was
+# renumbered from 56 files to 55 when one capture was withdrawn, shifting every
+# index above 52. Never key off the numeric prefix.
+
+SHOT_EXT = (".png", ".jpg", ".jpeg")
+
+# Captures showing a real person's name, held back from being embedded until the
+# lead answers whether the images get redacted. They are still counted and named
+# as evidence — a filename is not a name — but the maps do not render them, and
+# a thumbnail would surface the name more prominently than the prose ever did.
+# Remove an entry here once its image is cleared or redacted.
+SHOT_PRIVATE_AREAS = ("bbw-enduser",)
+SHOT_PRIVATE_FILES = ("bbw-admin/15-job-log.jpg",)
+
+
+def _shot_slug(s):
+    return re.sub(r"[^a-z0-9]+", "-", (s or "").lower()).strip("-")
+
+
+def shot_paths():
+    """Every capture, as a path relative to docs/."""
+    base = os.path.join(DOCS, "assets", "screenshots")
+    out = []
+    for dirpath, dirnames, filenames in os.walk(base):
+        dirnames[:] = [d for d in dirnames if not d.startswith(".")]
+        for fn in filenames:
+            if fn.lower().endswith(SHOT_EXT):
+                out.append(os.path.relpath(os.path.join(dirpath, fn), DOCS)
+                           .replace(os.sep, "/"))
+    return sorted(out)
+
+
 def screenshots():
     """{area: [relative paths]} under docs/assets/screenshots/.
 
-    Directory names are the key because they are stable; the `visuals` agent
-    owns what goes inside them.
+    Two area directories are empty (reporting, bbw); they resolve to no entry,
+    which is correct rather than a bug.
     """
     out = {}
-    base = os.path.join(DOCS, "assets", "screenshots")
-    if not os.path.isdir(base):
-        return out
-    for area in sorted(os.listdir(base)):
-        d = os.path.join(base, area)
-        if not os.path.isdir(d) or area.startswith("."):
-            continue
-        shots = sorted(f for f in os.listdir(d)
-                       if f.lower().endswith((".png", ".jpg", ".jpeg", ".webp")))
-        if shots:
-            out[area] = ["assets/screenshots/%s/%s" % (area, f) for f in shots]
+    for p in shot_paths():
+        out.setdefault(p.split("/")[2], []).append(p)
     return out
+
+
+def shot_index():
+    """{de-numbered basename slug: [paths]} — build_coverage.py's own join."""
+    out = {}
+    for s in shot_paths():
+        base = os.path.splitext(os.path.basename(s))[0]
+        base = re.sub(r"^\d+-", "", base)     # bbw-admin/01-manage-company.jpg
+        out.setdefault(_shot_slug(base), []).append(s)
+    return out
+
+
+def shot_for(name, index=None):
+    """Resolve a surface name to the captures that show it."""
+    return (index if index is not None else shot_index()).get(_shot_slug(name), [])
+
+
+CITE_RE_TMPL = r"`((?:%s)/[A-Za-z0-9._-]+\.(?:jpg|jpeg|png))`"
+EMBED_RE = re.compile(r"!\[([^\]]*)\]\(([^)]+\.(?:jpg|jpeg|png))\)")
+HEADING_RE = re.compile(r"^(#{1,6})\s+(.*)$")
+
+
+def shot_references(strict=True):
+    """Where each capture is cited or embedded across the corpus.
+
+    Two forms, and the first is much the larger:
+      * `area/file.jpg` path citations — the convention CONVENTIONS.md mandates,
+        237 of them, and the densest screenshot-to-surface mapping there is;
+      * ![alt](path) embeds, 79 of them, which carry a written caption.
+
+    Returns {path: {"cites": [(doc, heading)], "embeds": [(doc, heading, alt)]}}.
+
+    `strict` makes an unresolvable citation fail the build. It is on by default
+    because silence is how three citations to withdrawn files survived a renumber
+    of bbw-admin: a resolver that skips quietly cannot tell you it skipped.
+    """
+    known = set(shot_paths())
+    areas = sorted({p.split("/")[2] for p in known})
+    if not areas:
+        return {}
+    cite_re = re.compile(CITE_RE_TMPL % "|".join(areas))
+
+    out, broken = {}, []
+    for dirpath, dirnames, filenames in os.walk(DOCS):
+        dirnames[:] = [d for d in dirnames
+                       if not d.startswith(".") and d not in ("site", "assets")]
+        for fn in sorted(filenames):
+            if not fn.endswith(".md"):
+                continue
+            path = os.path.join(dirpath, fn)
+            rel = os.path.relpath(path, DOCS).replace(os.sep, "/")
+            heading = ""
+            for line in open(path, encoding="utf-8"):
+                h = HEADING_RE.match(line)
+                if h:
+                    heading = _clean(h.group(2))
+                    continue
+                for frag in cite_re.findall(line):
+                    full = "assets/screenshots/" + frag
+                    if full not in known:
+                        broken.append((rel, frag))
+                        continue
+                    out.setdefault(full, {"cites": [], "embeds": []})
+                    out[full]["cites"].append((rel, heading))
+                for alt, src in EMBED_RE.findall(line):
+                    full = os.path.normpath(
+                        os.path.join(os.path.dirname(rel), src)).replace(os.sep, "/")
+                    if full not in known:
+                        broken.append((rel, src))
+                        continue
+                    out.setdefault(full, {"cites": [], "embeds": []})
+                    out[full]["embeds"].append((rel, heading, _clean(alt)))
+    if broken and strict:
+        raise SystemExit(
+            "screenshot references that resolve to no file (%d).\n"
+            "Fix the citation or restore the capture — do not silence this:\n%s"
+            % (len(broken), "\n".join("  %s -> %s" % b for b in broken)))
+    return out
+
+
+def shot_is_private(path):
+    """True while a capture is held back pending the name-redaction decision."""
+    return (path.split("/")[2] in SHOT_PRIVATE_AREAS
+            or path.split("assets/screenshots/")[-1] in SHOT_PRIVATE_FILES)
 
 
 # -------------------------------------------------------------- module README
@@ -402,6 +529,15 @@ CROSS_FACTS = [
      "both captured tenants, while the accounting engine runs. Where the rate actually "
      "comes from is unresolved, and it blocks the accounting rebuild.",
      "observed", "features/reference-data/README.md"),
+    ("Versions are a suffix",
+     "Workflow versioning is a naming convention, not a feature",
+     "The live template is the unsuffixed one. A v1 or v2 suffix marks a superseded "
+     "template, not a successive version, and the fact that it was archived is recorded "
+     "only as free text in the grid's Description column — \"Archived and replaced with new "
+     "workflow on 10.02.25\". There is no version field, so nothing can order them. This "
+     "settles which Lease Admin Request is live, and the same holds for Lucernex Change "
+     "Request.",
+     "observed", "features/workflows-forms/README.md"),
     ("Fields are documented",
      "6,091 fields carry the vendor's own definition",
      "The field inventory explains what nearly every field is FOR, in the vendor's words — "
@@ -446,5 +582,13 @@ if __name__ == "__main__":  # a smoke test, not a build step
     print("field_inventory %d rows, %d with a definition"
           % (len(fi), sum(1 for v in fi.values() if v["definition"])))
     print("object_inventory %d objects" % len(oi))
+    refs = shot_references()
+    print("shot_paths      %d captures in %d areas" % (len(shot_paths()), len(sh)))
+    print("shot_index      %d de-numbered slugs" % len(shot_index()))
+    print("shot_references %d captures referenced; %d citations, %d embeds"
+          % (len(refs), sum(len(v["cites"]) for v in refs.values()),
+             sum(len(v["embeds"]) for v in refs.values())))
+    print("held back       %d captures pending the name-redaction decision"
+          % sum(1 for p in shot_paths() if shot_is_private(p)))
     print()
     print("Contract:", (en.get("Contract") or {}).get("blurb", "")[:200])

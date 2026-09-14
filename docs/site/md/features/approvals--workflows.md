@@ -72,12 +72,12 @@ The workflows forms manual is organised as: The 13 BBW workflow templates; Workf
 
 *Observed · fact · source: `features/workflows-forms/README.md`*
 
-Written up in features/workflows-forms/README.md. 4 screen captures on disk, under docs/assets/screenshots/workflow, docs/assets/screenshots/forms — the screens themselves, not a description of them. First few: manage-workflow-expanded-all-steps.jpg, manage-workflow-index.jpg, manage-forms-expanded-all-layouts.jpg, manage-forms-index.jpg.
+Written up in features/workflows-forms/README.md. 4 screen captures on disk, under docs/assets/screenshots/workflow, docs/assets/screenshots/forms — the screens themselves, not a description of them. 4 of them are cited by name in the documentation, which is what ties a capture to the screen it shows.
 
-![manage-workflow-expanded-all-steps.jpg](../../assets/screenshots/workflow/manage-workflow-expanded-all-steps.jpg)
-![manage-workflow-index.jpg](../../assets/screenshots/workflow/manage-workflow-index.jpg)
-![manage-forms-expanded-all-layouts.jpg](../../assets/screenshots/forms/manage-forms-expanded-all-layouts.jpg)
-![manage-forms-index.jpg](../../assets/screenshots/forms/manage-forms-index.jpg)
+![Manage Work Flow expanded — every step of every workflow](../../assets/screenshots/workflow/manage-workflow-expanded-all-steps.jpg)
+![Manage Work Flow — the same four names as Manage Forms](../../assets/screenshots/workflow/manage-workflow-index.jpg)
+![Manage Forms expanded — every form type's layouts](../../assets/screenshots/forms/manage-forms-expanded-all-layouts.jpg)
+![Manage Forms — four form types, each with edit fields and add layout](../../assets/screenshots/forms/manage-forms-index.jpg)
 
 ## Open questions (67)
 

@@ -162,6 +162,17 @@ def main():
             body_md = re.sub(r"\]\((?!https?:|#)([^)]+\.(?:jpg|jpeg|png|gif|svg))\)",
                              lambda m: "](" + "../" * (depth + 2) + m.group(1).lstrip("./") + ")",
                              body_md)
+            # Vault notes reference the corpus as ../docs/X.md. The number of
+            # levels to climb is the SAME on the site (vault/ and research/ are
+            # siblings under site/, exactly as vault/ and docs/ are siblings in
+            # the repo), so swap the segment and do not add a level.
+            body_md = re.sub(r"\]\(((?:\.\./)*)docs/([^)]+?)\.md\)",
+                             lambda m: f"]({m.group(1)}research/{m.group(2)}.html)",
+                             body_md)
+            # Non-markdown targets (screenshots, csv) still live at the docs
+            # root, which is one level further out than research/.
+            body_md = re.sub(r"\]\(((?:\.\./)*)docs/([^)]+?)\)",
+                             lambda m: f"]({m.group(1)}../{m.group(2)})", body_md)
             body, toc = render(body_md)
             chips = ""
             if fm:
