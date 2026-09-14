@@ -24,6 +24,21 @@ import os
 import re
 import shutil
 
+import gate
+
+# --------------------------------------------------------------- branding
+# The product's name is removed from all published output. Applied at the
+# point of emission so it holds however the upstream data was generated.
+# Technical identifiers (LxRetail, lxID, Lx.ui.*) are already "Lx"-prefixed
+# and unaffected; only the bare product name is rewritten.
+_BRAND = re.compile(r"\bLucernex\b(?!\s*(?:IWMS|Atlas)\b)")
+
+
+def brand(s):
+    s = s.replace("Lucernex IWMS", "Lx").replace("Lucernex Atlas", "Lx Atlas")
+    return _BRAND.sub("Lx", s)
+
+
 HERE = os.path.dirname(os.path.abspath(__file__))
 DOCS = os.path.dirname(HERE)
 SITE = os.path.join(DOCS, "site")
@@ -135,21 +150,21 @@ dt{color:var(--muted);white-space:nowrap}dd{margin:0}
 
 def page(title, body, depth=0, crumb=""):
     up = "../" * depth
-    return f"""<!doctype html>
+    return gate.inject(brand(f"""<!doctype html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>{e(title)} &middot; Lucernex Atlas</title>
+<title>{e(title)} &middot; Lx Atlas</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
 <link rel="stylesheet" href="{up}atlas.css">
 </head><body>
-<header><b>Lucernex Atlas</b>
+<header><b>Lx Atlas</b>
 <nav><a href="{up}index.html">Overview</a><a href="{up}atlas.html#/map?set=feature">Feature map</a>
 <a href="{up}atlas.html">Interactive app</a>
 <a href="{up}entities/index.html">Record types</a><a href="{up}rules/index.html">Rules</a>
 <a href="{up}research/index.html">Research</a>
 <a href="{up}questions.html">Open questions</a></nav></header>
-<main>{crumb}{body}</main></body></html>"""
+<main>{crumb}{body}</main></body></html>"""))
 
 
 # --------------------------------------------------------------------- rebuild
@@ -194,7 +209,7 @@ stats = [("Modules", meta["modules"]), ("Record types", meta["objects"]),
          ("Fields", fmt(meta["fields"])), ("Foreign keys", meta["edges"]),
          ("Rules", fmt(R["total"])), ("Open questions", fmt(Q["total"])),
          ("Data Fields", fmt(meta["datafields"])), ("API types", meta["gqlTypes"])]
-body = [f'<h1>Lucernex, as it actually runs</h1>',
+body = [f'<h1>Lx, as it actually runs</h1>',
         f'<p class="sub">{e(meta["vendor"])} &middot; {e(meta["tenant"])} &middot; build {e(meta["build"])} &middot; captured {e(meta["captured"])}</p>',
         NOTE.replace('href="atlas.html"', 'href="atlas.html"'),
         '<p class="lead">Everything here was read out of the live application and its own schema tools. '
@@ -228,8 +243,7 @@ envelope that makes HTTP&nbsp;200 an unreliable success signal.</p>
         "".join(mod_card(m) for m in modules if m["scope"]) + '</div>',
         '<h2>Excluded by decision</h2><div class="cards">' +
         "".join(mod_card(m) for m in modules if not m["scope"]) + '</div>']
-open(os.path.join(SITE, "index.html"), "w", encoding="utf-8").write(
-    page("Overview", "".join(body)))
+open(os.path.join(SITE, "index.html"), "w", encoding="utf-8").write(page("Overview", "".join(body)))
 
 # ----------------------------------------------------------------- modules
 for m in modules:
@@ -270,8 +284,7 @@ for m in modules:
             b.append(f'<tr><td><a class="mono" href="../rules/{slug(r["id"])}.html">{e(r["id"])}</a></td>'
                      f'<td>{e((r.get("section") or r["text"])[:140])}</td><td>{ctag(r["conf"])}</td></tr>')
         b.append('</tbody></table></div>')
-    open(os.path.join(SITE, "modules", slug(m["id"]) + ".html"), "w", encoding="utf-8").write(
-        page(m["title"], "".join(b), depth=1))
+    open(os.path.join(SITE, "modules", slug(m["id"]) + ".html"), "w", encoding="utf-8").write(page(m["title"], "".join(b), depth=1))
 
 # ---------------------------------------------------------------- entities
 names = sorted(objects, key=lambda n: -objects[n]["n"])
@@ -342,8 +355,7 @@ for n in names:
             b.append(f'<tr><td><a class="mono" href="{slug(s)}.html">{e(s)}</a></td>'
                      f'<td class="mono" style="font-size:11.5px;color:var(--muted)">{e(", ".join(cols))}</td></tr>')
         b.append('</tbody></table></div>')
-    open(os.path.join(SITE, "entities", slug(n) + ".html"), "w", encoding="utf-8").write(
-        page(n, "".join(b), depth=1))
+    open(os.path.join(SITE, "entities", slug(n) + ".html"), "w", encoding="utf-8").write(page(n, "".join(b), depth=1))
 
 # ------------------------------------------------------------------- rules
 by_mod = {}
@@ -360,8 +372,7 @@ for mt, rs in sorted(by_mod.items(), key=lambda x: -len(x[1])):
         b.append(f'<tr><td><a class="mono" href="{slug(r["id"])}.html">{e(r["id"])}</a></td>'
                  f'<td>{e((r.get("section") or r["text"])[:150])}</td><td>{ctag(r["conf"])}</td></tr>')
     b.append('</tbody></table></div>')
-open(os.path.join(SITE, "rules", "index.html"), "w", encoding="utf-8").write(
-    page("Rules", "".join(b), depth=1))
+open(os.path.join(SITE, "rules", "index.html"), "w", encoding="utf-8").write(page("Rules", "".join(b), depth=1))
 
 for r in R["rules"]:
     b = [f'<p class="crumb"><a href="../index.html">Atlas</a> &rsaquo; '
@@ -377,8 +388,7 @@ for r in R["rules"]:
     else:
         b.append(f'<p>{e(r["text"])}</p>')
     b.append(f'<p style="font-size:11.5px;color:var(--faint);margin-top:18px">Source: {e(r["doc"])}</p>')
-    open(os.path.join(SITE, "rules", slug(r["id"]) + ".html"), "w", encoding="utf-8").write(
-        page(r["id"], "".join(b), depth=1))
+    open(os.path.join(SITE, "rules", slug(r["id"]) + ".html"), "w", encoding="utf-8").write(page(r["id"], "".join(b), depth=1))
 
 # --------------------------------------------------------------- questions
 by_area = {}
@@ -390,8 +400,7 @@ b = [f'<h1>Open questions</h1><p class="sub">{fmt(Q["total"])} things nobody has
 for area, qs in sorted(by_area.items(), key=lambda x: -len(x[1])):
     b.append(f'<h2>{e(area)} &middot; {len(qs)}</h2>')
     b += [f'<div class="item">{e(q["q"])}<div class="m">{e(q["doc"])}</div></div>' for q in qs]
-open(os.path.join(SITE, "questions.html"), "w", encoding="utf-8").write(
-    page("Open questions", "".join(b)))
+open(os.path.join(SITE, "questions.html"), "w", encoding="utf-8").write(page("Open questions", "".join(b)))
 
 # ------------------------------------------------------------------ report
 count = sum(len(f) for _, _, f in os.walk(SITE))

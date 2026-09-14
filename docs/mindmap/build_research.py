@@ -23,6 +23,21 @@ import os
 import re
 import shutil
 
+import gate
+
+# --------------------------------------------------------------- branding
+# The product's name is removed from all published output. Applied at the
+# point of emission so it holds however the upstream data was generated.
+# Technical identifiers (LxRetail, lxID, Lx.ui.*) are already "Lx"-prefixed
+# and unaffected; only the bare product name is rewritten.
+_BRAND = re.compile(r"\bLucernex\b(?!\s*(?:IWMS|Atlas)\b)")
+
+
+def brand(s):
+    s = s.replace("Lucernex IWMS", "Lx").replace("Lucernex Atlas", "Lx Atlas")
+    return _BRAND.sub("Lx", s)
+
+
 HERE = os.path.dirname(os.path.abspath(__file__))
 DOCS = os.path.dirname(HERE)
 SITE = os.path.join(DOCS, "site")
@@ -187,23 +202,23 @@ def page(title, body, toc=None, sub="", depth=0):
     if toc:
         nav = ('<nav class="toc"><b>On this page</b>' +
                "".join(f'<a href="#{a}">{e(t)}</a>' for a, t in toc) + "</nav>")
-    return f"""<!doctype html>
+    return gate.inject(brand(f"""<!doctype html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>{e(title)} &middot; Lucernex Atlas</title>
+<title>{e(title)} &middot; Lx Atlas</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
 <link rel="stylesheet" href="{up}../atlas.css">
 <link rel="stylesheet" href="{up}research.css">
 </head><body>
-<header><b>Lucernex Atlas</b>
+<header><b>Lx Atlas</b>
 <nav><a href="{up}../index.html">Overview</a><a href="{up}../atlas.html#/map?set=feature">Feature map</a>
 <a href="{up}../atlas.html">Interactive app</a>
 <a href="{up}../entities/index.html">Record types</a><a href="{up}../rules/index.html">Rules</a>
 <a href="{up}index.html" class="on">Research</a>
 <a href="{up}../questions.html">Open questions</a></nav></header>
 <main><p class="crumb"><a href="{up}../index.html">Atlas</a> &rsaquo;
-<a href="{up}index.html">Research</a>{sub}</p>{nav}{body}</main></body></html>"""
+<a href="{up}index.html">Research</a>{sub}</p>{nav}{body}</main></body></html>"""))
 
 
 CSS = """
@@ -304,8 +319,7 @@ def main():
         m = re.search(r"^#\s+(.+)$", md, re.M)
         title = (m.group(1) if m else os.path.basename(rel)[:-3]).strip()
         title = re.sub(r"[`*]", "", title)
-        open(dest, "w", encoding="utf-8").write(
-            page(title, body, toc, f" &rsaquo; {e(title)}", depth))
+        open(dest, "w", encoding="utf-8").write(page(title, body, toc, f" &rsaquo; {e(title)}", depth))
         built.append((out_rel[:-5] + ".md", title, md.count(chr(10)) + 1))
         # links of the form "../some-folder/" expect a directory index
         if os.path.basename(rel).lower() == "readme.md":
@@ -407,8 +421,7 @@ def main():
                      f'<span>{e(f)}</span></a>')
         b.append("</div></details>")
 
-    open(os.path.join(OUT, "index.html"), "w", encoding="utf-8").write(
-        page("Research", "".join(b)))
+    open(os.path.join(OUT, "index.html"), "w", encoding="utf-8").write(page("Research", "".join(b)))
     print(f"research: {len(built)} pages, {sum(counts.values())} screens, {njson} data captures")
 
 

@@ -1,18 +1,54 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Overview &middot; Lucernex Atlas</title>
+<title>Overview &middot; Lx Atlas</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
 <link rel="stylesheet" href="atlas.css">
-</head><body>
-<header><b>Lucernex Atlas</b>
+</head><body><style id="lxg">body{visibility:hidden}
+#lxgate{visibility:visible;position:fixed;inset:0;z-index:9999;display:flex;
+align-items:center;justify-content:center;background:#0f172a;
+font-family:'IBM Plex Sans',system-ui,sans-serif}
+#lxgate form{background:#fff;padding:30px 32px;border-radius:12px;width:310px;
+box-shadow:0 20px 60px rgba(0,0,0,.35)}
+#lxgate h2{margin:0 0 4px;font-size:19px;color:#0f172a}
+#lxgate p{margin:0 0 18px;font-size:12.5px;color:#64748b;line-height:1.5}
+#lxgate label{display:block;font-size:11px;text-transform:uppercase;
+letter-spacing:.07em;color:#64748b;margin:0 0 5px}
+#lxgate input{width:100%;box-sizing:border-box;padding:9px 11px;margin:0 0 14px;
+border:1px solid #cbd5e1;border-radius:7px;font-size:14px}
+#lxgate button{width:100%;padding:10px;border:0;border-radius:7px;
+background:#b4530a;color:#fff;font-size:14px;font-weight:600;cursor:pointer}
+#lxgate .err{color:#b91c1c;font-size:12px;margin:0 0 10px;display:none}</style>
+<div id="lxgate"><form onsubmit="return lxg(event)">
+<h2>Lx Atlas</h2>
+<p>Internal documentation. Not a security boundary &mdash; see
+<code>gate.py</code>.</p>
+<p class="err" id="lxge">Incorrect.</p>
+<label for="lxgu">User</label><input id="lxgu" autocomplete="username" autofocus>
+<label for="lxgp">Password</label><input id="lxgp" type="password"
+autocomplete="current-password">
+<button type="submit">Enter</button></form></div>
+<script>
+function lxgOpen(){var g=document.getElementById('lxgate');if(g)g.remove();
+var s=document.getElementById('lxg');if(s)s.remove();
+document.body.style.visibility='visible';}
+function lxg(ev){ev.preventDefault();
+if(document.getElementById('lxgu').value==='admin'&&
+   document.getElementById('lxgp').value==='admin'){
+ try{sessionStorage.setItem('lxg','1');}catch(e){}
+ lxgOpen();return false;}
+document.getElementById('lxge').style.display='block';return false;}
+try{if(sessionStorage.getItem('lxg')==='1')
+ document.addEventListener('DOMContentLoaded',lxgOpen);}catch(e){}
+</script>
+<header><b>Lx Atlas</b>
 <nav><a href="index.html">Overview</a><a href="atlas.html#/map?set=feature">Feature map</a>
 <a href="atlas.html">Interactive app</a>
 <a href="entities/index.html">Record types</a><a href="rules/index.html">Rules</a>
 <a href="research/index.html">Research</a>
 <a href="questions.html">Open questions</a></nav></header>
-<main><h1>Lucernex, as it actually runs</h1><p class="sub">Accruent &middot; (ASG) American Freight &middot; build 26.08.0.46 (2026/08/26 16:15) &middot; captured 2026-09-10</p><div class="note">These pages are generated from the same data as the interactive app. Notes and the mind map live in <a href="atlas.html">the app</a> &mdash; these files are for reading, linking and printing.</div><p class="lead">Everything here was read out of the live application and its own schema tools. Every claim carries an evidence label &mdash; <b>Observed</b> means somebody saw it, <b>Inferred</b> means nobody has yet.</p><p><a class="btn" href="atlas.html#/map?set=feature">Open the feature map &mdash; the product by what it does &rarr;</a> <a class="btn" href="atlas.html#/map">Open the schema map &mdash; every record, field and key &rarr;</a></p><div class="stats"><div><b class="mono">15</b><span>Modules</span></div><div><b class="mono">223</b><span>Record types</span></div><div><b class="mono">7,421</b><span>Fields</span></div><div><b class="mono">972</b><span>Foreign keys</span></div><div><b class="mono">519</b><span>Rules</span></div><div><b class="mono">433</b><span>Open questions</span></div><div><b class="mono">6,158</b><span>Data Fields</span></div><div><b class="mono">490</b><span>API types</span></div></div><h2>The running product</h2>
+<main><h1>Lx, as it actually runs</h1><p class="sub">Accruent &middot; (ASG) American Freight &middot; build 26.08.0.46 (2026/08/26 16:15) &middot; captured 2026-09-10</p><div class="note">These pages are generated from the same data as the interactive app. Notes and the mind map live in <a href="atlas.html">the app</a> &mdash; these files are for reading, linking and printing.</div><p class="lead">Everything here was read out of the live application and its own schema tools. Every claim carries an evidence label &mdash; <b>Observed</b> means somebody saw it, <b>Inferred</b> means nobody has yet.</p><p><a class="btn" href="atlas.html#/map?set=feature">Open the feature map &mdash; the product by what it does &rarr;</a> <a class="btn" href="atlas.html#/map">Open the schema map &mdash; every record, field and key &rarr;</a></p><div class="stats"><div><b class="mono">15</b><span>Modules</span></div><div><b class="mono">223</b><span>Record types</span></div><div><b class="mono">7,421</b><span>Fields</span></div><div><b class="mono">972</b><span>Foreign keys</span></div><div><b class="mono">519</b><span>Rules</span></div><div><b class="mono">433</b><span>Open questions</span></div><div><b class="mono">6,158</b><span>Data Fields</span></div><div><b class="mono">490</b><span>API types</span></div></div><h2>The running product</h2>
 <p>The pages below the fold describe the <em>schema</em>. This section describes what two live
 tenants actually do &mdash; where they differ, what the product does that the schema cannot show,
 and what that means for a rebuild. Every claim is labelled Observed, Derived or Inferred.</p>

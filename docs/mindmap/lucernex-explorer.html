@@ -1,4 +1,4 @@
-<title>Lucernex Atlas</title>
+<title>Lx Atlas</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
@@ -227,7 +227,7 @@ table.t tr:hover td{background:var(--surface)}
 
 <div id="app">
 <header>
-  <div class="brand" onclick="go('/')"><h1>Lucernex Atlas</h1><span class="sub" id="cap"></span></div>
+  <div class="brand" onclick="go('/')"><h1>Lx Atlas</h1><span class="sub" id="cap"></span></div>
   <div class="tools">
     <div class="search">
       <input id="q" type="search" placeholder="Search 223 records, 7,421 fields, 384 rules&hellip;" aria-label="Search everything" autocomplete="off">
@@ -416,7 +416,7 @@ function viewHome(){
   </div>
 
   <h3 class="sec">What was learned</h3>
-  ${[['A Form is an Issue Type','Lucernex never built a form builder. It built one ticket record, made its subtype a code-table value, gave each subtype its own fields and one layout per workflow step. Every request-shaped feature in the product is the same table &mdash; so a rebuild modelling each request type as its own aggregate needs one workflow engine per type.'],
+  ${[['A Form is an Issue Type','Lx never built a form builder. It built one ticket record, made its subtype a code-table value, gave each subtype its own fields and one layout per workflow step. Every request-shaped feature in the product is the same table &mdash; so a rebuild modelling each request type as its own aggregate needs one workflow engine per type.'],
      ['Conditional display is a small, flat rule engine','[Show | Show and Require | Hide] this field when [all | any] of these rules match. Operators depend on the type of the driver field. Drivers reach across foreign keys into related records, so a Contract field can be hidden because of a value on its Location.'],
      ['Contract lifecycle is customer-editable data','The nine lifecycle states live in a tenant-authored drop-down, not in platform schema. Anyone with drop-down rights can add a tenth. Whether the rebuild keeps that flexibility is a real decision.'],
      ['Every non-key column is TEXT','6,882 of 7,069 physical columns, currency and percentage included. There is no numeric typing to inherit &mdash; the rebuild imposes its own or repeats the bug.'],
@@ -549,7 +549,7 @@ function viewField(ent,fld){
     ${fam==='dropdown'&&cm?`<dt>Code table</dt><dd>${esc(cm[1])}</dd>`:''}
   </dl>
   <p>${fam==='fk'
-    ? 'A foreign key. Lucernex names the type after the table it points at, so this relationship is declared in the schema rather than implied by the column name.'
+    ? 'A foreign key. Lx names the type after the table it points at, so this relationship is declared in the schema rather than implied by the column name.'
     : fam==='dropdown'
     ? 'A value chosen from a master code table that an administrator controls, not a developer. Every field like this is a place the business can change behaviour without a release.'
     : fam==='soft'

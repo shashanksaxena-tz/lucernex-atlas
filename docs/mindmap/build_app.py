@@ -19,6 +19,22 @@ if their inputs have changed.
 import json
 import os
 
+import gate
+import re
+
+# --------------------------------------------------------------- branding
+# The product's name is removed from all published output. Applied at the
+# point of emission so it holds however the upstream data was generated.
+# Technical identifiers (LxRetail, lxID, Lx.ui.*) are already "Lx"-prefixed
+# and unaffected; only the bare product name is rewritten.
+_BRAND = re.compile(r"\bLucernex\b(?!\s*(?:IWMS|Atlas)\b)")
+
+
+def brand(s):
+    s = s.replace("Lucernex IWMS", "Lx").replace("Lucernex Atlas", "Lx Atlas")
+    return _BRAND.sub("Lx", s)
+
+
 HERE = os.path.dirname(os.path.abspath(__file__))
 
 
@@ -54,7 +70,7 @@ for marker in ("__DATA__", "__MAPJS__", "__NOTES__"):
 
 out = os.path.join(HERE, "lucernex-atlas.built.html")
 with open(out, "w", encoding="utf-8") as fh:
-    fh.write(html)
+    fh.write(gate.inject(brand(html)))
 
 size = os.path.getsize(out)
 print(f"wrote {out}")

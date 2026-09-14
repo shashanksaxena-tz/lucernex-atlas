@@ -146,6 +146,9 @@ node**, and the `Export Configuration` screen surfaces it as a `Previous Layout`
 column (`bbw-admin/14-export-configuration.jpg`).
 Its values are other layout *names*, and they are not arbitrary:
 
+![All 15 BBW SEP layouts in one grid. The `Top Menu` column is the navigation node each one hangs off, and `Previous Layout` is the sequence pointer -- five rows share `Abstract Details` and four of them name a predecessor, so the column reads as a chain rather than a version history. Note also the `Clone these layouts in this firm and environment` checkbox above the grid, unchecked here.](../../assets/screenshots/bbw-admin/14-export-configuration.jpg)
+
+
 | Layout | Previous Layout |
 |---|---|
 | ASG Contract Abstract Details | *(none — head)* |
@@ -180,6 +183,61 @@ Contract : Payment Info : Percentage Rent
 Contract : Accounting Info : Straight-Line Rent
   ASG SL Summary  [LIST]  →  ASG Last Deferred SL Entry  [SEP]
 ```
+
+### The resolution chain, drawn
+
+**Derived**, from the join above. `PreviousPageLayoutID` points *backwards*, so the stored edges run
+the opposite way from the reading order:
+
+```mermaid
+flowchart TD
+    NAV["Navigation node<br/>Contract : Abstract Info : Abstract Details<br/>platform-seeded, not listed in Manage Page Layouts"]
+
+    H["ASG Contract Abstract Details  SEP  98925<br/>PreviousPageLayoutID = null -- the head"]
+    A["ASG Common Area Maintenance  SEP  98924"]
+    B["ASG Delivery Requirements  SEP  98928"]
+    C["ASG Funds and Expenses  SEP  98930"]
+    D["ASG Real Estate Taxes  SEP  99140"]
+
+    NAV -->|ParentPageLayoutID| H
+    NAV -->|ParentPageLayoutID| A
+    NAV -->|ParentPageLayoutID| B
+    NAV -->|ParentPageLayoutID| C
+    NAV -->|ParentPageLayoutID| D
+
+    A -.->|PreviousPageLayoutID| H
+    B -.->|PreviousPageLayoutID| A
+    C -.->|PreviousPageLayoutID| B
+    D -.->|PreviousPageLayoutID| C
+
+    H --> PICK["Layout selector at the top right of the content area.<br/>The head renders; the other four are options in the list."]
+```
+
+Solid edges are the many-to-one attachment; dotted edges are the sequence pointer, read in reverse
+to get the order `Abstract Details -> CAM -> Delivery Requirements -> Funds and Expenses -> Real Estate Taxes`.
+
+**Derived.** Once a layout is selected, the composition below it is three kinds of placement on one
+`PageLayoutField` table, discriminated by which column is populated:
+
+```mermaid
+flowchart LR
+    SEP["SEP layout<br/>ASG Contract Summary  98927<br/>PrimaryCodeSQLTableID = Contract"]
+    PF["PageLayoutField<br/>one row per placement<br/>Edit / View / Header geometry"]
+    FIELD["A data field<br/>rendered in a section grid"]
+    SUB["A SUB layout<br/>rendered as a titled section"]
+    LIST["A LIST layout<br/>rendered under Related Details"]
+    ACT["An action button<br/>rendered in the right-hand Actions rail"]
+
+    SEP --> PF
+    PF -->|ReportGroupAvailableFieldID| FIELD
+    PF -->|SubPageLayoutID| SUB
+    PF -->|"ReportGroupAvailableFieldID<br/>+ DisplayOption = OneToManyList"| LIST
+    PF -->|"ReportGroupAvailableFieldID<br/>on a button pseudo-field"| ACT
+```
+
+**Inferred** on one edge only: the exact `DisplayOption` bit that marks a `OneToManyList` placement
+is read from layout `98925` and not from the engine, so the discriminator is right in kind and
+unproven in detail -- see [`../required-and-validation/`](../required-and-validation/#displayoption1--displayoption2--a-correction-and-a-partial-negative).
 
 **Derived.** Three consequences.
 

@@ -1,13 +1,49 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>The payment lifecycle &middot; Lucernex Atlas</title>
+<title>The payment lifecycle &middot; Lx Atlas</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
 <link rel="stylesheet" href="../../../atlas.css">
 <link rel="stylesheet" href="../../research.css">
-</head><body>
-<header><b>Lucernex Atlas</b>
+</head><body><style id="lxg">body{visibility:hidden}
+#lxgate{visibility:visible;position:fixed;inset:0;z-index:9999;display:flex;
+align-items:center;justify-content:center;background:#0f172a;
+font-family:'IBM Plex Sans',system-ui,sans-serif}
+#lxgate form{background:#fff;padding:30px 32px;border-radius:12px;width:310px;
+box-shadow:0 20px 60px rgba(0,0,0,.35)}
+#lxgate h2{margin:0 0 4px;font-size:19px;color:#0f172a}
+#lxgate p{margin:0 0 18px;font-size:12.5px;color:#64748b;line-height:1.5}
+#lxgate label{display:block;font-size:11px;text-transform:uppercase;
+letter-spacing:.07em;color:#64748b;margin:0 0 5px}
+#lxgate input{width:100%;box-sizing:border-box;padding:9px 11px;margin:0 0 14px;
+border:1px solid #cbd5e1;border-radius:7px;font-size:14px}
+#lxgate button{width:100%;padding:10px;border:0;border-radius:7px;
+background:#b4530a;color:#fff;font-size:14px;font-weight:600;cursor:pointer}
+#lxgate .err{color:#b91c1c;font-size:12px;margin:0 0 10px;display:none}</style>
+<div id="lxgate"><form onsubmit="return lxg(event)">
+<h2>Lx Atlas</h2>
+<p>Internal documentation. Not a security boundary &mdash; see
+<code>gate.py</code>.</p>
+<p class="err" id="lxge">Incorrect.</p>
+<label for="lxgu">User</label><input id="lxgu" autocomplete="username" autofocus>
+<label for="lxgp">Password</label><input id="lxgp" type="password"
+autocomplete="current-password">
+<button type="submit">Enter</button></form></div>
+<script>
+function lxgOpen(){var g=document.getElementById('lxgate');if(g)g.remove();
+var s=document.getElementById('lxg');if(s)s.remove();
+document.body.style.visibility='visible';}
+function lxg(ev){ev.preventDefault();
+if(document.getElementById('lxgu').value==='admin'&&
+   document.getElementById('lxgp').value==='admin'){
+ try{sessionStorage.setItem('lxg','1');}catch(e){}
+ lxgOpen();return false;}
+document.getElementById('lxge').style.display='block';return false;}
+try{if(sessionStorage.getItem('lxg')==='1')
+ document.addEventListener('DOMContentLoaded',lxgOpen);}catch(e){}
+</script>
+<header><b>Lx Atlas</b>
 <nav><a href="../../../index.html">Overview</a><a href="../../../atlas.html#/map?set=feature">Feature map</a>
 <a href="../../../atlas.html">Interactive app</a>
 <a href="../../../entities/index.html">Record types</a><a href="../../../rules/index.html">Rules</a>
@@ -88,7 +124,7 @@ CodeIFRS16ScheduleID(Dropdown (IFRS 16 Schedule Type))
 CodeSLScheduleID(Dropdown (Straight Line Schedule Type))
 ── taxonomy ──
 CodeExpenseCategoryID, ParentCodeExpenseGroupID, ParentID(Expense Group Code)
-ShortName, LongDescription, ActualLongName, Inactive</code></pre><p><strong>Choosing an expense type chooses both the GL coding and the lease-accounting treatment.</strong> That is the single most load-bearing fact about the classification system, and it is why <code>CodeExpenseTypeID</code> appears on <code>ExpenseSetup</code>, <code>PaymentTransaction</code>, <code>AccrualTransaction</code>, <code>PercentageRent</code>, <code>UseBasedRent</code>, <code>ExpenseRecovery</code>, <code>ExpenseAccrualSetup</code>, <code>LandlordInvoiceItem</code>, <code>VariableRentOffset</code> and <code>VirtualExpenseForecastPeriod</code>. Ten objects, one classification.</p><p><code>CodeSLSchedule</code> (24 fields) similarly carries <code>ExportAcct1..20Number</code> and <code>DontAmortizeAssetValue(Boolean)</code> — 20 more slots for the straight-line side, mirrored on <code>SLPeriod</code> as <code>ExportAcct1..20Number</code> plus <code>SLExportAcct1..3Number</code>.</p><h3 id="where-they-land-paymenttransaction-and-accrualtransaction">Where they land: <code>PaymentTransaction</code> and <code>AccrualTransaction</code></h3><p>Both carry a <strong>snapshot</strong> of the account numbers on every row:</p><div class="wrapt"><table><thead><tr><th>Slot family</th><th style="text-align:center"><code>PaymentTransaction</code></th><th style="text-align:center"><code>AccrualTransaction</code></th><th style="text-align:center"><code>CodeExpenseType</code></th></tr></thead><tbody><tr><td><code>AccountNumber1..8</code></td><td style="text-align:center">✓</td><td style="text-align:center">✓</td><td style="text-align:center">—</td></tr><tr><td><code>APExportBaseNumber</code></td><td style="text-align:center">✓</td><td style="text-align:center">✓</td><td style="text-align:center">✓</td></tr><tr><td><code>APExportPrepaidNumber</code></td><td style="text-align:center">✓</td><td style="text-align:center">✓</td><td style="text-align:center">✓</td></tr><tr><td><code>APExportTax1..4Number</code></td><td style="text-align:center">✓</td><td style="text-align:center">—</td><td style="text-align:center">✓</td></tr><tr><td><code>ExpAccrualAcct1..4Number</code></td><td style="text-align:center">✓</td><td style="text-align:center">✓</td><td style="text-align:center">✓</td></tr><tr><td><code>PercentRentAccrualAcct1..4Number</code></td><td style="text-align:center">✓</td><td style="text-align:center">✓</td><td style="text-align:center">✓</td></tr><tr><td><code>RETaxAccrualAcct1..4Number</code></td><td style="text-align:center">✓</td><td style="text-align:center">✓</td><td style="text-align:center">✓</td></tr></tbody></table></div><p><code>AccountNumber1..8</code> exists on the transactions but <strong>not</strong> on <code>CodeExpenseType</code>. Its likely source is <code>Organization</code> — <code>docs/data-fields/</code> shows <code>Organization</code> carrying <code>Account Number #1–8</code> (recorded in <a href="../../admin/009-related-fields-and-data-model.html">009</a>&#x27;s Related Fields walkthrough). So the eight-segment account string comes from the <strong>org</strong>, and the base/tax/accrual accounts come from the <strong>expense type</strong>. <strong>Inferred</strong>, and open question 2 — it is the core of any GL export.</p><p><code>docs/data-fields/payment-transaction.md</code> reads the eight slots as split coding: <em>&quot;up to eight parallel &#x27;Account Number #N&#x27; fields for split GL coding … Lucernex models multi-line allocation as fixed parallel columns rather than a normalized child table.&quot;</em> <strong>Observed</strong> statement, but note it conflicts with the eight-segments-of-one-account reading. Both are plausible; resolving it is part of open question 2.</p><h3 id="export-batching">Export batching</h3><pre><code>ExportBatchNumber(Text)   — set when the row leaves for AP
+ShortName, LongDescription, ActualLongName, Inactive</code></pre><p><strong>Choosing an expense type chooses both the GL coding and the lease-accounting treatment.</strong> That is the single most load-bearing fact about the classification system, and it is why <code>CodeExpenseTypeID</code> appears on <code>ExpenseSetup</code>, <code>PaymentTransaction</code>, <code>AccrualTransaction</code>, <code>PercentageRent</code>, <code>UseBasedRent</code>, <code>ExpenseRecovery</code>, <code>ExpenseAccrualSetup</code>, <code>LandlordInvoiceItem</code>, <code>VariableRentOffset</code> and <code>VirtualExpenseForecastPeriod</code>. Ten objects, one classification.</p><p><code>CodeSLSchedule</code> (24 fields) similarly carries <code>ExportAcct1..20Number</code> and <code>DontAmortizeAssetValue(Boolean)</code> — 20 more slots for the straight-line side, mirrored on <code>SLPeriod</code> as <code>ExportAcct1..20Number</code> plus <code>SLExportAcct1..3Number</code>.</p><h3 id="where-they-land-paymenttransaction-and-accrualtransaction">Where they land: <code>PaymentTransaction</code> and <code>AccrualTransaction</code></h3><p>Both carry a <strong>snapshot</strong> of the account numbers on every row:</p><div class="wrapt"><table><thead><tr><th>Slot family</th><th style="text-align:center"><code>PaymentTransaction</code></th><th style="text-align:center"><code>AccrualTransaction</code></th><th style="text-align:center"><code>CodeExpenseType</code></th></tr></thead><tbody><tr><td><code>AccountNumber1..8</code></td><td style="text-align:center">✓</td><td style="text-align:center">✓</td><td style="text-align:center">—</td></tr><tr><td><code>APExportBaseNumber</code></td><td style="text-align:center">✓</td><td style="text-align:center">✓</td><td style="text-align:center">✓</td></tr><tr><td><code>APExportPrepaidNumber</code></td><td style="text-align:center">✓</td><td style="text-align:center">✓</td><td style="text-align:center">✓</td></tr><tr><td><code>APExportTax1..4Number</code></td><td style="text-align:center">✓</td><td style="text-align:center">—</td><td style="text-align:center">✓</td></tr><tr><td><code>ExpAccrualAcct1..4Number</code></td><td style="text-align:center">✓</td><td style="text-align:center">✓</td><td style="text-align:center">✓</td></tr><tr><td><code>PercentRentAccrualAcct1..4Number</code></td><td style="text-align:center">✓</td><td style="text-align:center">✓</td><td style="text-align:center">✓</td></tr><tr><td><code>RETaxAccrualAcct1..4Number</code></td><td style="text-align:center">✓</td><td style="text-align:center">✓</td><td style="text-align:center">✓</td></tr></tbody></table></div><p><code>AccountNumber1..8</code> exists on the transactions but <strong>not</strong> on <code>CodeExpenseType</code>. Its likely source is <code>Organization</code> — <code>docs/data-fields/</code> shows <code>Organization</code> carrying <code>Account Number #1–8</code> (recorded in <a href="../../admin/009-related-fields-and-data-model.html">009</a>&#x27;s Related Fields walkthrough). So the eight-segment account string comes from the <strong>org</strong>, and the base/tax/accrual accounts come from the <strong>expense type</strong>. <strong>Inferred</strong>, and open question 2 — it is the core of any GL export.</p><p><code>docs/data-fields/payment-transaction.md</code> reads the eight slots as split coding: <em>&quot;up to eight parallel &#x27;Account Number #N&#x27; fields for split GL coding … Lx models multi-line allocation as fixed parallel columns rather than a normalized child table.&quot;</em> <strong>Observed</strong> statement, but note it conflicts with the eight-segments-of-one-account reading. Both are plausible; resolving it is part of open question 2.</p><h3 id="export-batching">Export batching</h3><pre><code>ExportBatchNumber(Text)   — set when the row leaves for AP
 CheckNumber(Text)         — set when AP settles it
 CheckDate(Date)
 CheckAmount(Currency)

@@ -1,4 +1,4 @@
-<title>Lucernex Atlas</title>
+<title>Lx Atlas</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
@@ -190,7 +190,7 @@ table.mini tr:last-child td{border-bottom:0}
 <div id="app">
 <header>
   <div class="brand">
-    <h1>Lucernex Atlas</h1>
+    <h1>Lx Atlas</h1>
     <span class="sub" id="cap"></span>
   </div>
   <div class="stats" id="stats"></div>
@@ -213,7 +213,7 @@ table.mini tr:last-child td{border-bottom:0}
 
 <main>
   <div id="stage">
-    <svg id="svg" role="tree" aria-label="Lucernex system map">
+    <svg id="svg" role="tree" aria-label="Lx system map">
       <g id="cam">
         <g id="links"></g>
         <g id="nodes"></g>
@@ -269,7 +269,7 @@ const NOTES = {
     ["A Form is not a Page","observed",
      "A Page Layout presents an entity that already exists. A Form defines a new tenant-authored request type, and gets one layout per workflow step. A Custom List is a Form without the workflow."],
     ["Rules are stored as an opaque JSON blob","observed",
-     "One json.conditionalFieldsConfig per target. Cheap to write, impossible to query \u2014 Lucernex cannot answer 'which layouts depend on this drop-down?'. Storing predicates as rows instead would give the rebuild a Where-Used answer for free."]
+     "One json.conditionalFieldsConfig per target. Cheap to write, impossible to query \u2014 Lx cannot answer 'which layouts depend on this drop-down?'. Storing predicates as rows instead would give the rebuild a Where-Used answer for free."]
   ],
   "workflow": [
     ["Four workflows are live, 1:1 with four form types","observed",
@@ -313,7 +313,7 @@ const NOTES = {
     ["ProjectEntity is the spine","observed",
      "163 foreign keys point at it, and it is a declared interface in the GraphQL schema rather than a naming convention. Almost every table carries a ProjectEntityID."],
     ["The tenant travels in the token","observed",
-     "The session JWT carries firmname and a cluster claim shaped host:tenant \u2014 evidence that Lucernex routes each request to a tenant-specific database using a value inside the token."],
+     "The session JWT carries firmname and a cluster claim shaped host:tenant \u2014 evidence that Lx routes each request to a tenant-specific database using a value inside the token."],
     ["448 field-type codes hide a 10-value system","observed",
      "The API's FieldType enum is BOOLEAN, COMPUTED, DATE, DATETIME, FK, FLOAT, INTEGER, MONEY, PERCENTAGE, STRING. COMPUTED and FK are first-class types \u2014 the platform distinguishes engine-calculated values from user input in its type system."],
     ["Money is never a float","observed",
@@ -428,7 +428,7 @@ function childrenOf(n){
     k = [N(n.ftype,'type',{mod:n.mod,obj:n.obj,ftype:n.ftype,fam:n.fam,col:n.name,conf:'observed',
       src:'Declared field type',
       detail:D.typeNote[n.ftype] || (n.fam==='fk'
-        ? 'A foreign key. Lucernex names the type after the table it points at, so the relationship is declared in the schema rather than implied by the column name.'
+        ? 'A foreign key. Lx names the type after the table it points at, so the relationship is declared in the schema rather than implied by the column name.'
         : n.fam==='dropdown'
         ? 'A value chosen from a master code table that an administrator controls.'
         : n.fam==='soft'
@@ -451,7 +451,7 @@ function childrenOf(n){
     } else if(n.fam==='dropdown'){
       const m=/\(([^)]+)\)/.exec(n.ftype);
       k=[N(m?m[1]:'Code table','code-table',{conf:'derived',src:'docs/admin/007-firm-and-client-drop-downs.md',
-        detail:'A master list of allowed values. Lucernex keeps two kinds: 207 platform-fixed Firm Drop Downs whose values you may edit but whose catalogue you may not extend, and tenant-authored Client Drop Downs which support cascading parent/child lists and carry a field-level audit trail.',
+        detail:'A master list of allowed values. Lx keeps two kinds: 207 platform-fixed Firm Drop Downs whose values you may edit but whose catalogue you may not extend, and tenant-authored Client Drop Downs which support cascading parent/child lists and carry a field-level audit trail.',
         meta:[['Governed by','Manage Firm Drop Downs / Client Drop Downs']]})];
     }
   }

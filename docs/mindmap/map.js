@@ -57,7 +57,7 @@ function childrenOf(n){
     k=[N(n.ftype,'type',{mod:n.mod,obj:n.obj,ftype:n.ftype,fam:n.fam,col:n.name,conf:'observed',
       src:'Declared field type',
       detail:D.typeNote[n.ftype]||(n.fam==='fk'
-        ?'A foreign key. Lucernex names the type after the table it points at, so the relationship is declared rather than implied.'
+        ?'A foreign key. Lx names the type after the table it points at, so the relationship is declared rather than implied.'
         :n.fam==='dropdown'?'A value chosen from a master code table an administrator controls.'
         :n.fam==='soft'?'A soft reference \u2014 it names another record without a typed key behind it.'
         :'A declared field type.')})];
@@ -74,7 +74,7 @@ function childrenOf(n){
     } else if(n.fam==='dropdown'){
       const m=/\(([^)]+)\)/.exec(n.ftype);
       k=[N(m?m[1]:'Code table','code-table',{conf:'derived',src:'docs/admin/007-firm-and-client-drop-downs.md',
-        detail:'A master list of allowed values. Lucernex keeps 207 platform-fixed Firm Drop Downs whose values you may edit but whose catalogue you may not extend, plus tenant-authored Client Drop Downs which support cascading lists and carry an audit trail.'})];
+        detail:'A master list of allowed values. Lx keeps 207 platform-fixed Firm Drop Downs whose values you may edit but whose catalogue you may not extend, plus tenant-authored Client Drop Downs which support cascading lists and carry an audit trail.'})];
     }
   }
   n.kids=k;k.forEach(c=>c.parent=n);return k;

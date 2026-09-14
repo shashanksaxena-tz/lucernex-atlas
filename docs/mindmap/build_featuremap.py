@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Build featuremap.json — ONE mind map of Lucernex organised by FEATURE.
+Build featuremap.json — ONE mind map of Lx organised by FEATURE.
 
 Design rules (after user review 2026-09-11):
   * Node labels are NAMES, <=22 characters, never sentences. Truncation is a bug.
@@ -207,7 +207,7 @@ TREE = [
                   "In the physical database export, 6,882 of 7,069 non-key columns are "
                   "TEXT - currency and percentages included. There is no numeric typing to "
                   "inherit. The rebuild's constitution already mandates BigDecimal; "
-                  "Lucernex shows what happens without it."),
+                  "Lx shows what happens without it."),
              fact("Magnitude-typed field",
                   "One accounting field changes meaning by magnitude: it is read as a "
                   "percentage from 0-100 and as currency at 100.01 and above. A genuine "
@@ -282,7 +282,7 @@ TREE = [
                  "co-tenancy group and type, occupancy percentage, rent reduction amount "
                  "and percent, and a right-to-terminate flag, linked to the lease and to "
                  "a covenant record, with two code tables governing clause kinds. The "
-                 "record is fully tabulated in the corpus; how Lucernex evaluates the "
+                 "record is fully tabulated in the corpus; how Lx evaluates the "
                  "clause - what triggers the occupancy test, how the reduction applies, "
                  "what termination unlocks - is documented only in outline and stands as "
                  "an open analysis item. ASG Edge+ BRD-29.",
@@ -429,7 +429,7 @@ TREE = [
          "Configuration of what users see. A page presents a record that already exists. "
          "A form is something else entirely: a tenant-authored request type with one "
          "layout per workflow step. A custom list is a form without the workflow. "
-         "Lucernex never built a form builder; it built one ticket record and let the "
+         "Lx never built a form builder; it built one ticket record and let the "
          "tenant define its subtypes.",
          [
              cap("Form = Issue Type",
@@ -506,7 +506,7 @@ TREE = [
 
     area("property-tax", "Property Tax",
          "Out of scope - no approved BRD covers property tax, and ASG does not use this "
-         "Lucernex module. Kept in the corpus so the relationship graph stays whole. "
+         "Lx module. Kept in the corpus so the relationship graph stays whole. "
          "The product models tax as a roll-up: a summary per parcel, assessments under "
          "it, then either a bill (with detail lines) or an appeal (with an award).",
          [
@@ -798,7 +798,7 @@ if rule_long:
 
 out = {
     "meta": {
-        "name": "Lucernex - the product by feature",
+        "name": "Lx - the product by feature",
         "detail": "One map organised by what the product DOES, not by database table. "
                   "Node names are short on purpose: click any node and the panel on the "
                   "right opens with the full explanation, the evidence label, and links "
@@ -812,7 +812,7 @@ out = {
         "nodes": total,
         "rules": RULES["total"],
     },
-    "root": {"name": "Lucernex IWMS", "kind": "product", "children": root_children},
+    "root": {"name": "Lx", "kind": "product", "children": root_children},
 }
 
 with open(os.path.join(HERE, "featuremap.json"), "w", encoding="utf-8") as fh:
