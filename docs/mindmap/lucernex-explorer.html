@@ -499,9 +499,17 @@ function viewEntity(name){
     <dt>Referenced by</dt><dd>${fmt(ins.length)} foreign keys from ${fmt(Object.keys(byS).length)} record types</dd>
     <dt>Points at</dt><dd>${fmt(outs.length)} other records</dd>
   </dl>
-  ${o.tc>1?`<div class="find"><h5>Column-split table ${ctag('observed')}</h5><p>This record's columns are spread
-    across ${o.tc} physical tables. That is a platform working around a column-count ceiling, and it is a
-    rebuild consideration: the logical record and the physical rows are not one to one.</p></div>`:''}
+  ${o.d?`<p class="lead">${esc(o.d)}</p>
+    ${o.ds&&o.ds.length?`<p style="font-size:11px;color:var(--faint)">Source: ${o.ds.map(esc).join(', ')}</p>`:''}`:''}
+  ${(o.notes||[]).map(([t,c,d])=>`<div class="find"><h5>${esc(t)} ${ctag(c)}</h5><p>${esc(d)}</p></div>`).join('')}
+  ${(()=>{const rs=(RULES.byEntity||{})[name]||[];
+    if(!rs.length)return '';
+    return `<h3 class="sec">Rules that govern it &middot; ${rs.length}</h3>
+      <div class="scroll"><table class="t"><thead><tr><th>Rule</th><th>What it requires</th><th>Confidence</th></tr></thead><tbody>
+      ${rs.map(id=>{const r=RULES.rules.find(x=>x.id===id);if(!r)return '';
+        return `<tr><td><a class="mono" href="#/r/${esc(id)}">${esc(id)}</a></td>
+          <td>${esc((r.statement||r.section||'').slice(0,220))}</td><td>${ctag(r.conf)}</td></tr>`}).join('')}
+      </tbody></table></div>`})()}
   <h3 class="sec">Fields by group</h3>
   ${o.g.map(([g,fields])=>`
     <details class="rule" ${g.indexOf('Relationships')===0?'open':''}>
@@ -532,22 +540,40 @@ function viewField(ent,fld){
   let rec=null,grp='';
   o.g.forEach(([g,fs])=>fs.forEach(f=>{if(f[0]===fld){rec=f;grp=g}}));
   if(!rec) return `<h2 class="pt">Unknown field</h2>`;
-  const [fn,ft,fam]=rec;
+  const fn=rec[0],ft=rec[1],fam=rec[2];
+  /* the catalogue half of a field: the label a user sees, its scope, and
+     whether it is required. Absent when the census knows the column but the
+     Data Fields catalogue does not. */
+  const label=rec[3]||'',flags=rec[4]||0,code=rec[5]||'';
   const e=(edgesFrom[ent]||[]).find(x=>x[1]===fn);
   const cm=/\(([^)]+)\)/.exec(ft);
   return `
   <p class="crumb"><a href="#/">Atlas</a><i>&rsaquo;</i><a href="#/m/${encodeURIComponent(o.m)}">${esc((modOf(o.m)||{}).title||o.m)}</a>
     <i>&rsaquo;</i><a href="#/e/${encodeURIComponent(ent)}">${esc(ent)}</a><i>&rsaquo;</i>${esc(fn)}</p>
   <h2 class="pt mono">${esc(fn)}</h2>
-  <p class="psub">${esc(grp)}</p>
+  <p class="psub">${label?esc(label)+' &middot; ':''}${esc(grp)}</p>
   <dl class="kv">
     <dt>On record type</dt><dd><a class="mono" href="#/e/${encodeURIComponent(ent)}">${esc(ent)}</a></dd>
+    ${label?`<dt>Label users see</dt><dd>${esc(label)}</dd>`:''}
     <dt>Declared type</dt><dd class="mono">${esc(ft)}</dd>
+    ${code?`<dt>Catalogue type</dt><dd class="mono">${esc(code)}</dd>`:''}
+    <dt>Scope</dt><dd>${(flags&1)?'Firm &mdash; defined by this tenant':(code?'Global &mdash; shipped by the platform':'not in the Data Fields catalogue')}</dd>
+    ${(flags&2)?`<dt>Required</dt><dd>yes, in the catalogue</dd>`:''}
+    ${(flags&4)?`<dt>Read-only</dt><dd>yes &mdash; written by the engine</dd>`:''}
     <dt>Family</dt><dd>${fam==='fk'?'Foreign key':fam==='dropdown'?'Coded value':fam==='soft'?'Soft reference':'Scalar'}</dd>
     ${e?`<dt>Points at</dt><dd>${e[3]&&objOf(e[3])?`<a class="mono" href="#/e/${encodeURIComponent(e[3])}">${esc(e[3])}</a>`:'<span style="color:var(--faint)">unresolved</span>'}</dd>
     <dt>Match confidence</dt><dd>${esc(e[5]||'&mdash;')}</dd>`:''}
     ${fam==='dropdown'&&cm?`<dt>Code table</dt><dd>${esc(cm[1])}</dd>`:''}
   </dl>
+  ${code&&D.typeLegend&&D.typeLegend[code]?`<p class="lead">${esc(D.typeLegend[code])}</p>`:''}
+  ${(flags&2)?`<div class="find"><h5>Required &mdash; but not by the layout ${ctag('observed')}</h5>
+    <p>The catalogue marks this field required. Required-ness has no layout-level layer: the red
+    asterisk a user sees in the builder is this flag, rendered at paint time, not a per-placement
+    setting stored against the layout.</p></div>`:''}
+  ${(flags&1)?`<div class="find"><h5>A tenant custom column ${ctag('observed')}</h5>
+    <p>Firm-scope fields are physical <code>Firm_</code>-prefixed columns, not rows in a value store,
+    so adding one is a DDL change. That is direct evidence for database-per-tenant and against a
+    shared schema.</p></div>`:''}
   <p>${fam==='fk'
     ? 'A foreign key. Lx names the type after the table it points at, so this relationship is declared in the schema rather than implied by the column name.'
     : fam==='dropdown'
@@ -560,12 +586,38 @@ function viewField(ent,fld){
     The rebuild must impose <code>BigDecimal</code> typing of its own &mdash; there is nothing to inherit.</p></div>`:''}`;
 }
 
+/* The rule, stated, wherever a rule appears. A row that showed only an id and a
+   heading was the whole complaint: "you see the name of the rule, but nothing
+   else." The statement leads, the labelled parts follow. */
+function ruleParts(r){
+  if(r.parts&&r.parts.length)
+    return `<div class="scroll" style="margin-top:9px"><table class="t"><tbody>
+      ${r.parts.map(([a,b])=>`<tr><th style="width:150px;text-align:left">${esc(a)}</th><td>${esc(b)}</td></tr>`).join('')}
+      </tbody></table></div>`;
+  if(r.cells&&r.cells.length)
+    return `<div class="scroll" style="margin-top:9px"><table class="t"><tbody>
+      ${r.cells.map(c=>`<tr><td>${esc(c)}</td></tr>`).join('')}</tbody></table></div>`;
+  return r.text?`<p>${esc(r.text)}</p>`:'';
+}
+function ruleLinks(r){
+  const out=[];
+  if(r.objects&&r.objects.length)
+    out.push(`<p style="font-size:12px">Constrains ${r.objects.map(o=>
+      D.objects[o]?`<a href="#/e/${encodeURIComponent(o)}">${esc(o)}</a>`:esc(o)).join(', ')}.</p>`);
+  if(r.fields&&r.fields.length)
+    out.push(`<p style="font-size:11.5px;color:var(--muted)">Columns named: ${r.fields.map(esc).join(', ')}</p>`);
+  if(r.related&&r.related.length)
+    out.push(`<p style="font-size:12px">Cites ${r.related.map(i=>`<a href="#/r/${esc(i)}">${esc(i)}</a>`).join(', ')}.</p>`);
+  return out.join('');
+}
 function ruleRow(r){
   return `<details class="rule" id="rule-${esc(r.id)}">
     <summary><b>${esc(r.id)}</b><span>${esc(r.section||r.text.slice(0,110))}</span>${ctag(r.conf)}</summary>
-    <div class="rb">${r.detail?`<p>${esc(r.detail)}</p>`:''}
-      ${r.cells&&r.cells.length?`<div class="scroll" style="margin-top:9px"><table class="t"><tbody>
-        ${r.cells.map(c=>`<tr><td>${esc(c)}</td></tr>`).join('')}</tbody></table></div>`:''}
+    <div class="rb">${r.statement?`<p class="lead">${esc(r.statement)}</p>`:''}
+      ${r.detail?`<p>${esc(r.detail)}</p>`:''}
+      ${ruleParts(r)}
+      ${r.quote?`<p style="border-left:2px solid var(--line);padding-left:9px">&ldquo;${esc(r.quote)}&rdquo;</p>`:''}
+      ${ruleLinks(r)}
       <p style="font-size:11px;color:var(--faint)">${esc(r.doc)}</p></div></details>`;
 }
 
@@ -582,7 +634,7 @@ function viewRules(){
     <span class="count" id="rc"></span>
   </div>
   <div id="rlist">${RULES.rules.map(r=>`<div data-m="${esc(r.module)}" data-c="${esc(r.conf)}"
-    data-k="${esc((r.id+' '+r.section+' '+r.text+' '+(r.detail||'')).toLowerCase())}">${ruleRow(r)}</div>`).join('')}</div>`;
+    data-k="${esc((r.id+' '+r.section+' '+r.text+' '+(r.statement||'')+' '+(r.objects||[]).join(' ')+' '+(r.detail||'')).toLowerCase())}">${ruleRow(r)}</div>`).join('')}</div>`;
 }
 
 function viewRule(id){
@@ -590,10 +642,15 @@ function viewRule(id){
   return `<p class="crumb"><a href="#/">Atlas</a><i>&rsaquo;</i><a href="#/rules">Rules</a><i>&rsaquo;</i>${esc(r.id)}</p>
   <h2 class="pt mono">${esc(r.id)}</h2><p class="psub">${esc(r.moduleTitle)} &middot; ${esc(r.section)}</p>
   ${ctag(r.conf)}
-  ${r.detail?`<p class="lead">${esc(r.detail)}</p>`:''}
-  ${r.cells&&r.cells.length?`<div class="scroll"><table class="t"><tbody>
-    ${r.cells.map(c=>`<tr><td>${esc(c)}</td></tr>`).join('')}</tbody></table></div>`:`<p>${esc(r.text)}</p>`}
-  <p style="font-size:11.5px;color:var(--faint);margin-top:16px">Source: ${esc(r.doc)}</p>`;
+  ${r.statement?`<p class="lead">${esc(r.statement)}</p>`:''}
+  ${r.detail?`<p>${esc(r.detail)}</p>`:''}
+  ${ruleParts(r)}
+  ${r.quote?`<div class="find"><h5>The wording it rests on ${ctag('observed')}</h5>
+    <p>&ldquo;${esc(r.quote)}&rdquo;</p></div>`:''}
+  ${ruleLinks(r)}
+  ${r.confNote?`<p style="font-size:12px;color:var(--muted)">Confidence: ${esc(r.confNote)}</p>`:''}
+  <p style="font-size:11.5px;color:var(--faint);margin-top:16px">Source: ${esc(r.doc)}
+    &middot; markdown: <span class="mono">md/rules/${esc(r.id)}.md</span></p>`;
 }
 
 function viewQuestions(){

@@ -151,6 +151,6 @@ inference.
 
 | # | Rule | Label | Source |
 |---|---|---|---|
-| LAY-R-200 | Layout changes are audited — the admin dashboard exposes a **Layout Changes** tool (`ShowLayoutChanges.jsp`). Its contents were never opened; ASG's own review note records "*Need further explanation as to what this is.*" | Observed (link + note) | [004](../../admin/004-company-administration.md#datapS-tools), `_xlsx_feature_list.txt` line 44 |
+| LAY-R-200 | Layout changes are audited — the admin dashboard exposes a **Layout Changes** tool (`ShowLayoutChanges.jsp`). Its contents were never opened; ASG's own review note records "*Need further explanation as to what this is.*" | Observed (link + note) | [004](../../admin/004-company-administration.md#dataps-tools), `_xlsx_feature_list.txt` line 44 |
 | LAY-R-201 | Field-level value changes are audited in `AuditColumn`, filed under the registry's group and subgroup — so an audit entry inherits the Data Fields taxonomy. | Derived (11-for-11 column match) | [007](../../admin/007-firm-and-client-drop-downs.md#value-level-editor--scoping-and-audit-log); `all-fields.csv` |
 | LAY-R-202 | Layout records carry `VersionAdded`/`VersionModified` at the *field* level (`RGAF`) but not at the layout level — layout versioning, if any, is not visible in the schema. | Observed (absence) | `all-fields.csv` |

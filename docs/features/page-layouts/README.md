@@ -138,7 +138,7 @@ binds directly to the menu.
 them in sequence. `PageLayout.PreviousPageLayoutID` is a **sequence pointer within a navigation
 node**, and the `Export Configuration` screen surfaces it as a `Previous Layout` column
 ([`../import-export/`](../import-export/#export-configuration-is-the-publish-mechanism)). See
-[the chains](#the-chain-how-several-layouts-share-one-navigation-node) below.
+[the chains](#the-chain--how-several-layouts-share-one-navigation-node) below.
 
 ### The chain — how several layouts share one navigation node
 
@@ -266,6 +266,15 @@ have now been rendered (`screenshots/bbw-enduser/ct-03-summary.jpg`,
 `<select>` naming the current layout** — `ASG Contract Summary` on the Summary screen,
 `ASG Contract Abstract Details` on the Abstract Details screen.
 
+![Contract Summary as an end user sees it. The layout selector is the unlabelled `<select>` at the top right reading `ASG Contract Summary`; the `Actions` rail runs down the right-hand edge with 13 entries; the two tab rows above are the navigation tree's groups and leaves; and each blue banner -- `Contract Information`, `Contract Firm Information`, `Location Information`, `Facility Information`, `Contract Critical Dates` -- is a SUB layout rendered as a titled section.](../../assets/screenshots/bbw-enduser/ct-03-summary.jpg)
+
+> **Caveat on this and every other screenshot here.** These screens are ExtJS viewports: the content
+> area scrolls internally, so a capture shows only what the viewport held. Nothing may be inferred
+> from the *absence* of a row or a section below the fold. Where a count matters, the JSON captures
+> in [`../../tenants/`](../../tenants/) are the authority and the image is illustration
+> ([`../../CONVENTIONS.md`](../../CONVENTIONS.md)).
+
+
 **Derived.** A navigation node's chain is presented to the user as a **layout picker**. The runtime
 does not silently choose one and it does not stack them: it renders the head and offers the rest as
 options, in the order `PreviousPageLayoutID` defines. That is why five layouts can share
@@ -322,6 +331,9 @@ Information`, `Location Information`, `Facility Information`, `Contract Critical
 Details renders `ASG Contract Header`, `ASG Contract Critical Dates`, `ASG Contract Space
 Information`, then a `Related Details` block containing `Terms` → `Contract Terms`.
 
+![Abstract Details, the second screen in the same navigation group. The layout selector now reads `ASG Contract Abstract Details`, the `Actions` rail has shrunk from 13 entries to 4, and `ASG Contract Critical Dates` appears here as well as on Summary -- one SUB layout included by reference on two different pages.](../../assets/screenshots/bbw-enduser/ct-05-abstract-details.jpg)
+
+
 **Derived.** Those section titles are **SUB layout names** — `ASG Contract Firm Information`
 (`98878`), `ASG Contract Location Information` (`98880`), `ASG Contract Facility Information`
 (`98877`), `ASG Contract Critical Dates` (`98876`), `ASG Contract Header` (`98879`), `ASG Contract
@@ -364,6 +376,48 @@ wizard steps are ordinary sub-pages named `… Step 2`…`Step 5`; sequencing is
 with no `StepNumber` or `NextPageLayoutID` observed anywhere. Field-by-field capture in
 [`bbw-wizards.json`](../../tenants/bbw-wizards.json).
 
+**Observed**, [`bbw-wizards.json`](../../tenants/bbw-wizards.json) — the five steps, what each one
+places, and the two that do not collect fields at all but clone them from a template contract:
+
+```mermaid
+flowchart TD
+    S1["Step 1 -- ASG Contract Wizard  98883<br/>STEP ONE: Contract Summary Setup<br/>35 placed inputs"]
+    S2["Step 2 -- ASG Contract Wizard Step 2  98884<br/>10 placed inputs"]
+    S3["Step 3 -- ASG Contract Wizard Step 3  98885<br/>STEP THREE: Contract Covenants<br/>1 real input"]
+    S4["Step 4 -- ASG Contract Wizard Step 4  98886<br/>STEP FOUR: Responsibilities<br/>1 real input"]
+    S5["Step 5 -- ASG Contract Wizard Step 5  98887<br/>22 placed inputs"]
+
+    W1["Writes Contract: status, name, master contract, location, facility,<br/>group / type / category, the eight date axes, rentable area<br/><br/>and writes Facility: OpenDate, CloseDate"]
+    W2["Writes ContractTerm: term type, term length, option number<br/>and Contract: rentable area, building area unit"]
+    W3["Covenant_ContractWizardTemplate picks a template contract.<br/>Its Covenant rows are cloned onto the new contract."]
+    W4["Responsibility_ContractWizardTemplate picks a template contract.<br/>Its Responsibility rows are cloned onto the new contract."]
+    W5["Writes ExpenseSetup: expense group / type / category, vendor,<br/>frequency, proration, starting amount, escalation type and rate<br/>and Contract: PaymentsBeginDate, PaymentsEndDate"]
+
+    S1 --> S2 --> S3 --> S4 --> S5
+    S1 -.-> W1
+    S2 -.-> W2
+    S3 -.-> W3
+    S4 -.-> W4
+    S5 -.-> W5
+```
+
+**Derived, and it is the structurally interesting part.** Two things the field names give away that
+the step titles do not:
+
+1. **Step 1 writes across two tables.** `Facility_OpenDate` and `Facility_CloseDate` sit among 33
+   `Contract_*` inputs, so one wizard step spans `Contract` and `Facility`. A rebuild that scopes a
+   wizard step to a single aggregate cannot express this step.
+2. **Steps 3 and 4 collect nothing; they clone.** Each has exactly one meaningful control — a
+   `Contract Wizard Template` picker — and the on-screen text is explicit: *"Select the Contract
+   template below to clone its covenant entries automatically."* Covenants and responsibilities are
+   **copied from an existing contract**, not typed. That makes a designated template contract a piece
+   of live configuration with no admin screen behind it.
+
+**Inferred.** The ordering shown is from the `Step 2`…`Step 5` names and the `STEP ONE` / `STEP THREE`
+/ `STEP FOUR` banner text only. No `StepNumber` column exists, and steps 2 and 5 carry no banner at
+all, so the sequence is convention rather than data.
+
+
 ### LIST — a grid, in two different jobs
 
 **Observed.** 19 of 46 LIST layouts carry a navigation parent; 27 do not.
@@ -404,6 +458,17 @@ reached from the menu. The naming makes the nesting explicit: eleven are
 `ASG Approval - Transactions` — are approval grids with no navigation home, **Inferred** to be
 surfaced inside a workflow step's form rather than from the menu.
 
+**Observed, and it upgrades that derivation to a direct sighting.** The `Payment Details` screen
+renders exactly as predicted — a SEP page hosting its parentless LIST layouts, each under a heading
+that is **the LIST layout's own name**:
+
+![Contract -> Payment Info -> Payment Details. The page opens with `ASG Contract Header`, a SUB layout also used on Abstract Details. Below it, three embedded grids are labelled with their layout names verbatim: `ASG Contract Payment Details - Expense Setup`, `ASG Contract Payment Details - Rent Steps`, `ASG Contract Payment Details - Alternate Rent`. None of the three has a navigation parent; they are reached only by being placed here.](../../assets/screenshots/bbw-enduser/ct-14-payment-details.jpg)
+
+**Derived.** The heading above each grid is the parentless LIST layout's name, unedited — so the
+"embedded grid" reading is no longer an inference from naming convention. It also shows the host page
+carrying **both** kinds of placement at once: a SUB layout at the top and LIST layouts below.
+
+
 **Observed.** `ASG Contract List` (`98918`), `ASG Facility List` (`98919`) and
 `ASG Covenant List View` (`98906`) also have no navigation parent, despite being obvious top-level
 list screens. **Open question:** what renders them?
@@ -420,6 +485,38 @@ both tenants is copied, not independently authored.
 **Observed.** The id offsets cluster hard: `BBW_id − AF_id` is `+2626` for 14 layouts, `+2638` for
 13, `+2652` for 7, `+2653` for 7 — 58 of 80 within `+2626…+2677`. **Derived:** the set was copied in
 contiguous blocks in a small number of operations, not row by row over time.
+
+**Derived**, assembling the id evidence here with the `Clone` checkbox observed on
+`Export Configuration` ([`../import-export/`](../import-export/#export-configuration-is-the-publish-mechanism)):
+
+```mermaid
+sequenceDiagram
+    participant ASG as ASG template firm
+    participant XML as Configuration XML
+    participant BBW as Firm 3159 -- BBW
+    participant AF as Firm 3158 -- American Freight
+
+    ASG->>XML: Export Configuration, Export All,<br/>with Clone these layouts checked
+    Note over XML: One XML file. The Clone flag tells the<br/>importer to create new layouts and fields<br/>rather than preserve identity.
+
+    XML->>BBW: Import
+    Note over BBW: New PageLayoutIDs minted<br/>98858 - 102775
+    XML->>AF: Import
+    Note over AF: New PageLayoutIDs minted<br/>96206 - 110188
+
+    Note over BBW,AF: 80 layouts match by name and mode.<br/>0 match by id. 0 primary-table mismatches.<br/>58 of 80 id offsets fall in +2626..+2677.
+
+    BBW->>BBW: Fork -- adds the 7 ASG Lease Abstract layouts
+    AF->>AF: Fork -- adds ASG Client Request Log,<br/>leaves 4 scratch rows behind
+
+    Note over BBW,AF: No source_global_layout_id anywhere.<br/>Nothing points back to the template set,<br/>which is why the AF-BBW join had to be done on name.
+```
+
+**Derived.** The absence at the end of that sequence is the finding. `Clone` mints new keys and
+**records no lineage** — there is no column on `PageLayout` naming the layout it was copied from, and
+no version stamp for the template set as a whole. A tenant therefore cannot be told *"the layout you
+are running is three revisions behind the Hub"*, which is precisely the rule the ASG workspace
+`CLAUDE.md` wants and has not written down.
 
 **Derived.** The 19 unshared layouts are less divergence than they look:
 
@@ -456,6 +553,9 @@ models**; do not generalise one to the others.
 ## What a layout contains
 
 **Observed**, from [`008`](../../admin/008-manage-page-layouts.md) on `ASG Contract Summary`:
+
+![The layout editor on `ASG Contract Summary`. Three things to notice: the `Available Fields` tree on the left is the Manage Data Fields hierarchy for `Contract`, and its `Custom Lists` branch is expanded to show `Operating Expenses` and its `OpEx*` leaves; the placed fields carry red asterisks -- `Contract Status *`, `Location *`, `Lease Status *` -- which are required in neither the column layer nor the catalog layer; and the open modal says `Conditions affect the edit layout and NOT the list layout`, then reports no conditional fields on this layout at all.](../../assets/screenshots/page-layouts/page-layouts-conditional-field-associations.png)
+
 
 | Element | Detail |
 |---|---|
@@ -499,7 +599,7 @@ the schema itself.
 | `PageLayoutType`, `OutputType` | string | Single-character discriminators (`V`, `L` observed) |
 | `PrimaryCodeSQLTableID` | ref | The layout's primary table |
 | **`ParentPageLayoutID`** | ref | **Self-referential** |
-| **`PreviousPageLayoutID`** | ref | A second self-reference — **the sequence pointer within a navigation node**, see [the chains](#the-chain-how-several-layouts-share-one-navigation-node). *(Originally recorded as versioning/duplication; that reading is corrected there.)* |
+| **`PreviousPageLayoutID`** | ref | A second self-reference — **the sequence pointer within a navigation node**, see [the chains](#the-chain--how-several-layouts-share-one-navigation-node). *(Originally recorded as versioning/duplication; that reading is corrected there.)* |
 | **`CodeIssueTypeID`** | ref | **Binds the layout to an Issue Type — this is what makes it a FORM layout.** Null on summary/sub/list layouts |
 | `FirmID` | ref | The owning tenant |
 | `IsGlobalReport` | boolean | Global versus firm |
@@ -524,7 +624,7 @@ and tiering by `FirmID` / `IsGlobalReport` rather than by table.** The many-to-o
 observed earlier is unaffected — several firm layouts may share one parent.
 
 **Derived.** `PreviousPageLayoutID` orders layouts within a navigation node — see
-[the chains](#the-chain-how-several-layouts-share-one-navigation-node). It is **not** a version
+[the chains](#the-chain--how-several-layouts-share-one-navigation-node). It is **not** a version
 lineage, so layouts have no more version tracking in the schema than workflow templates do; the
 `Layout Changes` report tracks change against *platform release* versions instead.
 
@@ -553,7 +653,7 @@ explicit context dimension; one `(row, column)` pair cannot express this.
 `IsReadOnly` column** among the 20 — confirming
 [`layouts-and-forms/data-model.md`](../../modules/layouts-and-forms/data-model.md) on the column
 names. The two remaining candidates are the `DisplayOption*` bitmasks and `JSONConfigText`. See
-[`../required-and-validation/`](../required-and-validation/#layer-3-the-layouts-red-asterisk--observed-unexplained).
+[`../required-and-validation/`](../required-and-validation/#layer-3-the-red-asterisk--real-but-unlocated).
 
 ### `PageLayoutField.JSONConfigText` — the real extension point
 
@@ -596,7 +696,7 @@ populated columns, so its column list could not be recovered. Recorded as **bloc
 ## `Layout Changes` — the vendor's own unexplained tool, explained
 
 **Observed** (`/en/admin/ShowLayoutChanges.jsp`,
-`bbw-admin/56-layout-changes.jpg`). The vendor
+`bbw-admin/54-layout-changes.jpg`). The vendor
 feature workbook flags this tool as *"Need further explanation as to what this is"*
 ([`../../modules/layouts-and-forms/asg-edgeplus-mapping.md`](../../modules/layouts-and-forms/asg-edgeplus-mapping.md)).
 It is a **layout change report**:
@@ -611,6 +711,9 @@ It is a **layout change report**:
 
 On-screen banner: *"Note: This functionality is currently **experimental**, removed fields not
 included."* Result in BBW: **"No Records Found."**
+
+![The `Layout Changes` report. The `For:` control is the whole point of the screen -- it offers `Firm Layouts` and `Global Layouts` as separate populations, which is the product naming the two-tier model this document derived from id arithmetic. `And Modified After` is pre-filled with `12/09/2026`, one day before the capture, which is why the result is `No Records Found`.](../../assets/screenshots/bbw-admin/54-layout-changes.jpg)
+
 
 **Derived — three things at once.**
 

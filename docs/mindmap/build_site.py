@@ -8,14 +8,21 @@ can be linked to, printed, or handed to somebody who will never open the
 interactive app.
 
   site/index.html                 the entry point
-  site/modules/<id>.html          15 module pages
-  site/entities/<Name>.html       223 record-type pages, one anchor per field
+  site/modules/<id>.html          module pages
+  site/entities/<Name>.html       record-type pages, one anchor per field
+  site/features/<area>.html       one page per feature-map area
   site/rules/index.html           the rule index
-  site/rules/<ID>.html            384 rule pages
-  site/questions.html             286 open questions
+  site/rules/<ID>.html            one page per numbered rule
+  site/questions.html             the open questions
+  site/markdown.html              the markdown index
+  site/md/**.md                   the same content as markdown, one file per node
   site/atlas.html                 the interactive app, copied in
 
-Re-runnable: wipes and rewrites site/ each time.
+Every node in either map resolves to both an HTML page and a markdown document,
+and every page states what the thing IS before it states how big it is.
+
+Re-runnable: wipes and rewrites site/ each time, except research/, which
+build_research.py owns and which runs after this.
 """
 
 import html
@@ -53,10 +60,19 @@ M = load("mapdata.json")
 R = load("rules.json")
 Q = load("questions.json")
 F = load("findings.json")
+FM = load("featuremap.json")
 
 meta, objects, modules = M["meta"], M["objects"], M["modules"]
 edges = M["edges"]
 group_blurb = M.get("groupBlurb", {})
+type_legend = M.get("typeLegend", {})
+rule_by_id = {r["id"]: r for r in R["rules"]}
+rules_by_entity = R.get("byEntity", {})
+q_by_area = {}
+for _q in Q["questions"]:
+    q_by_area.setdefault(_q["area"], []).append(_q)
+
+FLAG_FIRM, FLAG_REQ, FLAG_RO = 1, 2, 4
 
 edges_from, edges_to = {}, {}
 for e in edges:
@@ -145,6 +161,12 @@ dt{color:var(--muted);white-space:nowrap}dd{margin:0}
 .btn{display:inline-block;font-size:12.5px;padding:7px 12px;background:var(--surface);
  color:var(--ink2);border:1px solid var(--line);border-radius:var(--r);margin:0 6px 8px 0}
 .btn:hover{border-color:var(--accent);color:var(--ink);text-decoration:none}
+.shots{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px;margin:0 0 18px}
+.shots a{display:block;border:1px solid var(--line);border-radius:var(--r);overflow:hidden;
+ background:var(--surface);color:var(--muted)}
+.shots a:hover{border-color:var(--accent);text-decoration:none}
+.shots img{width:100%;display:block;background:var(--surface2)}
+.shots span{display:block;padding:5px 8px;font-size:10.5px;word-break:break-all}
 """
 
 
@@ -161,8 +183,9 @@ def page(title, body, depth=0, crumb=""):
 <header><b>Lx Atlas</b>
 <nav><a href="{up}index.html">Overview</a><a href="{up}atlas.html#/map?set=feature">Feature map</a>
 <a href="{up}atlas.html">Interactive app</a>
+<a href="{up}features/index.html">Features</a>
 <a href="{up}entities/index.html">Record types</a><a href="{up}rules/index.html">Rules</a>
-<a href="{up}research/index.html">Research</a>
+<a href="{up}research/index.html">Research</a>\n<a href="{up}research/screens.html">Screens</a><a href="{up}markdown.html">Markdown</a>
 <a href="{up}questions.html">Open questions</a></nav></header>
 <main>{crumb}{body}</main></body></html>"""))
 
@@ -181,8 +204,52 @@ if os.path.isdir(SITE):
 os.makedirs(SITE, exist_ok=True)
 if os.path.isdir(_tmp):
     shutil.move(_tmp, _keep)
-for d in ("", "modules", "entities", "rules"):
+for d in ("", "modules", "entities", "rules", "features",
+          "md", "md/modules", "md/entities", "md/rules", "md/features"):
     os.makedirs(os.path.join(SITE, d), exist_ok=True)
+
+
+# ------------------------------------------------------------------- markdown
+# Every node resolves to a real markdown document as well as an HTML page: the
+# HTML is for reading in a browser, the markdown is what somebody pastes into a
+# ticket, a spec, or another tool. Same content, one generator.
+
+MD_INDEX = []
+
+
+def write_md(rel, title, lines):
+    """Write one markdown document and record it for the markdown index."""
+    path = os.path.join(SITE, "md", rel)
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    body = brand("\n".join(lines).rstrip() + "\n")
+    with open(path, "w", encoding="utf-8") as fh:
+        fh.write(body)
+    MD_INDEX.append((rel, title))
+    return "md/" + rel
+
+
+def md_link(depth, rel):
+    """A link from an HTML page down to its markdown twin."""
+    return (f'<p><a class="btn" href="{"../" * depth}md/{rel}">'
+            f'Read this page as Markdown &rarr;</a></p>')
+
+
+def md_table(headers, rows):
+    out = ["| " + " | ".join(headers) + " |",
+           "|" + "|".join("---" for _ in headers) + "|"]
+    for r in rows:
+        out.append("| " + " | ".join(str(c).replace("|", "\\|") for c in r) + " |")
+    out.append("")
+    return out
+
+
+CONF_WORD = {"observed": "Observed", "derived": "Derived", "inferred": "Inferred"}
+
+
+def scope_of(flags, code):
+    if flags & FLAG_FIRM:
+        return "Firm"
+    return "Global" if code else "—"
 
 with open(os.path.join(SITE, "atlas.css"), "w", encoding="utf-8") as fh:
     fh.write(CSS)
@@ -234,6 +301,14 @@ missing.</p><div class="row"><span>17 documents</span><span>34 data captures</sp
 <p>What one tenant has that the other does not, why a navigation root can be invisible, and how
 configuration is published between firms and then forks.</p>
 <div class="row"><span>27 sections</span></div></a>
+<a class="card" href="features/index.html"><h3>Features &rarr;</h3>
+<p>The feature map as pages: what the product does, who for, through which screens, governed by
+which rules, with the open questions and the captured screens attached to each area.</p>
+<div class="row"><span>21 areas</span></div></a>
+<a class="card" href="research/screens.html"><h3>Screens &rarr;</h3>
+<p>179 captured screens from both tenants &mdash; every administration tool, and the only end-user
+screens ever taken. Full width, click through for full resolution.</p>
+<div class="row"><span>179 images</span></div></a>
 <a class="card" href="research/data-model/api/index.html"><h3>The REST API</h3>
 <p>One generic CRUD controller serving all 227 record types. 141 paths, 160 operations, and the
 envelope that makes HTTP&nbsp;200 an unreliable success signal.</p>
@@ -253,6 +328,7 @@ for m in modules:
          f'<h1>{e(m["title"])}</h1>',
          f'<p class="sub">{"In scope for the rebuild" if m["scope"] else "Out of scope by decision"}</p>',
          f'<p class="lead">{e(m["what"])}</p>',
+         (f'<p>{e(m["lead"])}</p>' if m.get("lead") else ''),
          f'<p><a class="btn" href="../atlas.html#/map?set=feature&amp;f={e(m["id"])}">'
          f'Open this feature in the feature map &rarr;</a></p>',
          '<div class="stats">' + "".join(
@@ -282,8 +358,37 @@ for m in modules:
                  '<thead><tr><th>Rule</th><th>Subject</th><th>Confidence</th></tr></thead><tbody>')
         for r in rules:
             b.append(f'<tr><td><a class="mono" href="../rules/{slug(r["id"])}.html">{e(r["id"])}</a></td>'
-                     f'<td>{e((r.get("section") or r["text"])[:140])}</td><td>{ctag(r["conf"])}</td></tr>')
+                     f'<td><b>{e(r.get("section") or "")}</b>'
+                     f'<div style="color:var(--muted);font-size:11.5px">'
+                     f'{e((r.get("statement") or r.get("text") or "")[:190])}</div></td>'
+                     f'<td>{ctag(r["conf"])}</td></tr>')
         b.append('</tbody></table></div>')
+
+    md = [f"# {m['title']}", "",
+          f"*{'In scope for the rebuild' if m['scope'] else 'Out of scope by decision'}*", "",
+          m["what"], ""]
+    if m.get("lead"):
+        md += [m["lead"], ""]
+    md += md_table(["", "Count"], [["Record types", m["oc"]], ["Fields", fmt(m["fc"])],
+                                   ["Keys in", m["ei"]], ["Keys out", m["eo"]],
+                                   ["Rules", len(rules)]])
+    if finds:
+        md += ["## What was found here", ""]
+        for t, c, d in finds:
+            md += [f"### {t}", "", f"**{CONF_WORD.get(c, c)}.** {d}", ""]
+    md += ["## Record types", ""]
+    md += md_table(["Record type", "Postgres table", "Fields", "Referenced by"],
+                   [[f"[{n}](../entities/{slug(n)}.md)", f"`{objects[n]['t'] or '—'}`",
+                     fmt(objects[n]["n"]), fmt(len(edges_to.get(n, [])))]
+                    for n in m["objects"] if n in objects])
+    if rules:
+        md += ["## Rules", ""]
+        md += md_table(["Rule", "Subject", "What it requires", "Confidence"],
+                       [[f"[{r['id']}](../rules/{slug(r['id'])}.md)", r.get("section") or "",
+                         (r.get("statement") or "")[:200], CONF_WORD.get(r["conf"], r["conf"])]
+                        for r in rules])
+    write_md("modules/%s.md" % slug(m["id"]), m["title"], md)
+    b.append(md_link(1, "modules/%s.md" % slug(m["id"])))
     open(os.path.join(SITE, "modules", slug(m["id"]) + ".html"), "w", encoding="utf-8").write(page(m["title"], "".join(b), depth=1))
 
 # ---------------------------------------------------------------- entities
@@ -322,19 +427,45 @@ for n in names:
          f'<dt>Postgres table</dt><dd class="mono">{e(o["t"] or "none exported")}</dd>'
          f'<dt>Module</dt><dd><a href="../modules/{slug(o["m"])}.html">{e(mm["title"] if mm else o["m"])}</a></dd>'
          f'<dt>Referenced by</dt><dd>{fmt(len(ins))} keys from {len(by_src)} record types</dd>'
-         f'<dt>Points at</dt><dd>{fmt(len(outs))} other records</dd></dl>']
-    if o["tc"] > 1:
-        b.append(f'<div class="find"><h4>Column-split table {ctag("observed")}</h4><p>This record&rsquo;s '
-                 f'columns are spread across {o["tc"]} physical tables &mdash; the platform working around a '
-                 'column-count ceiling. The logical record and the physical rows are not one to one.</p></div>')
+         f'<dt>Points at</dt><dd>{fmt(len(outs))} other records</dd>'
+         + (f'<dt>Catalogued fields</dt><dd>{fmt(o["cat"][0])} '
+            f'({fmt(o["cat"][1])} global, {fmt(o["cat"][2])} firm)</dd>' if o.get("cat") else '')
+         + '</dl>']
+
+    # what the record IS, in the catalogue's own words, before any statistics
+    if o.get("d"):
+        b.append(f'<p class="lead">{e(o["d"])}</p>')
+        if o.get("ds"):
+            b.append('<p style="font-size:11.5px;color:var(--faint)">Source: '
+                     + ", ".join(f'<code>{e(s)}</code>' for s in o["ds"]) + '</p>')
+
+    ent_rules = [rule_by_id[i] for i in rules_by_entity.get(n, []) if i in rule_by_id]
+    if o.get("notes"):
+        b.append('<h2>What to know before rebuilding this</h2>')
+        for t, c, d in o["notes"]:
+            b.append(f'<div class="find"><h4>{e(t)} {ctag(c)}</h4><p>{e(d)}</p></div>')
+    if ent_rules:
+        b.append(f'<h2>Rules that govern it &middot; {len(ent_rules)}</h2>'
+                 '<div class="wrapt"><table><thead><tr><th>Rule</th><th>What it requires</th>'
+                 '<th>Confidence</th></tr></thead><tbody>')
+        for r in ent_rules:
+            b.append(f'<tr><td><a class="mono" href="../rules/{slug(r["id"])}.html">{e(r["id"])}</a></td>'
+                     f'<td>{e((r.get("statement") or r.get("section") or "")[:220])}</td>'
+                     f'<td>{ctag(r["conf"])}</td></tr>')
+        b.append('</tbody></table></div>')
+
     b.append('<h2>Fields</h2>')
     for g, fields in o["g"]:
         b.append(f'<div class="grp"><h3>{e(g)} <span class="tag">{len(fields)}</span></h3>')
         if group_blurb.get(g):
             b.append(f'<p class="gb">{e(group_blurb[g])}</p>')
-        b.append('<div class="wrapt"><table><thead><tr><th>Field</th><th>Declared type</th>'
+        b.append('<div class="wrapt"><table><thead><tr><th>Field</th><th>Label</th>'
+                 '<th>Declared type</th><th>Scope</th><th>Req</th>'
                  '<th>Points at</th></tr></thead><tbody>')
-        for fn, ft, fam in fields:
+        for f in fields:
+            fn, ft, fam = f[0], f[1], f[2]
+            label, flags, code = (f[3] if len(f) > 3 else ""), (f[4] if len(f) > 4 else 0), \
+                                 (f[5] if len(f) > 5 else "")
             tgt = ""
             if fam == "fk":
                 ed = next((x for x in edges_from.get(n, []) if x[1] == fn), None)
@@ -346,7 +477,11 @@ for n in names:
                 cm = re.search(r"\(([^)]+)\)", ft)
                 tgt = f'<span style="color:var(--muted)">{e(cm.group(1) if cm else "code table")}</span>'
             b.append(f'<tr id="f-{slug(fn)}"><td class="mono">{e(fn)}</td>'
-                     f'<td style="color:var(--muted)">{e(ft)}</td><td>{tgt}</td></tr>')
+                     f'<td style="font-size:11.5px">{e(label)}</td>'
+                     f'<td style="color:var(--muted)" title="{e(type_legend.get(code, ""))}">{e(ft)}</td>'
+                     f'<td style="font-size:11px;color:var(--muted)">{e(scope_of(flags, code))}</td>'
+                     f'<td style="font-size:11px">{"yes" if flags & FLAG_REQ else ""}</td>'
+                     f'<td>{tgt}</td></tr>')
         b.append('</tbody></table></div></div>')
     if by_src:
         b.append(f'<h2>What points here &middot; {fmt(len(ins))} keys</h2><div class="wrapt"><table>'
@@ -355,6 +490,67 @@ for n in names:
             b.append(f'<tr><td><a class="mono" href="{slug(s)}.html">{e(s)}</a></td>'
                      f'<td class="mono" style="font-size:11.5px;color:var(--muted)">{e(", ".join(cols))}</td></tr>')
         b.append('</tbody></table></div>')
+
+    # --- the same record, as markdown
+    md = [f"# {n}", "",
+          f"*{fmt(o['n'])} fields"
+          + (f", split across {o['tc']} physical tables" if o["tc"] > 1 else "")
+          + f" · module: {mm['title'] if mm else o['m']}"
+          + f" · Postgres: `{o['t'] or 'none exported'}`*", ""]
+    if o.get("d"):
+        md += [o["d"], ""]
+        if o.get("ds"):
+            md += ["Source: " + ", ".join("`%s`" % s for s in o["ds"]), ""]
+    md += ["## At a glance", ""]
+    md += md_table(["", "Value"], [
+        ["Fields declared", fmt(o["n"])],
+        ["Catalogued fields", (f"{fmt(o['cat'][0])} ({fmt(o['cat'][1])} global, "
+                               f"{fmt(o['cat'][2])} firm)") if o.get("cat") else "not in the catalogue"],
+        ["Physical tables", fmt(o["tc"])],
+        ["Referenced by", f"{fmt(len(ins))} keys from {len(by_src)} record types"],
+        ["Points at", f"{fmt(len(outs))} other records"],
+        ["Tenancy position", o.get("pe") or "—"],
+        ["Rules that name it", fmt(len(ent_rules))],
+    ])
+    if o.get("notes"):
+        md += ["## What to know before rebuilding this", ""]
+        for t, c, d in o["notes"]:
+            md += [f"### {t}", "", f"**{CONF_WORD.get(c, c)}.** {d}", ""]
+    if ent_rules:
+        md += ["## Rules that govern it", ""]
+        md += md_table(["Rule", "What it requires", "Confidence"],
+                       [[f"[{r['id']}](../rules/{slug(r['id'])}.md)",
+                         (r.get("statement") or r.get("section") or "")[:240],
+                         CONF_WORD.get(r["conf"], r["conf"])] for r in ent_rules])
+    md += ["## Fields", ""]
+    for g, fields in o["g"]:
+        md += [f"### {g} ({len(fields)})", ""]
+        if group_blurb.get(g):
+            md += [group_blurb[g], ""]
+        rows = []
+        for f in fields:
+            fn, ft, fam = f[0], f[1], f[2]
+            label = f[3] if len(f) > 3 else ""
+            flags = f[4] if len(f) > 4 else 0
+            code = f[5] if len(f) > 5 else ""
+            tgt = ""
+            if fam == "fk":
+                ed = next((x for x in edges_from.get(n, []) if x[1] == fn), None)
+                tgt = (f"[{ed[3]}]({slug(ed[3])}.md)"
+                       if ed and ed[3] and ed[3] in objects else "unresolved")
+            elif fam == "dropdown":
+                cm = re.search(r"\(([^)]+)\)", ft)
+                tgt = cm.group(1) if cm else "code table"
+            rows.append([f"`{fn}`", label, ft, scope_of(flags, code),
+                         "yes" if flags & FLAG_REQ else "", tgt])
+        md += md_table(["Field", "Label", "Declared type", "Scope", "Req", "Points at"], rows)
+    if by_src:
+        md += [f"## What points here ({fmt(len(ins))} keys)", ""]
+        md += md_table(["Record type", "Via column"],
+                       [[f"[{s}]({slug(s)}.md)", ", ".join(f"`{c}`" for c in cols)]
+                        for s, cols in sorted(by_src.items(), key=lambda x: -len(x[1]))])
+    rel = write_md("entities/%s.md" % slug(n), n, md)
+    b.append(md_link(1, "entities/%s.md" % slug(n)))
     open(os.path.join(SITE, "entities", slug(n) + ".html"), "w", encoding="utf-8").write(page(n, "".join(b), depth=1))
 
 # ------------------------------------------------------------------- rules
@@ -370,7 +566,10 @@ for mt, rs in sorted(by_mod.items(), key=lambda x: -len(x[1])):
              '<thead><tr><th>Rule</th><th>Subject</th><th>Confidence</th></tr></thead><tbody>')
     for r in rs:
         b.append(f'<tr><td><a class="mono" href="{slug(r["id"])}.html">{e(r["id"])}</a></td>'
-                 f'<td>{e((r.get("section") or r["text"])[:150])}</td><td>{ctag(r["conf"])}</td></tr>')
+                 f'<td><b>{e(r.get("section") or "")}</b>'
+                 f'<div style="color:var(--muted);font-size:11.5px">'
+                 f'{e((r.get("statement") or r.get("text") or "")[:190])}</div></td>'
+                 f'<td>{ctag(r["conf"])}</td></tr>')
     b.append('</tbody></table></div>')
 open(os.path.join(SITE, "rules", "index.html"), "w", encoding="utf-8").write(page("Rules", "".join(b), depth=1))
 
@@ -380,14 +579,66 @@ for r in R["rules"]:
          f'<h1 class="mono">{e(r["id"])}</h1>',
          f'<p class="sub">{e(r["moduleTitle"])} &middot; {e(r.get("section") or "")}</p>',
          ctag(r["conf"])]
+    # the rule itself, stated, before anything else on the page
+    if r.get("statement"):
+        b.append(f'<p class="lead">{e(r["statement"])}</p>')
     if r.get("detail"):
-        b.append(f'<p class="lead">{e(r["detail"])}</p>')
-    if r.get("cells"):
+        b.append(f'<p>{e(r["detail"])}</p>')
+    if r.get("parts"):
+        b.append('<h2>Stated for a rule engine</h2><div class="wrapt"><table><tbody>' +
+                 "".join(f'<tr><th style="width:150px">{e(a)}</th><td>{e(bd)}</td></tr>'
+                         for a, bd in r["parts"]) + '</tbody></table></div>')
+    elif r.get("cells"):
         b.append('<div class="wrapt"><table><tbody>' +
                  "".join(f'<tr><td>{e(c)}</td></tr>' for c in r["cells"]) + '</tbody></table></div>')
-    else:
+    elif r.get("text"):
         b.append(f'<p>{e(r["text"])}</p>')
-    b.append(f'<p style="font-size:11.5px;color:var(--faint);margin-top:18px">Source: {e(r["doc"])}</p>')
+    if r.get("quote"):
+        b.append(f'<div class="find"><h4>The wording it rests on {ctag("observed")}</h4>'
+                 f'<p>&ldquo;{e(r["quote"])}&rdquo;</p></div>')
+    if r.get("objects"):
+        b.append('<h2>What it constrains</h2><p>' + ", ".join(
+            (f'<a class="mono" href="../entities/{slug(o)}.html">{e(o)}</a>'
+             if o in objects else f'<span class="mono">{e(o)}</span>') for o in r["objects"])
+            + '</p>')
+    if r.get("fields"):
+        b.append('<p style="font-size:12px;color:var(--muted)">Columns named: '
+                 + ", ".join(f'<code>{e(c)}</code>' for c in r["fields"]) + '</p>')
+    if r.get("related"):
+        b.append('<h2>Rules it cites</h2><p>' + ", ".join(
+            f'<a class="mono" href="{slug(i)}.html">{e(i)}</a>' for i in r["related"]) + '</p>')
+    if r.get("confNote"):
+        b.append(f'<p style="font-size:12px;color:var(--muted)">Confidence: {e(r["confNote"])}</p>')
+    b.append(f'<p style="font-size:11.5px;color:var(--faint);margin-top:18px">Source: '
+             f'<code>docs/{e(r["doc"])}</code></p>')
+
+    md = [f"# {r['id']} — {r.get('section') or ''}".rstrip(" —"), "",
+          f"*{r['moduleTitle']} · {CONF_WORD.get(r['conf'], r['conf'])}*", ""]
+    if r.get("statement"):
+        md += ["**" + r["statement"].rstrip(".") + ".**", ""]
+    if r.get("detail"):
+        md += [r["detail"], ""]
+    if r.get("parts"):
+        md += ["## Stated for a rule engine", ""]
+        md += md_table(["", ""], [[a, bd] for a, bd in r["parts"]])
+    elif r.get("text"):
+        md += [r["text"], ""]
+    if r.get("quote"):
+        md += ["## The wording it rests on", "", "> " + r["quote"], ""]
+    if r.get("objects"):
+        md += ["## What it constrains", "",
+               ", ".join((f"[{o}](../entities/{slug(o)}.md)" if o in objects else o)
+                         for o in r["objects"]), ""]
+    if r.get("fields"):
+        md += ["Columns named: " + ", ".join("`%s`" % c for c in r["fields"]), ""]
+    if r.get("related"):
+        md += ["## Rules it cites", "",
+               ", ".join(f"[{i}]({slug(i)}.md)" for i in r["related"]), ""]
+    if r.get("confNote"):
+        md += ["## Confidence", "", r["confNote"], ""]
+    md += ["---", "", f"Source: `docs/{r['doc']}`", ""]
+    write_md("rules/%s.md" % slug(r["id"]), r["id"], md)
+    b.append(md_link(1, "rules/%s.md" % slug(r["id"])))
     open(os.path.join(SITE, "rules", slug(r["id"]) + ".html"), "w", encoding="utf-8").write(page(r["id"], "".join(b), depth=1))
 
 # --------------------------------------------------------------- questions
@@ -402,9 +653,133 @@ for area, qs in sorted(by_area.items(), key=lambda x: -len(x[1])):
     b += [f'<div class="item">{e(q["q"])}<div class="m">{e(q["doc"])}</div></div>' for q in qs]
 open(os.path.join(SITE, "questions.html"), "w", encoding="utf-8").write(page("Open questions", "".join(b)))
 
+# ---------------------------------------------------------------- features
+# The feature map's areas, each as a real page. The map shows the shape; these
+# pages are what a delivery lead reads, and what survives being printed.
+
+def fslug(name):
+    return slug(re.sub(r"[^A-Za-z0-9 ]", "", name).strip().lower().replace(" ", "-"))
+
+
+def feature_body(n, depth, md=False):
+    """Render one feature node and everything beneath it, HTML or markdown."""
+    out = []
+
+    def walk(node, level):
+        title = node.get("name", "")
+        kind = node.get("kind", "")
+        conf = node.get("conf", "derived")
+        rid = node.get("rid")
+        detail = node.get("detail") or ""
+        if md:
+            h = "#" * min(6, level + 1)
+            head = f"{h} {title}"
+            if rid:
+                head += f" — [{rid}](../rules/{slug(rid)}.md)"
+            out.append(head)
+            out.append("")
+            out.append(f"*{CONF_WORD.get(conf, conf)} · {kind}"
+                       + (f" · source: `{node['src']}`" if node.get("src") else "") + "*")
+            out.append("")
+            if rid and rid in rule_by_id:
+                r = rule_by_id[rid]
+                if r.get("statement"):
+                    out.append("**" + r["statement"].rstrip(".") + ".**")
+                    out.append("")
+                if r.get("parts"):
+                    out.extend(md_table(["", ""], [[a, bd] for a, bd in r["parts"]]))
+            elif detail:
+                out.append(detail)
+                out.append("")
+            if node.get("shots"):
+                out.extend(f"![{os.path.basename(sp)}](../../{sp})" for sp in node["shots"])
+                out.append("")
+        else:
+            out.append(f'<h{min(6, level + 2)}>{e(title)}</h{min(6, level + 2)}>')
+            out.append(ctag(conf))
+            if rid:
+                out.append(f'<a class="tag" href="{"../" * depth}rules/{slug(rid)}.html">{e(rid)}</a>')
+            if rid and rid in rule_by_id and rule_by_id[rid].get("statement"):
+                out.append(f'<p class="lead">{e(rule_by_id[rid]["statement"])}</p>')
+            elif detail:
+                out.append(f'<p>{e(detail)}</p>')
+            if node.get("src"):
+                out.append(f'<p style="font-size:11px;color:var(--faint)">Source: '
+                           f'<code>{e(node["src"])}</code></p>')
+            # the captured screens themselves, not a list of their filenames
+            if node.get("shots"):
+                out.append('<div class="shots">' + "".join(
+                    f'<a href="{"../" * depth}../{e(sp)}">'
+                    f'<img loading="lazy" src="{"../" * depth}../{e(sp)}" alt="{e(os.path.basename(sp))}">'
+                    f'<span>{e(os.path.basename(sp))}</span></a>'
+                    for sp in node["shots"]) + '</div>')
+        for c in node.get("children") or []:
+            walk(c, level + 1)
+
+    for c in n.get("children") or []:
+        walk(c, 1)
+    return out
+
+
+feature_areas_out = []
+for a in FM["root"].get("children") or []:
+    name = a.get("name", "")
+    fs = fslug(name)
+    feature_areas_out.append((fs, name, a))
+    b = [f'<p class="crumb"><a href="../index.html">Atlas</a> &rsaquo; '
+         f'<a href="index.html">Features</a> &rsaquo; {e(name)}</p>',
+         f'<h1>{e(name)}</h1>',
+         (f'<p class="sub">Out of scope by decision</p>' if a.get("oos") else ''),
+         f'<p class="lead">{e(a.get("detail") or "")}</p>',
+         f'<p><a class="btn" href="../atlas.html#/map?set=feature&amp;f={e(a.get("key") or "")}">'
+         f'Open this feature in the map &rarr;</a></p>']
+    b += feature_body(a, 1)
+    md = [f"# {name}", "", a.get("detail") or "", ""]
+    md += feature_body(a, 1, md=True)
+    write_md("features/%s.md" % fs, name, md)
+    b.append(md_link(1, "features/%s.md" % fs))
+    open(os.path.join(SITE, "features", fs + ".html"), "w", encoding="utf-8").write(
+        page(name, "".join(b), depth=1))
+
+b = [f'<h1>Features</h1><p class="sub">{len(feature_areas_out)} areas, '
+     f'{FM["meta"]["nodes"]} nodes</p>',
+     f'<p class="lead">{e(FM["meta"]["detail"])}</p>',
+     '<div class="cards">']
+for fs, name, a in feature_areas_out:
+    b.append(f'<a class="card {"oos" if a.get("oos") else ""}" href="{fs}.html">'
+             f'<h3>{e(name)}</h3><p>{e((a.get("detail") or "")[:210])}</p>'
+             f'<div class="row"><span>{len(a.get("children") or [])} branches</span></div></a>')
+b.append('</div>')
+open(os.path.join(SITE, "features", "index.html"), "w", encoding="utf-8").write(
+    page("Features", "".join(b), depth=1))
+
+# --------------------------------------------------------------- md index
+MD_INDEX.sort()
+by_kind = {}
+for rel, title in MD_INDEX:
+    by_kind.setdefault(rel.split("/")[0], []).append((rel, title))
+mb = [f'<h1>Markdown pages</h1><p class="sub">{len(MD_INDEX)} documents</p>',
+      '<p class="lead">Every node in either map resolves to a markdown document as well as '
+      'an HTML page. These are the files to paste into a ticket, a spec, or another tool &mdash; '
+      'the same content as the HTML, without the chrome.</p>']
+for kind, items in sorted(by_kind.items()):
+    mb.append(f'<h2>{e(kind)} &middot; {len(items)}</h2><div class="wrapt"><table><tbody>')
+    for rel, title in items:
+        mb.append(f'<tr><td><a href="md/{e(rel)}">{e(title)}</a></td>'
+                  f'<td class="mono" style="color:var(--muted);font-size:11px">md/{e(rel)}</td></tr>')
+    mb.append('</tbody></table></div>')
+open(os.path.join(SITE, "markdown.html"), "w", encoding="utf-8").write(
+    page("Markdown pages", "".join(mb)))
+
+with open(os.path.join(SITE, "md", "index.md"), "w", encoding="utf-8") as fh:
+    fh.write(brand("# Lx Atlas — markdown pages\n\n"
+                   "One document per node. %d files.\n\n" % len(MD_INDEX)
+                   + "\n".join("- [%s](%s)" % (t, r) for r, t in MD_INDEX) + "\n"))
+
 # ------------------------------------------------------------------ report
 count = sum(len(f) for _, _, f in os.walk(SITE))
 size = sum(os.path.getsize(os.path.join(r, f)) for r, _, fs in os.walk(SITE) for f in fs)
 print(f"wrote {SITE}")
 print(f"  {count} files, {size / 1048576:.1f} MB")
 print(f"  {len(modules)} modules, {len(names)} record types, {R['total']} rules, {Q['total']} questions")
+print(f"  {len(feature_areas_out)} feature pages, {len(MD_INDEX)} markdown documents")

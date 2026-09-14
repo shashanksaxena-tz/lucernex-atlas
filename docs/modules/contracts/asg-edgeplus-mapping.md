@@ -67,7 +67,7 @@ the 20 `ExportAcct1..20Number` GL slots exist exactly once, on `842 Rent`. Confi
 before building IFRS 16; the capability is present in the incumbent and unused.
 
 **The 2000/3000 code-table band does not predict behaviour** — see
-[`data-model.md` §8](data-model.md#8-the-code-table-bands-refuted-with-a-better-predictor). The
+[`data-model.md` §8](data-model.md#8-the-code-table-bands-refuted--with-a-better-predictor). The
 better predictor is *"does the code table have a dedicated object in the catalogue?"* — 11 of 207 do,
 and those 11 are the ones that cannot be modelled as `(code, label, active)`. Size the Masters model
 against that 11, not against the 17-table 3000 band.

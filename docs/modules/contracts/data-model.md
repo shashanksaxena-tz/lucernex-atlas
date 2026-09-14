@@ -291,7 +291,7 @@ Across the money-typed leaves specifically: 71 `sTYPE_MONEY`, 29 `sTYPE_PERCENTA
 being reported here — the application layer types these fields correctly as money. It is the
 *landed schema* being untyped. Whatever pipeline produced `_crossmap.tsv` is the boundary where
 precision can be lost, and it is exactly the boundary ASG Edge+ will build a migration across.
-Full register in [`asg-edgeplus-mapping.md`](asg-edgeplus-mapping.md#41-typing-hazard-register-constitution-444).
+Full register in [`asg-edgeplus-mapping.md`](asg-edgeplus-mapping.md#41-typing-hazard-register-constitution-44).
 
 ---
 

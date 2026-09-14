@@ -13,12 +13,33 @@ import json
 import os
 import re
 
+import corpus
+
 HERE = os.path.dirname(os.path.abspath(__file__))
 DOCS = os.path.dirname(HERE)
 
 HEADING = re.compile(r"^#{2,4}\s+(.*open question.*)$", re.I)
 ANY_HEADING = re.compile(r"^#{1,4}\s+")
 ITEM = re.compile(r"^\s*(?:\d+\.|[-*])\s+(.*)")
+
+# Feature-area folders map to the feature map's own areas, so an open question
+# can be attached to the feature it blocks rather than filed under "Other".
+FEATURE_AREA = {
+    "features/page-layouts": "Forms & Page Layouts",
+    "features/required-and-validation": "Required & Validation",
+    "features/equipment-contracts": "Equipment on Contracts",
+    "features/workflows-forms": "Approvals & Workflows",
+    "features/drop-downs-code-tables": "Drop Downs & Code Tables",
+    "features/custom-lists": "Custom Lists",
+    "features/data-fields": "Data Fields",
+    "features/import-export": "Import & Export",
+    "features/search-filtering": "Search & Filtering",
+    "features/administration": "Admin & Tenancy",
+    "features/reference-data": "Reference Data",
+    "features/security-access": "Security & Access",
+    "tenants": "Tenant comparison",
+    "screens": "Screens & navigation",
+}
 
 AREA = {
     "modules/accounting": "Lease Accounting & Payments",
@@ -38,10 +59,29 @@ def clean(s):
     return re.sub(r"\s+", " ", s).strip()
 
 
+# Every remaining modules/<folder> gets its real module title rather than being
+# swept into "Other" — the module list is generated, so this never goes stale.
+MODULE_TITLE = {}
+_mj = os.path.join(HERE, "modules.json")
+if os.path.exists(_mj):
+    for _mid, _m in json.load(open(_mj, encoding="utf-8")).items():
+        MODULE_TITLE["modules/" + _mid] = _m.get("title") or _mid
+
+
 def area_of(rel):
+    for k, v in FEATURE_AREA.items():
+        if rel.startswith(k):
+            return v
     for k, v in AREA.items():
         if rel.startswith(k):
             return v
+    for k, v in MODULE_TITLE.items():
+        if rel.startswith(k):
+            return v
+    if rel.startswith("features/"):
+        return "Feature areas"
+    if rel.startswith("mindmap/"):
+        return "The maps themselves"
     return "Other"
 
 
@@ -72,7 +112,7 @@ for root, dirs, files in os.walk(DOCS):
                 if len(q) < 15:
                     continue
                 out.append({
-                    "q": q[:600],
+                    "q": corpus.debrand(q)[:600],
                     "doc": rel,
                     "area": area_of(rel),
                     "rank": n,

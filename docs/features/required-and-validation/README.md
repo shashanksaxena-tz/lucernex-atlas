@@ -51,6 +51,36 @@ For the ASG Edge+ rebuild: **required-ness cannot be modelled as one boolean on 
 a column constraint, a catalog-level obligation, a per-placement override, and a rule-engine effect —
 and the second and third must be allowed to disagree with the first, because in Lucernex they do.
 
+```mermaid
+flowchart LR
+    L1["Layer 1 -- the physical column<br/><br/>Required? on the table definition<br/>vendor-fixed, platform-wide<br/>603 of 6,487 fields<br/>133 of them BOMapClientRecordID<br/><br/>Asks: can this be NULL in storage?"]
+    L2["Layer 2 -- the field catalog<br/><br/>ReportGroupAvailableField.IsRequired<br/>per field row, Global or Firm scope<br/>read-only to a firm in both tenants<br/>0 of 298 firm-scope fields carry it<br/><br/>Asks: must a user supply this on create?"]
+    L3["Layer 3 -- the red asterisk<br/><br/>Renders in the layout editor and on<br/>live administration list headers.<br/>STORAGE UNRESOLVED.<br/><br/>Asks: unknown -- the effect is observed,<br/>the mechanism is not"]
+    L4["Layer 4 -- conditional<br/><br/>conditionalFieldsConfig.showHide<br/>value showAndRequire, held in<br/>PageLayoutField.JSONConfigText<br/>used 0 of 50 times in either tenant<br/><br/>Asks: must this be supplied given<br/>what another field holds?"]
+
+    EFF{"Effective required-ness<br/>at the moment a user saves"}
+
+    L1 --> EFF
+    L2 --> EFF
+    L3 --> EFF
+    L4 -.->|"never exercised"| EFF
+
+    GAP["There is NO layout-level layer.<br/>PageLayoutField has been recovered in full --<br/>20 columns, across 134 layouts --<br/>and not one is named IsRequired or IsReadOnly.<br/>The two surviving candidates are the<br/>DisplayOption bitmasks and JSONConfigText."]
+
+    L3 -.-> GAP
+
+    DIS["Layers 1 and 2 disagree on 44 of 5,694 fields,<br/>in BOTH directions:<br/>42 catalogue-Yes / schema-No -- all owner FKs<br/>2 schema-Yes / catalogue-No -- audit stamps<br/><br/>Collapsing them into one boolean loses<br/>44 real obligations."]
+
+    L1 -.-> DIS
+    L2 -.-> DIS
+```
+
+**Read the arrows carefully.** Solid edges are layers observed to have an effect. The dotted edge
+from layer 4 is the point: the mechanism exists, is documented, and is **configured nowhere**, so it
+contributes nothing today and can be built late. The two dotted boxes are findings about the model
+rather than steps in it.
+
+
 ---
 
 ## Layers 1 and 2 are two obligations, not one flag
@@ -234,6 +264,9 @@ Field Security is driven by the same registry `UserClassSecurity` references. Fu
 editor** for `ASG Contract Summary`, required fields render red with a trailing `*` — e.g.
 `Contract Status *`, `Location *`.
 
+![The layout editor for `ASG Contract Summary`. The asterisked, red-labelled fields are layer 3 in the act: `Contract Status *`, `Contract Group *`, `Contract Type *`, `Contract Category *`, `Contract ID *`, `Contract Name *`, `Currency Type *`, `Location *`, `Lease Status *`, and six of the Contract Critical Dates. `Contract Name` is required in layers 1 and 2 both; `Contract Status` and `Location` are required in neither, and `Contract` carries only 7 column-required fields and 3 catalog-required leaves in total -- so most of the asterisks on this screen are unaccounted for by the two layers whose storage is known.](../../assets/screenshots/page-layouts/page-layouts-conditional-field-associations.png)
+
+
 **Observed.** Neither field is required in layer 1 or layer 2:
 
 | Field | Column `Required?` | Catalog `Required` |
@@ -286,6 +319,9 @@ rendered list screens. Five administration grids show it on **column headers**
 | Manage Discount Rates | `Effective End Date *`, `Length Month (min) *`, `Length Month (max) *`, `Discount Rate *` | `Country`, `State / Province`, `Portfolio`, `Accounting Method`, `Use Type` |
 | Manage Exchange Rates | all five data columns | — |
 | Manage CPI Data | `CPI Index *`, `Year *`, `Month *`, `CPI Value *` | `Published Date` |
+
+![`Manage Discount Rates`, and the reason it matters here has nothing to do with discount rates. Four of the nine column headers are red and asterisked -- `Effective End Date *`, `Length Month (min) *`, `Length Month (max) *`, `Discount Rate *` -- while `Country`, `State / Province`, `Portfolio`, `Accounting Method`, `Use Type` and `Notes` are plain. This is a LIST layout in ordinary use, outside the builder, with the marker rendering per column. Whatever drives layer 3 travels with the placement.](../../assets/screenshots/bbw-admin/25-manage-discount-rates.jpg)
+
 
 **Derived.** Whatever drives the marker **travels with the placement and renders on a LIST layout in
 normal use**. So it is not a builder-only affordance, and no `PForm.jsp`-specific explanation can be

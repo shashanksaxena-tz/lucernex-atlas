@@ -30,7 +30,7 @@ ID` — a foreign key. On [the subtypes] it is typed `Number` — the same as on
 They are not referencing the supertype; they are carrying its key."* The same reasoning applies here
 verbatim, and it is reinforced by a negative check: **no `Person ID` FK type exists anywhere in the
 schema.** Every other object that needs to reference "a person" uses a different, soft type —
-`Contact` — never a hard `Person ID` (see [§3](#3-contact-is-a-soft-polymorphic-type-not-an-object)).
+`Contact` — never a hard `Person ID` (see [§3](#3-contact-is-a-soft-polymorphic-type--not-an-object)).
 That absence is the same signature `project-entity.md` found for `FirmID` (no `Firm ID` type exists
 either): the true supertype's own key is never expressed as a first-class reference type, because
 nothing needs to distinguish *which* subtype it points at when addressed generically.

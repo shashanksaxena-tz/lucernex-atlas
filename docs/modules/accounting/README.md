@@ -42,6 +42,7 @@ captured 2026-09-10 (`docs/modules/layouts-and-forms/forms-vs-pages-vs-layouts.m
 
 ## The engine in one picture
 
+
 ```
 CodeExpenseType ──(CodeSLScheduleID / CodeASC842ScheduleID / CodeIFRS16ScheduleID)──┐
        │                                                                            │  routes each
@@ -70,6 +71,16 @@ SLSummary ──► "ASC 842 Schedule Review/Approval" workflow ──► IsAppr
 *Evidence class: **Derived** from the FK types in `_lucernex_objects_summary.txt` and the vendor field
 definitions in `_xlsx_lucernex_jcrew.txt`. The arrows are the documented relationships; the ordering
 of engine steps is inferred and is called out where it matters in [`rules.md`](rules.md).*
+
+### The same engine, as the user meets it
+
+![The `Accounting Info` group on a live BBW contract. The engine above is split across seven screens: `Accounting Details`, `Capital Lease Test`, `Straight-Line Rent`, `Accounting Assumptions`, `ASC 842 Test`, `ASC 842 Rent Schedule`, `IFRS 16 Rent Schedule`. ASC 842 and IFRS 16 get separate schedule screens, and the legacy `Capital Lease Test` sits alongside the current `ASC 842 Test` rather than being replaced by it.](../../assets/screenshots/bbw-enduser/ct-28-capital-lease-test.jpg)
+
+**Observed**, one contract, `(ASG)BBW`, build `26.09.0.113`. Also visible: the `Actions` rail on this
+screen carries only `Edit`, `Printable View`, `Save to Document` and `Link` — none of the generator
+buttons that appear on Contract Summary. **Derived:** the accounting screens *read* the engine; the
+commands that drive it are placed on a different layout
+([`../../features/page-layouts/`](../../features/page-layouts/#action-buttons-render-in-a-right-hand-actions-rail-and-they-are-per-layout)).
 
 ## Where this module's boundary sits
 

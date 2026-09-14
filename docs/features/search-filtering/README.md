@@ -52,6 +52,9 @@ likeliest consumer of that flag, which would make it *per-list search*, not a gl
 **Derived.** The filter row is **typed per column** — a date column gets a date picker, a code-table
 column gets a drop-down of its values. That is generated from the layout, not hand-built per screen.
 
+![`Manage Discount Rates`, chosen because it is empty -- which leaves the chrome itself visible with nothing to distract from it. Every element in the table above is here: the seven-control typed filter row, the separate `Search: Type to search` box at the right, first/previous/next/last paging with a refresh, `No items to display`, a `Rows per Page` control, `Add Discount Rate...`, and four asterisked column headers.](../../assets/screenshots/bbw-admin/25-manage-discount-rates.jpg)
+
+
 ---
 
 ## Per-placement list behaviour
@@ -100,6 +103,25 @@ Neither is confirmed. There is also a related field, **`Issue.SearchField (Text)
 object — a denormalised search column — which suggests at least some search is served by
 precomputed text rather than by querying columns. **Inferred.**
 
+**Observed, and it narrows the two readings to one.** The `List Layout` tab of the layout editor
+renders each column as a placement chip, and one of them is annotated in green:
+
+![The `List Layout` tab on `ASG Contract Payments`, table `PaymentTransaction`. Thirteen column placements run left to right. Eight are red and asterisked -- `Effective Date *`, `Effective End Date (Coverage End Date) *`, `Expense Group *`, `Expense Type *`, `Invoice Amount *`, `Primary Tax (Tax Amount #1) *`, `Due Date *`, `Vendor *` -- and five are plain. The last chip is green and reads `(Searchable, Hidden in grid)`: a placement that exists to be searched on and is not displayed.](../../assets/screenshots/page-layouts/page-layouts-contract-payments-list-layout.png)
+
+**Derived.** `(Searchable, Hidden in grid)` is `IncludeInSearch` rendered, and the two words it pairs
+settle the reading: **searchable** and **hidden in grid** are properties of *this column on this
+list*. It is a **per-list search box** configuration, not a global index — the editor has no concept
+of a tenant-wide index to add a field to. That also explains why 9 is a plausible number: it is nine
+deliberate additions across 46 list layouts, not an index that someone forgot to populate.
+
+**Derived, and it is a placement capability the corpus had not named.** A field can be **on a layout
+and not on the screen**. The placement record therefore needs a visibility flag independent of
+position, and `-1` geometry ("not placed in that context") is not the same thing as hidden-but-live.
+
+**Still Inferred:** whether the per-list box queries the columns directly or reads a denormalised
+column like `Issue.SearchField`. The editor does not say.
+
+
 ---
 
 ## Layout-level filters: built, unused
@@ -118,11 +140,14 @@ guessed.
 conditional fields, this one really does appear unused: the sweep that found 50 populated conditional
 records found no filter rows at all.
 
-**Derived, and it connects to an open question elsewhere.** `RunModeFilters` and
-`EntitySelectionFilter` are the leading candidates for **how the runtime picks between five layouts
-attached to one navigation node** ([`../page-layouts/`](../page-layouts/#open-questions), question 1).
-A layout that declares "I apply when the entity matches X" would resolve that directly. **Inferred**
-from the column names and position; untested.
+> **This paragraph previously offered `RunModeFilters` as the leading explanation for how the runtime
+> picks between five layouts on one navigation node. That question has since been answered, and the
+> answer is not this.** The runtime does not pick: it renders the chain head and offers the rest in a
+> **layout-selector dropdown** at the top right of the content area, ordered by
+> `PreviousPageLayoutID`
+> ([`../page-layouts/`](../page-layouts/#how-a-chain-renders--answered-a-layout-selector-dropdown)).
+> `RunModeFilters` and `EntitySelectionFilter` remain unexplained, and are now unexplained *without*
+> a hypothesis attached to them.
 
 ---
 
@@ -199,8 +224,11 @@ All of these need the running UI. **Requested from `af-tracker`** on a well-popu
 3. **Is filter state server-side?** The URL/query-string shape when a filter is applied would settle
    it.
 4. **Can a user add columns at runtime**, or only the administrator via the LIST layout?
-5. **What does the quick-search box search across** — one entity, or the whole tenant? And does it
-   use `IncludeInSearch`, `Issue.SearchField`, or neither?
+5. **What does the quick-search box search across** — one entity, or the whole tenant? Now half
+   answered: the layout editor labels an `IncludeInSearch` placement `(Searchable, Hidden in grid)`,
+   which is per-list language and rules out a tenant-wide index
+   ([above](#includeinsearch-is-the-whole-search-story-so-far)). What remains is whether it queries
+   the columns or reads a denormalised column like `Issue.SearchField`.
 6. **Sort: single or multi-column?** And is the sort stored on the layout?
 7. **Is there a per-list export button**, and what formats? `rowsPrintablePerPage` implies a print
    path at least.

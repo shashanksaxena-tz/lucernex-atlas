@@ -1,0 +1,2012 @@
+{
+ "_source": "Lucernex_to_PostgreSQL_Inventory_bbw.xlsx (owner-supplied, 2026-09-01)",
+ "_evidence": "Observed. Vendor/consultant inventory mapping every field to its PostgreSQL column.",
+ "_captured": "2026-09-14",
+ "pgDatabase": "lxr_drp_bbw",
+ "totals": {
+  "fieldRows": 7368,
+  "objects": 222,
+  "pgTables": 219,
+  "withDefinition": 6091,
+  "tableStatus": {
+   "Created \u2014 holds data": 3351,
+   "Not created yet \u2014 no data": 3642,
+   "Not applicable": 375
+  },
+  "required": {
+   "": 6762,
+   "Required": 606
+  },
+  "keyRole": {
+   "": 5046,
+   "Primary key": 157,
+   "Client identifier": 137,
+   "Foreign key (ID reference)": 1704,
+   "Audit": 169,
+   "Incremental watermark": 147,
+   "Parent key": 8
+  }
+ },
+ "perTable": {
+  "(none)": {
+   "fields": 375,
+   "created": 0,
+   "notCreated": 0,
+   "required": 17,
+   "fk": 0,
+   "pk": 0,
+   "object": "VirtualSalesPeriod"
+  },
+  "accrual_transaction": {
+   "fields": 55,
+   "created": 55,
+   "notCreated": 0,
+   "required": 1,
+   "fk": 10,
+   "pk": 1,
+   "object": "AccrualTransaction"
+  },
+  "accting_assumption_adjust": {
+   "fields": 19,
+   "created": 19,
+   "notCreated": 0,
+   "required": 5,
+   "fk": 7,
+   "pk": 1,
+   "object": "AcctingAssumptionAdjust"
+  },
+  "allowance": {
+   "fields": 23,
+   "created": 23,
+   "notCreated": 0,
+   "required": 1,
+   "fk": 9,
+   "pk": 1,
+   "object": "Allowance"
+  },
+  "allowance_transaction": {
+   "fields": 15,
+   "created": 15,
+   "notCreated": 0,
+   "required": 3,
+   "fk": 4,
+   "pk": 1,
+   "object": "AllowanceTransaction"
+  },
+  "alternate_rent_schedule": {
+   "fields": 26,
+   "created": 26,
+   "notCreated": 0,
+   "required": 2,
+   "fk": 8,
+   "pk": 1,
+   "object": "AlternateRentSchedule"
+  },
+  "asset": {
+   "fields": 122,
+   "created": 0,
+   "notCreated": 122,
+   "required": 2,
+   "fk": 38,
+   "pk": 1,
+   "object": "Asset"
+  },
+  "audit_table": {
+   "fields": 1,
+   "created": 0,
+   "notCreated": 1,
+   "required": 0,
+   "fk": 1,
+   "pk": 0,
+   "object": "AuditTable"
+  },
+  "bid_package": {
+   "fields": 48,
+   "created": 0,
+   "notCreated": 48,
+   "required": 4,
+   "fk": 21,
+   "pk": 1,
+   "object": "BidPackage"
+  },
+  "bid_package_alternate": {
+   "fields": 5,
+   "created": 0,
+   "notCreated": 5,
+   "required": 2,
+   "fk": 3,
+   "pk": 0,
+   "object": "BidPackageAlternate"
+  },
+  "bid_package_alternate_value": {
+   "fields": 4,
+   "created": 0,
+   "notCreated": 4,
+   "required": 3,
+   "fk": 3,
+   "pk": 0,
+   "object": "BidPackageAlternateValue"
+  },
+  "bid_package_template": {
+   "fields": 32,
+   "created": 0,
+   "notCreated": 32,
+   "required": 3,
+   "fk": 12,
+   "pk": 1,
+   "object": "BidPackageTemplate"
+  },
+  "bidder_issue": {
+   "fields": 21,
+   "created": 0,
+   "notCreated": 21,
+   "required": 6,
+   "fk": 6,
+   "pk": 1,
+   "object": "BidderIssue"
+  },
+  "budget_column": {
+   "fields": 21,
+   "created": 0,
+   "notCreated": 21,
+   "required": 7,
+   "fk": 9,
+   "pk": 1,
+   "object": "BudgetColumn"
+  },
+  "budget_column_type": {
+   "fields": 31,
+   "created": 0,
+   "notCreated": 31,
+   "required": 20,
+   "fk": 7,
+   "pk": 1,
+   "object": "BudgetColumnType"
+  },
+  "budget_index": {
+   "fields": 6,
+   "created": 0,
+   "notCreated": 6,
+   "required": 2,
+   "fk": 1,
+   "pk": 1,
+   "object": "BudgetIndex"
+  },
+  "budget_index_value": {
+   "fields": 8,
+   "created": 0,
+   "notCreated": 8,
+   "required": 4,
+   "fk": 4,
+   "pk": 1,
+   "object": "BudgetIndexValue"
+  },
+  "budget_line_group": {
+   "fields": 26,
+   "created": 0,
+   "notCreated": 26,
+   "required": 5,
+   "fk": 8,
+   "pk": 1,
+   "object": "BudgetLineGroup"
+  },
+  "budget_line_item": {
+   "fields": 26,
+   "created": 0,
+   "notCreated": 26,
+   "required": 5,
+   "fk": 8,
+   "pk": 1,
+   "object": "BudgetLineItem"
+  },
+  "budget_line_leaf": {
+   "fields": 26,
+   "created": 0,
+   "notCreated": 26,
+   "required": 5,
+   "fk": 8,
+   "pk": 1,
+   "object": "BudgetLineLeaf"
+  },
+  "budget_option": {
+   "fields": 13,
+   "created": 0,
+   "notCreated": 13,
+   "required": 5,
+   "fk": 7,
+   "pk": 1,
+   "object": "BudgetOption"
+  },
+  "budget_template": {
+   "fields": 1,
+   "created": 0,
+   "notCreated": 1,
+   "required": 0,
+   "fk": 1,
+   "pk": 0,
+   "object": "BudgetTemplate"
+  },
+  "budget_template_audit": {
+   "fields": 18,
+   "created": 0,
+   "notCreated": 18,
+   "required": 3,
+   "fk": 7,
+   "pk": 1,
+   "object": "BudgetTemplateAudit"
+  },
+  "budget_view": {
+   "fields": 10,
+   "created": 0,
+   "notCreated": 10,
+   "required": 2,
+   "fk": 3,
+   "pk": 1,
+   "object": "BudgetView"
+  },
+  "c_l_r_extension_part": {
+   "fields": 24,
+   "created": 0,
+   "notCreated": 24,
+   "required": 4,
+   "fk": 13,
+   "pk": 0,
+   "object": "CLRExtensionPart"
+  },
+  "c_p_i": {
+   "fields": 10,
+   "created": 0,
+   "notCreated": 10,
+   "required": 3,
+   "fk": 4,
+   "pk": 1,
+   "object": "CPI"
+  },
+  "change_order": {
+   "fields": 16,
+   "created": 0,
+   "notCreated": 16,
+   "required": 2,
+   "fk": 5,
+   "pk": 1,
+   "object": "ChangeOrder"
+  },
+  "client_list_row": {
+   "fields": 24,
+   "created": 0,
+   "notCreated": 24,
+   "required": 4,
+   "fk": 12,
+   "pk": 1,
+   "object": "ClientListRow"
+  },
+  "co_tenancy": {
+   "fields": 28,
+   "created": 28,
+   "notCreated": 0,
+   "required": 1,
+   "fk": 9,
+   "pk": 1,
+   "object": "CoTenancy"
+  },
+  "code_a_s_c842_schedule": {
+   "fields": 24,
+   "created": 24,
+   "notCreated": 0,
+   "required": 0,
+   "fk": 0,
+   "pk": 0,
+   "object": "CodeASC842Schedule"
+  },
+  "code_asset_category": {
+   "fields": 6,
+   "created": 6,
+   "notCreated": 0,
+   "required": 0,
+   "fk": 0,
+   "pk": 0,
+   "object": "CodeAssetCategory"
+  },
+  "code_budget_column_status": {
+   "fields": 3,
+   "created": 0,
+   "notCreated": 3,
+   "required": 0,
+   "fk": 0,
+   "pk": 0,
+   "object": "CodeBudgetColumnStatus"
+  },
+  "code_expense_type": {
+   "fields": 31,
+   "created": 31,
+   "notCreated": 0,
+   "required": 1,
+   "fk": 8,
+   "pk": 0,
+   "object": "CodeExpenseType"
+  },
+  "code_i_f_r_s16_schedule": {
+   "fields": 24,
+   "created": 0,
+   "notCreated": 24,
+   "required": 0,
+   "fk": 0,
+   "pk": 0,
+   "object": "CodeIFRS16Schedule"
+  },
+  "code_issue_type": {
+   "fields": 19,
+   "created": 19,
+   "notCreated": 0,
+   "required": 0,
+   "fk": 0,
+   "pk": 0,
+   "object": "CodeIssueType"
+  },
+  "code_problem": {
+   "fields": 4,
+   "created": 0,
+   "notCreated": 4,
+   "required": 0,
+   "fk": 0,
+   "pk": 0,
+   "object": "CodeProblem"
+  },
+  "code_responsible_party": {
+   "fields": 4,
+   "created": 4,
+   "notCreated": 0,
+   "required": 0,
+   "fk": 1,
+   "pk": 0,
+   "object": "CodeResponsibleParty"
+  },
+  "code_s_l_schedule": {
+   "fields": 24,
+   "created": 0,
+   "notCreated": 24,
+   "required": 0,
+   "fk": 0,
+   "pk": 0,
+   "object": "CodeSLSchedule"
+  },
+  "code_sales_group": {
+   "fields": 3,
+   "created": 3,
+   "notCreated": 0,
+   "required": 0,
+   "fk": 0,
+   "pk": 0,
+   "object": "CodeSalesGroup"
+  },
+  "code_sales_type": {
+   "fields": 3,
+   "created": 3,
+   "notCreated": 0,
+   "required": 0,
+   "fk": 0,
+   "pk": 0,
+   "object": "CodeSalesType"
+  },
+  "committee_package": {
+   "fields": 1,
+   "created": 0,
+   "notCreated": 1,
+   "required": 0,
+   "fk": 1,
+   "pk": 0,
+   "object": "CommitteePackage"
+  },
+  "comparison_item": {
+   "fields": 9,
+   "created": 0,
+   "notCreated": 9,
+   "required": 2,
+   "fk": 1,
+   "pk": 1,
+   "object": "ComparisonItem"
+  },
+  "comparison_report": {
+   "fields": 4,
+   "created": 0,
+   "notCreated": 4,
+   "required": 2,
+   "fk": 2,
+   "pk": 1,
+   "object": "ComparisonReport"
+  },
+  "competitor": {
+   "fields": 26,
+   "created": 0,
+   "notCreated": 26,
+   "required": 2,
+   "fk": 7,
+   "pk": 1,
+   "object": "Competitor"
+  },
+  "complex": {
+   "fields": 45,
+   "created": 0,
+   "notCreated": 45,
+   "required": 2,
+   "fk": 11,
+   "pk": 1,
+   "object": "Complex"
+  },
+  "contract_admin": {
+   "fields": 141,
+   "created": 141,
+   "notCreated": 0,
+   "required": 5,
+   "fk": 45,
+   "pk": 1,
+   "object": "Contract"
+  },
+  "contract_amendment": {
+   "fields": 20,
+   "created": 20,
+   "notCreated": 0,
+   "required": 1,
+   "fk": 8,
+   "pk": 1,
+   "object": "ContractAmendment"
+  },
+  "contract_financial": {
+   "fields": 168,
+   "created": 168,
+   "notCreated": 0,
+   "required": 0,
+   "fk": 0,
+   "pk": 1,
+   "object": "Contract"
+  },
+  "contract_financial_test": {
+   "fields": 93,
+   "created": 93,
+   "notCreated": 0,
+   "required": 1,
+   "fk": 14,
+   "pk": 1,
+   "object": "ContractFinancialTest"
+  },
+  "contract_firm": {
+   "fields": 171,
+   "created": 171,
+   "notCreated": 0,
+   "required": 0,
+   "fk": 3,
+   "pk": 1,
+   "object": "Contract"
+  },
+  "contract_term": {
+   "fields": 26,
+   "created": 26,
+   "notCreated": 0,
+   "required": 1,
+   "fk": 8,
+   "pk": 1,
+   "object": "ContractTerm"
+  },
+  "cost_tracking_template": {
+   "fields": 28,
+   "created": 0,
+   "notCreated": 28,
+   "required": 1,
+   "fk": 8,
+   "pk": 1,
+   "object": "CostTrackingTemplate"
+  },
+  "covenant": {
+   "fields": 56,
+   "created": 56,
+   "notCreated": 0,
+   "required": 1,
+   "fk": 16,
+   "pk": 1,
+   "object": "Covenant"
+  },
+  "custom_code_field": {
+   "fields": 13,
+   "created": 13,
+   "notCreated": 0,
+   "required": 3,
+   "fk": 5,
+   "pk": 1,
+   "object": "CustomCodeField"
+  },
+  "d_m_a": {
+   "fields": 7,
+   "created": 7,
+   "notCreated": 0,
+   "required": 4,
+   "fk": 1,
+   "pk": 1,
+   "object": "DMA"
+  },
+  "demographic_fact": {
+   "fields": 10,
+   "created": 0,
+   "notCreated": 10,
+   "required": 2,
+   "fk": 3,
+   "pk": 1,
+   "object": "DemographicFact"
+  },
+  "demographic_report": {
+   "fields": 10,
+   "created": 0,
+   "notCreated": 10,
+   "required": 2,
+   "fk": 5,
+   "pk": 1,
+   "object": "DemographicReport"
+  },
+  "demographic_results": {
+   "fields": 12,
+   "created": 0,
+   "notCreated": 12,
+   "required": 3,
+   "fk": 5,
+   "pk": 1,
+   "object": "DemographicResults"
+  },
+  "demographic_study_area": {
+   "fields": 6,
+   "created": 0,
+   "notCreated": 6,
+   "required": 2,
+   "fk": 1,
+   "pk": 1,
+   "object": "DemographicStudyArea"
+  },
+  "development_plan": {
+   "fields": 7,
+   "created": 0,
+   "notCreated": 7,
+   "required": 3,
+   "fk": 3,
+   "pk": 1,
+   "object": "DevelopmentPlan"
+  },
+  "development_slot": {
+   "fields": 31,
+   "created": 0,
+   "notCreated": 31,
+   "required": 7,
+   "fk": 15,
+   "pk": 1,
+   "object": "DevelopmentSlot"
+  },
+  "discount_rate": {
+   "fields": 16,
+   "created": 0,
+   "notCreated": 16,
+   "required": 4,
+   "fk": 6,
+   "pk": 0,
+   "object": "DiscountRate"
+  },
+  "document": {
+   "fields": 23,
+   "created": 23,
+   "notCreated": 0,
+   "required": 7,
+   "fk": 6,
+   "pk": 1,
+   "object": "Document"
+  },
+  "document_markup": {
+   "fields": 1,
+   "created": 0,
+   "notCreated": 1,
+   "required": 0,
+   "fk": 1,
+   "pk": 0,
+   "object": "DocumentMarkup"
+  },
+  "e_mail_received_log": {
+   "fields": 15,
+   "created": 0,
+   "notCreated": 15,
+   "required": 3,
+   "fk": 4,
+   "pk": 1,
+   "object": "EMailReceivedLog"
+  },
+  "e_mail_sent_log": {
+   "fields": 1,
+   "created": 0,
+   "notCreated": 1,
+   "required": 0,
+   "fk": 1,
+   "pk": 0,
+   "object": "EMailSentLog"
+  },
+  "employer": {
+   "fields": 71,
+   "created": 71,
+   "notCreated": 0,
+   "required": 5,
+   "fk": 9,
+   "pk": 1,
+   "object": "Employer"
+  },
+  "employer_site": {
+   "fields": 20,
+   "created": 0,
+   "notCreated": 20,
+   "required": 3,
+   "fk": 5,
+   "pk": 1,
+   "object": "EmployerSite"
+  },
+  "entity_template": {
+   "fields": 1,
+   "created": 0,
+   "notCreated": 1,
+   "required": 0,
+   "fk": 1,
+   "pk": 0,
+   "object": "EntityTemplate"
+  },
+  "escalation_index": {
+   "fields": 12,
+   "created": 0,
+   "notCreated": 12,
+   "required": 2,
+   "fk": 4,
+   "pk": 1,
+   "object": "EscalationIndex"
+  },
+  "exchange_rate": {
+   "fields": 8,
+   "created": 0,
+   "notCreated": 8,
+   "required": 6,
+   "fk": 4,
+   "pk": 1,
+   "object": "ExchangeRate"
+  },
+  "expense_accrual_schedule": {
+   "fields": 31,
+   "created": 0,
+   "notCreated": 31,
+   "required": 3,
+   "fk": 5,
+   "pk": 1,
+   "object": "ExpenseAccrualSchedule"
+  },
+  "expense_accrual_setup": {
+   "fields": 31,
+   "created": 0,
+   "notCreated": 31,
+   "required": 2,
+   "fk": 13,
+   "pk": 1,
+   "object": "ExpenseAccrualSetup"
+  },
+  "expense_allocation": {
+   "fields": 15,
+   "created": 0,
+   "notCreated": 15,
+   "required": 1,
+   "fk": 7,
+   "pk": 1,
+   "object": "ExpenseAllocation"
+  },
+  "expense_escalation": {
+   "fields": 28,
+   "created": 0,
+   "notCreated": 28,
+   "required": 3,
+   "fk": 9,
+   "pk": 1,
+   "object": "ExpenseEscalation"
+  },
+  "expense_recovery_firm": {
+   "fields": 11,
+   "created": 11,
+   "notCreated": 0,
+   "required": 0,
+   "fk": 0,
+   "pk": 1,
+   "object": "ExpenseRecovery"
+  },
+  "expense_recovery_item": {
+   "fields": 47,
+   "created": 47,
+   "notCreated": 0,
+   "required": 4,
+   "fk": 9,
+   "pk": 1,
+   "object": "ExpenseRecoveryItem"
+  },
+  "expense_recovery_item_mapping": {
+   "fields": 6,
+   "created": 0,
+   "notCreated": 6,
+   "required": 3,
+   "fk": 4,
+   "pk": 0,
+   "object": "ExpenseRecoveryItemMapping"
+  },
+  "expense_recovery_part1": {
+   "fields": 189,
+   "created": 189,
+   "notCreated": 0,
+   "required": 1,
+   "fk": 1,
+   "pk": 1,
+   "object": "ExpenseRecovery"
+  },
+  "expense_recovery_part2": {
+   "fields": 187,
+   "created": 187,
+   "notCreated": 0,
+   "required": 0,
+   "fk": 18,
+   "pk": 1,
+   "object": "ExpenseRecovery"
+  },
+  "expense_recovery_part3": {
+   "fields": 187,
+   "created": 187,
+   "notCreated": 0,
+   "required": 0,
+   "fk": 1,
+   "pk": 1,
+   "object": "ExpenseRecovery"
+  },
+  "expense_schedule": {
+   "fields": 51,
+   "created": 51,
+   "notCreated": 0,
+   "required": 5,
+   "fk": 11,
+   "pk": 1,
+   "object": "ExpenseSchedule"
+  },
+  "expense_setup": {
+   "fields": 98,
+   "created": 98,
+   "notCreated": 0,
+   "required": 2,
+   "fk": 19,
+   "pk": 1,
+   "object": "ExpenseSetup"
+  },
+  "expense_vendor_allocation": {
+   "fields": 16,
+   "created": 16,
+   "notCreated": 0,
+   "required": 3,
+   "fk": 6,
+   "pk": 1,
+   "object": "ExpenseVendorAllocation"
+  },
+  "facility": {
+   "fields": 139,
+   "created": 139,
+   "notCreated": 0,
+   "required": 13,
+   "fk": 36,
+   "pk": 1,
+   "object": "Facility"
+  },
+  "facility_expense": {
+   "fields": 22,
+   "created": 0,
+   "notCreated": 22,
+   "required": 2,
+   "fk": 9,
+   "pk": 1,
+   "object": "FacilityExpense"
+  },
+  "financial_adjustment": {
+   "fields": 19,
+   "created": 0,
+   "notCreated": 19,
+   "required": 3,
+   "fk": 9,
+   "pk": 1,
+   "object": "FinancialAdjustment"
+  },
+  "firm": {
+   "fields": 18,
+   "created": 18,
+   "notCreated": 0,
+   "required": 1,
+   "fk": 14,
+   "pk": 0,
+   "object": "Firm"
+  },
+  "fiscal_period": {
+   "fields": 17,
+   "created": 17,
+   "notCreated": 0,
+   "required": 6,
+   "fk": 3,
+   "pk": 1,
+   "object": "FiscalPeriod"
+  },
+  "folder": {
+   "fields": 16,
+   "created": 16,
+   "notCreated": 0,
+   "required": 2,
+   "fk": 3,
+   "pk": 1,
+   "object": "Folder"
+  },
+  "folder_security": {
+   "fields": 3,
+   "created": 0,
+   "notCreated": 3,
+   "required": 1,
+   "fk": 3,
+   "pk": 0,
+   "object": "FolderSecurity"
+  },
+  "folder_template": {
+   "fields": 1,
+   "created": 1,
+   "notCreated": 0,
+   "required": 0,
+   "fk": 1,
+   "pk": 0,
+   "object": "FolderTemplate"
+  },
+  "folder_template_audit": {
+   "fields": 18,
+   "created": 0,
+   "notCreated": 18,
+   "required": 3,
+   "fk": 7,
+   "pk": 1,
+   "object": "FolderTemplateAudit"
+  },
+  "global_property": {
+   "fields": 4,
+   "created": 4,
+   "notCreated": 0,
+   "required": 1,
+   "fk": 2,
+   "pk": 0,
+   "object": "GlobalProperty"
+  },
+  "holiday_date": {
+   "fields": 12,
+   "created": 0,
+   "notCreated": 12,
+   "required": 5,
+   "fk": 3,
+   "pk": 1,
+   "object": "HolidayDate"
+  },
+  "holiday_schedule": {
+   "fields": 8,
+   "created": 0,
+   "notCreated": 8,
+   "required": 2,
+   "fk": 2,
+   "pk": 1,
+   "object": "HolidaySchedule"
+  },
+  "insurance": {
+   "fields": 27,
+   "created": 0,
+   "notCreated": 27,
+   "required": 1,
+   "fk": 10,
+   "pk": 1,
+   "object": "Insurance"
+  },
+  "invoice_issue": {
+   "fields": 23,
+   "created": 0,
+   "notCreated": 23,
+   "required": 3,
+   "fk": 6,
+   "pk": 1,
+   "object": "InvoiceIssue"
+  },
+  "invoice_item": {
+   "fields": 18,
+   "created": 0,
+   "notCreated": 18,
+   "required": 2,
+   "fk": 4,
+   "pk": 1,
+   "object": "InvoiceItem"
+  },
+  "issue": {
+   "fields": 56,
+   "created": 0,
+   "notCreated": 56,
+   "required": 6,
+   "fk": 21,
+   "pk": 1,
+   "object": "Issue"
+  },
+  "issue_response": {
+   "fields": 11,
+   "created": 0,
+   "notCreated": 11,
+   "required": 4,
+   "fk": 4,
+   "pk": 1,
+   "object": "IssueResponse"
+  },
+  "issue_submittal": {
+   "fields": 1,
+   "created": 0,
+   "notCreated": 1,
+   "required": 0,
+   "fk": 1,
+   "pk": 0,
+   "object": "IssueSubmittal"
+  },
+  "jurisdiction": {
+   "fields": 11,
+   "created": 11,
+   "notCreated": 0,
+   "required": 3,
+   "fk": 3,
+   "pk": 1,
+   "object": "Jurisdiction"
+  },
+  "key_date": {
+   "fields": 39,
+   "created": 39,
+   "notCreated": 0,
+   "required": 1,
+   "fk": 12,
+   "pk": 1,
+   "object": "KeyDate"
+  },
+  "land_purchase_summary": {
+   "fields": 35,
+   "created": 0,
+   "notCreated": 35,
+   "required": 1,
+   "fk": 12,
+   "pk": 1,
+   "object": "LandPurchaseSummary"
+  },
+  "landlord_invoice": {
+   "fields": 31,
+   "created": 0,
+   "notCreated": 31,
+   "required": 0,
+   "fk": 11,
+   "pk": 0,
+   "object": "LandlordInvoice"
+  },
+  "landlord_invoice_item": {
+   "fields": 28,
+   "created": 0,
+   "notCreated": 28,
+   "required": 3,
+   "fk": 8,
+   "pk": 0,
+   "object": "LandlordInvoiceItem"
+  },
+  "lease_audit": {
+   "fields": 1,
+   "created": 0,
+   "notCreated": 1,
+   "required": 0,
+   "fk": 1,
+   "pk": 0,
+   "object": "LeaseAudit"
+  },
+  "lease_info": {
+   "fields": 219,
+   "created": 0,
+   "notCreated": 219,
+   "required": 2,
+   "fk": 19,
+   "pk": 1,
+   "object": "LeaseInfo"
+  },
+  "link_budget_index_b_l_i": {
+   "fields": 1,
+   "created": 0,
+   "notCreated": 1,
+   "required": 0,
+   "fk": 1,
+   "pk": 0,
+   "object": "LinkBudgetIndexBLI"
+  },
+  "link_budget_view_b_l_i": {
+   "fields": 1,
+   "created": 0,
+   "notCreated": 1,
+   "required": 0,
+   "fk": 1,
+   "pk": 0,
+   "object": "LinkBudgetViewBLI"
+  },
+  "link_e_mail_received_log_document": {
+   "fields": 5,
+   "created": 0,
+   "notCreated": 5,
+   "required": 2,
+   "fk": 3,
+   "pk": 1,
+   "object": "LinkEMailReceivedLogDocument"
+  },
+  "link_issue_part": {
+   "fields": 13,
+   "created": 0,
+   "notCreated": 13,
+   "required": 4,
+   "fk": 5,
+   "pk": 1,
+   "object": "LinkIssuePart"
+  },
+  "link_issue_part_order": {
+   "fields": 16,
+   "created": 0,
+   "notCreated": 16,
+   "required": 6,
+   "fk": 8,
+   "pk": 1,
+   "object": "LinkIssuePartOrder"
+  },
+  "link_land_purchase_inspection": {
+   "fields": 8,
+   "created": 0,
+   "notCreated": 8,
+   "required": 4,
+   "fk": 5,
+   "pk": 0,
+   "object": "LinkLandPurchaseInspection"
+  },
+  "link_landlord_inv_payment_txn": {
+   "fields": 13,
+   "created": 0,
+   "notCreated": 13,
+   "required": 5,
+   "fk": 5,
+   "pk": 0,
+   "object": "LinkLandlordInvPaymentTxn"
+  },
+  "link_member_project_entity": {
+   "fields": 7,
+   "created": 0,
+   "notCreated": 7,
+   "required": 2,
+   "fk": 3,
+   "pk": 0,
+   "object": "LinkMemberProjectEntity"
+  },
+  "link_p_e_member_code_job_title": {
+   "fields": 1,
+   "created": 0,
+   "notCreated": 1,
+   "required": 0,
+   "fk": 1,
+   "pk": 0,
+   "object": "LinkPEMemberCodeJobTitle"
+  },
+  "link_project_entity_contact": {
+   "fields": 11,
+   "created": 11,
+   "notCreated": 0,
+   "required": 2,
+   "fk": 7,
+   "pk": 0,
+   "object": "LinkProjectEntityContact"
+  },
+  "link_project_entity_vendor": {
+   "fields": 4,
+   "created": 0,
+   "notCreated": 4,
+   "required": 2,
+   "fk": 2,
+   "pk": 1,
+   "object": "LinkProjectEntityVendor"
+  },
+  "link_re_trans_scen_contact": {
+   "fields": 33,
+   "created": 0,
+   "notCreated": 33,
+   "required": 1,
+   "fk": 11,
+   "pk": 1,
+   "object": "LinkReTransScenContact"
+  },
+  "link_receipt_transaction": {
+   "fields": 12,
+   "created": 0,
+   "notCreated": 12,
+   "required": 3,
+   "fk": 5,
+   "pk": 1,
+   "object": "LinkReceiptTransaction"
+  },
+  "link_region_manager": {
+   "fields": 1,
+   "created": 1,
+   "notCreated": 0,
+   "required": 0,
+   "fk": 1,
+   "pk": 0,
+   "object": "LinkRegionManager"
+  },
+  "link_sched_offset_exp_grp_type": {
+   "fields": 12,
+   "created": 0,
+   "notCreated": 12,
+   "required": 3,
+   "fk": 7,
+   "pk": 1,
+   "object": "LinkSchedOffsetExpGrpType"
+  },
+  "link_task_by_code_member": {
+   "fields": 8,
+   "created": 0,
+   "notCreated": 8,
+   "required": 2,
+   "fk": 4,
+   "pk": 1,
+   "object": "LinkTaskByCodeMember"
+  },
+  "link_task_document": {
+   "fields": 1,
+   "created": 0,
+   "notCreated": 1,
+   "required": 0,
+   "fk": 1,
+   "pk": 0,
+   "object": "LinkTaskDocument"
+  },
+  "link_task_member": {
+   "fields": 5,
+   "created": 0,
+   "notCreated": 5,
+   "required": 3,
+   "fk": 4,
+   "pk": 0,
+   "object": "LinkTaskMember"
+  },
+  "location": {
+   "fields": 142,
+   "created": 142,
+   "notCreated": 0,
+   "required": 6,
+   "fk": 44,
+   "pk": 1,
+   "object": "Location"
+  },
+  "map_client_schedule": {
+   "fields": 10,
+   "created": 0,
+   "notCreated": 10,
+   "required": 3,
+   "fk": 5,
+   "pk": 0,
+   "object": "MapClientSchedule"
+  },
+  "member": {
+   "fields": 81,
+   "created": 81,
+   "notCreated": 0,
+   "required": 19,
+   "fk": 16,
+   "pk": 1,
+   "object": "Member"
+  },
+  "member_audit": {
+   "fields": 12,
+   "created": 0,
+   "notCreated": 12,
+   "required": 3,
+   "fk": 6,
+   "pk": 1,
+   "object": "MemberAudit"
+  },
+  "non_member": {
+   "fields": 37,
+   "created": 0,
+   "notCreated": 37,
+   "required": 8,
+   "fk": 8,
+   "pk": 0,
+   "object": "NonMember"
+  },
+  "notify": {
+   "fields": 1,
+   "created": 0,
+   "notCreated": 1,
+   "required": 0,
+   "fk": 1,
+   "pk": 0,
+   "object": "Notify"
+  },
+  "organization": {
+   "fields": 17,
+   "created": 0,
+   "notCreated": 17,
+   "required": 2,
+   "fk": 4,
+   "pk": 1,
+   "object": "Organization"
+  },
+  "ownership": {
+   "fields": 9,
+   "created": 0,
+   "notCreated": 9,
+   "required": 5,
+   "fk": 4,
+   "pk": 1,
+   "object": "Ownership"
+  },
+  "parcel": {
+   "fields": 154,
+   "created": 0,
+   "notCreated": 154,
+   "required": 8,
+   "fk": 42,
+   "pk": 1,
+   "object": "Parcel"
+  },
+  "parcel_access": {
+   "fields": 20,
+   "created": 0,
+   "notCreated": 20,
+   "required": 2,
+   "fk": 8,
+   "pk": 1,
+   "object": "ParcelAccess"
+  },
+  "parking": {
+   "fields": 19,
+   "created": 0,
+   "notCreated": 19,
+   "required": 2,
+   "fk": 8,
+   "pk": 1,
+   "object": "Parking"
+  },
+  "part": {
+   "fields": 16,
+   "created": 0,
+   "notCreated": 16,
+   "required": 2,
+   "fk": 2,
+   "pk": 1,
+   "object": "Part"
+  },
+  "part_package": {
+   "fields": 6,
+   "created": 0,
+   "notCreated": 6,
+   "required": 2,
+   "fk": 2,
+   "pk": 1,
+   "object": "PartPackage"
+  },
+  "part_package_item": {
+   "fields": 7,
+   "created": 0,
+   "notCreated": 7,
+   "required": 4,
+   "fk": 3,
+   "pk": 1,
+   "object": "PartPackageItem"
+  },
+  "party": {
+   "fields": 12,
+   "created": 0,
+   "notCreated": 12,
+   "required": 1,
+   "fk": 7,
+   "pk": 1,
+   "object": "Party"
+  },
+  "pay_app": {
+   "fields": 15,
+   "created": 0,
+   "notCreated": 15,
+   "required": 2,
+   "fk": 5,
+   "pk": 1,
+   "object": "PayApp"
+  },
+  "payment_receipt": {
+   "fields": 21,
+   "created": 0,
+   "notCreated": 21,
+   "required": 1,
+   "fk": 5,
+   "pk": 1,
+   "object": "PaymentReceipt"
+  },
+  "payment_transaction": {
+   "fields": 118,
+   "created": 118,
+   "notCreated": 0,
+   "required": 1,
+   "fk": 24,
+   "pk": 1,
+   "object": "PaymentTransaction"
+  },
+  "percentage_rent": {
+   "fields": 47,
+   "created": 47,
+   "notCreated": 0,
+   "required": 1,
+   "fk": 16,
+   "pk": 1,
+   "object": "PercentageRent"
+  },
+  "percentage_rent_breakpoint": {
+   "fields": 40,
+   "created": 40,
+   "notCreated": 0,
+   "required": 1,
+   "fk": 6,
+   "pk": 1,
+   "object": "PercentageRentBreakpoint"
+  },
+  "person": {
+   "fields": 37,
+   "created": 0,
+   "notCreated": 37,
+   "required": 8,
+   "fk": 7,
+   "pk": 1,
+   "object": "Person"
+  },
+  "potential_project": {
+   "fields": 108,
+   "created": 0,
+   "notCreated": 108,
+   "required": 3,
+   "fk": 30,
+   "pk": 1,
+   "object": "PotentialProject"
+  },
+  "pro_forma_budget": {
+   "fields": 47,
+   "created": 0,
+   "notCreated": 47,
+   "required": 1,
+   "fk": 3,
+   "pk": 1,
+   "object": "ProFormaBudget"
+  },
+  "process_timeline": {
+   "fields": 31,
+   "created": 0,
+   "notCreated": 31,
+   "required": 0,
+   "fk": 3,
+   "pk": 1,
+   "object": "ProcessTimeline"
+  },
+  "process_timeline_template": {
+   "fields": 10,
+   "created": 0,
+   "notCreated": 10,
+   "required": 5,
+   "fk": 3,
+   "pk": 1,
+   "object": "ProcessTimelineTemplate"
+  },
+  "program": {
+   "fields": 181,
+   "created": 181,
+   "notCreated": 0,
+   "required": 6,
+   "fk": 64,
+   "pk": 1,
+   "object": "Program"
+  },
+  "program_revenue_weeks": {
+   "fields": 13,
+   "created": 0,
+   "notCreated": 13,
+   "required": 3,
+   "fk": 2,
+   "pk": 1,
+   "object": "ProgramRevenueWeeks"
+  },
+  "project": {
+   "fields": 111,
+   "created": 0,
+   "notCreated": 111,
+   "required": 4,
+   "fk": 31,
+   "pk": 1,
+   "object": "Project"
+  },
+  "project_entity": {
+   "fields": 107,
+   "created": 0,
+   "notCreated": 107,
+   "required": 3,
+   "fk": 29,
+   "pk": 1,
+   "object": "ProjectEntity"
+  },
+  "property_tax_appeal": {
+   "fields": 41,
+   "created": 0,
+   "notCreated": 41,
+   "required": 3,
+   "fk": 10,
+   "pk": 1,
+   "object": "PropertyTaxAppeal"
+  },
+  "property_tax_appeal_award": {
+   "fields": 18,
+   "created": 0,
+   "notCreated": 18,
+   "required": 3,
+   "fk": 8,
+   "pk": 1,
+   "object": "PropertyTaxAppealAward"
+  },
+  "property_tax_assessment": {
+   "fields": 25,
+   "created": 0,
+   "notCreated": 25,
+   "required": 3,
+   "fk": 6,
+   "pk": 1,
+   "object": "PropertyTaxAssessment"
+  },
+  "property_tax_bill": {
+   "fields": 32,
+   "created": 0,
+   "notCreated": 32,
+   "required": 3,
+   "fk": 6,
+   "pk": 1,
+   "object": "PropertyTaxBill"
+  },
+  "property_tax_detail": {
+   "fields": 15,
+   "created": 0,
+   "notCreated": 15,
+   "required": 3,
+   "fk": 6,
+   "pk": 1,
+   "object": "PropertyTaxDetail"
+  },
+  "property_tax_summary": {
+   "fields": 32,
+   "created": 0,
+   "notCreated": 32,
+   "required": 2,
+   "fk": 14,
+   "pk": 1,
+   "object": "PropertyTaxSummary"
+  },
+  "prototype": {
+   "fields": 113,
+   "created": 0,
+   "notCreated": 113,
+   "required": 12,
+   "fk": 29,
+   "pk": 1,
+   "object": "Prototype"
+  },
+  "purchase_order": {
+   "fields": 20,
+   "created": 0,
+   "notCreated": 20,
+   "required": 2,
+   "fk": 4,
+   "pk": 1,
+   "object": "PurchaseOrder"
+  },
+  "question": {
+   "fields": 14,
+   "created": 0,
+   "notCreated": 14,
+   "required": 4,
+   "fk": 5,
+   "pk": 1,
+   "object": "Question"
+  },
+  "r_e_transaction": {
+   "fields": 31,
+   "created": 0,
+   "notCreated": 31,
+   "required": 3,
+   "fk": 15,
+   "pk": 1,
+   "object": "RETransaction"
+  },
+  "re_trans_scen_contact": {
+   "fields": 28,
+   "created": 0,
+   "notCreated": 28,
+   "required": 3,
+   "fk": 7,
+   "pk": 1,
+   "object": "ReTransScenContact"
+  },
+  "recalc_override_notes": {
+   "fields": 7,
+   "created": 7,
+   "notCreated": 0,
+   "required": 2,
+   "fk": 4,
+   "pk": 0,
+   "object": "RecalcOverrideNotes"
+  },
+  "region": {
+   "fields": 1,
+   "created": 1,
+   "notCreated": 0,
+   "required": 0,
+   "fk": 1,
+   "pk": 0,
+   "object": "Region"
+  },
+  "report_group_available_field": {
+   "fields": 27,
+   "created": 27,
+   "notCreated": 0,
+   "required": 4,
+   "fk": 4,
+   "pk": 0,
+   "object": "ReportGroupAvailableField"
+  },
+  "report_group_data": {
+   "fields": 5,
+   "created": 5,
+   "notCreated": 0,
+   "required": 1,
+   "fk": 2,
+   "pk": 0,
+   "object": "ReportGroupData"
+  },
+  "responsibility": {
+   "fields": 32,
+   "created": 32,
+   "notCreated": 0,
+   "required": 1,
+   "fk": 18,
+   "pk": 1,
+   "object": "Responsibility"
+  },
+  "s_l_period": {
+   "fields": 79,
+   "created": 79,
+   "notCreated": 0,
+   "required": 4,
+   "fk": 7,
+   "pk": 1,
+   "object": "SLPeriod"
+  },
+  "s_l_summary": {
+   "fields": 134,
+   "created": 134,
+   "notCreated": 0,
+   "required": 2,
+   "fk": 13,
+   "pk": 1,
+   "object": "SLSummary"
+  },
+  "sales": {
+   "fields": 28,
+   "created": 28,
+   "notCreated": 0,
+   "required": 1,
+   "fk": 8,
+   "pk": 1,
+   "object": "Sales"
+  },
+  "sales_exclusion": {
+   "fields": 19,
+   "created": 19,
+   "notCreated": 0,
+   "required": 1,
+   "fk": 8,
+   "pk": 1,
+   "object": "SalesExclusion"
+  },
+  "sales_exclusion_cap": {
+   "fields": 23,
+   "created": 23,
+   "notCreated": 0,
+   "required": 2,
+   "fk": 7,
+   "pk": 1,
+   "object": "SalesExclusionCap"
+  },
+  "scenario": {
+   "fields": 69,
+   "created": 0,
+   "notCreated": 69,
+   "required": 4,
+   "fk": 22,
+   "pk": 1,
+   "object": "Scenario"
+  },
+  "scheduled_offset": {
+   "fields": 19,
+   "created": 0,
+   "notCreated": 19,
+   "required": 1,
+   "fk": 6,
+   "pk": 1,
+   "object": "ScheduledOffset"
+  },
+  "scratch_pad": {
+   "fields": 1,
+   "created": 0,
+   "notCreated": 1,
+   "required": 0,
+   "fk": 1,
+   "pk": 0,
+   "object": "ScratchPad"
+  },
+  "security_deposit": {
+   "fields": 26,
+   "created": 26,
+   "notCreated": 0,
+   "required": 1,
+   "fk": 12,
+   "pk": 1,
+   "object": "SecurityDeposit"
+  },
+  "service_request": {
+   "fields": 30,
+   "created": 0,
+   "notCreated": 30,
+   "required": 3,
+   "fk": 16,
+   "pk": 1,
+   "object": "ServiceRequest"
+  },
+  "site_survey": {
+   "fields": 79,
+   "created": 0,
+   "notCreated": 79,
+   "required": 1,
+   "fk": 15,
+   "pk": 1,
+   "object": "SiteSurvey"
+  },
+  "space": {
+   "fields": 27,
+   "created": 0,
+   "notCreated": 27,
+   "required": 3,
+   "fk": 10,
+   "pk": 1,
+   "object": "Space"
+  },
+  "state_province_country": {
+   "fields": 11,
+   "created": 11,
+   "notCreated": 0,
+   "required": 5,
+   "fk": 2,
+   "pk": 0,
+   "object": "StateProvinceCountry"
+  },
+  "task": {
+   "fields": 37,
+   "created": 0,
+   "notCreated": 37,
+   "required": 2,
+   "fk": 7,
+   "pk": 1,
+   "object": "Task"
+  },
+  "task_group": {
+   "fields": 37,
+   "created": 0,
+   "notCreated": 37,
+   "required": 2,
+   "fk": 7,
+   "pk": 1,
+   "object": "TaskGroup"
+  },
+  "task_item": {
+   "fields": 37,
+   "created": 0,
+   "notCreated": 37,
+   "required": 2,
+   "fk": 7,
+   "pk": 1,
+   "object": "TaskItem"
+  },
+  "task_predecessor": {
+   "fields": 15,
+   "created": 0,
+   "notCreated": 15,
+   "required": 6,
+   "fk": 6,
+   "pk": 1,
+   "object": "TaskPredecessor"
+  },
+  "task_template": {
+   "fields": 1,
+   "created": 0,
+   "notCreated": 1,
+   "required": 0,
+   "fk": 1,
+   "pk": 0,
+   "object": "TaskTemplate"
+  },
+  "task_template_audit": {
+   "fields": 18,
+   "created": 0,
+   "notCreated": 18,
+   "required": 3,
+   "fk": 7,
+   "pk": 1,
+   "object": "TaskTemplateAudit"
+  },
+  "template_audit": {
+   "fields": 18,
+   "created": 18,
+   "notCreated": 0,
+   "required": 3,
+   "fk": 7,
+   "pk": 1,
+   "object": "TemplateAudit"
+  },
+  "tenant": {
+   "fields": 42,
+   "created": 0,
+   "notCreated": 42,
+   "required": 3,
+   "fk": 14,
+   "pk": 1,
+   "object": "Tenant"
+  },
+  "usage": {
+   "fields": 14,
+   "created": 0,
+   "notCreated": 14,
+   "required": 1,
+   "fk": 7,
+   "pk": 1,
+   "object": "Usage"
+  },
+  "use_based_rent": {
+   "fields": 23,
+   "created": 0,
+   "notCreated": 23,
+   "required": 2,
+   "fk": 13,
+   "pk": 1,
+   "object": "UseBasedRent"
+  },
+  "use_based_rent_breakpoint": {
+   "fields": 31,
+   "created": 0,
+   "notCreated": 31,
+   "required": 1,
+   "fk": 6,
+   "pk": 1,
+   "object": "UseBasedRentBreakpoint"
+  },
+  "user_class_security": {
+   "fields": 21,
+   "created": 21,
+   "notCreated": 0,
+   "required": 2,
+   "fk": 10,
+   "pk": 1,
+   "object": "UserClassSecurity"
+  },
+  "variable_rent_offset": {
+   "fields": 20,
+   "created": 0,
+   "notCreated": 20,
+   "required": 1,
+   "fk": 11,
+   "pk": 1,
+   "object": "VariableRentOffset"
+  },
+  "vendor_insurance": {
+   "fields": 15,
+   "created": 0,
+   "notCreated": 15,
+   "required": 2,
+   "fk": 4,
+   "pk": 1,
+   "object": "VendorInsurance"
+  },
+  "virtual_exp_accrual_forecast_period": {
+   "fields": 13,
+   "created": 0,
+   "notCreated": 13,
+   "required": 0,
+   "fk": 6,
+   "pk": 0,
+   "object": "VirtualExpAccrualForecastPeriod"
+  },
+  "virtual_expense_forecast_period": {
+   "fields": 20,
+   "created": 20,
+   "notCreated": 0,
+   "required": 0,
+   "fk": 5,
+   "pk": 0,
+   "object": "VirtualExpenseForecastPeriod"
+  },
+  "virtual_p_r_p_aggregate": {
+   "fields": 16,
+   "created": 0,
+   "notCreated": 16,
+   "required": 0,
+   "fk": 6,
+   "pk": 0,
+   "object": "VirtualPRPAggregate"
+  },
+  "virtual_percentage_rent_period": {
+   "fields": 38,
+   "created": 0,
+   "notCreated": 38,
+   "required": 0,
+   "fk": 4,
+   "pk": 0,
+   "object": "VirtualPercentageRentPeriod"
+  },
+  "virtual_pr_accrual_period": {
+   "fields": 20,
+   "created": 20,
+   "notCreated": 0,
+   "required": 0,
+   "fk": 1,
+   "pk": 0,
+   "object": "VirtualPRAccrualPeriod"
+  },
+  "virtual_template_budget": {
+   "fields": 17,
+   "created": 0,
+   "notCreated": 17,
+   "required": 0,
+   "fk": 2,
+   "pk": 0,
+   "object": "VirtualTemplateBudget"
+  },
+  "virtual_template_budget_option": {
+   "fields": 17,
+   "created": 0,
+   "notCreated": 17,
+   "required": 0,
+   "fk": 2,
+   "pk": 0,
+   "object": "VirtualTemplateBudgetOption"
+  },
+  "virtual_template_folder": {
+   "fields": 16,
+   "created": 0,
+   "notCreated": 16,
+   "required": 0,
+   "fk": 2,
+   "pk": 0,
+   "object": "VirtualTemplateFolder"
+  },
+  "virtual_template_schedule": {
+   "fields": 16,
+   "created": 0,
+   "notCreated": 16,
+   "required": 0,
+   "fk": 2,
+   "pk": 0,
+   "object": "VirtualTemplateSchedule"
+  },
+  "virtual_u_b_r_p_aggregate": {
+   "fields": 14,
+   "created": 0,
+   "notCreated": 14,
+   "required": 0,
+   "fk": 6,
+   "pk": 0,
+   "object": "VirtualUBRPAggregate"
+  },
+  "virtual_usage_period": {
+   "fields": 66,
+   "created": 0,
+   "notCreated": 66,
+   "required": 0,
+   "fk": 3,
+   "pk": 0,
+   "object": "VirtualUsagePeriod"
+  },
+  "virtual_use_based_rent_period": {
+   "fields": 23,
+   "created": 0,
+   "notCreated": 23,
+   "required": 0,
+   "fk": 4,
+   "pk": 0,
+   "object": "VirtualUseBasedRentPeriod"
+  },
+  "w_f_step_full_import": {
+   "fields": 47,
+   "created": 0,
+   "notCreated": 47,
+   "required": 6,
+   "fk": 11,
+   "pk": 1,
+   "object": "WFStepFullImport"
+  },
+  "work_flow": {
+   "fields": 19,
+   "created": 19,
+   "notCreated": 0,
+   "required": 6,
+   "fk": 9,
+   "pk": 1,
+   "object": "WorkFlow"
+  },
+  "work_flow_step": {
+   "fields": 47,
+   "created": 47,
+   "notCreated": 0,
+   "required": 6,
+   "fk": 11,
+   "pk": 1,
+   "object": "WorkFlowStep"
+  },
+  "work_flow_step_approver": {
+   "fields": 20,
+   "created": 0,
+   "notCreated": 20,
+   "required": 5,
+   "fk": 7,
+   "pk": 1,
+   "object": "WorkFlowStepApprover"
+  },
+  "work_flow_step_assignee": {
+   "fields": 11,
+   "created": 0,
+   "notCreated": 11,
+   "required": 6,
+   "fk": 5,
+   "pk": 1,
+   "object": "WorkFlowStepAssignee"
+  },
+  "work_flow_template": {
+   "fields": 25,
+   "created": 25,
+   "notCreated": 0,
+   "required": 9,
+   "fk": 6,
+   "pk": 1,
+   "object": "WorkFlowTemplate"
+  },
+  "work_flow_template_step": {
+   "fields": 55,
+   "created": 55,
+   "notCreated": 0,
+   "required": 10,
+   "fk": 10,
+   "pk": 1,
+   "object": "WorkFlowTemplateStep"
+  },
+  "work_flow_template_step_action": {
+   "fields": 37,
+   "created": 37,
+   "notCreated": 0,
+   "required": 15,
+   "fk": 8,
+   "pk": 1,
+   "object": "WorkFlowTemplateStepAction"
+  },
+  "work_order": {
+   "fields": 30,
+   "created": 0,
+   "notCreated": 30,
+   "required": 3,
+   "fk": 12,
+   "pk": 1,
+   "object": "WorkOrder"
+  }
+ }
+}

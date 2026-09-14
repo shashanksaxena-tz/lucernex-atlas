@@ -37,6 +37,69 @@ configuration**, `Issue`/`ClientListRow` are **tenant business data**. `ReportGr
 sits on the business-data side of that line, which is why the field registry is API-addressable and
 the layout tables are not. **Derived** (membership checks against both artefacts).
 
+The same inventory as an entity-relationship sketch. Only the edges this document evidences are
+drawn; cardinalities are from the FK direction, not from row counts.
+
+```mermaid
+erDiagram
+    PAGELAYOUT ||--o{ PAGELAYOUT : "ParentPageLayoutID -- self-referential"
+    PAGELAYOUT ||--o| PAGELAYOUT : "PreviousPageLayoutID -- sequence within a nav node"
+    PAGELAYOUT ||--o{ PAGELAYOUTFIELD : "PageLayoutID"
+    PAGELAYOUT ||--o{ PAGELAYOUTFILTER : "PageLayoutID -- zero rows in BBW"
+    PAGELAYOUTFIELD }o--|| REPORTGROUPAVAILABLEFIELD : "ReportGroupAvailableFieldID"
+    PAGELAYOUTFIELD }o--o| PAGELAYOUT : "SubPageLayoutID -- embeds another layout"
+    PAGELAYOUTFILTER }o--|| REPORTGROUPAVAILABLEFIELD : "required FK"
+    REPORTGROUPDATA ||--o{ REPORTGROUPAVAILABLEFIELD : "the grouping tree"
+    CODEISSUETYPE ||--o{ PAGELAYOUT : "CodeIssueTypeID -- what makes a layout a FORM layout"
+    CODEISSUETYPE ||--o{ ISSUE : "the record a Form produces"
+    CODEISSUETYPE ||--o{ CLIENTLISTROW : "IsWorkFlow = No -- the Custom List case"
+    USERCLASSSECURITY }o--|| REPORTGROUPAVAILABLEFIELD : "field-level grants"
+    USERCLASSSECURITY }o--o| PAGELAYOUT : "page and list-layout grants"
+
+    PAGELAYOUT {
+        string PageLayoutName
+        ref PrimaryCodeSQLTableID
+        ref ParentPageLayoutID
+        ref PreviousPageLayoutID
+        ref CodeIssueTypeID
+        ref FirmID
+        bool IsGlobalReport
+        int RunModeFilters
+        int EntitySelectionFilter
+        string JSONConfigText
+    }
+    PAGELAYOUTFIELD {
+        ref PageLayoutID
+        ref ReportGroupAvailableFieldID
+        ref SubPageLayoutID
+        string DisplayLabel
+        int EditRowPosition
+        int ViewRowPosition
+        int HeaderColumnPosition
+        int DisplayOption1
+        int DisplayOption2
+        string JSONConfigText
+    }
+```
+
+**Three things the sketch is meant to make unmissable.**
+
+1. **`PageLayout` points at itself twice, for two different jobs.** `ParentPageLayoutID` is
+   *attachment* — a firm layout hanging off a platform navigation layout. `PreviousPageLayoutID` is
+   *ordering* within that attachment. Conflating them is the error this corpus already made and
+   corrected ([`../../features/page-layouts/`](../../features/page-layouts/#the-chain--how-several-layouts-share-one-navigation-node)).
+2. **`SubPageLayoutID` lives on the *placement*, not on the sub-layout.** That is what makes a SUB
+   layout reusable across parents and why 0 of 32 BBW sub-pages carry a `ParentPageLayoutID`.
+3. **`ReportGroupAvailableField` is the hub.** Layouts, filters, field security and the audit trail
+   all key off it. A rebuild that gives each of those its own field list will have four registries to
+   keep in step.
+
+**Caveat on the column lists.** The attribute blocks above are the columns recovered through REST
+across 134 layouts, and the serializer emits only **populated** columns — so 17 on `PageLayout` and
+20 on `PageLayoutField` are **lower bounds**, against the 42 and 27 the Manage Data Fields catalog
+declares. The diagram shows the load-bearing ones, not all of them.
+
+
 ## `PageLayout` — 42 fields
 
 | Field | Type | Reqd | Role |

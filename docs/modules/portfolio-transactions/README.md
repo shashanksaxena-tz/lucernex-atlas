@@ -128,7 +128,7 @@ which can carry multiple competing `Scenario` rows (`Scenario.RETransactionID` a
 `Scenario.ProjectEntityID` are both **required**). `Scenario.ContractID` is a genuine, optional,
 forward-pointing FK to `Contract` — the deal's terminus once a lease is signed. **The reverse link
 does not exist**: `Contract` has no `ScenarioID` or `RETransactionID` column
-([`data-model.md`](data-model.md#4-the-contract-boundary----one-way-only)) — the same
+([`data-model.md`](data-model.md#4-the-contract-boundary--one-way-only)) — the same
 asymmetric-FK-plus-child-grid pattern
 [`../facilities-locations/README.md`](../facilities-locations/README.md) found between `Facility`
 and `Contract`. **`POR-R-004`.**

@@ -7,8 +7,20 @@ in `(ASG)American Freight` (AF's dashboard renders six extra anchors, but they a
 inventory with routes**, which did not previously exist: the corpus documented nine of the 57 in
 depth and named the rest only as a list.
 
-**55 of 57 now have a screenshot.** Two do not: `RESTful WebService Docs` (deliberately — the page
-renders live credentials) and `Delete Entities` (a vendor-only destructive tool).
+**55 of 57 now have a screenshot.** The two that do not are the two on the capture-exclusion list,
+and for the same reason: **`RESTful WebService Docs`** renders a live Basic token and a live JWT, and
+**`GraphQL Explorer`** may carry an auth header in its console state
+([`../../tenants/CAPTURE-EXCLUSIONS.md`](../../tenants/CAPTURE-EXCLUSIONS.md)). `Delete Entities`
+*does* have a screenshot, in both tenants.
+
+> **Screenshot numbers in this document were off by up to two, and the reason is worth keeping.**
+> A `RESTful.jsp` capture was written to disk during the BBW sweep, deleted on discovery, and the
+> set renumbered — so `bbw-admin/` went from 56 files to 55 and every reference above index 52
+> shifted. `Layout Changes` was cited as `56-…`, `Generate Enterprise Report File` as `55-…`, and a
+> `54-graphql-explorer.jpg` was cited that has never existed. All three are corrected here. This is
+> precisely the rot [`../../CONVENTIONS.md`](../../CONVENTIONS.md) warns about when it asks for
+> `code`-formatted paths rather than links — but a `code` path that is *wrong* is no better than a
+> broken link, so the rule needs a checker, not just a format.
 
 Three facts fall straight out of the route list and are worth stating before the tables.
 
@@ -25,6 +37,9 @@ routes make it **Observed**.
 
 **3. `Job Log` and `Report Log` are the same screen.** Both are `JobLogEdit.jsp` — two dashboard
 entries, one page.
+
+![The whole administration surface on one page. The vendor's own grouping is six boxes -- `Company Administration`, `Portfolio/Capital Program Administration`, `Member Administration`, `Portfolio Administration`, `Folder Administration`, `Data/PS Tools` -- with `Cost Management` and `Manage Defined Fields` as sub-headings inside two of them. The six extra anchors AF renders are the indented `Manage Defined Fields` entries: `Job Function Code`, `Job Title Code`, `User Class Code`, `Document Content Code`, `Document Type Code`, `Client Drop Downs`. They are shortcuts into `FirmCodeEdit.jsp`, not distinct tools. Note `Export Schema` sitting in `Data/PS Tools`, still unopened.](../../assets/screenshots/af-admin/01-admin-dashboard.jpg)
+
 
 **Coverage, honestly.** **22 of 57** tools now have an owning document, up from 8. The remaining 35
 are named, routed and screenshotted but not explained — and 10 of those are deliberate: budget and
@@ -55,7 +70,7 @@ Source: [`../../tenants/bbw-platform-inventory.json`](../../tenants/bbw-platform
 | Client Drop Downs | `/en/admin/CustomCodeTableEdit.jsp` | [drop-downs-code-tables](../drop-downs-code-tables/) | `bbw-admin/28-client-drop-downs.jpg`, `bbw-admin/28-client-drop-downs.jpg` |
 | Manage Top Menu | `/en/admin/ManageTopMenu.jsp` | **—** | `bbw-admin/16-manage-top-menu.jpg`, `bbw-admin/16-manage-top-menu.jpg` |
 | Manage Firm Dictionary | `/en/admin/Dictionary.jsp` | **—** | `bbw-admin/17-manage-firm-dictionary.jpg`, `bbw-admin/17-manage-firm-dictionary.jpg` |
-| Layout Changes | `/en/admin/ShowLayoutChanges.jsp` | **—** | `bbw-admin/56-layout-changes.jpg` |
+| Layout Changes | `/en/admin/ShowLayoutChanges.jsp` | **—** | `bbw-admin/54-layout-changes.jpg` |
 | Manage Folder Templates | `/en/admin/FolderTemplateEdit.jsp` | [README.md](../../modules/documents-folders/README.md) | `bbw-admin/44-manage-folder-templates.jpg` |
 | Manage Binder Templates | `/en/CommitteeDocuments/BinderTemplateEdit.jsp` | **—** | `af-admin/05-manage-binder-templates.jpg`, `bbw-admin/04-manage-binder-templates.jpg`, `af-admin/05-manage-binder-templates.jpg`, `bbw-admin/04-manage-binder-templates.jpg` |
 | Manage Schedule Templates | `/en/admin/TaskTemplateEdit.jsp` | [scheduling.md](../../modules/projects-capital/scheduling.md) | `af-admin/03-manage-schedule-templates.jpg`, `bbw-admin/02-manage-schedule-templates.jpg`, `af-admin/03-manage-schedule-templates.jpg`, `bbw-admin/02-manage-schedule-templates.jpg` |
@@ -105,7 +120,7 @@ Source: [`../../tenants/bbw-platform-inventory.json`](../../tenants/bbw-platform
 | Export Configuration | `/en/admin/MessengerExportData.jsp` | [import-export](../import-export/) | `bbw-admin/14-export-configuration.jpg`, `bbw-admin/14-export-configuration.jpg` |
 | Job Log | `/en/admin/JobLogEdit.jsp` | [import-export](../import-export/) | `bbw-admin/15-job-log.jpg`, `bbw-admin/15-job-log.jpg` |
 | Report Log | `/en/admin/JobLogEdit.jsp` | **—** | `bbw-admin/49-report-log.jpg` |
-| Generate Enterprise Report File | `/en/admin/GenBaseReport.jsp` | **—** | `bbw-admin/55-generate-enterprise-report-file.jpg` |
+| Generate Enterprise Report File | `/en/admin/GenBaseReport.jsp` | **—** | `bbw-admin/53-generate-enterprise-report-file.jpg` |
 
 ### Diagnostics, logs and developer tools
 
@@ -116,7 +131,7 @@ Source: [`../../tenants/bbw-platform-inventory.json`](../../tenants/bbw-platform
 | Audit Reports | `/en/reports/AuditReport.jsp` | **—** | `bbw-admin/47-audit-reports.jpg` |
 | Email Log | `/en/reports/EMailLogs.jsp` | **—** | `bbw-admin/48-email-log.jpg` |
 | RESTful WebService Docs | `/en/test/RESTful.jsp` | [import-export](../import-export/) | — |
-| GraphQL Explorer | `/en/admin/graphql.jsp` | [graphql-api.md](../../data-model/graphql-api.md) | `bbw-admin/54-graphql-explorer.jpg` |
+| GraphQL Explorer | `/en/admin/graphql.jsp` | [graphql-api.md](../../data-model/graphql-api.md) | **—** (capture-excluded) |
 | Manage Dashboard Reports | `/en/reports/ManageDashboardModules.jsp` | [admin-tools.md](../../modules/reporting/admin-tools.md) | `bbw-admin/11-manage-dashboard-reports.jpg`, `bbw-admin/11-manage-dashboard-reports.jpg` |
 
 ### Budget and bidding — out of scope by decision
@@ -137,7 +152,7 @@ Source: [`../../tenants/bbw-platform-inventory.json`](../../tenants/bbw-platform
 | Modify Straight Line Status | `/en/admin/lxadmin/SLDemoTweaks.jsp` | **—** | `bbw-admin/50-modify-straight-line-status.jpg` |
 | Data Conversion Cleaner | `/en/admin/lxadmin/DataLoadTweaks.jsp` | **—** | `bbw-admin/51-data-conversion-cleaner.jpg` |
 | Test Email Address | `/en/admin/lxadmin/EmailTest.jsp` | **—** | `bbw-admin/52-test-email-address.jpg` |
-| Delete Entities | `/en/admin/lxadmin/DeleteEntities.jsp` | **—** | — |
+| Delete Entities | `/en/admin/lxadmin/DeleteEntities.jsp` | **—** | `bbw-admin/55-delete-entities.jpg`, `af-admin/64-delete-entities.jpg` |
 ---
 
 ## What the classification shows
@@ -192,6 +207,9 @@ the field labels**."* Two modes, by radio:
 | **`Append current translation phrases with all non-empty language phrases in uploaded file`** | **Default** — merge |
 
 The file is an **XLSX**, chosen with `Choose file`, then `Upload New Dictionary`.
+
+![`Manage Firm Dictionary`. The upload half replaces or appends translation phrases; the note above it says the file can be used *"to just overwrite the field labels"*. This screen is the reason every UI label in this corpus carries an implicit asterisk.](../../assets/screenshots/bbw-admin/17-manage-firm-dictionary.jpg)
+
 
 **Download.** Four scopes, plus a multi-select `For Language:` currently holding `English`:
 
@@ -264,11 +282,15 @@ platform-owned things are not. That is exactly what the provenance reading predi
    ([`../../INDEX.md`](../../INDEX.md#what-is-still-open), item 2) — **and it is one screen away**:
    open `Lease Status` and read its values.
 
-**Open.** The truncated fourth column, `Smar…`. **Inferred** to be something like *"Smart Drop
-Down"* — plausibly the flag for the **dependent/cascading** behaviour that
-`CustomCodeField.ParentCustomCodeFieldID` implements
-([`../drop-downs-code-tables/`](../drop-downs-code-tables/#dependent-drop-downs-an-unnoticed-feature)).
-Unconfirmed; the screenshot is cropped.
+**Answered.** The truncated fourth column is **`Smart List Parent Drop Down`**, read in full from the
+American Freight capture of the same screen
+(`drop-downs/client-lease-status-values.jpg`). It is the UI for the
+**dependent/cascading** behaviour that `CustomCodeField.ParentCustomCodeFieldID` implements
+([`../drop-downs-code-tables/`](../drop-downs-code-tables/#dependent-drop-downs--an-unnoticed-feature)),
+and the value editor carries a matching `<select>` of the same name. The inference was right; it is
+now **Observed**.
+
+![`Client Drop Downs` at BBW -- the firm's own registry, distinct from the 207 platform code tables. Every row carries `edit | delete`, with none protected, against 154 of 1,140 protected values in the platform registry. The fourth column is cropped here at `Smar...`; it is `Smart List Parent Drop Down`.](../../assets/screenshots/bbw-admin/28-client-drop-downs.jpg)
 
 ---
 

@@ -59,11 +59,62 @@ The 6 BBW form types: `ASC 842 Tracking`, `Change Request`, `Lease Admin Request
 `User Request`, `Vendor Changes (Integration)`. **`Change Request` and `QC Request` have no
 workflow of any name.**
 
+![`Manage Work Flows` in BBW, all 13 rows -- the footer reads `Displaying 1 - 13 of 13`. Two things to read off it. The per-row actions are `edit | delete | add task step | add form step`, so a Task step is offered on every template and taken on none. And the `Description` column, empty on nine rows, carries a free-text archive note on exactly the versioned ones.](../../assets/screenshots/bbw-admin/08-manage-work-flows.jpg)
+
+![`Manage Forms`. Every row offers `edit | delete | edit fields | add layout` -- the identical action set `Manage Custom Lists` offers, because they are two views over one code table discriminated by `CodeIssueType.IsWorkFlow`.](../../assets/screenshots/bbw-admin/05-manage-forms.jpg)
+
+
 **Observed.** Every one of the 62 steps is `type = Form`. Approval levels observed across the whole
 set are exactly two: `Ad Hoc` and `Member`.
 
 **Observed.** BRD-24's eight `Lease Admin Request` steps are visible here for the first time — the
 live process the rebuild has to reproduce.
+
+```mermaid
+flowchart TD
+    S1["1 -- Initial Review of Lease Admin Request<br/>layout: LAR Initial Review of Lease Admin Request<br/>4 approvers"]
+    S2["2 -- Abstract Lease Document<br/>layout: LAR Abstract Lease Document<br/>3 approvers"]
+    S3["3 -- ASG Review of Lease Abstract<br/>layout: LAR ASG Review of Lease Abstract<br/>2 approvers"]
+    S4["4 -- Client Review of Lease Abstract<br/>layout: LAR Client Review of Lease Abstract<br/>3 approvers"]
+    S5["5 -- Finalize Lease Admin Request<br/>layout: LAR Finalize Lease Admin Request<br/>2 approvers"]
+    S6["6 -- Finalize Lease Admin Request  Option<br/>layout: LAR Finalize Lease Admin Request<br/>3 approvers"]
+    S7["7 -- Complete Lease Admin Request<br/>layout: LAR Complete Lease Admin Request<br/>3 approvers"]
+    S8["8 -- Client Review of Estoppel<br/>layout: LAR Submit Lease Admin Request<br/>2 approvers"]
+    TASK["No Task step exists here,<br/>or anywhere in either tenant.<br/>0 of 62 BBW steps, 0 of 19 AF steps."]
+
+    S1 --> S2 --> S3 --> S4 --> S5 --> S6 --> S7 --> S8
+    TASK -.-> S1
+
+    classDef note fill:#f6f6f6,stroke:#999,stroke-dasharray: 4 3;
+    class TASK note;
+```
+
+**Observed**, [`../../tenants/bbw-workflow-steps.json`](../../tenants/bbw-workflow-steps.json),
+`WorkFlowTemplateID` `2472`. Every one of the eight is `type = Form` with
+`approvalLevel = Member`; `approverCount` runs 2–4. Approver identities are deliberately not recorded
+anywhere in this corpus.
+
+**Derived — four things the diagram makes visible that the table does not.**
+
+1. **The ordering is a plain 1..N sequence with no branch, merge or parallel construct.** What looks
+   like branching — step 6 being a variant of step 5 — is two ordinal steps, not a fork.
+2. **Two steps share one layout.** Steps 5 and 6 both render
+   `LAR Finalize Lease Admin Request(Approvers)`, so the layout is not a step identity.
+3. **Step 8 renders the *submit* layout.** `Client Review of Estoppel` points at
+   `LAR Submit Lease Admin Request`, which is layout `98946` — the one carrying **19 of the tenant's
+   54 conditional-field clauses**
+   ([`../page-layouts/`](../page-layouts/#conditional-fields--used-and-the-stored-shape-is-now-known)).
+   The conditional engine's whole production job is making that one form change shape by
+   `Issue.LAR_RequestType`, and it is reached from two different points in this process.
+4. **The `Task` step type is in the vocabulary and used nowhere.** Half the step model is unexercised
+   across both tenants, and the `Task Templates` count is zero. It is drawn above as an unattached
+   note because that is exactly its status: defined, and connected to nothing.
+
+**Inferred**, and worth stating because the diagram will otherwise be read as more than it is: the
+**edges** are the ordinal numbering, not an observed transition table. The branching predicate is the
+human's choice of action button on the step's form, so the real runtime graph may skip steps. No
+instance has been observed executing.
+
 
 ---
 
@@ -116,6 +167,35 @@ the captured template grid — the version lives in the **name**. Three conseque
 **Open question.** Does creating a new version copy the template's steps, actions and per-step
 layouts, or reference them? A 10-step `v2` next to an 8-step base suggests a copy that was then
 edited, but the layouts each step points at may still be shared.
+
+### Currency is recorded — in free text, in the `Description` column
+
+**Observed**, `bbw-admin/08-manage-work-flows.jpg`. The grid's `Description` column is empty on nine
+of the 13 templates and carries an archive note on exactly the versioned ones:
+
+| Template | `Description` |
+|---|---|
+| Lease Admin Request | *(empty)* |
+| Lease Admin Request `v1` | *"Workflow has been archived and replaced on 09.22.25"* |
+| Lease Admin Request `v2` | *"Workflow has been archived and replaced on 03.26.26"* |
+| Lucernex Change Request | *(empty)* |
+| Lucernex Change Request `v1` | *"Archived and replaced with new workflow on 10.02.25"* |
+
+**Derived, and it answers this document's first open question.** The **live** Lease Admin Request is
+the **unsuffixed** one. The `v1` and `v2` suffixes mark *superseded* templates, not successive
+improvements — which inverts the natural reading of the names, and is why the step counts (8, 8, 10)
+looked unorderable. The same holds for Lucernex Change Request.
+
+**Derived, and it sharpens rather than softens the finding above.** There *is* a supersession record
+— a date, and the fact of replacement — but it is **prose in a free-text field**, written by hand, in
+`MM.DD.YY`. Nothing queries it, nothing enforces it, nothing stops a template being archived without
+the note being written, and the three dates use two different years' conventions with no year
+boundary check possible. A rebuild needs `status`, `supersededBy` and `supersededOn` as real columns;
+Lx has an administrator's habit.
+
+**Still open**, and unchanged: what pins an in-flight instance to the template it started on. An
+archive note does not answer that.
+
 
 ---
 
@@ -185,8 +265,11 @@ expect a migration problem when those people leave.
 
 ## Open questions
 
-1. **Which `Lease Admin Request` variant is live?** Three templates, no version field, no
-   effective-dating. Needs the Manage Work Flows grid read for an active/inactive column.
+1. ~~**Which `Lease Admin Request` variant is live?**~~ **Answered** — the **unsuffixed** template.
+   `v1` and `v2` each carry a hand-written *"archived and replaced"* note in the grid's `Description`
+   column; the base template carries none. See
+   [above](#currency-is-recorded--in-free-text-in-the-description-column). There is still no
+   active/inactive column — the record is prose.
 2. **What pins a running instance to a template version?** Unobserved.
 3. **Which workflow chains to which?** The spawn flag is documented; the actual edges are not.
 4. **What is in `Conditional Workflow JS`?** Never read, in either tenant.

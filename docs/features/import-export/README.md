@@ -44,6 +44,36 @@ credentials and the capture was structure-only.*
 code will silently lose data. Any ASG Edge+ integration against Lucernex — and any migration tooling
 that reads from it — must parse `ImportResults` and reconcile `successes[]` against what it sent.
 
+```mermaid
+sequenceDiagram
+    participant C as Client
+    participant API as POST /businessObject/{type}<br/>or POST /rest/firm
+    participant DB as Storage
+
+    C->>API: Payload, N records<br/>allowUpdate / synchronous / stopOnError
+    loop per record
+        API->>DB: insert, or upsert on BOMapClientRecordID
+        alt record accepted
+            DB-->>API: written
+        else record rejected
+            DB-->>API: error -- no transaction rollback
+        end
+    end
+    API-->>C: HTTP 200 with an ImportResults body
+
+    Note over C,API: The body carries successes[] AND errors[].<br/>A 200 with N-1 successes and 1 error is a<br/>normal, expected outcome -- partial success<br/>is first class, and there is no transaction<br/>boundary to undo the rest.
+
+    C->>C: Reconcile successes[] against what was sent.<br/>Checking only the status code loses data silently.
+```
+
+**Derived.** Two details of the loop are settled and one is not. `stopOnError` decides whether the
+loop breaks at the first rejection or runs to the end — **either way the records already committed
+stay committed**, so both modes can leave a partial import behind. What is *not* settled is whether
+any record-level rollback exists at all; nothing in the spec or the screen suggests one, and
+`Job Log` is built to report per-run outcomes after the fact, which is what a system without
+rollback needs.
+
+
 **Derived.** This is consistent with the rest of the import design: `stopOnError` is optional, there
 is no transaction boundary, and `Job Log` exists to report per-run outcomes. The product's model is
 **partial success as a first-class outcome**, reported in the body. A rebuild should decide
@@ -124,6 +154,9 @@ The `Import Data` tab itself is minimal:
 | `File:` | A text box with a `Browse…` button |
 | | `Import` button (disabled until a file is chosen) |
 
+![The whole `Import Data` tab. It is a radio pair and a file box -- no column mapping, no dry run, no preview. The banner above the controls is a real business rule: importing a Facility creates or updates its Location implicitly.](../../assets/screenshots/bbw-admin/12-import-data.jpg)
+
+
 **Derived.** Three things the API spec did not show.
 
 1. **A `Spreadsheets` tab exists.** So spreadsheet import is a first-class path alongside the XML
@@ -171,6 +204,9 @@ forms, reports and templates.
 
 **Observed, and this is the mechanism.** A checkbox above the grid reads:
 
+![`Export Configuration`, `Summary Pages` tab. The checkbox above the grid is the publish mechanism, and the `Previous Layout` column on the right is the sequence pointer that revealed layouts form ordered chains. Fifteen rows here, matching BBW's 15 SEP layouts exactly.](../../assets/screenshots/bbw-admin/14-export-configuration.jpg)
+
+
 > *"Clone these layouts in this firm and environment (new layouts/fields created when this xml is
 > imported)"*
 >
@@ -203,7 +239,7 @@ rebuild should keep the lineage that Lucernex discards.
 
 **Observed.** The `Previous Layout` column here is what revealed that layouts form **ordered chains**
 within a navigation node — see
-[`../page-layouts/`](../page-layouts/#the-chain-how-several-layouts-share-one-navigation-node).
+[`../page-layouts/`](../page-layouts/#the-chain--how-several-layouts-share-one-navigation-node).
 
 ---
 
@@ -214,6 +250,9 @@ within a navigation node — see
 A modal listing **versioned configuration packages published by Accruent**, with a search box, a
 checkbox per row, and columns **`Name`**, **`Description`**, **`Version`**, **`Min Version`**,
 **`Released`**.
+
+![The Accruent package catalogue. `Version` and `Min Version` together are a compatibility contract between a configuration package and the platform release it lands on -- the closest thing in the product to the version discipline the Hub/Spoke design needs, and it exists only at the vendor tier.](../../assets/screenshots/bbw-admin/13-import-best-practice-templates.jpg)
+
 
 | Package | Version | Min Version | Released |
 |---|---|---|:--:|
@@ -281,6 +320,9 @@ standard free-text search. Each row has `view | delete` and an expander.
 | **`Input File`** | The uploaded file, or an `LxHttpMsg…` identifier |
 | `Log…` | A link to a log file — `LxRetroPaymentR…`, `LxImportLog…`, `LxDataImportLog_…` |
 
+![`Job Log` -- 818 entries, and the only place in this corpus where the product is seen actually running. The `Job Type` column mixes `Generate Payments`, `Data Import` and `Scheduled Report`; the hourly `BBW Transaction Update` rows are a live inbound integration nothing else had recorded. Note the grid scrolls internally, so the visible rows are a page, not the run history.](../../assets/screenshots/bbw-admin/15-job-log.jpg)
+
+
 *(Per this corpus's rules, the named individuals in `Initiated By` and in one uploaded filename are
 deliberately not recorded. Three distinct human initiators and the system principal `Lx
 Administrator` were present.)*
@@ -337,6 +379,43 @@ which is consistent with scheduled *reports* and scheduled *imports* sharing one
 **configurable adapter mapping** transforms it → it lands as `Contract` records, either creating new
 ones or updating one the user picks. `/adapter-config` being an *admin* surface for *mapping config
 files* means the field mapping is **tenant-configurable**, not hard-coded.
+
+```mermaid
+flowchart TD
+    ATLAS["Atlas / RocketClub API<br/>external lease-abstraction service"]
+    GATE{"Firm flag<br/>Allow AI Lease Abstraction"}
+    OPS["POST /atlas-api/import/{leaseId}<br/>POST /atlas-api/import/{leaseId}/async<br/>POST /atlas-api/sync -- all leases"]
+    MAP["Adapter transformation pipeline<br/>field map held as config files,<br/>editable per firm via /adapter-config"]
+    PICK["GET /atlas-api/contracts<br/>lists active contracts so the user can<br/>choose one to update instead of creating"]
+    NEW["New Contract record"]
+    UPD["Existing Contract updated"]
+    STATUS["Contract Status Code = AI Abstracted"]
+    REVIEW["The 7 ASG Lease Abstract layouts<br/>plus the Lease Abstract action on the<br/>contract's Actions rail"]
+    ACTIVE["Contract Status Code = Active"]
+
+    ATLAS --> GATE
+    GATE -->|"Yes -- BBW"| OPS
+    GATE -->|"empty -- American Freight"| STOP["Pipeline unavailable"]
+    OPS --> MAP
+    MAP --> NEW
+    PICK --> UPD
+    MAP --> UPD
+    NEW --> STATUS
+    UPD --> STATUS
+    STATUS --> REVIEW
+    REVIEW -.->|Inferred| ACTIVE
+```
+
+**Evidence labels on that diagram, because they differ by step.** The Atlas endpoints, the adapter
+config surface, the entitlement flag, the `AI Abstracted` status value and the seven BBW-only
+`ASG Lease Abstract - *` layouts are each **Observed**. The `Lease Abstract` entry on the contract's
+`Actions` rail is **Observed** too
+([`../page-layouts/`](../page-layouts/#action-buttons-render-in-a-right-hand-actions-rail-and-they-are-per-layout)).
+**The dotted edge is Inferred** — that a human reviews the abstraction on those layouts and promotes
+the contract from `AI Abstracted` to `Active`. No Lease Abstract screen has been opened, no
+abstraction run appears in `Job Log`, and no contract carrying `AI Abstracted` has been observed in
+either tenant. The promotion step is the part of this picture with no evidence behind it.
+
 
 **Derived — four threads, now one story.** These were separate observations in this corpus:
 

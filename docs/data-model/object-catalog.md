@@ -29,7 +29,7 @@ object in the top ten is out of scope.
 
 | Column | Meaning |
 |---|---|
-| **Table(s)** | The `PG TABLE` cell. `_(none)_` means the export named no physical table — see [`foreign-key-graph.md`](foreign-key-graph.md#objects-with-no-physical-table). Two objects name four tables each. |
+| **Table(s)** | The `PG TABLE` cell. `_(none)_` means the export named no physical table — see [`foreign-key-graph.md`](foreign-key-graph.md#6-objects-with-no-physical-table). Two objects name four tables each. |
 | **Fields** | Declared field count, which the parse independently confirms for all 223. |
 | **Module** | Primary module from the taxonomy ([`../mindmap/taxonomy.md`](../mindmap/taxonomy.md)) — 14 in-scope modules plus `out-of-scope-cost-budget`. Every object has exactly one. **out-of-scope** marks the 27 Budget/Bid/Cost objects excluded by user decision on 2026-09-10. |
 | **Spine** | Role relative to `ProjectEntity` ([`project-entity.md`](project-entity.md)): `supertype` (1), `subtype_root` (9, inherit the supertype column block on a shared key), `entity_scoped` (161, carry a `ProjectEntityID` FK), `firm_global` (52, outside the spine). |

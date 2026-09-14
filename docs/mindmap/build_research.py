@@ -215,7 +215,7 @@ def page(title, body, toc=None, sub="", depth=0):
 <nav><a href="{up}../index.html">Overview</a><a href="{up}../atlas.html#/map?set=feature">Feature map</a>
 <a href="{up}../atlas.html">Interactive app</a>
 <a href="{up}../entities/index.html">Record types</a><a href="{up}../rules/index.html">Rules</a>
-<a href="{up}index.html" class="on">Research</a>
+<a href="{up}index.html" class="on">Research</a>\n<a href="{up}screens.html">Screens</a>
 <a href="{up}../questions.html">Open questions</a></nav></header>
 <main><p class="crumb"><a href="{up}../index.html">Atlas</a> &rsaquo;
 <a href="{up}index.html">Research</a>{sub}</p>{nav}{body}</main></body></html>"""))
@@ -414,7 +414,7 @@ def main():
         if not os.path.isdir(p):
             continue
         files = sorted(f for f in os.listdir(p) if f.endswith((".jpg", ".png")))
-        b.append(f"<details><summary>{e(lab)} &middot; {len(files)}</summary><div class='shots'>")
+        b.append(f"<details open><summary>{e(lab)} &middot; {len(files)}</summary><div class='shots'>")
         for f in files:
             src = f"../../assets/screenshots/{d}/{f}"
             b.append(f'<a href="{src}"><img loading="lazy" src="{src}" alt="{e(f)}">'
@@ -422,6 +422,55 @@ def main():
         b.append("</div></details>")
 
     open(os.path.join(OUT, "index.html"), "w", encoding="utf-8").write(page("Research", "".join(b)))
+
+    # ----- a dedicated Screens page, nothing collapsed
+    AREAS = [("bbw-enduser", "End-user screens &mdash; BBW",
+              "The product as a user meets it: 14 Contract screens and 4 Equipment Contract. "
+              "These are the only end-user screens ever captured in either tenant."),
+             ("bbw-admin", "Administration &mdash; BBW", "All 55 administration tools."),
+             ("af-admin", "Administration &mdash; American Freight",
+              "The same surface in the second tenant, for comparison."),
+             ("page-layouts", "Layout builder", "The page-layout editor and its sub-systems."),
+             ("drop-downs", "Drop downs", "Firm and Client code tables."),
+             ("conditional-fields", "Conditional fields", "The rule editor."),
+             ("workflow", "Workflow", "Templates and steps."),
+             ("custom-lists", "Custom lists", ""), ("forms", "Forms", ""),
+             ("data-fields", "Data fields", ""), ("data-model", "Data model tools", ""),
+             ("end-user", "End-user (earlier capture)", ""), ("dashboard", "Dashboard", ""),
+             ("accounting", "Accounting", ""), ("navigation", "Navigation", "")]
+    sb = ["<h1>Screens</h1>",
+          "<p class='lead'>Every screen captured from the two tenants, at each page's true width. "
+          "Click any image for full resolution.</p>",
+          "<div class='note'><b>Two caveats.</b> These are ExtJS viewport apps &mdash; grids scroll "
+          "<em>internally</em>, so a screenshot never shows more rows than the viewport held. Row "
+          "counts in the data captures are authoritative; the images are not. And BBW holds exactly "
+          "<b>one</b> Equipment Contract, so those four screens show one record's population, not "
+          "the module's range.</div>"]
+    total = 0
+    body_areas = []
+    for d, lab, blurb in AREAS:
+        pth = os.path.join(DOCS, "assets", "screenshots", d)
+        if not os.path.isdir(pth):
+            continue
+        files = sorted(f for f in os.listdir(pth) if f.endswith((".jpg", ".png")))
+        if not files:
+            continue
+        total += len(files)
+        body_areas.append(f"<h2>{lab} &middot; {len(files)}</h2>")
+        if blurb:
+            body_areas.append(f"<p>{blurb}</p>")
+        body_areas.append("<div class='shots'>")
+        for f in files:
+            src = f"../assets/screenshots/{d}/{f}"
+            nice = re.sub(r"^\d+-", "", f.rsplit(".", 1)[0]).replace("-", " ")
+            body_areas.append(f'<a href="{src}"><img loading="lazy" src="{src}" alt="{e(nice)}">'
+                              f'<span>{e(nice)}</span></a>')
+        body_areas.append("</div>")
+    sb.insert(2, f"<div class='stats'><div><b class='mono'>{total}</b><span>Screens</span></div>"
+                 f"<div><b class='mono'>2</b><span>Tenants</span></div></div>")
+    open(os.path.join(OUT, "screens.html"), "w", encoding="utf-8").write(
+        page("Screens", "".join(sb + body_areas)))
+    print(f"screens page: {total} images")
     print(f"research: {len(built)} pages, {sum(counts.values())} screens, {njson} data captures")
 
 

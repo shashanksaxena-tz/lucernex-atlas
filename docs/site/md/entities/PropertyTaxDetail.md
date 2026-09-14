@@ -1,0 +1,106 @@
+# PropertyTaxDetail
+
+*15 fields · module: Property Tax · Postgres: `property_tax_detail`*
+
+Free-form notes detail attached to a Parcel's property tax record.
+
+Source: `data-fields/small-miscellaneous-entities.md`
+
+## At a glance
+
+|  | Value |
+|---|---|
+| Fields declared | 15 |
+| Catalogued fields | 14 (14 global, 0 firm) |
+| Physical tables | 1 |
+| Referenced by | 0 keys from 0 record types |
+| Points at | 5 other records |
+| Tenancy position | entity_scoped |
+| Rules that name it | 3 |
+
+## What to know before rebuilding this
+
+### Tenant-scoped, one join deep
+
+**Derived.** This record carries no FirmID of its own. It hangs off ProjectEntity, and tenant isolation has to be enforced by joining to that row and filtering on its FirmID — or it is not enforced at all. 161 of the 223 record types are shaped this way.
+
+## Rules that govern it
+
+| Rule | What it requires | Confidence |
+|---|---|---|
+| [FAC-R-014](../rules/FAC-R-014.md) | Input: All six `PropertyTax*` objects (`PropertyTaxAppeal`, `PropertyTaxAppealAward`, `PropertyTaxAssessment`, `PropertyTaxBill`, `PropertyTaxDetail`, `PropertyTaxSummary`) carry a `ParcelID` FK and no `FacilityID`/`ContractID`. Confidence: | Observed |
+| [TAX-R-003](../rules/TAX-R-003.md) | Input: `PropertyTaxDetail.PropertyTaxBillID`. Effect: Each tax-type breakdown line is scoped to one billing cycle. | Observed |
+| [TAX-R-011](../rules/TAX-R-011.md) | Input: No FK from `PropertyTaxAppeal` or `PropertyTaxAppealAward` to `PropertyTaxBill` or `PropertyTaxDetail`. Effect: Reconciling a won appeal's computed reduction (`AssessmentReduction`/`TaxReduction`/`NetTaxReduction`) against bills alre | Derived |
+
+## Fields
+
+### Relationships (foreign keys) (3)
+
+Typed pointers to other records. Lx names each FK type after the table it points at, so the relational model is declared rather than implied.
+
+| Field | Label | Declared type | Scope | Req | Points at |
+|---|---|---|---|---|---|
+| `ParcelID` | Parcel | Parcel ID | Global | yes | [Parcel](Parcel.md) |
+| `ProjectEntityID` |  | Entity ID | — |  | [ProjectEntity](ProjectEntity.md) |
+| `PropertyTaxBillID` | Property Tax Bill | Property Tax Bill ID | Global | yes | [PropertyTaxBill](PropertyTaxBill.md) |
+
+### Coded values (drop-downs) (1)
+
+Fields bound to a master code table. Every one of these is a place where an administrator, not a developer, controls the allowed values.
+
+| Field | Label | Declared type | Scope | Req | Points at |
+|---|---|---|---|---|---|
+| `CodeTaxTypeID` | Tax Type | Dropdown (Tax Type Code) | Global |  | Tax Type Code |
+
+### Money (1)
+
+Currency amounts. Stored as TEXT in the physical database, which is why the rebuild must impose BigDecimal typing of its own.
+
+| Field | Label | Declared type | Scope | Req | Points at |
+|---|---|---|---|---|---|
+| `TaxAmount` | Tax Amount | Currency | Global |  |  |
+
+### Rates & percentages (1)
+
+Percentage inputs and computed rates.
+
+| Field | Label | Declared type | Scope | Req | Points at |
+|---|---|---|---|---|---|
+| `TaxRate` | Tax Rate | Percentage | Global |  |  |
+
+### Quantities (1)
+
+Counts, areas and other plain numeric measures.
+
+| Field | Label | Declared type | Scope | Req | Points at |
+|---|---|---|---|---|---|
+| `PropertyTaxDetailID` | Property Tax Detail RecID | Number | Global |  |  |
+
+### Flags (1)
+
+Booleans. In this product they usually gate engine behaviour rather than describe the record.
+
+| Field | Label | Declared type | Scope | Req | Points at |
+|---|---|---|---|---|---|
+| `RateFlag` | Rate? | Boolean | Global |  |  |
+
+### Text & notes (1)
+
+Free text. Notably, free text is never allowed to drive a conditional display rule.
+
+| Field | Label | Declared type | Scope | Req | Points at |
+|---|---|---|---|---|---|
+| `Notes` |  | Text | Global |  |  |
+
+### Audit & record keeping (6)
+
+Who created and changed the record, and the identifiers that survive migration.
+
+| Field | Label | Declared type | Scope | Req | Points at |
+|---|---|---|---|---|---|
+| `BOMapClientRecordID` | Property Tax Detail ClientID | Text | Global | yes |  |
+| `CreatedByID` | Created By | Member ID | Global |  | [Member](Member.md) |
+| `CreatedDate` | Created Date | Time | Global |  |  |
+| `ModifiedByID` | Modified By | Member ID | Global |  | [Member](Member.md) |
+| `ModifiedDate` | Modified Date | Time | Global |  |  |
+| `RevNumber` | Rev Number | Number | Global |  |  |

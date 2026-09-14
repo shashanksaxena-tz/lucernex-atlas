@@ -37,12 +37,18 @@ of the layout editor in [`008`](../../admin/008-manage-page-layouts.md)):
 | Reconciliation Log | Contract | — | |
 | Savings Log | Contract | — | |
 
+![`Manage Custom Lists` at American Freight. Each row offers `edit | delete | edit fields | add layout` -- the same three-part creation a custom list needs: a field namespace, a layout, and a parent binding.](../../assets/screenshots/custom-lists/manage-custom-lists-index.png)
+
+
 **Observed.** Expanding **Available Fields → Contract → Custom Lists** in the layout editor lists
 exactly the Contract-scoped lists — `Default Log, Funds, Operating Expenses, Reconciliation Log,
 Savings Log`. `Client Request Log` is **absent** there because its primary table is `Portfolio`.
 
 **Derived.** A custom list appears in the Available Fields tree **only under the entity it belongs
 to**. The parent binding is real and enforced in the builder, not merely conventional.
+
+![The layout editor's `Available Fields` tree with `Contract -> Custom Lists` expanded. Only the Contract-scoped lists appear -- `Default Log`, `Funds`, `Operating Expenses`, `Reconciliation Log`, `Savings Log`. `Client Request Log` is absent because its primary table is `Portfolio`.](../../assets/screenshots/page-layouts/page-layouts-available-fields-custom-lists-link.png)
+
 
 **Observed.** Expanding `Operating Expenses` lists its own leaf fields —
 `OpExAdministrativeFee`, `OpExComments`, `OpExCPIBaseMonth`, `OpExDateofFirstIncrease`,
@@ -95,6 +101,39 @@ workflow-less form types (`Change Request`, `QC Request`
 — [`../workflows-forms/`](../workflows-forms/)) are, mechanically, custom lists that happen to be
 listed under Forms.
 
+```mermaid
+flowchart TD
+    CT["CodeIssueType -- 19 columns<br/>TableType = 2035, Issue Type Code"]
+    FLAG{"IsWorkFlow"}
+    FORM["Presented as a FORM<br/>Manage Forms, FirmCodeEdit.jsp<br/>drives a WorkFlowTemplate"]
+    LIST["Presented as a CUSTOM LIST<br/>Manage Custom Lists, CustomListEdit.jsp<br/>renders as a grid on its parent"]
+    REC["Both produce an Issue record"]
+
+    ATT["11 IsValidFor* boolean columns<br/>Portfolio, Location, Facility, Contract,<br/>EquipContract, Parcel, Prototype,<br/>PotentialProject, CapProgram,<br/>CapProject, OpenProject"]
+    SEQ["SequencePrefix + IsSequencePerFirm<br/>the record number, e.g. LAR"]
+    PL["Its own PageLayout<br/>e.g. Client Request Details 96279"]
+    NS["A field-name prefix<br/>CRL_, OpEx, LAR_"]
+
+    CT --> FLAG
+    FLAG -->|Yes| FORM
+    FLAG -->|No| LIST
+    FORM --> REC
+    LIST --> REC
+    CT --- ATT
+    CT --- SEQ
+    CT --- PL
+    CT --- NS
+```
+
+**Derived.** Everything except the one boolean is shared. That is why the two admin screens offer an
+identical row action set, and why a rebuild should build the mechanism once and present it twice
+rather than modelling forms and custom lists separately.
+
+**Note the attachability box is a row of columns, not a join.** Eleven `IsValidFor*` booleans fix the
+set of possible parents in the schema, so a twelfth entity type is a DDL change. A rebuild should use
+a join table.
+
+
 ---
 
 ## Where the rows live
@@ -103,6 +142,13 @@ listed under Forms.
 `ClientListRow.<IntegrationName>` — e.g. `ClientListRow.CRL_CompleteDate`
 ([`006`](../../admin/006-manage-custom-lists.md)). **Derived** there: every custom list is layered on
 one shared generic backing object rather than a table per list.
+
+![The `Edit fields` modal on `Client Request Log`, seven fields, with the `Integration Name` column carrying the physical name each field maps to. Five are prefixed -- `CRL_CompleteDate`, `CRL_Details`, `CRL_RequestedBy`, `CRL_StartDate`, `CRL_TimetoComplete` -- and two are not: `ModifiedByID` and `ModifiedDate` sit in the same list unprefixed. That is the direct evidence that the prefix is a convention rather than something the product enforces. Note also the `Required *` column, `No` on all seven.](../../assets/screenshots/custom-lists/manage-custom-lists-edit-fields.png)
+
+**Observed**, `(ASG)American Freight`, build `26.08.0.46`, captured 2026-09-09 — an **older build than
+the 26.09.0.113 the rest of this corpus was captured on**. Nothing here is known to have changed
+between the two, but the difference is recorded rather than smoothed over.
+
 
 **Observed, and it complicates that.** The census gives `ClientListRow` 24 columns:
 
@@ -165,6 +211,8 @@ returned `SubValue3` settles it for reading 1. Same method that recovered the la
    cap — but Operating Expenses already shows 13 fields, which argues against it.
 5. **Does BBW carry the same five lists?** The custom-list inventory has only ever been read at
    American Freight. BBW is the more advanced fork.
-6. **Is the field prefix enforced or conventional?** `CRL_`, `OpEx` — and [`006`](../../admin/006-manage-custom-lists.md)
-   notes some Client Request Log fields have generic, non-`CRL_` integration names, which suggests
-   convention rather than enforcement.
+6. ~~**Is the field prefix enforced or conventional?**~~ **Answered — conventional.** The `Edit fields`
+   modal on `Client Request Log` shows seven fields, five prefixed `CRL_` and two
+   (`ModifiedByID`, `ModifiedDate`) not, in the same list
+   ([screenshot above](#where-the-rows-live)). Nothing enforces the namespace, which is exactly the
+   defect a rebuild should not copy.

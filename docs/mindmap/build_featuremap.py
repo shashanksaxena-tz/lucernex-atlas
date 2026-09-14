@@ -20,12 +20,27 @@ import json
 import os
 import re
 
+import corpus
+
 HERE = os.path.dirname(os.path.abspath(__file__))
 
 with open(os.path.join(HERE, "rules.json"), encoding="utf-8") as fh:
     RULES = json.load(fh)
 
+with open(os.path.join(HERE, "questions.json"), encoding="utf-8") as fh:
+    QUESTIONS = json.load(fh)
+
 BY_ID = {r["id"]: r for r in RULES["rules"]}
+
+# The feature manuals in docs/features/ are the delivery-facing account of the
+# product: what each area settles and what is still open. They are read here so
+# the feature map states what those documents state, rather than a paraphrase.
+FEATURES = corpus.feature_areas()
+SHOTS = corpus.screenshots()
+
+Q_BY_AREA = {}
+for _q in QUESTIONS["questions"]:
+    Q_BY_AREA.setdefault(_q["area"], []).append(_q)
 
 
 def ascii_words(s):
@@ -44,21 +59,154 @@ def slug(s, maxlen=20):
 
 
 def rule_node(rid, mod):
+    """One numbered rule, carrying the rule itself — not just its name.
+
+    A rule node used to render as an id and a short label, which told a reader
+    nothing. It now carries the statement, the labelled parts a rule engine
+    would consume, what the rule constrains, the confidence the source document
+    gave it, and the document to go and check.
+    """
     r = BY_ID[rid]
-    text = re.sub(r"\s+", " ", r.get("text") or "").strip()
-    if len(text) > 460:
-        text = text[:460].rsplit(" ", 1)[0] + " ..."
     section = (r.get("section") or "").strip()
+    statement = (r.get("statement") or "").strip()
+
+    lines = ["Rule %s%s." % (rid, " — " + section if section else "")]
+    if statement:
+        lines.append(statement.rstrip(".") + ".")
+    for label, body in (r.get("parts") or [])[:6]:
+        if label == "Confidence":
+            continue
+        lines.append("%s: %s" % (label, body.rstrip(".") + "."))
+    if r.get("objects"):
+        lines.append("Constrains: " + ", ".join(r["objects"][:8]) + ".")
+    if r.get("fields"):
+        lines.append("Columns named: " + ", ".join(r["fields"][:8]) + ".")
+    if r.get("quote"):
+        lines.append("Vendor wording: “%s”" % r["quote"])
+    if r.get("confNote"):
+        lines.append("Confidence: " + r["confNote"].rstrip(".") + ".")
+    if r.get("related"):
+        lines.append("Cites: " + ", ".join(r["related"]) + ".")
+    lines.append("Stated in %s." % r.get("doc", "the module rules"))
+
     return {
         "name": slug(section) or rid,
         "kind": "rule",
         "rid": rid,
-        "detail": ("Rule %s — %s. %s" % (rid, section, text)).strip()
-        or "See the rule page for the full statement.",
-        "conf": "derived",
+        "detail": " ".join(lines),
+        "statement": statement,
+        "parts": r.get("parts") or [],
+        "objects": r.get("objects") or [],
+        "conf": r.get("conf") or "derived",
         "mod": mod,
-        "src": "docs/modules/%s/rules.md" % mod,
+        "src": "docs/" + r.get("doc", "modules/%s/rules.md" % mod),
     }
+
+
+QMARK = re.compile(r"^\s*(?:\((?:new|updated|open|answered)\)|[⚠✅❓•*\-–—\d.)\]]+|"
+                   r"(?:Q|Question)\s*\d*[:.]?)\s*", re.I)
+
+
+def q_name(text):
+    """A label for an open question: the question, minus the document's markers.
+
+    Corpus questions are written with lead-in markers — "(new)", a warning
+    glyph, a list number. Slugging the raw string produced labels like
+    "new How does an", which is exactly the empty-label problem in another form.
+    """
+    s = text
+    for _ in range(4):                       # markers stack: "(new) ⚠ 3."
+        s2 = QMARK.sub("", s)
+        if s2 == s:
+            break
+        s = s2
+    return slug(s, 22) or slug(text, 22) or "Open question"
+
+
+def question_node(q, mod):
+    """One open question, as its own node — the thing somebody has to find out."""
+    return {
+        "name": q_name(q["q"]),
+        "kind": "question",
+        "detail": "%s Nobody has confirmed this. Recorded in %s, under the %s area. "
+                  "Until it is settled, anything built on the assumption is a guess."
+                  % (q["q"].rstrip(".") + ".", q["doc"], q["area"]),
+        "conf": "inferred",
+        "mod": mod,
+        "src": "docs/" + q["doc"],
+    }
+
+
+def questions_group(areas, mod):
+    """One folder per feature holding the open questions that block it."""
+    qs = []
+    for a in areas:
+        qs.extend(Q_BY_AREA.get(a, []))
+    if not qs:
+        return None
+    return {
+        "name": "Open questions (%d)" % len(qs),
+        "kind": "group",
+        "detail": "%d things nobody has confirmed for this feature. Each one is work "
+                  "somebody has to do before the feature can be rebuilt with confidence; "
+                  "they are carried here rather than resolved by guessing. Click one for "
+                  "the question and the document that raised it." % len(qs),
+        "conf": "inferred",
+        "mod": mod,
+        "children": [question_node(q, mod) for q in qs[:60]],
+    }
+
+
+def evidence_node(slugs, shot_dirs, mod):
+    """What this feature's claims rest on: documents and captured screens."""
+    docs = [FEATURES[s]["doc"] for s in slugs if s in FEATURES]
+    shots = [f for d in shot_dirs for f in SHOTS.get(d, [])]
+    if not docs and not shots:
+        return None
+    bits = []
+    if docs:
+        bits.append("Written up in " + ", ".join(docs) + ".")
+    if shots:
+        bits.append("%d screen captures on disk, under %s — the screens themselves, "
+                    "not a description of them."
+                    % (len(shots), ", ".join("docs/assets/screenshots/" + d
+                                             for d in shot_dirs if SHOTS.get(d))))
+        bits.append("First few: " + ", ".join(os.path.basename(s) for s in shots[:6]) + ".")
+    return {
+        "name": "Evidence", "kind": "fact", "conf": "observed", "mod": mod,
+        "detail": " ".join(bits),
+        "src": docs[0] if docs else "docs/assets/screenshots/",
+        "shots": shots[:24],
+    }
+
+
+def feature_doc_nodes(slugs, mod):
+    """Turn the feature manuals into nodes: what they settle, and what they cover."""
+    out = []
+    for s in slugs:
+        fa = FEATURES.get(s)
+        if not fa:
+            continue
+        if fa.get("settles"):
+            out.append({
+                "name": slug(s.replace("-", " ").title(), 24) or "Settled",
+                "kind": "fact", "conf": "observed", "mod": mod, "src": "docs/" + fa["doc"],
+                "detail": "What the %s manual settles: %s%s"
+                          % (s.replace("-", " "), fa["settles"].rstrip(".") + ".",
+                             (" Biggest open question: " + fa["question"].rstrip(".") + ".")
+                             if fa.get("question") else ""),
+            })
+        heads = [h for h in corpus.feature_headings(s)
+                 if h.lower() not in ("open questions", "conventions", "sources")]
+        if heads:
+            out.append({
+                "name": "Manual contents", "kind": "fact", "conf": "observed", "mod": mod,
+                "src": "docs/" + fa["doc"],
+                "detail": "The %s manual is organised as: %s. Read it rather than this "
+                          "node when you need the detail — this is the index."
+                          % (s.replace("-", " "), "; ".join(heads[:14])),
+            })
+    return out
 
 
 def rules_group(attach, mod):
@@ -125,6 +273,157 @@ def area(key, title, what, children, attach=None, conf="observed", oos=False):
     if oos:
         n["oos"] = True
     return n
+
+
+# --------------------------------------------------------------- delivery view
+# What turns a schema-shaped area into a delivery-shaped one: who it is for,
+# which screens it is used through, which feature manual documents it, which
+# screenshot folder evidences it, and which open questions block it. Held as a
+# table keyed by area title so the tree above stays readable, and applied in one
+# pass after the tree is built.
+
+AREA_SPEC = {
+    "ASC 842 Accounting": dict(
+        who="Lease accountants and the controller's office. They do not configure anything: "
+            "they press Generate Rent or Calculate Schedule on a contract, review what comes "
+            "out, and route it for approval. The output is what the auditors see.",
+        screens="The contract record's accounting tabs, the schedule review screens, and the "
+                "approval steps of the accounting workflow. The engine has no screen of its "
+                "own — it is a button on a record.",
+        shots=["accounting"],
+        qareas=["Lease Accounting & Payments"]),
+    "CAM & Expense Recovery": dict(
+        who="Lease administrators auditing a landlord's reconciliation, and the analysts who "
+            "have to defend the number back to the landlord.",
+        screens="The expense-recovery grid on the contract. It is a reconciliation grid, not "
+                "a schedule, and it has no schedule layer behind it.",
+        qareas=["Contracts & Leases"]),
+    "Leases & Contracts": dict(
+        who="Lease administrators and abstractors — the people who read an executed lease and "
+            "turn it into data. Everything else in the product reads what they enter.",
+        screens="The contract record: 15 SEP page layouts and the sub-page sections beneath "
+                "them, reached from the Contracts navigation root.",
+        shots=["end-user", "bbw-enduser"],
+        qareas=["Contracts & Leases"]),
+    "Rent & Payments": dict(
+        who="Accounts payable and the lease administrators who reconcile what was billed "
+            "against what the lease says.",
+        screens="Payment Info on the contract, and the invoice list layouts.",
+        qareas=[]),
+    "Approvals & Workflows": dict(
+        who="Everyone who submits a request and everyone who approves one. Routing is by "
+            "position — a member, a job title, or ad hoc — not by named person.",
+        screens="A different page layout per workflow step, so the same request presents a "
+                "different screen to the submitter and to each approver.",
+        shots=["workflow", "forms"],
+        feat=["workflows-forms"],
+        qareas=["Workflow & Approvals", "Approvals & Workflows"]),
+    "Forms & Page Layouts": dict(
+        who="Configuration administrators. This is the surface on which the product is "
+            "assembled, and the one a rebuild has to reproduce most faithfully.",
+        screens="Manage Page Layouts and Manage Forms, plus the two JSP renderers that serve "
+                "56% of all end-user screens from what those editors produce.",
+        shots=["page-layouts", "forms", "bbw-admin", "af-admin"],
+        feat=["page-layouts"],
+        qareas=["Configuration, Layouts & Forms", "Forms & Page Layouts"]),
+    "Smart Field Rules": dict(
+        who="Configuration administrators, working inside the layout editor. No developer is "
+            "involved, which is the point of the feature and the risk in it.",
+        screens="The conditional-rule editor inside a page layout's field properties.",
+        shots=["conditional-fields"],
+        qareas=[]),
+    "Reports & Exports": dict(
+        who="Anyone who has to get data out — analysts, auditors, and the integrations that "
+            "read the product rather than the database.",
+        screens="The report builder, the export tools, and the REST surface.",
+        shots=["reporting", "data-model"],
+        feat=["import-export", "search-filtering"],
+        qareas=["Reporting", "Data model & APIs", "Import & Export", "Search & Filtering"]),
+    "Property Tax": dict(
+        who="The property-tax team and the outside consultants who file appeals.",
+        qareas=["Property Tax"]),
+    "Site Selection & Deals": dict(
+        who="Real-estate and development teams working a site from prospect to signed deal.",
+        qareas=["Portfolio & Real-Estate Transactions"]),
+    "Projects & Construction": dict(
+        who="Project managers running a build-out against a schedule and a budget.",
+        qareas=["Capital Projects & Scheduling"]),
+    "Properties & Facilities": dict(
+        who="Facilities and portfolio teams — the people who own the physical estate rather "
+            "than the paper about it.",
+        qareas=["Facilities, Locations & Sites"]),
+    "People & Organisation": dict(
+        who="Administrators managing who exists in the system and what they may see. Security "
+            "is per user class, not per person.",
+        shots=["bbw-admin", "af-admin"],
+        feat=["security-access"],
+        qareas=["People & Parties", "Security & Access"]),
+    "Equipment on Contracts": dict(
+        who="The teams leasing equipment rather than space — and the accountants, because the "
+            "same ASC 842 engine runs over both.",
+        screens="BBW's fifth navigation root, 32 nodes. It renders only because BBW holds "
+                "equipment-contract records; American Freight's identical configuration does "
+                "not render, because it holds none.",
+        feat=["equipment-contracts"],
+        qareas=["Equipment on Contracts"]),
+    "Documents & Files": dict(
+        who="Everyone. Documents hang off records, and the folder tree is how they are found.",
+        qareas=["Documents, Folders & Correspondence"]),
+    "Admin & Tenancy": dict(
+        who="Platform and firm administrators. 57 admin tools, and the boundary between what "
+            "the vendor owns and what a firm may change runs through all of them.",
+        screens="Company Administration and the Data-PS tools.",
+        shots=["bbw-admin", "af-admin", "dashboard", "navigation"],
+        feat=["administration", "data-fields", "drop-downs-code-tables", "custom-lists",
+              "reference-data"],
+        qareas=["Platform & Tenancy", "Admin & Tenancy", "Data Fields",
+                "Drop Downs & Code Tables", "Custom Lists", "Reference Data",
+                "Tenant comparison"]),
+    "Required & Validation": dict(
+        who="Configuration administrators deciding what a user must fill in, and the "
+            "developers who will have to reproduce that decision.",
+        screens="The red asterisk in the record renderer, and the required flags in Manage "
+                "Data Fields.",
+        shots=["data-fields"],
+        feat=["required-and-validation"],
+        qareas=["Required & Validation"]),
+    "Navigation & Screens": dict(
+        who="Every user. The navigation tree is the product's front door and it is "
+            "platform-seeded, not tenant-authored.",
+        screens="141 navigation nodes at BBW, 109 at American Freight, from one seeded tree.",
+        shots=["navigation", "dashboard", "end-user"],
+        qareas=["Screens & navigation"]),
+}
+
+
+def enrich_areas(tree):
+    """Attach the delivery view to each area, from AREA_SPEC and the corpus."""
+    touched = 0
+    for a in tree:
+        spec = AREA_SPEC.get(a["name"])
+        if not spec:
+            continue
+        key = a.get("key") or a.get("mod") or ""
+        kids = a.setdefault("children", [])
+        head = []
+        if spec.get("who"):
+            head.append({"name": "Who it is for", "kind": "fact", "conf": "derived",
+                         "mod": key, "detail": spec["who"],
+                         "src": "docs/features/README.md"})
+        if spec.get("screens"):
+            head.append({"name": "Where it is used", "kind": "fact", "conf": "observed",
+                         "mod": key, "detail": spec["screens"],
+                         "src": "docs/data-model/screen-routing.md"})
+        kids[:0] = head
+        kids.extend(feature_doc_nodes(spec.get("feat", []), key))
+        ev = evidence_node(spec.get("feat", []), spec.get("shots", []), key)
+        if ev:
+            kids.append(ev)
+        qg = questions_group(spec.get("qareas", []), key)
+        if qg:
+            kids.append(qg)
+        touched += 1
+    return touched
 
 
 def cap(title, detail, conf="observed", src=None, children=None, attach=None, mod=None,
@@ -720,6 +1019,90 @@ TREE = [
          ],
          attach={"prefix": "PLT"}),
 
+    area("layouts-and-forms", "Required & Validation",
+         "Where the obligation to fill a field in comes from — and the finding that it "
+         "does not come from the layout. There is no layout-level required-ness layer: "
+         "the red asterisk a user sees in the builder is the schema-required flag "
+         "rendered at paint time, not a per-placement setting. Two further obligations "
+         "live in the column flag and the catalogue flag, and they disagree on 44 "
+         "fields in both directions, so collapsing them into one loses 44 obligations.",
+         [
+             cap("No layout-level layer",
+                 "The asterisk is not stored against the placement. It is the "
+                 "schema-required flag, rendered when the field is painted. A rebuild "
+                 "that models required-ness as a layout property is modelling something "
+                 "that does not exist in the source system.",
+                 src="docs/features/required-and-validation/README.md"),
+             cap("Two flags, not one",
+                 "The column flag and the catalogue flag are two separate obligations. "
+                 "They disagree on 44 fields, in both directions. Collapsing them loses "
+                 "44 real obligations, so a rebuild has to carry both and decide which "
+                 "wins, field by field.",
+                 src="docs/features/required-and-validation/README.md"),
+             cap("Show and Require, unused",
+                 "SHOW_AND_REQUIRE is one of the three conditional actions, and it is "
+                 "used zero times across both captured tenants. It exists; nobody has "
+                 "chosen it. Worth confirming before it is built.",
+                 conf="observed",
+                 src="docs/features/required-and-validation/README.md"),
+         ]),
+
+    area("platform-tenancy", "Navigation & Screens",
+         "The front door. The navigation tree is platform-seeded and identical across "
+         "tenants — 109 of 109 nodes at American Freight share their PageLayoutID with "
+         "BBW's — and what a firm sees is decided by its data, not by its configuration.",
+         [
+             cap("Data decides the roots",
+                 "A navigation root renders if and only if the firm holds at least one "
+                 "record of that ProjectEntityTypeName. Four other candidate gates were "
+                 "tested and eliminated: user-class page security, the action-verb list, "
+                 "field-level security and the firm feature flags are all open at "
+                 "American Freight and the Equipment Contract root still does not render. "
+                 "This is the single most consequential navigation fact in the corpus, "
+                 "because it means an empty tenant looks like a differently-configured one.",
+                 src="docs/features/security-access/README.md"),
+             cap("Layouts form a sequence",
+                 "PreviousPageLayoutID is a sequence pointer, not a parent link. Layouts "
+                 "attached to one navigation node form an ordered chain, and the chains "
+                 "cross SEP and LIST modes. The parent link is a different column, "
+                 "ParentPageLayoutID.",
+                 src="docs/features/page-layouts/README.md"),
+             cap("135 layouts, not 93",
+                 "Manage Page Layouts shows 93 rows. A further 42 form layouts are "
+                 "reachable only through Issue Types and never appear in that list. The "
+                 "real population is 135, and an inventory that stops at the admin screen "
+                 "is short by a third.",
+                 src="docs/features/page-layouts/README.md"),
+             fact("Two tiers, one column",
+                  "Navigation nodes and firm layouts share the PageLayoutID column and "
+                  "never collide: the navigation tier sits in a low, byte-identical band "
+                  "across tenants, the firm tier in a high tenant-specific block. A firm "
+                  "layout does not replace a navigation screen, it hangs off one — and "
+                  "several may hang off the same one.",
+                  src="docs/features/page-layouts/README.md"),
+         ]),
+
+    # Facts that belong to no single feature and would be lost if filed under
+    # one. Generated from corpus.CROSS_FACTS so the map and the documents cannot
+    # drift apart: each node quotes a document and names it.
+    {
+        "name": "What bites a rebuild",
+        "kind": "area",
+        "key": "cross-cutting",
+        "mod": "platform-tenancy",
+        "conf": "observed",
+        "src": "docs/features/ and docs/tenants/",
+        "detail": "The findings that cut across every feature, and that a delivery plan "
+                  "gets wrong if it reads only the schema. Each one was established in a "
+                  "named document and is repeated here because filing it under a single "
+                  "feature would hide it from the features it also governs.",
+        "children": [
+            {"name": n, "kind": "fact", "conf": c, "mod": "platform-tenancy",
+             "src": "docs/" + s, "detail": corpus.debrand(t.rstrip(".") + ". " + d)}
+            for n, t, d, c, s in corpus.CROSS_FACTS
+        ],
+    },
+
     {
         "name": "Cost & Bidding (out)",
         "kind": "area",
@@ -768,6 +1151,8 @@ def apply_attach(n, parent_mod=None):
             n.setdefault("children", []).append(grp)
 
 
+enriched_areas = enrich_areas(TREE)
+
 for _a in TREE:
     apply_attach(_a)
 
@@ -789,10 +1174,11 @@ labels = []
 for _a in root_children:
     walk_labels(_a, labels)
 bad = [(k, nm, len(nm)) for k, nm in labels
-       if k not in ("rule",) and len(nm) > 24]
+       if k not in ("rule", "question") and len(nm) > 24]
 if bad:
     raise SystemExit("labels over 24 chars: %s" % bad)
-rule_long = [(nm, len(nm)) for k, nm in labels if k == "rule" and len(nm) > 22]
+rule_long = [(nm, len(nm)) for k, nm in labels
+             if k in ("rule", "question") and len(nm) > 24]
 if rule_long:
     raise SystemExit("rule labels over 22 chars: %s" % rule_long[:5])
 
@@ -820,4 +1206,5 @@ with open(os.path.join(HERE, "featuremap.json"), "w", encoding="utf-8") as fh:
 
 print("wrote featuremap.json: %d areas, %d nodes total, %d rules attached"
       % (len(root_children), total, RULES["total"]))
-print("label check passed: all feature labels <=24 chars, rule labels <=22")
+print("label check passed: every label <=24 chars")
+print("delivery view attached to %d of %d areas" % (enriched_areas, len(root_children)))

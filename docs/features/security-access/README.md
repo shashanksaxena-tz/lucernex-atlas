@@ -18,6 +18,14 @@ still does not appear. A fourth mechanism exists and has not been identified.
 | **Field Security** | `/en/admin/SecurityFieldSecurity.jsp` | **6,553 individual fields** | `NoAccess` / `View` / `Edit` / `Default` |
 | **Budget Columns** | `/en/admin/SecurityBudget.jsp` | Budget column types *(out of scope)* | *(not read)* |
 
+![The `Page Access` tab, opened on the class the screen defaults to. The four tabs across the top are the four securable kinds. Eighteen top-level nodes -- including `Equipment Contract`, `Program`, `List Layouts` and `Sub-pages`, so the layout registry is secured here too. Two details worth the pixels: `Default` is rendered disabled on every row, and `Dashboard Items` offers only `No Access` / `View` / `Default`, so the ladder is pruned per node rather than being one fixed vocabulary.](../../assets/screenshots/bbw-admin/38-manage-security.jpg)
+
+> **Read the class selector before reading the radios.** The `<select>` above the grid decides what
+> every value on the page means, and the tabs do not default to the same class -- Page Access opens
+> on `Default Security`, Field Security on `System Administrator`. The grid above is
+> `Default Security`, which denies almost everything; it is not the tenant's effective permission set.
+
+
 Sources: [`../../tenants/af-security-page-access.json`](../../tenants/af-security-page-access.json),
 [`../../tenants/af-security-field-actions.json`](../../tenants/af-security-field-actions.json),
 `(ASG)American Freight`, build `26.09.0.113`, 2026-09-13. **Observed.** Read by GET only — the user
@@ -67,6 +75,75 @@ So at American Freight:
 
 **Derived. There is a fourth mechanism, and we have not identified it.** That is the honest state,
 and it is a stronger position than a wrong attribution.
+
+> **Update — the fourth mechanism has since been identified, and this section has not been rewritten
+> around it.** [`../../tenants/af-navigation-gate.json`](../../tenants/af-navigation-gate.json) and
+> [`../../tenants/bbw-navigation-gate.json`](../../tenants/bbw-navigation-gate.json) settle it, and
+> the full argument is in [`../../tenants/bbw-vs-american-freight.md`](../../tenants/bbw-vs-american-freight.md).
+> **A navigation root renders if and only if the firm holds at least one record of that root's
+> `ProjectEntityTypeName`.** Everything above about the three gates being open remains correct and
+> is the reason the fourth had to be looked for; only the closing "we have not identified it" is
+> superseded. The diagram below states the settled model.
+
+**Observed**, both tenants, build `26.09.0.113`. Counts from
+[`bbw-navigation-gate.json`](../../tenants/bbw-navigation-gate.json) (`GET
+/rest/businessObject/{type}?fields=lxid`, one link per record) and
+[`af-navigation-gate.json`](../../tenants/af-navigation-gate.json) (`GET
+/rest/businessObject/{Type}/details?fields=ProjectEntityTypeName`). The rendering column is what a
+browser actually shows. *(The two methods return slightly different totals — the master findings
+document reports 2,014 BBW contracts against the 2,190 below, because one counts links and the other
+counts a `$top`-capped detail page. Neither number is near the threshold, which is 1, so the
+difference does not touch the argument.)*
+
+| Root type | BBW records | BBW root | AF records | AF root |
+|---|---:|:--:|---:|:--:|
+| `Contract` | 2,190 | renders | 2 | renders |
+| `Location` | 2,140 | renders | 400 | renders |
+| `Facility` | 2,173 | renders | 36 | renders |
+| `Portfolio` (`Program` table) | 2 | renders | 3 | renders |
+| **`EquipmentContract`** | **1** | **renders** | **0** | **hidden** |
+| **`Program`** (the menu structure) | — | — | **0** | **hidden** |
+| `Parcel`, `Prototype`, `Project`, `CapitalProject` | 0 | hidden | 0 | hidden |
+
+**Derived, and it is what makes the rule an answer rather than a correlation.** `Program` is the
+control. At AF the `Program` *table* holds three rows, but those rows carry
+`ProjectEntityTypeName = Portfolio`; **nothing at AF is typed `Program`**, and the `Program` menu
+structure stays hidden while the `Portfolio` one renders off the same three rows. The gate reads the
+**type name**, not the table. And BBW renders `Portfolio` off **two** records, so the threshold is
+existence, not volume.
+
+```mermaid
+flowchart TD
+    START["A navigation root, for one firm"]
+    G1{"Gate 1 -- Firm entitlement<br/>Allow X? on the Firm record"}
+    G2{"Gate 2 -- Menu structure<br/>present in Manage Top Menu"}
+    G3{"Gate 3 -- Page Access<br/>granted to this user class<br/>View / Edit / Delete"}
+    G4{"Gate 4 -- Record existence<br/>at least one record whose<br/>ProjectEntityTypeName is this type"}
+    SHOW["Root renders"]
+    HIDE1["Hidden"]
+    HIDE2["Hidden"]
+    HIDE3["Hidden"]
+    HIDE4["Hidden -- this is what hid<br/>Equipment Contract and Program<br/>at American Freight"]
+
+    START --> G1
+    G1 -->|No| HIDE1
+    G1 -->|Yes| G2
+    G2 -->|Absent| HIDE2
+    G2 -->|Present| G3
+    G3 -->|"NoAccess, or Default and unresolved"| HIDE3
+    G3 -->|Granted| G4
+    G4 -->|"0 records"| HIDE4
+    G4 -->|"1 or more"| SHOW
+```
+
+**Derived, on gate 3.** `Default` is drawn as a failure edge deliberately. It means *inherit*, not
+*allowed*, and reading it as a grant is the error that produced the refuted hypothesis above.
+
+**Caveat, stated by the capture itself.** Record existence could be a *consequence* rather than a
+*cause* — nobody creates records in a module they cannot see. `Equipment Contract` escapes that
+circularity because AF holds the entitlement, the menu structure and the page-access grant, and
+still shows nothing; the only remaining difference between the two tenants is the one row BBW has.
+
 
 **The obvious rescue is also ruled out.** No single user class explains the 4-root navigation.
 `Lease Admin Mail` is the only class granting `Contract` while denying `Equipment Contract` — but it
@@ -175,6 +252,9 @@ shape for the missing fourth mechanism, though nothing yet connects it to root r
 
 Result columns: **`Member Name`**, **`Date / Time`**, **`Group Name`**, **`Sub-Group`**, `Entity`,
 `Table`, **`Item ID`**, **`Field`**, **`Action`**, **`Old Value`**, **`New Value`**.
+
+![`Audit Reports`. The result columns are the shape of the audit table itself -- one row per changed field, carrying who, when, which record, which field, and both the old and the new value. `In Group` / `And Sub-Group` filter along the data-field grouping tree, not along tables, which is why this is a fifth consumer of the shared field registry.](../../assets/screenshots/bbw-admin/47-audit-reports.jpg)
+
 
 **Derived.** This is a **row-and-field-level before/after audit**: one row per changed field, carrying
 who, when, which record, which field, the action, and both values. It is the reporting face of the

@@ -238,6 +238,35 @@ form-type count, it is reporting rows in code table `2035`. See
 narrow to those whose parent is the value you picked. Nothing in this corpus had recorded the
 feature.
 
+```mermaid
+flowchart TD
+    subgraph PLAT["Platform registry -- FirmCodeList.jsp / FirmCodeEdit.jsp"]
+        TT["207 code tables, discriminated by TableType<br/>bands 2000-2190 and 3000-3016<br/>identical ids and names in both tenants"]
+        VAL["1,140 values at AF across 73 tables.<br/>134 tables hold nothing at all."]
+        RO["isReadOnlyRecord, server-supplied per row<br/>154 protected, 986 deletable.<br/>NOT a reference count."]
+        TT --> VAL --> RO
+    end
+
+    subgraph FIRM["Firm registry -- CustomCodeTableEdit.jsp"]
+        CCT["CustomCodeTable<br/>38 at BBW, 27 at AF<br/>every row deletable"]
+        CCF["CustomCodeField -- the values<br/>13 columns"]
+        PAR["ParentCustomCodeFieldID<br/>ParentCustomCodeTableID<br/>surfaced as Smart List Parent Drop Down"]
+        CCT --> CCF --> PAR
+        PAR -.->|"a value in another firm drop-down"| CCF
+    end
+
+    NOTE["Two registries, not two views of one.<br/>Different routes, different tables,<br/>different delete rules."]
+    PLAT --- NOTE --- FIRM
+```
+
+**Derived.** The cascade is a self-reference on the firm side only. The platform registry's value
+editor exposes four fields and none of them is a parent pointer
+([below](#what-a-code-table-value-is-made-of)), so as far as anything observed goes **dependent
+drop-downs are a firm-registry feature**. That is an argument from the *editor*, not from the
+platform table's declared schema, which has not been read. That matters for the split: a rebuild can keep platform code tables flat and must give
+the tenant-defined ones a parent edge.
+
+
 **Derived.** It also explains the field type `sTYPE_CUSTOM_CODE_FIELD`, which **54 of the 205 firm
 custom fields** use ([`../data-fields/`](../data-fields/)) — a firm field bound to a custom drop-down
 whose values are `CustomCodeField` rows, optionally chained to a parent.
@@ -306,10 +335,51 @@ contract status: `Contract: 2386/Lease ID 31117 - … - 06/30/2034 - Open`. The 
 whether it carries all five BRD-24 states is not established. **That remains one click**, and it is
 still the cheapest high-value check outstanding.
 
-**Still open:** no screen has been opened that shows a firm *creating* a `CustomCodeTable`, whether a
-firm table can extend or shadow a platform one, and what the fourth column on the Manage Custom Drop
-Down grid is — it is truncated at `Smar…` and is **Inferred** to relate to the dependent/cascading
-behaviour below.
+> **That click has been made.** The screenshot below is the `Lease Status` drop-down open in the
+> value editor. The paragraph above is left standing because the answer it predicted is only half
+> what arrived.
+
+![The `Edit Custom Drop Down` modal on `Lease Status`, over the `Manage Custom Drop Down` grid. Seven of its nine values are on screen. Behind the modal, the grid's fourth column -- the one this corpus could only read as `Smar...` -- resolves to `Smart List Parent Drop Down`, and the modal carries the matching `<select>` at the top right, empty for this drop-down.](../../assets/screenshots/drop-downs/client-lease-status-values.jpg)
+
+**Observed**, `(ASG)American Freight`, build `26.08.0.46`, captured 2026-09-10. The pager reads
+**`Displaying 1 - 7 of 9`**, so **two values are on a second page and have not been seen**. The seven
+that have:
+
+| `Lease Status` value | Matches a BRD-24 state? |
+|---|---|
+| `Open` | **yes** — BRD-24 state 1 |
+| `Active` | **yes** — BRD-24 state 2 |
+| `Future Possession` | near — BRD-24 says `Possession` |
+| `Closed` | **yes** — BRD-24 state 5 |
+| `Closed - Active` | no — a compound state BRD-24 does not describe |
+| `Accounting Purposes Only` | no |
+| `Accounting Purposes Only: Close…` *(truncated)* | no |
+
+**Derived, and it is weaker than the prediction.** The firm-defined `Lease Status` is **not** simply
+BRD-24's lifecycle. Four of BRD-24's five states are present or near-present, `Paying Rent` is
+**absent from the seven observed**, and three values exist that BRD-24 has no equivalent for —
+including `Closed - Active`, which reads as two states at once, and two `Accounting Purposes Only`
+variants that look like an accounting-visibility flag smuggled into a status field.
+
+**The question is therefore narrowed, not closed.** Two values remain unread, and `Paying Rent` could
+be one of them. Until page 2 is read, the honest statement is: *ASG tracks a lease lifecycle in a
+firm-defined drop-down, it overlaps BRD-24 substantially, and it is not the same list.* A rebuild
+that implements BRD-24's five states verbatim will not be able to represent the three extra values
+this tenant actually uses.
+
+**Observed, and unrelated but worth recording.** The grid behind the modal reads
+`Displaying 1 - 15 of 27`, so **American Freight holds 27 custom drop-downs** against BBW's 38.
+
+
+**Answered — the fourth column is `Smart List Parent Drop Down`.** It was truncated at `Smar…` in the
+BBW capture and **Inferred** to relate to cascading behaviour; the American Freight capture above
+renders it in full, and the value editor carries a matching `Smart List Parent Drop Down` `<select>`
+on every drop-down. That is the UI for `CustomCodeField.ParentCustomCodeFieldID` /
+`ParentCustomCodeTableID` described below, so the dependent-drop-down feature is **Observed** from
+both the schema side and the screen side. It is empty on `Lease Status`.
+
+**Still open:** no screen has been opened that shows a firm *creating* a `CustomCodeTable`, and
+whether a firm table can extend or shadow a platform one.
 
 **Open.** Is the parent link used in either tenant? Neither `CustomCodeField` nor `CustomCodeTable`
 is readable through the schema viewer, so no row has ever been seen. Like conditional fields, this
@@ -340,6 +410,18 @@ contract schema. Carried forward from [`INDEX.md`](../../INDEX.md#what-is-still-
 | `Description` | Free text |
 | `Inactive` | The soft-delete / hide flag — **the real deactivation mechanism**, available on every value including protected ones |
 | Available for the following Portfolios/Capital Programs | A required multi-select chip control defaulting to `All Portfolios/Capital Programs` |
+
+![The value editor, open on a value in the platform `Lease Status Code` table. All four fields are visible: `Name *`, `Description`, the `Inactive` checkbox, and the required `Available for the following Portfolios/Capital Programs:` chip control holding `All Portfolios/Capital Programs`. Behind it, the table holds `Displaying 1 - 1 of 1` -- a single value, `Expired`.](../../assets/screenshots/drop-downs/firm-drop-downs-value-edit-portfolio-scope.png)
+
+> **A name collision worth catching before it causes a mistake.** There is a **platform**
+> `Lease Status Code` table, shown above, holding exactly **one** value (`Expired`) at American
+> Freight — and a **firm-defined** `Lease Status` custom drop-down holding **nine**
+> ([above](#lease-status-may-be-the-missing-contract-lifecycle)). They are different objects in
+> different registries with near-identical names, and the nine-value one is the one carrying the
+> lifecycle. Anything citing "Lease Status" must say which registry it means. This is the same
+> label-versus-mechanism hazard [`../../CONVENTIONS.md`](../../CONVENTIONS.md) warns about, and the
+> second instance of it in this document after `Manage Forms` / `Issue Type Code`.
+
 
 **Derived.** Because `Inactive` is editable on protected rows, **`isReadOnlyRecord` blocks
 destruction but not withdrawal**. A firm that cannot delete a vendor value can still take it out of

@@ -20,6 +20,50 @@ expensive modelling mistake ASG Edge+ could make here.
 Source for the whole table: `_lucernex_objects_summary.txt` (field inventory) and
 `docs/data-fields/*.md` (labels, scope, group taxonomy). **Observed.**
 
+```mermaid
+flowchart TD
+    L0["L0 -- CLAUSE<br/>ExpenseSetup, PercentageRent, UseBasedRent,<br/>ExpenseAccrualSetup, ContractFinancialTest<br/><br/>Markers: AmendmentID + Section + CovenantID<br/>Carries the obligation. Carries no money."]
+    L1["L1 -- SCHEDULE<br/>ExpenseSchedule, ExpenseAccrualSchedule,<br/>SLSummary and SLPeriod<br/><br/>Markers: FK back to its own L0, ProcessedFlag,<br/>AccountPeriod / AccountYear, Previous / Next links<br/>THE AMOUNTS LIVE HERE."]
+    L2["L2 -- TRANSACTION<br/>PaymentTransaction, AccrualTransaction<br/><br/>Markers: four date axes, AccountNumber1..8,<br/>VendorID, ExportBatchNumber, CheckNumber,<br/>SourceEntityTable -- which generator wrote this row"]
+    L3["L3 -- PROJECTION<br/>the eight Virtual* objects<br/><br/>Markers: no RevNumber, no ModifiedByID,<br/>no BOMapClientRecordID, no Firm scope.<br/>Nothing user-authored, so nothing audited."]
+
+    L0 -->|"GenerateExpenseSetup<br/>GenerateStraightLineRent<br/>CalculateScheduleAmounts"| L1
+    L1 -->|"GENERATE_RENT<br/>GENERATE_ACCRUALS<br/>GENERATE_RETRO_PAYMENT"| L2
+    L2 -.->|"DELETE_PAYMENTS<br/>the other half of regeneration"| L1
+    L0 -.-> L3
+    L1 -.-> L3
+    L2 -.->|"posted amounts, for reconciliation<br/>against the recomputed ones"| L3
+
+    HOLD["HoldFlag exists at EVERY layer,<br/>and AlternateRentSchedule carries setters for it:<br/>SetExpHoldFlag, SetPRHoldFlag, SuspendSL.<br/>A cross-cutting suppression mechanism."]
+    HOLD -.-> L0
+    HOLD -.-> L1
+    HOLD -.-> L2
+```
+
+**The exception, drawn separately because it is the expensive mistake.** Expense recovery / CAM
+looks like an instance of the pattern and is not — **there is no `ExpenseRecoverySchedule`, and no
+object plays L1**:
+
+```mermaid
+flowchart LR
+    ER["ExpenseRecovery<br/>one header per recovery period,<br/>holding 9 parallel valuation perspectives"]
+    ERI["ExpenseRecoveryItem<br/>LINE DETAIL -- not dated periods"]
+    PT["PaymentTransaction<br/>via PaymentTransaction.ExpenseRecoveryID"]
+    MISSING["No schedule layer exists.<br/>Nothing generates dated period rows."]
+
+    ER --> ERI --> PT
+    ER -.-> MISSING
+
+    style MISSING stroke-dasharray: 5 4
+```
+
+**Derived.** CAM is a **reconciliation grid**, not a generated schedule: a header, its line items, and
+a posting. `Allowance` is the second near-miss for the same reason —
+`Allowance` to `AllowanceTransaction` with `RequestDate` / `RequestAmount` / `ReceiveDate` /
+`ReceiveAmount`, which is a claim shape, not a schedule. See
+[`expense-recovery-cam.md`](expense-recovery-cam.md).
+
+
 ---
 
 ## 1. The five instantiations
@@ -122,6 +166,28 @@ posted counterparts (`PostedAccrualAmountPriorPeriods`, `PostedAccrualAmountThis
 `PostedAccrualAmountTotal`). That pairing **is** the reconciliation between L3 and L2 — the
 platform re-computes what the accrual should be and shows it next to what was posted. ASG Edge+
 should copy this idea explicitly. **Derived** from the field names.
+
+**And it renders.** `Contract -> Accrual Info -> Percentage Rent Accruals` is `VirtualPRAccrualPeriod`
+on screen, with the computed/posted pairing as adjacent columns:
+
+![The Percentage Rent Accrual Schedule. Four of the columns are the L3-to-L2 reconciliation drawn side by side -- `Accrual Amount This Period` next to `Posted Accrual Amount This Period`, and `Accrual Amount Prior Periods` next to `Posted Accrual Amount Prior Periods`. Above the grid, a month and year picker with a `Refresh` button computes the window on demand. The `Actions` rail carries `Printable View`, `Generate Accruals`, `Save to Document` and `Link` -- and no `Edit`.](../../assets/screenshots/bbw-enduser/ct-36-percentage-rent-accruals.jpg)
+
+**Observed**, and three details support the L3 reading directly:
+
+1. **No `Edit` action.** Every other contract screen captured carries one; this one does not. A
+   projection is not editable, which is the same fact the absent `RevNumber` / `ModifiedByID` /
+   `BOMapClientRecordID` columns state from the schema side.
+2. **A period picker with a `Refresh` button.** The 12 rows shown run `6/2026` to `5/2027` — a window
+   selected at the top of the screen, not a stored range. That is a read-time computation with a
+   parameter, which is what "generated at read-time" looks like in the UI.
+3. **The computed columns read `$0.00`; the posted columns are *blank*.** Zero and unposted are
+   rendered differently. A rebuild that stores the projection with a non-nullable posted amount
+   loses that distinction.
+
+**It does not settle open question 6.** Whether the rows are computed per request or read from a
+materialised `virtual_pr_accrual_period` table is invisible from the screen — a `Refresh` button is
+equally consistent with recompute-now and with re-read-the-cache.
+
 
 ---
 

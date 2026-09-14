@@ -85,4 +85,4 @@ Anything that would need a screen to confirm is in each file's `## Open question
    across 33 tables are `TEXT`; the only exceptions are 31 primary keys typed `VARCHAR(64) NOT NULL`.
    `sales.GrossSalesAmount`, `sales.NetSalesAmount` and all six `sales.SalesAdjustmentN` land as
    `TEXT`. This is the Constitution §4.4 hazard in its most acute form, and it is registered in
-   [`asg-edgeplus-mapping.md`](asg-edgeplus-mapping.md#41-typing-hazard-register-constitution-444).
+   [`asg-edgeplus-mapping.md`](asg-edgeplus-mapping.md#41-typing-hazard-register-constitution-44).

@@ -16,7 +16,7 @@ from `GET /rest/api-docs/swagger` on build `26.09.0.113`.
 | Server | `https://{tenant}.lucernex.com/rest` |
 | Paths / operations | 141 / 160 |
 | Schemas | 25 |
-| Declared `securitySchemes` | **none** — see [Authentication](#authentication) |
+| Declared `securitySchemes` | **none** — see [Authentication](#8-authentication) |
 
 ---
 

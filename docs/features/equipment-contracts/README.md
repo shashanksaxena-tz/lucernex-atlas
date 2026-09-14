@@ -32,7 +32,7 @@ The screen-count diff and the AF-gating investigation are documented in
 `PageLayoutID 41087`, 5 groups, 26 leaf screens. These ids exist in the same platform-seeded band as
 the four shared roots and appear in **neither** tenant's Manage Page Layouts list — so the Equipment
 Contract screens are **platform layouts**, not firm layouts (see
-[`../page-layouts/`](../page-layouts/#two-populations-of-pagelayoutid)).
+[`../page-layouts/`](../page-layouts/#two-tiers-of-pagelayoutid-in-one-table)).
 
 **Routes are not captured.** `navtree-bbw.json` carries `jsp: ""` for all 32, and they cannot be
 joined from American Freight the way the other 109 nodes were, because AF never renders this root.
@@ -97,6 +97,9 @@ Equipment Contract screens ever opened in this corpus.
 > record rather than unused in the module, and that record is barely populated: `Aggregate Payment`
 > and `Remaining Payment Obligation` both read `$0.00`, and most date fields are blank.
 
+![The only Equipment Contract in either tenant, on Details -> Summary. Five group tabs, not six -- there is no `Accrual Info`. Five screen tabs, not seven -- no `Binders`, no `Schedule`. And no layout selector at the top right, because no firm layout attaches to any of the 32 Equipment Contract navigation nodes.](../../assets/screenshots/bbw-enduser/eq-01-details-summary.jpg)
+
+
 **Observed**, from Details → Summary:
 
 | Element | Detail |
@@ -142,6 +145,9 @@ so the classification surface really is per asset, visible here on the contract'
 `Alternate Rent Wizard` and `Lease Abstract`. So **the action set is specialised per entity type**,
 not merely subtracted. Note `Generate Payments` and `Approve Payments` appear on both: the payment
 engine is shared.
+
+![Equipment Contract -> Payment Details. Compare against the retail contract's equivalent: the same payment engine, a narrower screen. This is one record, so an empty grid here means empty for this contract, not unused in the module.](../../assets/screenshots/bbw-enduser/eq-03-payment-details.jpg)
+
 
 **Observed.** `Contract Status` reads `Active`. **No `Lease Status` field appears** — consistent with
 `Lease Status` being a retail-lease concern
@@ -267,6 +273,20 @@ Equipment Contract: `Program` is granted by all 10 classes and **also fails to r
 an open page-access grant is demonstrably not sufficient for a root to appear. Full analysis and the
 remaining candidates in [`../security-access/`](../security-access/).
 
+> **The fourth mechanism has since been identified, and this section predates it.**
+> **A navigation root renders if and only if the firm holds at least one record of that root's
+> `ProjectEntityTypeName`.** American Freight holds **zero** records typed `Equipment Contract`;
+> BBW holds **one**, the record screenshotted above. That single row is the entire difference between
+> the two tenants, and it explains `Program` at AF as well — AF's `Program` table rows are typed
+> `Portfolio`, so nothing at AF is typed `Program` at all.
+> Evidence: [`../../tenants/af-navigation-gate.json`](../../tenants/af-navigation-gate.json),
+> [`../../tenants/bbw-navigation-gate.json`](../../tenants/bbw-navigation-gate.json); flowchart and
+> full table in [`../security-access/`](../security-access/#the-equipment-contract-gate--three-gates-open-root-still-hidden).
+>
+> Everything above about the three gates being open at AF stands, and is why the fourth had to be
+> looked for. Only the closing "unidentified" is superseded.
+
+
 **Supporting schema evidence.**
 
 **Derived, and it matters more than the puzzle does.** Entitlement is at least two-layered: a Firm
@@ -309,7 +329,7 @@ either.
    navigation node, so the screens must be rendered by platform layouts — which are not listed in
    Manage Page Layouts and whose field content is therefore unreadable by the route used for the 93
    firm layouts. This is the same blind spot described in
-   [`../page-layouts/`](../page-layouts/#the-storage-gap).
+   [`../page-layouts/`](../page-layouts/#the-storage-recovered).
 7. ~~**Is `Asset` linked to an Equipment Contract, and how?**~~ **Answered:** an embedded `Equipment`
    grid on the Summary screen, with the asset pointing back at the contract, and the ASC 842 flags
    `Is Short Term` / `Is Low Asset Value` shown as grid columns.

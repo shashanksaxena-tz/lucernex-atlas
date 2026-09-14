@@ -27,6 +27,12 @@ from `docs/data-fields/payment-transaction.md`, `payment-receipt.md`, `landlord-
 
 ## 1. `ExpenseSchedule` → `PaymentTransaction`
 
+![The clause layer on a live contract: one `Expense Setup` row -- Real Estate Taxes / Min Rent, monthly, 01/06/2019 to 30/06/2034, `Current Monthly Rent` $64,166.67 against `Current Annual Rent` $770,000.04. The `Rent Steps` grid immediately below it is empty, which is the L0-populated / L1-empty state described in [`rent-generation.md`](rent-generation.md): the clause states the obligation, the schedule carries the amounts, and generation reads the schedule.](../../assets/screenshots/bbw-enduser/ct-14-payment-details.jpg)
+
+> **One contract, one screen.** These grids scroll internally and this is a single record. An empty
+> `Rent Steps` here means empty for this contract; it is not a statement about the module.
+
+
 ### The generation gate
 
 `ExpenseSchedule` (51 fields) holds four state fields that together gate generation:

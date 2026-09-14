@@ -13,6 +13,8 @@ import json
 import os
 import re
 
+import corpus
+
 HERE = os.path.dirname(os.path.abspath(__file__))
 
 
@@ -80,7 +82,7 @@ GROUP_ORDER = [
 
 GROUP_BLURB = {
     "Relationships (foreign keys)":
-        "Typed pointers to other records. Lucernex names each FK type after the table it "
+        "Typed pointers to other records. Lx names each FK type after the table it "
         "points at, so the relational model is declared rather than implied.",
     "Soft references":
         "Columns that name another record without a typed foreign key behind them - generic "
@@ -124,26 +126,248 @@ for mid, m in modules.items():
     for name in m.get("objects", []):
         obj_module[name] = mid
 
+# --------------------------------------------------------- corpus-backed prose
+# The maps used to label an entity "a record type in the contracts area holding
+# 570 fields", which tells a reader nothing they could not see. The Data Fields
+# catalogue already explains every one of these records in several sentences;
+# this reads that text in and attaches it to the node.
+
+CAT = corpus.entity_notes()          # 214 entities, from data-fields/INDEX.md
+LEAD = corpus.entity_leads()         # 122 per-entity lead paragraphs
+FIELDS = corpus.field_catalog()      # 6,158 catalogued fields with labels
+LEGEND = corpus.field_type_legend()  # 448 sTYPE_/sCODE_ codes explained
+
+# The field inventory is the primary source for what an individual field is FOR:
+# 6,081 of the census's 7,421 fields carry a definition written by the vendor,
+# plus a key role and the physical PostgreSQL mapping.
+INV = corpus.field_inventory()
+OINV = corpus.object_inventory(INV)
+
+edges_to_obj = {}
+edges_from_obj = {}
+for _e in edges:
+    edges_from_obj.setdefault(_e["source_object"], []).append(_e)
+    if _e.get("target_object"):
+        edges_to_obj.setdefault(_e["target_object"], []).append(_e)
+
+# pe_scope is the tenancy position of a record and decides how a rebuild has to
+# isolate it. Spelled out once here rather than left as a raw enum on the node.
+PE_SCOPE = {
+    "entity_scoped": (
+        "Tenant-scoped, one join deep",
+        "This record carries no FirmID of its own. It hangs off ProjectEntity, and tenant "
+        "isolation has to be enforced by joining to that row and filtering on its FirmID — "
+        "or it is not enforced at all. 161 of the 223 record types are shaped this way."),
+    "subtype_root": (
+        "A ProjectEntity subtype root",
+        "One of the nine records that are themselves a kind of ProjectEntity rather than "
+        "hanging off one. The discriminator is ProjectEntityTypeName, which is how a single "
+        "table serves several apparent record types."),
+    "firm_global": (
+        "Firm-global reference data",
+        "Owned by the firm as a whole rather than by any one business record — configuration "
+        "and reference data rather than transactional rows."),
+    "supertype": (
+        "The polymorphic spine",
+        "The supertype every business record hangs off. Its ProjectEntityTypeName column is "
+        "the discriminator that makes one physical table present as several record types."),
+}
+
+CONF_OBS, CONF_DER, CONF_INF = "observed", "derived", "inferred"
+
+
+def entity_prose(o, name, mod_id):
+    """Compose the description a reader sees when they click this record type.
+
+    Order of preference: the catalogue's own explanation, then the entity's own
+    document, then a stated fallback that says the catalogue does not cover it
+    rather than pretending otherwise.
+    """
+    cat = CAT.get(name)
+    lead = LEAD.get(name)
+    parts, src = [], []
+    if cat and cat["blurb"]:
+        parts.append(cat["blurb"])
+        src.append(cat["doc"])
+    if lead and (not parts or lead[0][:80] not in parts[0]):
+        parts.append(lead[0])
+        if lead[1] not in src:
+            src.append(lead[1])
+    if not parts:
+        mod = modules.get(mod_id, {})
+        parts.append(
+            "Not covered by the Data Fields catalogue: this record type appears in the "
+            "223-object census but has no row in the catalogue of 6,158 configurable "
+            "fields, so nothing in the corpus explains it in the vendor's own words. What "
+            "is known is structural — %d declared fields, filed under %s, %d foreign keys "
+            "pointing at it."
+            % (o.get("declared_field_count", 0),
+               (mod.get("title") or mod_id or "no module"),
+               len(edges_to_obj.get(name, []))))
+        src.append("_lucernex_objects_summary.txt")
+    return " ".join(parts), src
+
+
+def entity_notes_for(o, name, mod_id):
+    """The caveats a rebuild has to know about this record, as [title, conf, text]."""
+    out = []
+    tc = o.get("physical_table_count", 1)
+    if tc > 1:
+        out.append([
+            "Split across %d physical tables" % tc, CONF_OBS,
+            "The logical record and the physical rows are not one to one: its columns are "
+            "spread over %s. That is the platform working around a column-count ceiling, "
+            "and any rebuild has to decide deliberately whether to reproduce the split or "
+            "collapse it." % (o.get("pg_table") or "several tables")])
+    if name.startswith("Virtual"):
+        out.append([
+            "A computed projection, not a table", CONF_OBS,
+            "Virtual records are calculated at read time rather than stored. They have no "
+            "primary key to join on and never appear in Firm scope — a tenant cannot "
+            "customise a projection the platform generates. Treat this as the shape of a "
+            "query result, not as a table to migrate."])
+    firm_cols = [f["name"] for f in o.get("fields", [])
+                 if f["name"].startswith("Firm_")]
+    z_firm = [f["name"] for f in o.get("fields", [])
+              if f["name"].lower().startswith("zfirm_")]
+    if firm_cols or z_firm:
+        extra = (" A further %d use the zFirm_ spelling instead." % len(z_firm)) if z_firm else ""
+        out.append([
+            "%d tenant custom columns" % (len(firm_cols) + len(z_firm)), CONF_OBS,
+            "This record carries %d physical Firm_-prefixed columns — tenant custom fields "
+            "are real columns, not rows in a value store, so adding one is a DDL change.%s "
+            "That is direct evidence for database-per-tenant and against a shared schema."
+            % (len(firm_cols), extra)])
+    scope = PE_SCOPE.get(o.get("pe_scope") or "")
+    if scope:
+        out.append([scope[0], CONF_DER, scope[1]])
+    cat = CAT.get(name)
+    declared = o.get("declared_field_count", 0)
+    if cat and declared and cat["total"] and declared - cat["total"] >= 20:
+        out.append([
+            "Census and catalogue disagree", CONF_OBS,
+            "The object census declares %d fields; the Data Fields catalogue lists %d. The "
+            "%d-field gap is columns the platform holds but does not expose as configurable "
+            "Data Fields — a rebuild that reads only the catalogue will miss them."
+            % (declared, cat["total"], declared - cat["total"])])
+    if cat and cat["firm"]:
+        out.append([
+            "%d catalogued Firm-scope fields" % cat["firm"], CONF_OBS,
+            "Of %d catalogued fields on this record, %d are Firm scope — defined by this "
+            "tenant rather than shipped by the platform. Firm-scope definitions are "
+            "RGAF rows carrying IsGlobal, FirmID and IsClientExtensionField."
+            % (cat["total"], cat["firm"])])
+    ind = len(edges_to_obj.get(name, []))
+    outd = len([x for x in edges_from_obj.get(name, []) if x.get("target_object")])
+    if ind >= 20:
+        srcs = sorted({x["source_object"] for x in edges_to_obj.get(name, [])})
+        out.append([
+            "A hub: %d keys point here" % ind, CONF_OBS,
+            "%d record types hold a foreign key into this one, so it sits at the centre of "
+            "the relationship graph. Changing its key or its identity is a change to %s "
+            "and %d others." % (len(srcs), ", ".join(srcs[:4]), max(0, len(srcs) - 4))])
+    if ind == 0 and outd == 0:
+        out.append([
+            "No typed relationships either way", CONF_DER,
+            "Nothing holds a typed foreign key into this record and it declares none out. "
+            "Either it is joined by a soft reference the census cannot see, or it is "
+            "genuinely standalone — worth settling before anything is built on it."])
+    if name == "Contract":
+        out.append([
+            "Equipment contracts live in this table", CONF_OBS,
+            "There is no EquipmentContract table in any inventory. An equipment contract is "
+            "a Contract row discriminated by ProjectEntityTypeName = \"Equipment Contract\" — "
+            "with a space in the value. Any query that filters contracts has to account for "
+            "that, and any rebuild has to decide whether the discriminator survives."])
+    if name == "DiscountRate":
+        out.append([
+            "Empty in both captured tenants", CONF_OBS,
+            "This table holds zero rows in both American Freight and BBW while the ASC 842 "
+            "engine runs and produces schedules. Where the discount rate actually comes "
+            "from is unresolved, and it blocks the accounting rebuild."])
+    # PageLayout / PageLayoutField carry the layout-tier and conditional-rule
+    # findings, but neither is in the 223-object census — the census derives from
+    # a viewer that refuses them. Those facts are carried by the feature map's
+    # "Navigation & Screens" area and by corpus.CROSS_FACTS instead, so they are
+    # not silently lost; do not re-add them here unless the census gains them.
+    mod = modules.get(mod_id or "", {})
+    if mod and not mod.get("in_scope", True):
+        out.append([
+            "Out of scope by decision", CONF_OBS,
+            "Its module is excluded from the rebuild. It stays in the census so impact "
+            "analysis through the relationship graph is never silently wrong at the "
+            "boundary, but nothing here is being built."])
+    return out
+
+
 # ----------------------------------------------------------------- build index
+
+FLAG_FIRM, FLAG_REQ, FLAG_RO = 1, 2, 4
+FLAG_INV_REQ, FLAG_FUNC, FLAG_NOPG = 8, 16, 32
 
 out_objects = {}
 for o in objects:
     name = o["object"]
+    mod_id = obj_module.get(name, "unassigned")
     groups = {}
     for f in o.get("fields", []):
         fam = {"foreign_key": "fk", "soft_reference": "soft"}.get(
             f["type_family"], f["type_family"]
         )
-        groups.setdefault(field_group(f), []).append([f["name"], f["type"], fam])
+        cat = FIELDS.get((name, f["name"]))
+        inv = INV.get((name, f["name"]))
+        # Field entries stay positional to keep the bundle small:
+        # [column, declared type, family, label, flags, catalogue type code,
+        #  vendor definition, key role, physical mapping]
+        flags = 0
+        label = ""
+        code = ""
+        if cat:
+            if cat["scope"] == "Firm":
+                flags |= FLAG_FIRM
+            if cat["required"]:
+                flags |= FLAG_REQ
+            if cat["readonly"]:
+                flags |= FLAG_RO
+            code = cat["type"]
+            label = cat["label"]
+        if inv:
+            if inv["required"]:
+                flags |= FLAG_INV_REQ
+            if inv["functional"] == "Yes":
+                flags |= FLAG_FUNC
+            if not inv["extracted"]:
+                flags |= FLAG_NOPG
+            label = label or inv["label"]
+        if label == f["name"]:
+            label = ""
+        pg = ""
+        if inv and inv["pgcol"]:
+            pg = "%s.%s" % (inv["pgtable"], inv["pgcol"])
+            if inv["pgtype"]:
+                pg += ":" + inv["pgtype"]
+        row = [f["name"], f["type"], fam, label, flags, code,
+               (inv or {}).get("definition", ""), (inv or {}).get("role", ""), pg]
+        while len(row) > 3 and not row[-1]:      # trailing blanks cost bytes
+            row.pop()
+        groups.setdefault(field_group(f), []).append(row)
     ordered = [
         [g, groups[g]] for g in GROUP_ORDER if g in groups
     ]
+    prose, prose_src = entity_prose(o, name, mod_id)
     out_objects[name] = {
         "t": o.get("pg_table") or "",
         "tc": o.get("physical_table_count", 1),
         "n": o.get("declared_field_count", 0),
-        "m": obj_module.get(name, "unassigned"),
+        "m": mod_id,
         "g": ordered,
+        "d": prose,
+        "ds": prose_src,
+        "notes": entity_notes_for(o, name, mod_id),
+        "pe": o.get("pe_scope") or "",
+        "sm": o.get("secondary_modules") or [],
+        "cat": ([CAT[name]["total"], CAT[name]["global"], CAT[name]["firm"]]
+                if name in CAT else None),
     }
 
 # ------------------------------------------------------------------- edge maps
@@ -170,7 +394,8 @@ for mid, m in modules.items():
     out_modules.append({
         "id": mid,
         "title": m.get("title") or mid,
-        "what": m.get("what") or "",
+        "what": corpus.debrand(m.get("what") or ""),
+        "lead": corpus.module_headline(mid),
         "scope": bool(m.get("in_scope", True)),
         "oc": m.get("object_count", 0),
         "fc": m.get("field_count", 0),
@@ -193,19 +418,30 @@ CURATED_FOR = {"accounting-tree.json": "accounting",
                "contracts-tree.json": "contracts-leases",
                "workflow-tree.json": "workflow"}
 
+def debrand_tree(n):
+    """The curated trees are generated input, so the product name is rewritten
+    here at build time rather than by editing their JSON."""
+    if isinstance(n, dict):
+        return {k: (corpus.debrand(v) if isinstance(v, str) else debrand_tree(v))
+                for k, v in n.items()}
+    if isinstance(n, list):
+        return [debrand_tree(c) for c in n]
+    return corpus.debrand(n) if isinstance(n, str) else n
+
+
 curated = {}
 for fname, mod in CURATED_FOR.items():
     fp = os.path.join(HERE, fname)
     if os.path.exists(fp):
         with open(fp, encoding="utf-8") as fh:
-            curated[mod] = json.load(fh)
+            curated[mod] = debrand_tree(json.load(fh))
         print(f"  curated tree: {fname} -> {mod}")
 
 bundle = {
     "curated": curated,
     "meta": {
-        "product": "Lucernex IWMS",
-        "vendor": "Accruent",
+        "product": "Lx",
+        "vendor": "Vendor-hosted IWMS",
         "tenant": "(ASG) American Freight",
         "build": "26.08.0.46 (2026/08/26 16:15)",
         "captured": "2026-09-10",
@@ -221,6 +457,12 @@ bundle = {
     },
     "groupBlurb": GROUP_BLURB,
     "typeNote": TYPE_NOTE,
+    # 448 sTYPE_/sCODE_ codes explained once, so a field node can say what its
+    # catalogued type means instead of just naming it.
+    "typeLegend": LEGEND,
+    # Cross-cutting facts the whole map has to carry, each quoting a document.
+    "facts": [{"n": n, "t": t, "conf": c, "d": d, "src": s}
+              for n, t, d, c, s in corpus.CROSS_FACTS],
     "modules": out_modules,
     "objects": out_objects,
     "edges": out_edges,

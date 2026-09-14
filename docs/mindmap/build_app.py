@@ -6,8 +6,8 @@ Assemble the single-file explorer from its parts.
   map.js                   the mind-map view, inlined at __MAPJS__
   findings.json            per-module findings, inlined at __NOTES__
   mapdata.json             schema, modules, edges, curated trees
-  rules.json               384 numbered rules
-  questions.json           286 open questions
+  rules.json               the numbered rules, each split into its parts
+  questions.json           the open questions, by feature area
 
 Output: lucernex-atlas.built.html — the same filename the published artifact
 uses, so republishing keeps the existing URL.
@@ -68,9 +68,16 @@ html = html.replace("__DATA__", payload)
 for marker in ("__DATA__", "__MAPJS__", "__NOTES__"):
     assert marker not in html, f"{marker} was not substituted"
 
+# The shell carries no <head> of its own, because the published-artifact host
+# supplies one. Served as a plain file — which is what docs/site/atlas.html is —
+# the browser then guesses the encoding and mangles every non-ASCII character in
+# the inlined script. One declaration fixes both cases; in the artifact it lands
+# in <body>, where it is simply ignored.
+CHARSET = '<meta charset="utf-8">\n'
+
 out = os.path.join(HERE, "lucernex-atlas.built.html")
 with open(out, "w", encoding="utf-8") as fh:
-    fh.write(gate.inject(brand(html)))
+    fh.write(CHARSET + gate.inject(brand(html)))
 
 size = os.path.getsize(out)
 print(f"wrote {out}")

@@ -113,6 +113,39 @@ column of that screen comes from:
 | Default | `DefaultValue` |
 | *(schema viewer)* Maximum Size | `MaxLength` |
 | *(schema viewer)* Version Added | `VersionAdded`, `VersionModified` |
+
+```mermaid
+flowchart LR
+    subgraph SOLVED["Solved -- the definition"]
+        RGAF["ReportGroupAvailableField -- 27 columns<br/>IsGlobal + FirmID -> scope<br/>IsClientExtensionField -> firm extension<br/>ScriptName Firm_Something -> the name"]
+    end
+
+    subgraph CONS["Five confirmed consumers of the same registry"]
+        C1["Manage Data Fields"]
+        C2["PageLayoutField.ReportGroupAvailableFieldID"]
+        C3["Field Security -- 6,553 securable nodes"]
+        C4["Audit Reports -- Group / Sub-Group filters"]
+        C5["conditionalFieldsConfig.scriptName"]
+    end
+
+    subgraph OPEN["NOT solved -- the value store"]
+        Q["Where does a Firm_ field's VALUE get written?<br/><br/>Candidate A: a real physical column on the<br/>entity's table, added per firm.<br/>Candidate B: a generic value table.<br/><br/>Neither confirmed. The three schema inventories<br/>union to 254 tables and none is complete."]
+    end
+
+    RGAF --> C1
+    RGAF --> C2
+    RGAF --> C3
+    RGAF --> C4
+    RGAF --> C5
+    RGAF -.->|"the definition says WHAT.<br/>Nothing observed says WHERE."| Q
+```
+
+**Derived, and it is the consequence that matters.** If a `Firm_` field is a **real column**, then
+adding a custom field is a **DDL operation on a tenant's table** — which forces database-per-tenant,
+or at least schema-per-tenant, and makes the Hub/Spoke decision for you. If it is a generic value
+table, it does not. **The two answers have opposite architectural consequences**, which is why this
+is recorded as the open question it is rather than assumed either way.
+
 | *(schema viewer)* Functional Field? | **`IsFunctional`** |
 | The group tree | `ReportGroupDataID`, `ParentReportGroupDataID`, `HierarchyName` |
 
@@ -164,7 +197,7 @@ Both establish the same structural fact; neither is the authoritative count.
 Field)`**, 28 `Date`, 22 `Percentage`, 19 `Currency`, 14 `Number`, 7 `Custom List`, 2 `Boolean`. The
 77 `Dropdown (Custom Field)` columns are the physical counterpart of the 54 catalog leaves typed
 `sTYPE_CUSTOM_CODE_FIELD`, bound to `CustomCodeField` values
-([dependent drop-downs](../drop-downs-code-tables/#dependent-drop-downs-an-unnoticed-feature)).
+([dependent drop-downs](../drop-downs-code-tables/#dependent-drop-downs--an-unnoticed-feature)).
 
 **Derived.** So the model is: **definition in RGAF, data in a `Firm_`-prefixed column on the base
 table.** Adding a firm field is a **schema change** — a DDL operation against the tenant's table —
@@ -201,6 +234,32 @@ clear answer to copy — one registry table, `IsGlobal` + `FirmID` + `IsClientEx
 ## Global versus Firm
 
 **Observed.** 5,953 `Global` and 205 `Firm`. 199 of 214 entities have no firm fields at all.
+
+![`Manage Data Fields` on the `Global Fields` tab. The collapsed rows are `ReportGroupData` groups, not entities -- the grouping hierarchy that sits above the field registry, and the same tree that drives the layout editor's `Available Fields` palette and the `In Group` / `And Sub-Group` filters on `Audit Reports`.](../../assets/screenshots/data-fields/manage-data-fields-global.png)
+
+![The `Firm Fields` tab, the whole tenant-shaped layer -- 205 leaves against 5,953 global ones, 147 of them on `Contract`. Twenty-four groups, collapsed. The columns are the registry's own surface: `Field Name`, `Form Field Type`, `Reqd?`, `Read Only?`, `Table Association`, `Default Value`, and three attachability questions -- `Valid For Portfolio or Capital Program?`, `Valid For Entity?`, `Valid For Issue?`.](../../assets/screenshots/data-fields/manage-data-fields-firm.png)
+
+> **Global and Firm are two tabs, not a radio.** The radio that has burned this corpus is a different
+> screen — `ShowObjectDetails.jsp`'s `Global Fields` selector, whose `showGlobal=true` default
+> excluded every firm column from a sweep and produced a confident, complete-looking result over the
+> wrong population ([`../../CONVENTIONS.md`](../../CONVENTIONS.md)). The two are easy to conflate
+> because they carry the same words. Any count must state which control on which screen it came from.
+
+> **Discrepancy, recorded rather than resolved.** This document and
+> [`../../admin/005-manage-data-fields.md`](../../admin/005-manage-data-fields.md) describe
+> Manage Data Fields as **read-only in both tenants**, and the Hub/Spoke argument below leans on it.
+> The screen above does not obviously agree: its instruction block reads *"Use add/edit/delete links
+> to change an individual Field or Group"* and *"For bulk changes export these fields into a
+> spreadsheet and make changes to it and import that spreadsheet"*, and it carries **`Add Group`**,
+> **`Export Data Fields`** and **`Import Data Fields`** buttons. No `add`/`edit`/`delete` link is
+> visible on any row — but every group is **collapsed**, and the links may live on the expanded field
+> rows. **Unresolved.** The two readings differ on whether a firm can change a field *definition*,
+> which is load-bearing for the Hub/Spoke design, so it should be settled by expanding one group
+> rather than argued from either screenshot.
+
+**Capture note.** Both images are `(ASG)American Freight` on build **`26.08.0.39`**, captured
+2026-09-01 — an older build than the `26.09.0.113` most of this corpus was read on.
+
 
 **Derived.** The Global catalog is platform-wide and identical across tenants — consistent with
 navigation (109/109 identical), code tables (207/207 identical) and sql tables (227/227 identical).

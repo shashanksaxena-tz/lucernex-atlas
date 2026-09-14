@@ -42,6 +42,9 @@ calculate anything.
 | Index observed | **`BLS_CWUR0000SA0`** — the only value present |
 | Year range observed | **1932 to 2019** |
 
+![`Manage CPI Data`. The only populated reference table of the five -- 3,683 rows, but the footer reads `Displaying 1 - 15 of 3683`, so the grid is showing one page and the row count comes from the pager, not from what is visible. One index, `BLS_CWUR0000SA0`, across every row on the page.](../../assets/screenshots/bbw-admin/26-manage-cpi-data.jpg)
+
+
 **Derived.** `BLS_CWUR0000SA0` is the US Bureau of Labor Statistics series for **CPI-W, US city
 average, all items, not seasonally adjusted**. Nearly nine decades of monthly values are loaded,
 which is far more history than any live lease needs — so this is a **bulk vendor or ASG data load**,
@@ -95,6 +98,9 @@ needs exactly one.
 | Columns | `Actions`, **`Effective End Date *`**, **`Length Month (min) *`**, **`Length Month (max) *`**, **`Discount Rate *`**, `Country`, `State / Province`, `Portfolio`, `Accounting Method`, `Use Type` |
 | Action | `Add Discount Rate…` |
 
+![`Manage Discount Rates`, empty -- `No rows to display`, `No items to display` in the pager, so this is a genuine zero and not a viewport artefact. The seven-control filter row above the grid is the lookup key in miniature: effective date, lease-length band, country, state, portfolio, accounting method, use type. The ASC 842 engine runs in this tenant against this empty table.](../../assets/screenshots/bbw-admin/25-manage-discount-rates.jpg)
+
+
 **Derived — the lookup key, read off the columns.** A discount rate is selected by **seven
 dimensions**: effective date range, a **lease-length band** (`Length Month min`–`max`), country,
 state/province, portfolio, **accounting method**, and **use type**. That is a considerably richer
@@ -137,6 +143,9 @@ accounting work.
 | Columns | `Actions`, **`Effective Date *`**, **`From Currency *`**, **`To Currency *`**, **`Exchange Rate *`**, **`Exchange Rate Type *`** |
 | Action | `Add Exchange Rate…` |
 
+![`Manage Exchange Rates`, also empty. Every one of the five data columns is asterisked -- a rate row is meaningless without all of them, including `Exchange Rate Type`, which is how the product distinguishes spot from average from closing.](../../assets/screenshots/bbw-admin/24-manage-exchange-rates.jpg)
+
+
 **Derived.** Every column is required — a rate is meaningless without all five. **`Exchange Rate
 Type`** as a required dimension means the product distinguishes rate *kinds* (spot, average,
 closing), which is what multi-currency lease accounting needs and what
@@ -159,6 +168,9 @@ The richest of the five.
 
 **Observed, on-screen text:** *"Computed calendar years will be used for date ranges not defined
 below (based on last defined Fiscal Year)."*
+
+![`Manage Fiscal Calendar`. The banner above the grid is the important part: years past the last defined one are computed rather than rejected, so a 20-year lease resolves to periods nobody entered. Note also that the dates render `DD/MM/YYYY` on a US retail tenant.](../../assets/screenshots/bbw-admin/31-manage-fiscal-calendar.jpg)
+
 
 **Derived.** The calendar **extrapolates**. Years beyond the last defined one are computed from it
 rather than erroring — so a contract dated 2035 still resolves to periods. A rebuild needs the same

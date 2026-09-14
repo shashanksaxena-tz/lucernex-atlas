@@ -7,10 +7,38 @@ let tx=90, ty=0, sc=1, sel=null, MODE='schema';
 function N(name,kind,opt){return Object.assign({id:++uid,name,kind,open:false,kids:null,parent:null},opt||{})}
 
 function fromCurated(c,mod){
+  /* the feature map writes `conf`/`src`; the older hand-authored trees write
+     `confidence`/`source`. Reading only one of each silently dropped half the
+     evidence labels and every source path on the feature map. */
   return N(c.name,c.kind||'capability',{mod:c.mod||mod,detail:c.detail||'',
-    conf:c.confidence||'derived',src:c.source||'Hand-authored module analysis',
+    conf:c.conf||c.confidence||'derived',
+    src:c.src||c.source||'Hand-authored module analysis',
     key:c.key,rid:c.rid,oos:!!c.oos,
+    statement:c.statement,parts:c.parts,objects:c.objects,shots:c.shots,
     curatedKids:c.children||[]});
+}
+
+/* What a single column is, said in a sentence a reader can use: the label the
+   user sees, who owns the field, whether it is required, and what its catalogued
+   type code means. A field node used to say "a text field on Contract". */
+const FLAG_FIRM=1,FLAG_REQ=2,FLAG_RO=4;
+function fieldProse(obj,col,ftype,fam,label,flags,code){
+  const s=[];
+  if(label) s.push(`Shown to users as \u201c${label}\u201d.`);
+  s.push(fam==='fk'
+    ?`A typed foreign key on ${obj}, declared as ${ftype} \u2014 the type names the record it points at.`
+    :fam==='dropdown'
+    ?`A coded value on ${obj}, bound to a master list an administrator controls rather than a developer.`
+    :fam==='soft'
+    ?`A soft reference on ${obj}: it names another record without a typed key behind it, so the join has to be made explicit in a rebuild.`
+    :`A ${String(ftype).toLowerCase()} column on ${obj}.`);
+  if(code&&D.typeLegend&&D.typeLegend[code]) s.push(`Catalogued as ${code}: ${D.typeLegend[code]}`);
+  if(flags&FLAG_FIRM) s.push('Firm scope \u2014 this tenant defined it, the platform did not ship it. Firm fields are physical Firm_-prefixed columns, so adding one is a schema change.');
+  else if(code) s.push('Global scope \u2014 shipped by the platform for every tenant.');
+  if(flags&FLAG_REQ) s.push('The catalogue marks it required. Required-ness has no layout-level layer: the asterisk a user sees is this flag, rendered at paint time.');
+  if(flags&FLAG_RO) s.push('Read-only in the catalogue \u2014 written by the engine, not by a user.');
+  if(ftype==='Currency'||ftype==='Percentage') s.push('Stored as TEXT in the physical database, like 6,882 of the 7,069 exported columns; a rebuild has to impose its own BigDecimal typing.');
+  return s.join(' ');
 }
 
 function childrenOf(n){
@@ -37,8 +65,11 @@ function childrenOf(n){
       {mod:m.id,deps:m.dep,conf:'derived',src:'docs/mindmap/edges.json',
        detail:'Modules this one holds foreign keys into. Following these is how you find the blast radius of a schema change.'}));
     m.objects.forEach(name=>{const o=objOf(name);if(!o)return;
-      k.push(N(name,'entity',{mod:m.id,obj:name,conf:'observed',src:'_lucernex_objects_summary.txt',
-        detail:`A record type in the ${m.title.toLowerCase()} area, holding ${fmt(o.n)} fields.`}));});
+      /* the description comes from the Data Fields catalogue, not from a
+         template: the node has to say what the record IS */
+      k.push(N(name,'entity',{mod:m.id,obj:name,conf:'observed',
+        src:(o.ds&&o.ds.length?o.ds.join(', '):'_lucernex_objects_summary.txt'),
+        detail:o.d||`A record type in the ${m.title.toLowerCase()} area, holding ${fmt(o.n)} fields.`}));});
   }
   else if(n.kind==='link-group'){
     k=n.deps.map(id=>{const m=modOf(id);
@@ -50,17 +81,21 @@ function childrenOf(n){
       src:'Grouped from the entity field list',detail:D.groupBlurb[g]||'',meta:[['Fields',fmt(fields.length)]]}));
   }
   else if(n.kind==='group'){
-    k=n.fields.map(([fn,ft,fam])=>N(fn,'field',{mod:n.mod,obj:n.obj,ftype:ft,fam,conf:'observed',
-      src:'_lucernex_objects_summary.txt',detail:`A ${ft.toLowerCase()} field on ${n.obj}.`}));
+    k=n.fields.map(f=>{
+      const fn=f[0],ft=f[1],fam=f[2],label=f[3]||'',flags=f[4]||0,code=f[5]||'';
+      return N(fn,'field',{mod:n.mod,obj:n.obj,ftype:ft,fam,label,flags,code,conf:'observed',
+        src:code?'docs/data-fields/all-fields.csv':'_lucernex_objects_summary.txt',
+        detail:fieldProse(n.obj,fn,ft,fam,label,flags,code)});});
   }
   else if(n.kind==='field'){
-    k=[N(n.ftype,'type',{mod:n.mod,obj:n.obj,ftype:n.ftype,fam:n.fam,col:n.name,conf:'observed',
+    k=[N(n.ftype,'type',{mod:n.mod,obj:n.obj,ftype:n.ftype,fam:n.fam,col:n.name,code:n.code,conf:'observed',
       src:'Declared field type',
-      detail:D.typeNote[n.ftype]||(n.fam==='fk'
+      detail:((n.code&&D.typeLegend&&D.typeLegend[n.code])?D.typeLegend[n.code]+' ':'')
+       +(D.typeNote[n.ftype]||(n.fam==='fk'
         ?'A foreign key. Lx names the type after the table it points at, so the relationship is declared rather than implied.'
         :n.fam==='dropdown'?'A value chosen from a master code table an administrator controls.'
         :n.fam==='soft'?'A soft reference \u2014 it names another record without a typed key behind it.'
-        :'A declared field type.')})];
+        :'A declared field type.'))})];
   }
   else if(n.kind==='type'){
     if(n.fam==='fk'){
@@ -84,7 +119,7 @@ function depthOf(n){let d=0,p=n;while(p.parent){d++;p=p.parent}return d}
 function mightHaveKids(n){
   if(n.curatedKids) return n.curatedKids.length>0;
   if(n.kind==='unresolved'||n.kind==='code-table'||n.kind==='finding'
-     ||n.kind==='rule'||n.kind==='fact') return false;
+     ||n.kind==='rule'||n.kind==='fact'||n.kind==='question') return false;
   if(n.kind==='type') return n.fam==='fk'||n.fam==='dropdown';
   return true;
 }
@@ -130,6 +165,9 @@ function drawMap(){
     if(n.oos)cls+=' oos';
     if(n.kind==='rule')cls+=' rule';
     if(n.kind==='group')cls+=' rule';
+    /* an open question is not a finding: drawn like an unresolved node so a
+       reader can see at a glance how much of a feature is still unknown */
+    if(n.kind==='question')cls+=' oos';
     if(n.kind==='walkthrough'||n.kind==='area')cls+=' walkthrough';
     g.setAttribute('class',cls);
     g.setAttribute('transform',`translate(${n._x},${n._y-BOXH/2})`);
@@ -167,17 +205,77 @@ function toggleNode(n){
   selectNode(n);drawMap();
 }
 
+/* A rule's own statement, in the panel. The complaint that started this was
+   "you see the name of the rule, but nothing else" \u2014 so a rule node renders the
+   statement, the labelled parts a rule engine would consume, what it constrains,
+   and the document that states it. */
+function rulePanel(rid){
+  const r=(RULES.rules||[]).find(x=>x.id===rid);
+  if(!r) return '';
+  const out=[];
+  if(r.statement) out.push(`<p class="lead">${esc(r.statement)}</p>`);
+  if(r.parts&&r.parts.length)
+    out.push(`<dl class="kv" style="font-size:12px">${r.parts.map(([a,b])=>
+      `<dt>${esc(a)}</dt><dd>${esc(b)}</dd>`).join('')}</dl>`);
+  else if(r.text) out.push(`<p>${esc(r.text)}</p>`);
+  if(r.quote) out.push(`<p style="border-left:2px solid var(--line);padding-left:9px;color:var(--ink2)">
+    &ldquo;${esc(r.quote)}&rdquo;</p>`);
+  if(r.objects&&r.objects.length)
+    out.push(`<p style="font-size:12px">Constrains ${r.objects.map(o=>
+      objOf(o)?`<a href="#/e/${encodeURIComponent(o)}">${esc(o)}</a>`:esc(o)).join(', ')}.</p>`);
+  if(r.fields&&r.fields.length)
+    out.push(`<p style="font-size:11.5px;color:var(--muted)">Columns named: ${r.fields.map(esc).join(', ')}</p>`);
+  if(r.related&&r.related.length)
+    out.push(`<p style="font-size:12px">Cites ${r.related.map(i=>
+      `<a href="#/r/${esc(i)}">${esc(i)}</a>`).join(', ')}.</p>`);
+  if(r.confNote) out.push(`<p style="font-size:11.5px;color:var(--muted)">Confidence: ${esc(r.confNote)}</p>`);
+  return out.join('');
+}
+
+/* An entity's caveats, rendered as callouts rather than buried in a sentence. */
+function noteBlocks(notes){
+  if(!notes||!notes.length) return '';
+  return notes.map(([t,c,d])=>`<div class="find"><h5>${esc(t)} ${ctag(c)}</h5><p>${esc(d)}</p></div>`).join('');
+}
+
 function selectNode(n){
   sel=n;
   const el=document.getElementById('mapdet');
   const trail=[];let p=n;while(p){trail.unshift(p.name);p=p.parent}
   const kv=[];
   if(n.meta)n.meta.forEach(x=>kv.push(x));
+  let extra='';
   if(n.kind==='entity'){const o=objOf(n.obj);
     kv.push(['Fields',fmt(o.n)]);kv.push(['Postgres table',o.t||'none']);
-    kv.push(['Referenced by',fmt((edgesTo[n.obj]||[]).length)+' keys']);}
-  if(n.kind==='field'){kv.push(['Declared type',n.ftype]);kv.push(['On record',n.obj]);}
+    if(o.tc>1)kv.push(['Physical tables',fmt(o.tc)]);
+    if(o.cat)kv.push(['Catalogued fields',`${fmt(o.cat[0])} (${fmt(o.cat[1])} global, ${fmt(o.cat[2])} firm)`]);
+    kv.push(['Referenced by',fmt((edgesTo[n.obj]||[]).length)+' keys']);
+    kv.push(['Points at',fmt((edgesFrom[n.obj]||[]).filter(e=>e[3]).length)+' records']);
+    const rs=(RULES.byEntity||{})[n.obj]||[];
+    if(rs.length)kv.push(['Rules that name it',fmt(rs.length)]);
+    extra=noteBlocks(o.notes);
+    if(rs.length) extra+=`<p style="font-size:12px">Governed by ${rs.slice(0,10).map(i=>
+      `<a href="#/r/${esc(i)}">${esc(i)}</a>`).join(', ')}${rs.length>10?` and ${rs.length-10} more`:''}.</p>`;
+  }
+  if(n.kind==='field'){
+    if(n.label)kv.push(['Label',n.label]);
+    kv.push(['Declared type',n.ftype]);kv.push(['On record',n.obj]);
+    if(n.code)kv.push(['Catalogue type',n.code]);
+    kv.push(['Scope',(n.flags&FLAG_FIRM)?'Firm \u2014 defined by this tenant':(n.code?'Global \u2014 shipped by the platform':'not catalogued')]);
+    if(n.flags&FLAG_REQ)kv.push(['Required','yes, in the catalogue']);
+    if(n.flags&FLAG_RO)kv.push(['Read-only','yes']);
+  }
+  if(n.kind==='module'){const m=modOf(n.mod);
+    if(m&&m.lead)extra=`<p>${esc(m.lead)}</p>`;}
+  if(n.shots&&n.shots.length)
+    extra+=`<p style="font-size:11.5px;color:var(--muted)">Screen captures: ${n.shots.slice(0,8).map(s=>esc(s.split('/').pop())).join(', ')}${n.shots.length>8?` +${n.shots.length-8} more`:''}</p>`;
   if(n.src)kv.push(['Source',n.src]);
+  /* Every node also exists as a markdown document in the static mirror. Shown as
+     a path rather than a link: this page is published standalone, where a
+     relative link into the mirror would 404. */
+  const fslug=s=>String(s).replace(/[^A-Za-z0-9_.-]/g,'_');
+  if(n.kind==='entity')kv.push(['Markdown','md/entities/'+fslug(n.obj)+'.md']);
+  else if(n.kind==='module')kv.push(['Markdown','md/modules/'+fslug(n.mod)+'.md']);
   let deep='';
   if(n.kind==='entity') deep=`<p><a class="btn" href="#/e/${encodeURIComponent(n.obj)}">Open the full record page &rarr;</a></p>`;
   if(n.kind==='field') deep=`<p><a class="btn" href="#/f/${encodeURIComponent(n.obj)}/${encodeURIComponent(n.name)}">Open the full field page &rarr;</a></p>`;
@@ -185,11 +283,17 @@ function selectNode(n){
   /* feature-map rule nodes carry their ID in `rid`: the visible label is a short
      name, so the ID is not in the node text to regex out */
   const rid=n.rid||((/\b([A-Z]{2,4}-R-\d{2,4})\b/).exec(n.name)||[])[1];
-  if(rid) deep=`<p><a class="btn" href="#/r/${rid}">Open rule ${rid} &rarr;</a></p>`;
+  if(rid){ extra=rulePanel(rid)+extra;
+    kv.push(['Markdown','md/rules/'+fslug(rid)+'.md']);
+    deep=`<p><a class="btn" href="#/r/${rid}">Open rule ${rid} &rarr;</a></p>`; }
+  /* a rule's own statement replaces the run-on detail string; everything else
+     keeps its prose */
+  const body=(rid&&extra)?'':(n.detail?`<p>${esc(n.detail)}</p>`:'');
   el.innerHTML=`<h4>${esc(n.name)}</h4>
     <p style="font-size:11px;color:var(--muted)">${trail.map(esc).join(' \u203A ')}</p>
     ${n.conf?ctag(n.conf):''}<span class="tag">Level ${depthOf(n)}</span>
-    ${n.detail?`<p>${esc(n.detail)}</p>`:''}
+    ${rid?`<span class="tag">${esc(rid)}</span>`:''}
+    ${body}${extra}
     ${kv.length?`<dl class="kv" style="font-size:12px">${kv.map(([a,b])=>`<dt>${esc(a)}</dt><dd>${esc(b)}</dd>`).join('')}</dl>`:''}
     ${deep}`;
   el.classList.add('on');
