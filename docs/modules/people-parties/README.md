@@ -25,6 +25,44 @@ bid parties, brokers, lease analysts. **Member is the universal "who did this" a
 product**, not primarily a business-domain reference. See
 [`data-model.md`](data-model.md#why-290-foreign-keys-point-at-member) for the full breakdown.
 
+![`Manage Employers` in BBW: **7,447 rows**, every one `Company Type = Vendor` and `Contact Type = Vendor` on the visible page. Eight of the columns are red-asterisked and required, including `Vendor#` and `Store Number`. Note the `Select Alternate Layout` control at the top right -- the layout-chain picker, appearing on an administration list rather than an end-user screen.](../../assets/screenshots/bbw-admin/35-manage-employers.jpg)
+
+**Derived.** `Employer` is where the counterparty lives, and the grid shows why
+[`../contracts/contract-hierarchy.md`](../contracts/contract-hierarchy.md) finds **no `Vendor` FK on
+`Contract`**: there is no separate Vendor object to point at. Vendor, Landlord and Tenant are the
+same `Employer` record under a relabelled `Contact Type`.
+
+> **The count is the pager's, not the image's.** `Displaying 1 - 15 of 7447` — fifteen rows are on
+> screen. These grids scroll internally, so nothing may be read from the visible page about the
+> other 7,432.
+
+### Why this module is under-illustrated, deliberately
+
+**The captures exist; most of them cannot be shown.** `Manage Regions/Org Chart`
+(`bbw-admin/30-manage-regions-org-chart.jpg`) is the single richest screen in this module — it renders
+the whole `Accounting Purposes` portfolio's membership as a job-title-to-person list — and it names
+roughly **sixty real individuals**. `Manage Members/Contacts` and `Manage Membership` have the same
+problem by construction: they are directories of people.
+
+What can be taken from those screens without naming anyone is the **job-title vocabulary**, which is
+the part a rebuild actually needs:
+
+| Observed job titles, `(ASG)BBW` org chart |
+|---|
+| `Lease Admin Manager`, `Lease Admin`, `Lease Admin Accounting`, `Lease Admin Client`, `Lease Abstractor`, `Outside Attorney`, `Outside Paralegal` |
+
+**Derived, and it connects two modules.** These are `CodeJobTitle` values, and they are exactly the
+vocabulary the workflow router resolves against when a step's `ApproverType` is `JOBTITLE`
+([`../workflow/routing-and-approvals.md`](../workflow/routing-and-approvals.md)). The split between
+`Lease Admin *` (internal) and `Outside *` (external counsel) also shows the org chart carries
+**non-employees**, which bears on whether `Member` means "staff" or "anyone with a login".
+
+**Observed, from `Manage Company`.** Three firm-level flags — `Apply Org Chart when creating
+Locations`, `… RE Contracts`, `… Equipment Contracts` — are all **`Yes`** in BBW. The org chart is
+therefore not a directory; **it is applied at record creation**, which is how membership propagates
+to new entities without anyone assigning it.
+
+
 ## Contents
 
 | Document | Answers |

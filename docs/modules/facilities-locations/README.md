@@ -39,6 +39,25 @@ full in [`location-vs-facility-vs-site.md`](location-vs-facility-vs-site.md).*
 
 ## The containment hierarchy
 
+![`Manage Locations` in BBW -- and the tab is named `Activate/Deactivate`, which is the whole screen. It is **not** a location editor: it is a bulk soft-delete surface, with `List Active` / `List Inactive` radios, a `Current Status` column, a `Planned Status` column whose cells are `<Change to Inactive>` links, and one `Apply Changes` button at the bottom. The `Parent Region`, `Sub Region` and `Market` columns are the org-chart and demographics dimensions a Location is filed under.](../../assets/screenshots/bbw-admin/41-manage-locations.jpg)
+
+**Derived, and it corrects a natural reading of the admin tool list.** `Manage Locations`
+(`/en/admin/LocationEdit.jsp`) sounds like a location editor and is not one — the only tab it opens
+on is bulk activate/deactivate. Locations are authored through the **`ASG Location Wizard`** and
+edited on their own record screen; the admin tool exists to retire them in bulk. `Manage Contracts`
+and `Manage Portfolios/Capital Programs` carry the same `Activate/Deactivate` tab, so this is a
+pattern rather than a quirk.
+
+**Derived.** Deactivation, not deletion, is again the disposal mechanism — the same conclusion
+[`../../features/drop-downs-code-tables/`](../../features/drop-downs-code-tables/) reaches for code
+table values, where `Inactive` is editable even on rows that cannot be deleted. **Lx retires records;
+it does not remove them.**
+
+> `Displaying 1 - 15 of 2140` — the row count is the pager's. It matches
+> [`../../tenants/bbw-navigation-gate.json`](../../tenants/bbw-navigation-gate.json) exactly, which
+> is the number to cite; the fifteen visible rows are illustration.
+
+
 ```
                     Program (Portfolio)
                    /   |    |    \
@@ -91,6 +110,11 @@ never offers `Contract` as a lookup at all; the Facility Summary layout instead 
 Contract List (One to Many List)"** child grid (`FAC-R-013`). Two structurally independent tools —
 the Page Layout builder's sidebar contents and the routing/screen evidence — agree on the same
 asymmetry.
+
+![The `ASG Facility Summary` layout in the builder. Its last section but one is headed `Contracts` and contains exactly one placement: `ASG Contract List (One to Many List)`. A Facility reaches its Contracts through a placed child grid, not through a foreign key on `Facility`. The same screen also shows all three placement kinds at once -- `ASG Facility Header (Sub Edit Form)` is an embedded SUB layout, the address and space blocks are plain fields, and the Contracts block is a LIST layout.](../../assets/screenshots/page-layouts/facility-summary-contracts-one-to-many-list.jpg)
+
+![The Facility's `Related Fields` sidebar in the same builder, expanded. `Contract` is **not** among the offered lookups -- which is the negative half of the same finding, and the reason the child grid has to exist.](../../assets/screenshots/page-layouts/facility-related-fields-no-contract.jpg)
+
 
 ## Space Management, briefly
 

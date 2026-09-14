@@ -47,6 +47,26 @@ billing" readings are **Derived** from field presence/absence — full argument 
 | Code tables | 7 — `Property Tax Status` (2184), `Property Tax Type` (2185), `Tax Appeal Result` (2186), `Tax Appeal Status` (2187), `Tax Paid To` (2188), `Tax Refund Type` (2189), `Tax Type` (2190) — see [`data-model.md`](data-model.md#5-property-tax-is-a-recoverable-expense--and-the-tax-code-table-naming-is-easy-to-confuse) for how easily the four similarly-named tables get confused |
 | End-user screens | Not in the four-root navigation captured in [003](../../screens/003-main-navigation.md) directly — reached via `Parcel`'s Related Fields/child grids, as `Parcel` itself has no own nav root ([`../facilities-locations/location-vs-facility-vs-site.md`](../facilities-locations/location-vs-facility-vs-site.md) §1) |
 
+## No screen of this module has ever been captured
+
+**Stated plainly, because an absence recorded is worth more than an unrelated illustration.** There
+is **no screenshot anywhere in `docs/assets/screenshots/` of any property-tax surface** — no
+`Parcel` record, no `PropertyTaxBill`, no assessment, no appeal. A filename sweep for `tax`,
+`propert`, `parcel` and `appeal` across all 179 captures returns nothing.
+
+The reason is structural rather than an oversight: **`Parcel` has no navigation root of its own**
+(the table above records this), and BBW holds **zero `Parcel` records**
+([`../../tenants/bbw-navigation-gate.json`](../../tenants/bbw-navigation-gate.json)), so the root
+would not render even if one were sought — it fails the record-existence gate
+([`../../features/security-access/`](../../features/security-access/#the-equipment-contract-gate--three-gates-open-root-still-hidden)).
+Property tax is reached only through a `Parcel`'s child grids, and there are no Parcels to open.
+
+**Everything in this folder is therefore derived from field inventories and code-table registries,
+not from a rendered screen.** That is a real confidence ceiling on the module and should be read
+into every claim here. Per-surface status is tracked in
+[`../../COVERAGE.md`](../../COVERAGE.md); this module's screens are the largest single block of
+unobserved surface in the corpus.
+
 ## The roll-up, and the one redundancy worth flagging
 
 Every object also carries its **own** direct `ParcelID`, in addition to its position in the chain

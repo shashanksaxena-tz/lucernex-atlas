@@ -65,6 +65,19 @@ processes and they are the best available statement of what the rebuild must sup
 19 steps total (3 + 8 + 6 + 2), **all of type `Form`; not one `Task` step is configured anywhere in
 the tenant**. The source document states 22; the four per-workflow tables in it sum to 19.
 
+![`Manage Work Flow` at American Freight, collapsed -- four templates, `Displaying 1 - 4 of 4`. The per-row actions are `edit | delete | add task step | add form step`, so **a Task step is offered on every template and taken on none**. The `Collaborator Job Titles` column is empty on all four.](../../assets/screenshots/workflow/manage-workflow-index.jpg)
+
+![The same screen in BBW, all 13 templates. The `Description` column is empty on nine rows and carries a hand-typed archive note on exactly the versioned ones -- which is how the live `Lease Admin Request` is identified as the **unsuffixed** template, with `v1` and `v2` superseded.](../../assets/screenshots/bbw-admin/08-manage-work-flows.jpg)
+
+> **A third capture of this screen exists and is deliberately not embedded here.**
+> `workflow/manage-workflow-expanded-all-steps.jpg` shows all 19 AF steps with their
+> `Form/Task`, `Type`, `Approval Level` and **`Approver`** columns populated — and that last column
+> names roughly twenty real individuals. The table above carries everything the image proves,
+> counted rather than named, which is this corpus's rule
+> ([`../../CONVENTIONS.md`](../../CONVENTIONS.md)). The image remains on disk as evidence and is
+> cited, not rendered.
+
+
 Three of the four are lease-accounting processes and they say something the BRDs do not:
 
 - **ASC 842 Schedule Review/Approval** — schedules are *not* auto-published. Produce → internal

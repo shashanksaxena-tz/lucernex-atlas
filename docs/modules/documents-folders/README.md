@@ -53,6 +53,19 @@ of its own. [`data-model.md`](data-model.md#3-binders-have-no-backing-object) ha
 
 ## What exists, and what doesn't, behind each headline capability
 
+![`Document Type Code` at American Freight -- the whole vocabulary is four values: `Document`, `Drawing`, `Image`, `Spreadsheet`. Every row offers **`edit` and nothing else**: there is no `delete` action on any of the four, so all are protected by the server-supplied `isReadOnlyRecord` flag. The `Inactive` checkbox is the only way to retire one.](../../assets/screenshots/af-admin/50-document-type-code.jpg)
+
+**Derived, and it corroborates a finding from the other side of the corpus.** Platform-owned code
+values are not deletable while firm-authored ones are
+([`../../features/drop-downs-code-tables/`](../../features/drop-downs-code-tables/#it-splits-on-provenance-instead)).
+`Document Type Code` is entirely platform-owned — a firm classifies documents with the vendor's four
+types or with none. If ASG needs a fifth, it cannot add one here.
+
+**Observed.** `Document Content Code` is the sibling table
+(`af-admin/49-document-content-code.jpg`), and the two are distinct
+axes: *what the file is* versus *what it is about*.
+
+
 | Capability visible in the UI/navigation | What backs it in the schema |
 |---|---|
 | Document storage, folders, checkout, versioning | `Document` (23 fields) + `Folder` (16 fields) — genuinely substantive |
@@ -65,6 +78,18 @@ of its own. [`data-model.md`](data-model.md#3-binders-have-no-backing-object) ha
 | Binders / Committee Packages | **No object found anywhere in the 223-object census** |
 
 ## Applying a template touches folder, budget, and task templates in one event
+
+![`Manage Folder Templates` in BBW -- two templates, `Contracts` and `Portfolio`, and that is the entire tenant configuration. The per-row actions are the finding: alongside `edit | delete` sit **`Modify folder structure`** and **`Update Portfolio items`**. The second is a retroactive apply: it pushes a changed template onto records that already exist.](../../assets/screenshots/bbw-admin/44-manage-folder-templates.jpg)
+
+**Derived.** A folder template is not only applied at creation. `Update Portfolio items` means the
+template is a **living definition that can be re-applied**, which is what makes
+`FolderTemplateAudit` necessary — there has to be a record of which entities received which version
+of the structure and when. The three tabs (`Manage Folder Templates`, `Folder Structure`,
+`Update Portfolio`) separate defining the template from shaping it from pushing it.
+
+**Observed.** Two templates, named for the two entity types that have document sets worth
+standardising. Nothing for Facility, Location or Equipment Contract.
+
 
 **Non-obvious finding:** `FolderTemplateAudit` (18 fields) is not narrowly about folders — it
 carries `EntityTemplateID`, `FolderEntityTemplateID`, `BudgetEntityTemplateID`, and

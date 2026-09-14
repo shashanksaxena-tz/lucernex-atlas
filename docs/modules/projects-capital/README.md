@@ -115,6 +115,22 @@ independent confirmation of the `ProjectEntity` subtype enumeration
 
 ## The calendar
 
+![`Manage Schedule Templates` in BBW -- **`No rows to display`**. Three tabs exist (`Schedule Templates`, `Template Details`, `Update Portfolio`) and the tenant has authored nothing in any of them. This is a genuine zero, stated by the pager, not a viewport artefact.](../../assets/screenshots/bbw-admin/02-manage-schedule-templates.jpg)
+
+**Derived, and it corroborates the workflow module from a second screen.**
+[`../workflow/README.md`](../workflow/README.md) records **zero `Task` steps across both tenants**
+and `Task Templates = 0`. Here is the authoring surface for exactly that, and it is empty. The
+`Task` / `TaskGroup` / `TaskItem` machinery this document dissects is **declared in the schema and
+unexercised by ASG** — which is the honest scope statement for this module, and the reason it is
+documented from field inventories rather than from live configuration.
+
+**Observed.** The `Update Portfolio` tab is the same retroactive-apply mechanism
+[`../documents-folders/README.md`](../documents-folders/README.md) finds on folder templates, so
+template-push-to-existing-records is a shared platform pattern rather than a folder feature.
+
+![`Manage Holiday Calendar`. Its own on-screen help is the reason this screen belongs to scheduling and not to accounting: holiday days determine **task completion dates**. The four other reference-data tools feed the lease-accounting engine; this one does not.](../../assets/screenshots/bbw-admin/32-manage-holiday-calendar.jpg)
+
+
 `HolidaySchedule` → `HolidayDate` is a firm-level named calendar; `Program.DefaultHolidayScheduleID`
 (`portfolio-transactions`) sets the portfolio's default. `Task`/`TaskGroup`/`TaskItem`'s
 `TaskEndsCodeDayOfWeekID` and `Program.DefaultWorkWeekends` are the other half of the working-day

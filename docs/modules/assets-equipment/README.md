@@ -57,6 +57,20 @@ force one name to win.
 
 ## Where the module attaches
 
+![The only Equipment Contract in either tenant. Its `Assets` section carries an embedded `Equipment` grid whose columns are `Asset Group`, `Asset Type`, `Name`, `Maintenance Category`, `Contract`, `Asset Serial #`, `Location Details`, `Operational Status`, **`Is Short Term`** and **`Is Low Asset Value`** -- the last two being the ASC 842 classification flags, carried on the *asset*, not on the contract. One row: a `Tractor`, asset group `ASG`, pointing back at its contract.](../../assets/screenshots/bbw-enduser/eq-01-details-summary.jpg)
+
+> **One record, and the caveat is not decorative.** BBW holds **exactly one** Equipment Contract — of
+> 2,008 contracts sampled, 2,007 are `Contract` and 1 is `Equipment Contract`. This screen shows
+> **one record's population, not the module's range**: `Aggregate Payment` and `Remaining Payment
+> Obligation` both read `$0.00`, `Contract List` is empty, and most dates are blank. An empty field
+> here means empty *for this contract*. The module's shape can be read from it; its data cannot.
+
+**Derived, and it answers how `Asset` attaches.** Not through a field on the contract — through an
+**embedded list layout on the contract's Summary page**, with the asset carrying the FK back. That is
+the same one-to-many-list mechanism `Facility` uses to reach `Contract`
+([`../facilities-locations/README.md`](../facilities-locations/README.md)).
+
+
 `Asset` has **no hard-typed FK to `Facility`/`Location`** — its only entity-scoping column is the
 generic `ProjectEntityID`, meaning it can in principle attach to any `ProjectEntity` subtype, not
 only the physical-space objects the "Equipment" screens suggest. Its one hard, typed FK is
@@ -81,7 +95,16 @@ Issue (from WorkOrder.IssueID) ──► LinkIssuePart (projects-capital) ──
 
 Both generation steps are **user-triggered buttons**, not automatic escalation or a scheduled
 sweep — matching the same pattern `../accounting/README.md` documents for `Generate Rent`/`Calculate
-Schedule`. Full detail, including the schema-export-vs-admin-catalog divergence that hides the
+Schedule`. 
+
+![`Manage Parts and Inventory` in BBW -- `No rows to display`, `No items to display`. Three tabs exist (`Manage Parts`, `Manage Part Packages`, `Maintenance Categories`) and the grid declares a full inventory model: `Part Name *`, `Model Number`, `Vendor`, `Cost`, `Quantity on hand`, `Quantity on order`, `Par level`, `Order level`. **None of it is used.** This is a genuine zero, not a viewport artefact -- the pager says so.](../../assets/screenshots/bbw-admin/07-manage-parts-and-inventory.jpg)
+
+**Derived.** The maintenance loop above is **declared and unexercised in this tenant**. `Par level`
+and `Order level` are reorder-point fields, so the model anticipates consumable stock management —
+a scope well beyond lease accounting. A rebuild should treat the whole parts/service-request/work-order
+family as *present in the vendor's product and unused by ASG*, and confirm before building any of it.
+
+ Full detail, including the schema-export-vs-admin-catalog divergence that hides the
 `Issue` relationship from the mechanical FK graph:
 [`data-model.md`](data-model.md#3-the-maintenance-loop--servicerequest--workorder-and-how-both-relate-to-issue).
 

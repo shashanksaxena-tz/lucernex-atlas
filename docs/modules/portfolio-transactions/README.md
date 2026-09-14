@@ -75,6 +75,16 @@ Full FK-by-FK evidence: [`data-model.md`](data-model.md).
 
 ## `Program` — the Portfolio, and what hangs off it
 
+![`Manage Portfolios/Capital Programs` in BBW. The whole tenant holds **two** Portfolios -- `Accounting Purposes` and `Global` -- both typed `Portfolio`, neither a Capital Program. `Revenue Per Week` and `State` are populated on one and blank on the other. The second tab, `Activate/Deactivate`, is the same bulk soft-delete surface the Locations and Contracts admin tools use.](../../assets/screenshots/bbw-admin/29-manage-portfolios-capital-programs.jpg)
+
+**Derived, and it is the control case for the navigation gate.** Two Portfolio records is enough for
+the `Portfolio` root to render, while `Parcel`, `Prototype` and the project types hold zero and do
+not render at all — which is what pins the visibility threshold at **existence, not volume**
+([`../../features/security-access/`](../../features/security-access/#the-equipment-contract-gate--three-gates-open-root-still-hidden)).
+`Displaying 1 - 2 of 2` in the footer is the authoritative count here; the grid is short enough that
+the image and the JSON capture agree, which is not true of the larger admin lists.
+
+
 **"Portfolio" (menu label), `Program` (schema object), and `Portfolio ID` (the FK type every
 child column carries) are three names for one record** — already established from the routing
 layer in [`screen-routing.md`](../../data-model/screen-routing.md) and repeated here because this
@@ -147,6 +157,39 @@ performed, so the pipeline's actual stage names are not confirmed. **`POR-R-005`
 `RETransaction.FacilityID` is a direct, optional FK to `Facility` — meaning a transaction can
 *already* reference an operating Facility even before a Scenario or Contract exists (a renewal or
 expansion at a site the tenant already occupies, most plausibly). **`POR-R-006`.**
+
+```mermaid
+flowchart LR
+    PP["PotentialProject<br/>the Site"]
+    RT["RETransaction<br/>ProgramID REQUIRED --<br/>a transaction must belong to a Portfolio"]
+    SC["Scenario<br/>RETransactionID and ProjectEntityID<br/>both REQUIRED.<br/>Several compete per transaction."]
+    CT["Contract<br/>the deal's terminus once a lease is signed"]
+    FAC["Facility<br/>an operating building"]
+    PROG["Program<br/>the Portfolio"]
+
+    PP --> RT
+    RT --> SC
+    SC -->|"Scenario.ContractID<br/>optional, forward-pointing"| CT
+    RT -.->|"RETransaction.FacilityID<br/>optional -- a renewal or expansion<br/>at a site already occupied"| FAC
+    PROG --> RT
+    CT -.->|"NO ScenarioID.<br/>NO RETransactionID.<br/>The reverse link does not exist."| SC
+
+    linkStyle 5 stroke:#b00,stroke-dasharray: 5 4
+```
+
+**Derived, and the missing edge is the finding.** The pipeline is one-way. `Contract` carries no
+`ScenarioID` and no `RETransactionID`
+([`data-model.md`](data-model.md#4-the-contract-boundary--one-way-only)), so **from a signed lease
+you cannot reach the deal that produced it** without scanning every `Scenario` for a matching
+`ContractID`. It is the same asymmetric-FK-plus-child-grid shape
+[`../facilities-locations/README.md`](../facilities-locations/README.md) found between `Facility`
+and `Contract`. A rebuild that wants deal-to-lease traceability has to add the back-pointer; Lx does
+not have one.
+
+**Observed, and it bounds this whole section.** The four code tables that classify the pipeline
+exist and are attached, but **none of their values has been read**, so the stage names above are
+structural, not the tenant's actual vocabulary.
+
 
 ## The rollout-planning family, briefly
 

@@ -18,6 +18,47 @@ combination means for the ASG Edge+ database-per-tenant decision, without decidi
 | `FirmID` | `Text` — **not** a declared FK type | `ProjectEntity`, the 9 subtype roots, and 3 config objects (13 objects total) | *Which tenant?* |
 | `ProjectEntityID` | `Entity ID` (FK) on 161 children; `Number` (shared key) on the 9 subtypes and `ProjectEntity` itself | 161 `entity_scoped` objects, this module's own `LinkMemberProjectEntity`/`Region`/`AuditColumn`/etc. | *Which owned thing, within some tenant?* |
 
+![`Manage Company` in BBW. `Firm ID: 3159` sits in the middle column, and the whole screen is one firm's configuration: nine tabs across the top (`Manage Company`, `Alerts`, `Password Policy`, `PGP`, `Financial Settings`, `Colors / Styles`, `Integrations`, `SAML Authentication`, `Entity Banners`), then a separate **`LxAdministrator Only`** band below the fold carrying the entitlement flags a firm cannot set for itself.](../../assets/screenshots/bbw-admin/01-manage-company.jpg)
+
+**Observed, and it matters for the tenancy question.** Three things are visible on that screen that
+the field inventories do not convey:
+
+| | |
+|---|---|
+| **`Is Test Firm? = Yes`** | BBW is flagged as a test firm at the platform level — corroborating the "training tenant" framing used throughout this corpus, from the product's own record rather than from context |
+| **`Product Type = Enterprise`** | Firms are **tiered**, and the tier is an `LxAdministrator`-only field |
+| **`LxAdministrator Only` is a distinct band on the form** | The entitlement flags — `Allow Portfolio?`, `Allow Capital Programs?`, `Allow Sites?`, `Allow Opening Projects?`, `Allow Capital Projects?`, `Allow Documents?`, `Is Audit Enabled?` — are rendered **on the firm's own configuration screen but in a vendor-only section** |
+
+**Derived, and it is a two-tier permission model inside one record.** `Firm` is not simply "the
+tenant row": it is a **shared editing surface with a vendor-owned partition**. A firm administrator
+changes the address, the email filter and the folder-security default; only Accruent changes what the
+firm is licensed to do. Any ASG Edge+ equivalent needs the same split — tenant-editable configuration
+and platform-owned entitlement **on the same aggregate**, with different authority over each.
+
+**Observed, and it closes a loop with the navigation gate.** The flags visible read `Allow Portfolio?
+= Yes` and `Allow Capital Programs? / Allow Sites? / Allow Opening Projects? / Allow Capital Projects?
+= No` — exactly the `allowFlag` column in
+[`../../tenants/bbw-navigation-gate.json`](../../tenants/bbw-navigation-gate.json). Entitlement is
+**necessary and not sufficient**: those `No` types also hold zero records, and it took American
+Freight — entitled for Equipment Contracts and holding none — to separate the two
+([`../../features/security-access/`](../../features/security-access/#the-equipment-contract-gate--three-gates-open-root-still-hidden)).
+
+![`Manage Firm Dictionary`. Every UI label in the product is overridable per tenant by uploading a spreadsheet, in two modes -- replace all translation phrases, or append non-empty ones -- with a `For Language:` multi-select on the download half.](../../assets/screenshots/bbw-admin/17-manage-firm-dictionary.jpg)
+
+**Derived, and it is a third instance of the same two-tier pattern this module is about.** The
+dictionary has a **global layer and a firm layer**, exactly as the field registry does
+(`RGAF.IsGlobal` + `FirmID`) and the layout registry does (`Firm Layouts` / `Global Layouts`). Three
+independent subsystems, one shape: **a platform-owned base with a per-tenant override on top**.
+
+**Derived, and it is a caveat on this whole corpus, not just this module.** Because a firm can
+overwrite labels tenant-wide, **every UI label recorded anywhere in these documents is potentially
+tenant-local** — screen names, node names, field labels, code-table value names. Internal names
+(`FirmID`, `ProjectEntityID`, `ScriptName`, physical table names) are unaffected, which is why
+[`../../CONVENTIONS.md`](../../CONVENTIONS.md) requires real identifiers in `code` rather than
+paraphrases. That convention is load-bearing, and this screen is why.
+
+
+
 The decisive fact, from `project-entity.md` §4: **`FirmID` is typed `Text`, not a first-class FK
 type.** Lucernex's own schema declares dozens of `<Entity> ID` types — `Facility ID`, `Contract
 ID`, `Employer ID`, `Member ID` — each one a first-class reference the type system understands. It

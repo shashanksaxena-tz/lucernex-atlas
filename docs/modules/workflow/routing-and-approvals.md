@@ -67,6 +67,48 @@ the single most important thing this document does, because a rebuild has to pic
 **Derived, and this is the load-bearing conclusion of this document: these are two orthogonal
 dimensions plus a runtime escape hatch, not one enum with disagreeing definitions.**
 
+```mermaid
+flowchart TD
+    STEP["A workflow step needs its people"]
+    TYPE{"ApproverType / AssigneeType / NotifieeType<br/>WHICH KIND of thing names them"}
+
+    JT["JOBTITLE<br/>resolve ApproverJobTitleIDList<br/>against Member.CodeJobTitleID"]
+    UC["USERCLASS<br/>resolve ApproverUserClassIDList"]
+    MID["MEMBERID<br/>ApproverMemberIDList names people directly"]
+    OC["ORGCHART_ALL / LEV1 / LEV2 / LEV3 / MKT<br/>walk the Portfolio's org chart"]
+
+    FILT["Filter to the entity<br/>via LinkMemberProjectEntity"]
+    LIST["WorkFlowStep.ApproverMemberIDList<br/>a flat list of Members, resolved at instantiation"]
+    ROWS["One WorkFlowStepApprover row per person<br/>20 columns -- this is where a decision is recorded"]
+    ADHOC["Ad Hoc<br/>a human picks the approvers at runtime.<br/>Not a resolution rule -- an escape hatch."]
+
+    STEP --> TYPE
+    TYPE --> JT
+    TYPE --> UC
+    TYPE --> MID
+    TYPE --> OC
+    JT --> FILT
+    UC --> FILT
+    OC --> FILT
+    MID --> LIST
+    FILT --> LIST
+    LIST --> ROWS
+    ADHOC --> ROWS
+```
+
+**Read the diagram against what the tenants actually do.** Across the 19 AF steps the `Approval Level`
+column reads **`Member` ×16**, **`Ad Hoc` ×2**, **`Job Title` ×1** — the last being `User Request`
+step 1, routed to *System Administrator*. The **org-chart and user-class branches are built and
+unused in both tenants**, and `Job Title` is exercised exactly once.
+
+**Derived, and it is the sharpest thing the diagram shows.** Every branch converges on the same
+place: a flat `ApproverMemberIDList` on the instance, then one `WorkFlowStepApprover` row per person.
+**The routing rule is evaluated once, at instantiation, and then discarded** — the instance keeps
+people, not the rule that chose them. That is why a member leaving breaks in-flight instances, and
+why *"positions in the model, people in the data"* is a description of the **storage**, not just of
+tenant habit.
+
+
 **Dimension 1 — the principal selector: *what kind of thing names the people*.** `MemberNotifyType`
 is this dimension in its complete form. It contains all four categories the vendor help names
 (`MEMBERID`, `JOBTITLE`, `USERCLASS`, and `ORGCHART_*`), it resolves the vendor help's vague "Org

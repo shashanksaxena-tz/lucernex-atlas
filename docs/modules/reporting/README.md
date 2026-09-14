@@ -13,6 +13,17 @@ for change auditing. There is **no** schedule table, **no** run-history table, *
 table and **no** chart table. Those four absences define most of what ASG Edge+ has to build from
 scratch.
 
+## The two screens the corpus captured
+
+![Manage Dashboard Reports in BBW. Reports are administered from the same place as layouts, which is consistent with a report being a PageLayout row rather than its own object — there is no separate report designer.](../../assets/screenshots/bbw-admin/11-manage-dashboard-reports.jpg)
+
+![The Report Log. Run history is surfaced as a job log, not as rows on a report record — which matches the finding that no run-history table exists in the schema.](../../assets/screenshots/bbw-admin/49-report-log.jpg)
+
+**Nothing else in this module was ever captured.** No saved report was opened, none was run, and
+the report builder itself was never rendered. The account below is read from the schema and from
+the REST surface, not from the running feature — see [`../../COVERAGE.md`](../../COVERAGE.md).
+Treat every statement about report *behaviour* as Inferred unless it cites an observation.
+
 ## Contents
 
 | Document | What it covers |
@@ -49,6 +60,45 @@ scratch.
    "scheduled & external delivery" requirements need.
 5. `AuditColumn.GroupID`/`SubGroupID` point at `ReportGroupData`, so **the audit trail is filed
    under the Data Fields taxonomy** — the registry organises audit as well as forms and reports.
+
+## What the saved-report screen shows, and why it is described rather than shown
+
+**Observed** (`Manage Dashboard Reports`, `/en/reports/ManageDashboardModules.jsp`,
+`bbw-admin/11-manage-dashboard-reports.jpg` and `af-admin/12-manage-dashboard-reports.jpg`).
+**Both captures are deliberately not embedded**: the grid's `Created By`, `Last Modified By` and
+`Last Run By` columns name real individuals, and this corpus records people as counts, not names
+([`../../CONVENTIONS.md`](../../CONVENTIONS.md)).
+
+What the screens establish, safely:
+
+| | |
+|---|---|
+| Saved reports | **9**, in **both** tenants |
+| Report names | Identical across tenants — `ASG Disabled User Accounts`, `Contracts - Future Kickouts`, `Contracts - Future Openings`, `Contracts - Lease Expiration`, `Contracts - Month to Month Leases`, `Contracts - Unprocessed Transactions`, `Logs - Default Log`, `Logs - Reconciliation Log`, `Logs - Savings Log` |
+| `Report Type` | **`Entity`** on 8, **`Member`** on 1 (`ASG Disabled User Accounts`) |
+| Columns | `Report Name *`, `Description`, `Report Type`, `Created By`, `Created Date`, `Last Modified By`, `Last Modified Date`, **`Last Run By`**, **`Last Run Date`** |
+| Row actions | `edit \| delete \| export` |
+| Creation control | **`Create Report - Old…`** |
+
+**Derived — three findings, none of which needed the pixels.**
+
+1. **The report set is published, not authored.** Nine identically-named reports with identical
+   descriptions in two tenants whose workflows share only two names is the **layout** distribution
+   pattern, not the workflow one
+   ([`../../features/page-layouts/`](../../features/page-layouts/#the-publish-and-fork-model)). ASG
+   ships a standard report pack per tenant.
+2. **`Last Run By` / `Last Run Date` are columns on the row, and that is the whole run history.**
+   Sentence 4 above says `PageLayout` keeps a single most-recent run stamp; the screen renders
+   exactly that and nothing more. Run dates in the AF capture range from 2024 to 2026, so reports
+   *are* being used — the product simply does not retain a history of it.
+3. **The creation button is labelled `Create Report - Old…`.** The vendor is shipping a creation path
+   it has itself marked legacy, with no replacement visible on the screen. Worth confirming before a
+   rebuild copies this surface.
+
+**Two further reporting screens are captured and unread:** `Generate Enterprise Report File`
+(`bbw-admin/53-generate-enterprise-report-file.jpg`) and `Report Log`
+(`bbw-admin/49-report-log.jpg`, the same page as `Job Log`). Neither is analysed in this folder yet.
+
 
 ## Open questions
 
