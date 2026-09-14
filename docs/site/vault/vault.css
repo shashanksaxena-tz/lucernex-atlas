@@ -23,6 +23,17 @@ nav.sitenav a.on{color:var(--accent);font-weight:600}
 .seealso a:hover{border-color:var(--accent);color:var(--ink);text-decoration:none}
 .seealso i{font-style:normal;color:var(--faint);margin-right:5px}
 
+#lxlb{position:fixed;inset:0;z-index:9998;background:rgba(8,12,22,.94);display:none;
+ align-items:center;justify-content:center;flex-direction:column;padding:40px}
+#lxlb.on{display:flex}
+#lxlb img{max-width:94vw;max-height:82vh;border-radius:8px;box-shadow:0 24px 70px rgba(0,0,0,.6)}
+#lxlbc{color:#cbd5e1;font-size:13px;margin-top:14px;max-width:780px;text-align:center;line-height:1.55}
+#lxlb button{position:absolute;background:rgba(255,255,255,.08);color:#fff;border:0;
+ width:46px;height:46px;border-radius:50%;font-size:26px;cursor:pointer;line-height:1}
+#lxlb button:hover{background:rgba(255,255,255,.18)}
+#lxlbx{top:22px;right:26px}#lxlbp{left:22px;top:50%}#lxlbn{right:22px;top:50%}
+main figure a,.shots a{cursor:zoom-in}
+
 .toc{display:block;margin:0 0 28px;padding:16px 18px;background:var(--card,#fff);
  border:1px solid var(--line,#e5e7eb);border-radius:10px}
 .toc b{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.08em;

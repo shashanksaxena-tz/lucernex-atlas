@@ -783,6 +783,10 @@ function buildNav(){
   const item=(p,l,c)=>{
     const on = p.indexOf('?')>=0 ? h===p : (hp===p||(p!=='/'&&hp.startsWith(p)));
     return `<a href="#${p}" class="${on?'on':''}">${l}${c!==undefined?`<i>${c}</i>`:''}</a>`;};
+  // The app is reached from the static site and must lead back to it. Without
+  // these it is an island: no way out, and no sign that Research, Screens or
+  // the Vault exist at all.
+  const out=(href,l)=>`<a href="${href}">${l}</a>`;
   document.getElementById('nav').innerHTML=`
     <h4>Atlas</h4>
     ${item('/','Overview')}
@@ -791,6 +795,17 @@ function buildNav(){
     ${item('/entities','Record types',D.meta.objects)}
     ${item('/rules','Rules',fmt(RULES.total))}
     ${item('/questions','Open questions',fmt(QS.total))}
+    <h4>Evidence</h4>
+    ${out('research/screens.html','Screens')}
+    ${out('research/index.html','Research')}
+    ${out('research/tenants/bbw-vs-american-freight.html','Two tenants')}
+    <h4>Second brain</h4>
+    ${out('vault/graph.html','Graph')}
+    ${out('vault/index.html','Vault notes')}
+    <h4>Reference</h4>
+    ${out('research/data-model/api/index.html','REST API')}
+    ${out('research/COVERAGE.html','Coverage')}
+    ${out('index.html','Back to site')}
     ${item('/notes','Notes')}
     <h4>Modules</h4>
     ${D.modules.filter(m=>m.scope).map(m=>`<a class="sm ${h==='/m/'+m.id?'on':''}" href="#/m/${encodeURIComponent(m.id)}">${esc(m.title)}<i>${m.oc}</i></a>`).join('')}

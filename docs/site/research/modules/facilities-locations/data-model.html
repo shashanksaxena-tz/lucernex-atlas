@@ -76,4 +76,28 @@ try{if(sessionStorage.getItem('lxg')==='1')
     Contract }o--|| Location : &quot;LocationID (optional, direct)&quot;
     Contract ||--o{ Space   : &quot;ContractID (optional)&quot;
     Contract ||--o{ Tenant  : &quot;ContractID (optional)&quot;
-    Parcel   }o--o| Contract : &quot;ContractID (optional)&quot;</code></pre><p>Confidence: <strong>Observed</strong> for every edge and its required/optional label (schema type + Data Fields <code>Required</code> column); the diagram&#x27;s <em>layout</em> (top-to-bottom containment reading) is <strong>Derived</strong> from required-vs-optional FK direction, not a separate observed fact.</p><h2 id="open-questions">Open questions</h2><ol><li>What actually populates <code>Prototype.LocationID</code>/<code>ComplexID</code>/<code>DemographicDMAID</code> if the admin Data Fields catalog never exposes them for placement? (§5)</li><li>Is <code>LinkLandPurchaseInspection.LandPurchaseSummaryID</code> truly untyped in the live schema, or is that a parsing artefact of the offline export? (§4)</li><li>Does <code>Complex</code> carry any tenant-scoping column at all, or is it genuinely one flat list shared across every Portfolio in the Firm? Nothing in this module&#x27;s field list answers it.</li></ol></main></body></html>
+    Parcel   }o--o| Contract : &quot;ContractID (optional)&quot;</code></pre><p>Confidence: <strong>Observed</strong> for every edge and its required/optional label (schema type + Data Fields <code>Required</code> column); the diagram&#x27;s <em>layout</em> (top-to-bottom containment reading) is <strong>Derived</strong> from required-vs-optional FK direction, not a separate observed fact.</p><h2 id="open-questions">Open questions</h2><ol><li>What actually populates <code>Prototype.LocationID</code>/<code>ComplexID</code>/<code>DemographicDMAID</code> if the admin Data Fields catalog never exposes them for placement? (§5)</li><li>Is <code>LinkLandPurchaseInspection.LandPurchaseSummaryID</code> truly untyped in the live schema, or is that a parsing artefact of the offline export? (§4)</li><li>Does <code>Complex</code> carry any tenant-scoping column at all, or is it genuinely one flat list shared across every Portfolio in the Firm? Nothing in this module&#x27;s field list answers it.</li></ol></main><div id="lxlb"><img id="lxlbi" alt=""><div id="lxlbc"></div>
+<button id="lxlbx" aria-label="Close">&times;</button>
+<button id="lxlbp" aria-label="Previous">&lsaquo;</button>
+<button id="lxlbn" aria-label="Next">&rsaquo;</button></div>
+<script>(function(){
+var lb=document.getElementById('lxlb'),im=document.getElementById('lxlbi'),
+cap=document.getElementById('lxlbc'),shots=[],cur=0;
+function collect(){shots=[].slice.call(document.querySelectorAll('main figure a, .shots a'));}
+function show(i){if(!shots.length)return;cur=(i+shots.length)%shots.length;
+ var a=shots[cur],img=a.querySelector('img');
+ im.src=a.getAttribute('href');
+ var f=a.parentElement.querySelector('figcaption');
+ cap.textContent=(f?f.textContent:(img?img.alt:''))+'   ('+(cur+1)+' / '+shots.length+')';
+ lb.classList.add('on');}
+function hide(){lb.classList.remove('on');im.src='';}
+document.addEventListener('click',function(e){
+ var a=e.target.closest('main figure a, .shots a');if(!a)return;
+ e.preventDefault();collect();show(shots.indexOf(a));});
+document.getElementById('lxlbx').onclick=hide;
+document.getElementById('lxlbp').onclick=function(e){e.stopPropagation();show(cur-1);};
+document.getElementById('lxlbn').onclick=function(e){e.stopPropagation();show(cur+1);};
+lb.addEventListener('click',function(e){if(e.target===lb)hide();});
+document.addEventListener('keydown',function(e){if(!lb.classList.contains('on'))return;
+ if(e.key==='Escape')hide();if(e.key==='ArrowRight')show(cur+1);if(e.key==='ArrowLeft')show(cur-1);});
+})();</script></body></html>

@@ -58,6 +58,126 @@ def page(title, body, depth=0, toc=None, sub=""):
 <p class="viewfor">{e(sitenav.purpose("vault"))}</p>{nav}{body}</main></body></html>"""))
 
 
+GRAPH_BODY = r"""
+<h1>Graph</h1>
+<p class="lead">Every note in the vault and every link between them. Drag to pan, scroll to zoom,
+drag a node to pull it. Click a node to open it; hover to isolate its neighbours. Colour is folder.</p>
+<div id="gwrap">
+  <div id="gbar">
+    <input id="gq" placeholder="Filter notes&hellip;" autocomplete="off">
+    <span id="gcount"></span>
+    <label><input type="checkbox" id="glab" checked> labels</label>
+    <button id="gfit">Fit</button>
+  </div>
+  <canvas id="gcv"></canvas>
+  <div id="gtip"></div>
+</div>
+<style>
+#gwrap{position:relative;border:1px solid var(--line,#e5e7eb);border-radius:12px;overflow:hidden;
+ background:#0f172a;margin:0 0 28px}
+#gcv{display:block;width:100%;height:660px;cursor:grab}
+#gcv.drag{cursor:grabbing}
+#gbar{position:absolute;top:12px;left:12px;right:12px;z-index:5;display:flex;gap:10px;
+ align-items:center;flex-wrap:wrap}
+#gbar input[type=text],#gq{padding:7px 11px;border-radius:7px;border:1px solid #334155;
+ background:rgba(15,23,42,.85);color:#e2e8f0;font-size:13px;width:210px}
+#gbar label,#gcount{color:#94a3b8;font-size:12px;font-family:'IBM Plex Mono',monospace}
+#gbar button{padding:7px 12px;border-radius:7px;border:1px solid #334155;background:rgba(15,23,42,.85);
+ color:#e2e8f0;font-size:12px;cursor:pointer}
+#gtip{position:absolute;pointer-events:none;display:none;background:#fff;color:#0f172a;
+ padding:7px 10px;border-radius:7px;font-size:12px;box-shadow:0 6px 20px rgba(0,0,0,.3);max-width:270px}
+</style>
+<script>
+(function(){
+const cv=document.getElementById('gcv'),ct=cv.getContext('2d'),tip=document.getElementById('gtip');
+let N=[],E=[],W=0,H=0,tx=0,ty=0,sc=1,hover=-1,drag=null,pan=null,q='',labels=true;
+const PAL=['#f97316','#38bdf8','#a78bfa','#34d399','#fbbf24','#f472b6','#60a5fa','#4ade80',
+           '#fb7185','#c084fc','#2dd4bf'];
+let groups=[];
+function resize(){const r=cv.getBoundingClientRect();W=cv.width=r.width*devicePixelRatio;
+ H=cv.height=r.height*devicePixelRatio;ct.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);draw();}
+fetch('graph.json').then(r=>r.json()).then(d=>{
+ N=d.nodes;E=d.edges;
+ groups=[...new Set(N.map(n=>n.g))].sort();
+ N.forEach(n=>{const gi=groups.indexOf(n.g);
+   n.c=PAL[gi%PAL.length];n.r=3.2+Math.min(10,Math.sqrt(n.d||0)*2.0);});
+ document.getElementById('gcount').textContent=N.length+' notes  ·  '+E.length+' links';
+ resize();fit();draw();
+});
+function step(){
+ const k=0.0009;
+ for(const n of N){n.vx-=n.x*k;n.vy-=n.y*k;}
+ for(let i=0;i<N.length;i++){const a=N[i];
+  for(let j=i+1;j<N.length;j++){const b=N[j];
+   let dx=b.x-a.x,dy=b.y-a.y,d2=dx*dx+dy*dy;if(d2>360000||d2===0)continue;
+   const f=2600/d2;const d=Math.sqrt(d2);dx/=d;dy/=d;
+   a.vx-=dx*f;a.vy-=dy*f;b.vx+=dx*f;b.vy+=dy*f;}}
+ for(const [i,j] of E){const a=N[i],b=N[j];
+  let dx=b.x-a.x,dy=b.y-a.y,d=Math.sqrt(dx*dx+dy*dy)||1;
+  const f=(d-105)*0.0042;dx/=d;dy/=d;
+  a.vx+=dx*f;a.vy+=dy*f;b.vx-=dx*f;b.vy-=dy*f;}
+ for(const n of N){if(n===drag)continue;n.x+=n.vx*=0.86;n.y+=n.vy*=0.86;}
+}
+function fit(){if(!N.length)return;
+ const xs=N.map(n=>n.x),ys=N.map(n=>n.y);
+ const x0=Math.min(...xs),x1=Math.max(...xs),y0=Math.min(...ys),y1=Math.max(...ys);
+ const r=cv.getBoundingClientRect();
+ sc=Math.min(r.width/(x1-x0+120),r.height/(y1-y0+120),2.2);
+ tx=r.width/2-(x0+x1)/2*sc;ty=r.height/2-(y0+y1)/2*sc;}
+function match(n){return !q||n.t.toLowerCase().includes(q)||n.id.toLowerCase().includes(q);}
+function draw(){
+ const r=cv.getBoundingClientRect();ct.clearRect(0,0,r.width,r.height);
+ ct.save();ct.translate(tx,ty);ct.scale(sc,sc);
+ const nb=new Set();
+ if(hover>=0){nb.add(hover);for(const [i,j] of E){if(i===hover)nb.add(j);if(j===hover)nb.add(i);}}
+ ct.lineWidth=0.7/sc;
+ for(const [i,j] of E){const a=N[i],b=N[j];
+  const on=hover<0?(match(a)&&match(b)):(nb.has(i)&&nb.has(j));
+  ct.strokeStyle=on?'rgba(148,163,184,.55)':'rgba(148,163,184,.09)';
+  ct.beginPath();ct.moveTo(a.x,a.y);ct.lineTo(b.x,b.y);ct.stroke();}
+ for(let i=0;i<N.length;i++){const n=N[i];
+  const on=hover<0?match(n):nb.has(i);
+  ct.globalAlpha=on?1:0.16;ct.fillStyle=n.c;
+  ct.beginPath();ct.arc(n.x,n.y,n.r,0,6.284);ct.fill();
+  const lab=labels&&on&&(i===hover||(hover>=0&&nb.has(i))||n.d>=30||sc>1.9);
+  if(lab){
+   ct.globalAlpha=on?0.95:0.2;ct.fillStyle='#e2e8f0';
+   ct.font=(10/sc<5?5:10/sc)+"px 'IBM Plex Sans',sans-serif";ct.textAlign='center';
+   ct.fillText(n.t,n.x,n.y-n.r-3);}}
+ ct.globalAlpha=1;ct.restore();}
+
+function at(ev){const r=cv.getBoundingClientRect();
+ const x=(ev.clientX-r.left-tx)/sc,y=(ev.clientY-r.top-ty)/sc;
+ let best=-1,bd=1e9;
+ for(let i=0;i<N.length;i++){const n=N[i];const d=(n.x-x)**2+(n.y-y)**2;
+  if(d<Math.max(90,(n.r+5)**2)&&d<bd){bd=d;best=i;}}
+ return {i:best,x,y};}
+cv.addEventListener('mousemove',ev=>{
+ if(pan){tx=pan.tx+ev.clientX-pan.x;ty=pan.ty+ev.clientY-pan.y;draw();return;}
+ if(drag){const p=at(ev);drag.x=p.x;drag.y=p.y;draw();return;}
+ const h=at(ev).i;if(h!==hover){hover=h;draw();}
+ if(h>=0){const n=N[h];tip.style.display='block';
+  tip.style.left=(ev.clientX-cv.getBoundingClientRect().left+14)+'px';
+  tip.style.top=(ev.clientY-cv.getBoundingClientRect().top+14)+'px';
+  tip.innerHTML='<b>'+n.t+'</b><br>'+n.g+' · '+n.d+' links';}
+ else tip.style.display='none';});
+cv.addEventListener('mousedown',ev=>{const p=at(ev);
+ if(p.i>=0){drag=N[p.i];}else{pan={x:ev.clientX,y:ev.clientY,tx:tx,ty:ty};cv.classList.add('drag');}});
+addEventListener('mouseup',()=>{drag=null;pan=null;cv.classList.remove('drag');});
+cv.addEventListener('click',ev=>{const p=at(ev);if(p.i>=0&&!pan)location.href=N[p.i].u;});
+cv.addEventListener('wheel',ev=>{ev.preventDefault();
+ const r=cv.getBoundingClientRect(),mx=ev.clientX-r.left,my=ev.clientY-r.top;
+ const f=ev.deltaY<0?1.12:0.893,ns=Math.max(0.15,Math.min(5,sc*f));
+ tx=mx-(mx-tx)*(ns/sc);ty=my-(my-ty)*(ns/sc);sc=ns;draw();},{passive:false});
+document.getElementById('gq').addEventListener('input',e=>{q=e.target.value.toLowerCase();draw();});
+document.getElementById('glab').addEventListener('change',e=>{labels=e.target.checked;draw();});
+document.getElementById('gfit').addEventListener('click',()=>{fit();draw();});
+addEventListener('resize',resize);
+})();
+</script>
+"""
+
+
 VCSS = sitenav.NAV_CSS + """
 .backlinks{margin:34px 0 0;padding:16px 18px;background:var(--card,#fff);
  border:1px solid var(--line,#e5e7eb);border-radius:10px}
@@ -221,6 +341,7 @@ def main():
         folders.setdefault(os.path.dirname(rel) or ".", []).append((rel, title, deg))
     total_links = sum(d for _, _, _, d in notes)
     b = ["<h1>Vault</h1>",
+         '<p><a class="btn" href="graph.html">Open the graph &rarr;</a></p>',
          "<p class='lead'>The same corpus as a <em>graph</em>: small notes, each about one thing, "
          "joined by links. Open <code>vault/</code> in Obsidian for the graph view, or read it "
          "here &mdash; these are the identical files.</p>",
@@ -242,6 +363,98 @@ def main():
             b.append(f'<a href="{rel[:-3]}.html">{e(title[:56])}<span>{deg}</span></a>')
         b.append("</div>")
     open(os.path.join(OUT, "index.html"), "w", encoding="utf-8").write(page("Vault", "".join(b)))
+
+    # ----- graph data + the force-directed view
+    nodes, idx = [], {}
+    for rel, title, fm, deg in notes:
+        idx[rel] = len(nodes)
+        nodes.append({"id": rel[:-3], "t": title[:52],
+                      "g": os.path.dirname(rel) or "root",
+                      "u": rel[:-3] + ".html"})
+    edges = []
+    for src, outs in links.items():
+        if src not in idx:
+            continue
+        for t in outs:
+            hit = INDEX.get(t.lower()) or INDEX.get(slug(t))
+            if hit and hit in idx and hit != src:
+                edges.append([idx[src], idx[hit]])
+    seen_e, uniq = set(), []
+    for a, bb in edges:
+        k = (min(a, bb), max(a, bb))
+        if k not in seen_e:
+            seen_e.add(k)
+            uniq.append([a, bb])
+    for n in nodes:
+        n["d"] = 0
+    for a, bb in uniq:
+        nodes[a]["d"] += 1
+        nodes[bb]["d"] += 1
+
+    # Lay the graph out HERE, not in the browser. A live simulation over 422
+    # nodes was unstable — it collapsed into a band and the result depended on
+    # how long the tab had been open. Deterministic coordinates with proper
+    # cooling give the same picture every time and load instantly; the browser
+    # is left to pan, zoom and drag.
+    import math
+    import random
+    rnd = random.Random(7)
+    gs = sorted({n["g"] for n in nodes})
+    # seed each folder in its own sector so clusters start apart
+    for n in nodes:
+        gi = gs.index(n["g"])
+        a = (gi / max(len(gs), 1)) * math.tau + rnd.uniform(-0.28, 0.28)
+        r = 300 + rnd.uniform(0, 230)
+        n["x"], n["y"] = math.cos(a) * r, math.sin(a) * r
+
+    adj = [[] for _ in nodes]
+    for a, bb in uniq:
+        adj[a].append(bb)
+        adj[bb].append(a)
+
+    AREA = 1500.0
+    k = AREA / math.sqrt(max(len(nodes), 1))          # ideal separation
+    temp = AREA / 6.0
+    for it in range(320):
+        dx = [0.0] * len(nodes)
+        dy = [0.0] * len(nodes)
+        for i in range(len(nodes)):
+            xi, yi = nodes[i]["x"], nodes[i]["y"]
+            for j in range(i + 1, len(nodes)):
+                ex, ey = xi - nodes[j]["x"], yi - nodes[j]["y"]
+                d2 = ex * ex + ey * ey
+                if d2 < 1e-6:
+                    ex, ey, d2 = rnd.uniform(-1, 1), rnd.uniform(-1, 1), 1.0
+                if d2 > 9e6:
+                    continue
+                d = math.sqrt(d2)
+                f = (k * k) / d
+                dx[i] += ex / d * f; dy[i] += ey / d * f
+                dx[j] -= ex / d * f; dy[j] -= ey / d * f
+        for a, bb in uniq:
+            ex = nodes[a]["x"] - nodes[bb]["x"]
+            ey = nodes[a]["y"] - nodes[bb]["y"]
+            d = math.hypot(ex, ey) or 0.01
+            f = (d * d) / k
+            dx[a] -= ex / d * f; dy[a] -= ey / d * f
+            dx[bb] += ex / d * f; dy[bb] += ey / d * f
+        for i, n in enumerate(nodes):
+            d = math.hypot(dx[i], dy[i]) or 1.0
+            n["x"] += dx[i] / d * min(d, temp)
+            n["y"] += dy[i] / d * min(d, temp)
+            n["x"] -= n["x"] * 0.0016          # gentle centring
+            n["y"] -= n["y"] * 0.0016
+        temp *= 0.975
+    for n in nodes:
+        n["x"] = round(n["x"], 1)
+        n["y"] = round(n["y"], 1)
+
+    import json as _json
+    open(os.path.join(OUT, "graph.json"), "w", encoding="utf-8").write(
+        _json.dumps({"nodes": nodes, "edges": uniq}, separators=(",", ":")))
+    open(os.path.join(OUT, "graph.html"), "w", encoding="utf-8").write(
+        page("Graph", GRAPH_BODY, 0, None, " &rsaquo; Graph"))
+    print(f"graph: {len(nodes)} nodes, {len(uniq)} edges")
 
     # backlink blocks appended to each page
     for rel, title, fm, deg in notes:

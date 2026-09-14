@@ -240,10 +240,49 @@ def page(title, body, toc=None, sub="", depth=0, view="research"):
 {sitenav.nav_html(up + "../", view)}</header>
 <main><p class="crumb"><a href="{up}../index.html">Atlas</a> &rsaquo;
 <a href="{up}index.html">Research</a>{sub}</p>
-<p class="viewfor">{e(sitenav.purpose(view))}</p>{nav}{body}</main></body></html>"""))
+<p class="viewfor">{e(sitenav.purpose(view))}</p>{nav}{body}</main>"""+LIGHTBOX+"""</body></html>"""))
 
 
-CSS = sitenav.NAV_CSS + """
+LIGHTBOX = """<div id="lxlb"><img id="lxlbi" alt=""><div id="lxlbc"></div>
+<button id="lxlbx" aria-label="Close">&times;</button>
+<button id="lxlbp" aria-label="Previous">&lsaquo;</button>
+<button id="lxlbn" aria-label="Next">&rsaquo;</button></div>
+<script>(function(){
+var lb=document.getElementById('lxlb'),im=document.getElementById('lxlbi'),
+cap=document.getElementById('lxlbc'),shots=[],cur=0;
+function collect(){shots=[].slice.call(document.querySelectorAll('main figure a, .shots a'));}
+function show(i){if(!shots.length)return;cur=(i+shots.length)%shots.length;
+ var a=shots[cur],img=a.querySelector('img');
+ im.src=a.getAttribute('href');
+ var f=a.parentElement.querySelector('figcaption');
+ cap.textContent=(f?f.textContent:(img?img.alt:''))+'   ('+(cur+1)+' / '+shots.length+')';
+ lb.classList.add('on');}
+function hide(){lb.classList.remove('on');im.src='';}
+document.addEventListener('click',function(e){
+ var a=e.target.closest('main figure a, .shots a');if(!a)return;
+ e.preventDefault();collect();show(shots.indexOf(a));});
+document.getElementById('lxlbx').onclick=hide;
+document.getElementById('lxlbp').onclick=function(e){e.stopPropagation();show(cur-1);};
+document.getElementById('lxlbn').onclick=function(e){e.stopPropagation();show(cur+1);};
+lb.addEventListener('click',function(e){if(e.target===lb)hide();});
+document.addEventListener('keydown',function(e){if(!lb.classList.contains('on'))return;
+ if(e.key==='Escape')hide();if(e.key==='ArrowRight')show(cur+1);if(e.key==='ArrowLeft')show(cur-1);});
+})();</script>"""
+
+LBCSS = """
+#lxlb{position:fixed;inset:0;z-index:9998;background:rgba(8,12,22,.94);display:none;
+ align-items:center;justify-content:center;flex-direction:column;padding:40px}
+#lxlb.on{display:flex}
+#lxlb img{max-width:94vw;max-height:82vh;border-radius:8px;box-shadow:0 24px 70px rgba(0,0,0,.6)}
+#lxlbc{color:#cbd5e1;font-size:13px;margin-top:14px;max-width:780px;text-align:center;line-height:1.55}
+#lxlb button{position:absolute;background:rgba(255,255,255,.08);color:#fff;border:0;
+ width:46px;height:46px;border-radius:50%;font-size:26px;cursor:pointer;line-height:1}
+#lxlb button:hover{background:rgba(255,255,255,.18)}
+#lxlbx{top:22px;right:26px}#lxlbp{left:22px;top:50%}#lxlbn{right:22px;top:50%}
+main figure a,.shots a{cursor:zoom-in}
+"""
+
+CSS = sitenav.NAV_CSS + LBCSS + """
 .toc{display:block;margin:0 0 28px;padding:16px 18px;background:var(--card,#fff);
  border:1px solid var(--line,#e5e7eb);border-radius:10px}
 .toc b{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.08em;
