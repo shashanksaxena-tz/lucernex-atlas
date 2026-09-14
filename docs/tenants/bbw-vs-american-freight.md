@@ -1375,11 +1375,26 @@ column (606 of 7,358). Joined against the Manage Data Fields catalogue on `(obje
 **5,768 joined · 5,725 agree (99.3%) · 43 disagree — every one catalogue-Yes / inventory-No, and
 34 of them `ContractID` plus 8 `ProjectEntityID`.**
 
-Three sources, three slightly different totals (603 · 637 · 606), and **the same structural
-signature every time: the disagreements are owner foreign keys.** That is the finding — a parent
-link the application demands and the database permits to be null. The exact count varies with the
-source because each inventory covers a slightly different population; the pattern does not vary at
-all, which is what makes it trustworthy.
+Three sources, three different totals (603 · 637 · 606), and **the same structural signature every
+time: the disagreements are owner foreign keys.** That is the finding — a parent link the application
+demands and the database permits to be null.
+
+> **Never compare the totals to each other.** They are not three measurements of one quantity;
+> each capture covers a different population (7,358 · 6,136 · ~6,487 rows, only **5,768** common to
+> any pair tested). A count from one says nothing about a count from another, and treating
+> "606 corroborates 603" as agreement is a mistake — **it originated in a brief written by this
+> document and was propagated twice before anyone recomputed it.** Only the *jointly observable*
+> rows can agree or disagree about anything. What corroborates is the **pattern**, not the number.
+
+**What a wrong denominator produces, precisely.** Comparing the two required *sets* rather than the
+shared rows gave **213** disagreements. That decomposes as **43 real + 170 non-overlap** — 79 fields
+absent from the inventory and 91 absent from the catalogue, none of which disagree about anything
+because only one capture has ever seen them. **Absence is not denial.**
+
+**One three-way disagreement, recorded and unresolved.** `ProjectEntity.CreatedByID` and
+`ModifiedByID`: the inventory and the catalogue agree, and the `ShowObjectDetails` schema sweep
+differs. These are the 2 reverse cases in §3's 42-plus-2 split. Below the granularity of the
+per-entity notes and left open rather than reconciled.
 
 §3's note stands: the first two are **not** one flag twice. 42 catalog-Yes/schema-No cases are all
 owner foreign keys, 2 reverse cases are audit columns, so neither is a subset. A rebuild needs both —
