@@ -6,7 +6,7 @@ evidence: Observed
 
 `/en/admin/ComplexEdit.jsp`
 
-![The complex or campus record — structurally the odd one out in this hierarchy.](../../docs/assets/screenshots/bbw-admin/42-manage-complex-center-details.jpg)
+![The complex or campus record — structurally the odd one out in this hierarchy.](../assets/screenshots/bbw-admin/42-manage-complex-center-details.jpg)
 `docs/assets/screenshots/bbw-admin/42-manage-complex-center-details.jpg` · `af-admin/46-manage-complex-center-details.jpg`
 
 [[Complex]] sits **above** [[Facility]] and is structurally unlike everything around it: **no parent,

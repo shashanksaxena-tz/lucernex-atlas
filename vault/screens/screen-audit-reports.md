@@ -6,7 +6,7 @@ evidence: Observed
 
 `/en/reports/AuditReport.jsp`
 
-![Row-and-field-level audit with Old Value and New Value columns.](../../docs/assets/screenshots/bbw-admin/47-audit-reports.jpg)
+![Row-and-field-level audit with Old Value and New Value columns.](../assets/screenshots/bbw-admin/47-audit-reports.jpg)
 `docs/assets/screenshots/bbw-admin/47-audit-reports.jpg` · `af-admin/53-audit-reports.jpg`
 
 The surface over `AuditMaster` / `AuditTable` / `AuditColumn` — **synchronous, in-transaction,

@@ -9,7 +9,7 @@ evidence: Observed
 > **[[caveat-one-equipment-contract]]** — BBW holds exactly one equipment contract. This shows one
 > record's population, not the module's range.
 
-![The one equipment contract in the tenant. Contract Status reads "Active", and — the point of this capture — neither it nor Location is marked required.](../../docs/assets/screenshots/bbw-enduser/eq-01-details-summary.jpg)
+![The one equipment contract in the tenant. Contract Status reads "Active", and — the point of this capture — neither it nor Location is marked required.](../assets/screenshots/bbw-enduser/eq-01-details-summary.jpg)
 `docs/assets/screenshots/bbw-enduser/eq-01-details-summary.jpg`
 
 `ASG Equipment Contract`, lxID 507018, `Contract ID ASG1234`, commence `01/09/2026`, expire

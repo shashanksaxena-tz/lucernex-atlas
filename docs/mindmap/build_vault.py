@@ -299,6 +299,13 @@ def main():
                     return f"]({to_site}research/{target[:-3]}.html)"
                 return f"]({to_docs}{target})"
 
+            # vault/assets is a symlink to docs/assets so that pointing
+            # Obsidian at vault/ resolves images — a path escaping the vault
+            # root does not render there. On the site the real location is the
+            # docs root, which is (depth + 2) levels out.
+            body_md = re.sub(r"\]\(((?:\.\./)*)assets/([^)]+?)\)",
+                             lambda m: f"]({to_docs}assets/{m.group(2)})", body_md)
+
             # Any number of leading ../ then docs/… — the prefix is discarded.
             body_md = re.sub(r"\]\(((?:\.\./)*)docs/([^)]+?)\)", _docs_link, body_md)
 

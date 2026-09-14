@@ -6,7 +6,7 @@ evidence: Observed
 
 `/en/admin/MessengerExportData.jsp`
 
-![The clone checkbox, and its warning text. This is the publish-and-fork model, named by the product itself.](../../docs/assets/screenshots/bbw-admin/14-export-configuration.jpg)
+![The clone checkbox, and its warning text. This is the publish-and-fork model, named by the product itself.](../assets/screenshots/bbw-admin/14-export-configuration.jpg)
 `docs/assets/screenshots/bbw-admin/14-export-configuration.jpg` · `af-admin/15-export-configuration.jpg`
 
 **Not a data export — a *configuration* export**, tabbed by exactly the sub-systems the layout

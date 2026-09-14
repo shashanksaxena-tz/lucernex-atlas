@@ -6,7 +6,7 @@ evidence: Observed
 
 `/en/admin/EmployerEdit.jsp`
 
-![The company record — and the one table behind landlord, tenant and vendor alike.](../../docs/assets/screenshots/bbw-admin/35-manage-employers.jpg)
+![The company record — and the one table behind landlord, tenant and vendor alike.](../assets/screenshots/bbw-admin/35-manage-employers.jpg)
 `docs/assets/screenshots/bbw-admin/35-manage-employers.jpg` · `af-admin/36-manage-employers.jpg`
 
 **There is no `Vendor`, `Landlord` or `Tenant` object anywhere in the 223-object schema.** All three

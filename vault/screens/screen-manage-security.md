@@ -6,7 +6,7 @@ evidence: Observed
 
 `/en/admin/SecurityPageAccess.jsp?UserClass={id}`
 
-![The Page Access matrix. Careful: it loads on "Default Security", a class that denies almost everything — reading the blank matrix as "unselected" is a trap.](../../docs/assets/screenshots/bbw-admin/38-manage-security.jpg)
+![The Page Access matrix. Careful: it loads on "Default Security", a class that denies almost everything — reading the blank matrix as "unselected" is a trap.](../assets/screenshots/bbw-admin/38-manage-security.jpg)
 `docs/assets/screenshots/bbw-admin/38-manage-security.jpg` · `af-admin/39-manage-security.jpg`
 
 Four tabs, four securable kinds — Page Access, **Actions (70 verbs)**, **Field Security (6,553

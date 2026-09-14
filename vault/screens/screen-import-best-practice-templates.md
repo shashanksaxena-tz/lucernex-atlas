@@ -6,7 +6,7 @@ evidence: Observed
 
 `/en/admin/BestPracticeTemplates.jsp`
 
-![Seven versioned packages, with Version, Min Version and Released columns. This is the only tier of configuration publishing in the entire product that is versioned.](../../docs/assets/screenshots/bbw-admin/13-import-best-practice-templates.jpg)
+![Seven versioned packages, with Version, Min Version and Released columns. This is the only tier of configuration publishing in the entire product that is versioned.](../assets/screenshots/bbw-admin/13-import-best-practice-templates.jpg)
 `docs/assets/screenshots/bbw-admin/13-import-best-practice-templates.jpg` · `af-admin/14-import-best-practice-templates.jpg`
 
 **Accruent's own publish channel into a tenant.** Seven configuration packages — layouts, forms and

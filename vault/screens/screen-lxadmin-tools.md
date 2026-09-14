@@ -6,7 +6,7 @@ evidence: Observed
 
 `/en/admin/lxadmin/*`
 
-![Modify Straight Line Status — a vendor tool that reaches directly into the accounting engine's state.](../../docs/assets/screenshots/bbw-admin/50-modify-straight-line-status.jpg)
+![Modify Straight Line Status — a vendor tool that reaches directly into the accounting engine's state.](../assets/screenshots/bbw-admin/50-modify-straight-line-status.jpg)
 `docs/assets/screenshots/bbw-admin/50-modify-straight-line-status.jpg` · `af-admin/57-modify-straight-line-status.jpg`
 
 Four tools under `/lxadmin/`, available to the vendor rather than the tenant:
@@ -25,7 +25,7 @@ un-approved"* ([[rule-ACC-R-050]]) — and here is a vendor tool for modifying e
 So the real rule is *"irreversible to the tenant, reversible by the vendor"*, which is a different
 statement and a better one to design from.
 
-![Data Conversion Cleaner.](../../docs/assets/screenshots/bbw-admin/51-data-conversion-cleaner.jpg)
+![Data Conversion Cleaner.](../assets/screenshots/bbw-admin/51-data-conversion-cleaner.jpg)
 `docs/assets/screenshots/bbw-admin/51-data-conversion-cleaner.jpg`
 
 See [[module-accounting]] · [[feature-administration]]

@@ -6,7 +6,7 @@ evidence: Observed
 
 `/en/admin/ManageHolidayCalendar.jsp`
 
-![Empty — and its own help text is the correction: holiday days determine task completion dates.](../../docs/assets/screenshots/bbw-admin/32-manage-holiday-calendar.jpg)
+![Empty — and its own help text is the correction: holiday days determine task completion dates.](../assets/screenshots/bbw-admin/32-manage-holiday-calendar.jpg)
 `docs/assets/screenshots/bbw-admin/32-manage-holiday-calendar.jpg` · `af-admin/33-manage-holiday-calendar.jpg`
 
 **Zero rows** — and **corrected**: this feeds **project scheduling, not accounting**. The screen's own

@@ -6,7 +6,7 @@ evidence: Observed
 
 `/en/pagebuilder/SummaryEntityPageLayoutEdit.jsp?mode={SEP|SUB|LIST}`
 
-![The layout registry. One record type, three modes, one shared builder — and the two modes missing from this dropdown are where the conditional rules turned out to live.](../../docs/assets/screenshots/bbw-admin/09-manage-page-layouts.jpg)
+![The layout registry. One record type, three modes, one shared builder — and the two modes missing from this dropdown are where the conditional rules turned out to live.](../assets/screenshots/bbw-admin/09-manage-page-layouts.jpg)
 `docs/assets/screenshots/bbw-admin/09-manage-page-layouts.jpg` · `af-admin/10-manage-page-layouts.jpg`
 
 A five-way system on one [[PageLayout]] record type, edited through one shared builder
@@ -27,7 +27,7 @@ Four things this screen settles:
 - Edit Layout and List Layout keep **independent** [[conditional-field]] configuration on the same
   record ([[rule-LAY-R-120]]).
 
-![The Add Item modal — where a placement is created, and where the "(Run Report Action)" kind shows up.](../../docs/assets/screenshots/page-layouts/page-layouts-add-item-modal.png)
+![The Add Item modal — where a placement is created, and where the "(Run Report Action)" kind shows up.](../assets/screenshots/page-layouts/page-layouts-add-item-modal.png)
 `docs/assets/screenshots/page-layouts/page-layouts-add-item-modal.png`
 
 See [[feature-page-layouts]] · [[layout-modes]] · [[screen-layout-changes]]

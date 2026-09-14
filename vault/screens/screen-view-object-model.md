@@ -6,7 +6,7 @@ evidence: Observed
 
 `/en/admin/ShowObjectDetails.jsp`
 
-![The `sqlTableID` picker — 227 tables, against a 223-object census. And 25 of the 227 are refused when you select them.](../../docs/assets/screenshots/bbw-admin/45-view-object-model.jpg)
+![The `sqlTableID` picker — 227 tables, against a 223-object census. And 25 of the 227 are refused when you select them.](../assets/screenshots/bbw-admin/45-view-object-model.jpg)
 `docs/assets/screenshots/bbw-admin/45-view-object-model.jpg` · `af-admin/51-view-object-model.jpg`
 
 **The schema viewer, and the source of the 227-table count** that the 223-object census is measured

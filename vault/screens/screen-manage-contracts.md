@@ -6,7 +6,7 @@ evidence: Observed
 
 `/en/admin/ContractEdit.jsp`
 
-![The administrative contract list, distinct from the end-user Contract root.](../../docs/assets/screenshots/bbw-admin/40-manage-contracts.jpg)
+![The administrative contract list, distinct from the end-user Contract root.](../assets/screenshots/bbw-admin/40-manage-contracts.jpg)
 `docs/assets/screenshots/bbw-admin/40-manage-contracts.jpg` · `af-admin/44-manage-contracts.jpg`
 
 One of the eight **master data** admin tools. Administrative maintenance of [[Contract]] records,

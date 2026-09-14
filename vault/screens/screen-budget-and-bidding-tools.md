@@ -6,7 +6,7 @@ evidence: Observed
 
 `/en/budget/* · /en/admin/BidPackageTemplate.jsp`
 
-![Budget templates — one of six tools in an area ruled out of scope by decision.](../../docs/assets/screenshots/bbw-admin/19-manage-budget-templates.jpg)
+![Budget templates — one of six tools in an area ruled out of scope by decision.](../assets/screenshots/bbw-admin/19-manage-budget-templates.jpg)
 `docs/assets/screenshots/bbw-admin/19-manage-budget-templates.jpg`
 
 **Out of scope by decision (2026-09-10).** Six admin tools, and **27 objects** retained in the census

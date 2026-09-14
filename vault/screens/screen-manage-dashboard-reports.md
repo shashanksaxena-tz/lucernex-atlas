@@ -6,7 +6,7 @@ evidence: Observed
 
 `/en/reports/ManageDashboardModules.jsp`
 
-![Dashboard tile administration.](../../docs/assets/screenshots/bbw-admin/11-manage-dashboard-reports.jpg)
+![Dashboard tile administration.](../assets/screenshots/bbw-admin/11-manage-dashboard-reports.jpg)
 `docs/assets/screenshots/bbw-admin/11-manage-dashboard-reports.jpg` · `af-admin/12-manage-dashboard-reports.jpg`
 
 Dashboard tiles are [[PageLayout]] rows like everything else ([[rule-LAY-R-101]]).

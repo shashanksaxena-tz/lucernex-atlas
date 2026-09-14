@@ -6,7 +6,7 @@ evidence: Observed
 
 `/en/admin/ManageFiscalPeriod.jsp`
 
-![Nine defined years, 2022–2030, twelve monthly periods each. The capability on offer is much larger than what is configured — and note the dates render DD/MM/YYYY on a US tenant.](../../docs/assets/screenshots/bbw-admin/31-manage-fiscal-calendar.jpg)
+![Nine defined years, 2022–2030, twelve monthly periods each. The capability on offer is much larger than what is configured — and note the dates render DD/MM/YYYY on a US tenant.](../assets/screenshots/bbw-admin/31-manage-fiscal-calendar.jpg)
 `docs/assets/screenshots/bbw-admin/31-manage-fiscal-calendar.jpg` · `af-admin/32-manage-fiscal-calendar.jpg`
 
 **[[fiscal-period|A fiscal period is not a calendar month]].** The screen supports **4-4-5 quarters**

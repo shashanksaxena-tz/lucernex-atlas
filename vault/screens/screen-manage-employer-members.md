@@ -6,7 +6,7 @@ evidence: Observed
 
 `/en/admin/ManageEmployerMembers.jsp`
 
-![People belonging to an employer.](../../docs/assets/screenshots/bbw-admin/34-manage-employer-members.jpg)
+![People belonging to an employer.](../assets/screenshots/bbw-admin/34-manage-employer-members.jpg)
 `docs/assets/screenshots/bbw-admin/34-manage-employer-members.jpg` · `af-admin/35-manage-employer-members.jpg`
 
 The join between [[Employer]] and the [[Person]] identity aggregate.

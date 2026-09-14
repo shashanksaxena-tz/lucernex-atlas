@@ -16,26 +16,22 @@ Start at **[[00-start-here]]**.
 
 ## Opening it in Obsidian
 
-**Recommended: open the repository root as the vault.**
+**Point Obsidian at this `vault/` folder.** *Open folder as vault* → select `vault/`. That is it.
+
+Images work because `vault/assets` is a **symlink** to `../docs/assets`, so the screenshots live
+inside the vault as far as Obsidian is concerned. Obsidian will not resolve a path that escapes the
+vault root, which is why note links read `../assets/screenshots/…` and never `../../docs/…`.
+
+If you clone this repository on a system that does not preserve symlinks, or with a Git client that
+writes them as plain text files, the images will not appear. Restore it with:
 
 ```
-Obsidian → Open folder as vault → …/Lx
+ln -sfn ../docs/assets vault/assets
 ```
 
-Everything then resolves: the `[[wikilinks]]` between notes, the embedded screenshots (which live
-under `docs/assets/screenshots/` and are referenced with relative paths), and the outbound links
-from vault notes into the `docs/` corpus. The graph view will also show the `docs/` files, which is
-usually what you want — the vault is the map and `docs/` is the territory. Use Obsidian's
-**Graph view → Filters** with the query `path:vault` to see the vault's own graph alone.
-
-**Alternative: open `vault/` itself.** The note-to-note graph works exactly the same. Embedded
-screenshots will not render, because the image files live outside that folder. They are deliberately
-not copied in: the screenshot sets are periodically re-captured and renumbered, and a duplicated copy
-would silently rot. Every embed is followed by the canonical path in `code` formatting, which is the
-citation that cannot break.
-
-There is no `.obsidian/` directory here on purpose — adding one would hard-code a choice between the
-two modes above.
+You may instead open the **repository root** as the vault, which also works and additionally puts
+`docs/` in the graph. It is noisier — every reference document becomes a node — so prefer `vault/`
+unless you specifically want that.
 
 ## How the graph is organised
 

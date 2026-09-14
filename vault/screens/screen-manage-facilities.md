@@ -6,7 +6,7 @@ evidence: Observed
 
 `/en/admin/FacilityEditForm.jsp`
 
-![Administrative maintenance of Facility records.](../../docs/assets/screenshots/bbw-admin/39-manage-facilities.jpg)
+![Administrative maintenance of Facility records.](../assets/screenshots/bbw-admin/39-manage-facilities.jpg)
 `docs/assets/screenshots/bbw-admin/39-manage-facilities.jpg` · `af-admin/43-manage-facilities.jpg`
 
 **2,062 facilities** at [[tenant-bbw|BBW]].

@@ -6,7 +6,7 @@ evidence: Observed
 
 `/en/reports/EMailLogs.jsp`
 
-![Outbound and inbound mail records.](../../docs/assets/screenshots/bbw-admin/48-email-log.jpg)
+![Outbound and inbound mail records.](../assets/screenshots/bbw-admin/48-email-log.jpg)
 `docs/assets/screenshots/bbw-admin/48-email-log.jpg` · `af-admin/54-email-log.jpg`
 
 Behind it sits an **asymmetry** ([[rule-DOC-R-011]]): received-email attachments are **promoted into

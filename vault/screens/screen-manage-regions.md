@@ -6,7 +6,7 @@ evidence: Observed
 
 `/en/admin/OrgChartEdit.jsp`
 
-![The region hierarchy and reporting org chart.](../../docs/assets/screenshots/bbw-admin/30-manage-regions-org-chart.jpg)
+![The region hierarchy and reporting org chart.](../assets/screenshots/bbw-admin/30-manage-regions-org-chart.jpg)
 `docs/assets/screenshots/bbw-admin/30-manage-regions-org-chart.jpg` · `af-admin/31-manage-regions-org-chart.jpg`
 
 **This screen is the proof that [[Region]] is an export gap rather than a one-field table.** The

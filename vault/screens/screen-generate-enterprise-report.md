@@ -6,7 +6,7 @@ evidence: Observed
 
 `/en/admin/GenBaseReport.jsp`
 
-![Enterprise report file generation.](../../docs/assets/screenshots/bbw-admin/53-generate-enterprise-report-file.jpg)
+![Enterprise report file generation.](../assets/screenshots/bbw-admin/53-generate-enterprise-report-file.jpg)
 `docs/assets/screenshots/bbw-admin/53-generate-enterprise-report-file.jpg` · `af-admin/62-generate-enterprise-report-file.jpg`
 
 One of the few bulk-out paths in a product with

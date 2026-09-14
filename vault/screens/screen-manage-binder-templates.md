@@ -6,7 +6,7 @@ evidence: Observed
 
 `/en/CommitteeDocuments/BinderTemplateEdit.jsp`
 
-![Binder templates. The route is the interesting part: CommitteeDocuments.](../../docs/assets/screenshots/bbw-admin/04-manage-binder-templates.jpg)
+![Binder templates. The route is the interesting part: CommitteeDocuments.](../assets/screenshots/bbw-admin/04-manage-binder-templates.jpg)
 `docs/assets/screenshots/bbw-admin/04-manage-binder-templates.jpg` · `af-admin/05-manage-binder-templates.jpg`
 
 **`Binders` is a universally visible tab on every [[ProjectEntity]] root — and no object anywhere in

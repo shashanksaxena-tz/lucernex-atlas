@@ -6,7 +6,7 @@ evidence: Observed
 
 `/en/admin/ManageCPIData.jsp`
 
-![3,683 rows of one index series, ending in 2019. Notice the Published Date column: every row reads 12/06/2019.](../../docs/assets/screenshots/bbw-admin/26-manage-cpi-data.jpg)
+![3,683 rows of one index series, ending in 2019. Notice the Published Date column: every row reads 12/06/2019.](../assets/screenshots/bbw-admin/26-manage-cpi-data.jpg)
 `docs/assets/screenshots/bbw-admin/26-manage-cpi-data.jpg` · `af-admin/27-manage-cpi-data.jpg`
 
 **The only populated reference-data table of the five.** One index, `BLS_CWUR0000SA0`, years **1932 to

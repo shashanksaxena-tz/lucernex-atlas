@@ -6,7 +6,7 @@ evidence: Observed
 
 `/en/admin/ManageDiscountRates.jsp`
 
-![Empty. "No rows to display." Both tenants run ASC 842, IFRS 16 and straight-line against this.](../../docs/assets/screenshots/bbw-admin/25-manage-discount-rates.jpg)
+![Empty. "No rows to display." Both tenants run ASC 842, IFRS 16 and straight-line against this.](../assets/screenshots/bbw-admin/25-manage-discount-rates.jpg)
 `docs/assets/screenshots/bbw-admin/25-manage-discount-rates.jpg` · `af-admin/26-manage-discount-rates.jpg`
 
 **[[finding-discount-rate-table-empty]]** — the most consequential blocker in this corpus for the

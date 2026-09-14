@@ -6,7 +6,7 @@ evidence: Observed
 
 `/en/admin/ManageTopMenu.jsp`
 
-![Fourteen menu structures and 892 nodes — against the four or five roots a user actually meets.](../../docs/assets/screenshots/bbw-admin/16-manage-top-menu.jpg)
+![Fourteen menu structures and 892 nodes — against the four or five roots a user actually meets.](../assets/screenshots/bbw-admin/16-manage-top-menu.jpg)
 `docs/assets/screenshots/bbw-admin/16-manage-top-menu.jpg` · `af-admin/17-manage-top-menu.jpg`
 
 **The screen that reconciles 892 nodes against a 109-node [[navigation-tree]].** Fourteen structures

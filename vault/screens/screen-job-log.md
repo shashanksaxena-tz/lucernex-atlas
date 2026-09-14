@@ -6,7 +6,7 @@ evidence: Observed
 
 `/en/admin/JobLogEdit.jsp`
 
-![818 entries — the first evidence anywhere in this corpus of the product actually running. The hourly rows are an external system posting transaction data.](../../docs/assets/screenshots/bbw-admin/15-job-log.jpg)
+![818 entries — the first evidence anywhere in this corpus of the product actually running. The hourly rows are an external system posting transaction data.](../assets/screenshots/bbw-admin/15-job-log.jpg)
 `docs/assets/screenshots/bbw-admin/15-job-log.jpg` · `af-admin/16-job-log.jpg`
 
 **818 entries at [[tenant-bbw|BBW]].** Job types `Generate Payments`, `Data Import`,

@@ -6,10 +6,10 @@ evidence: Observed
 
 `/en/pagebuilder/ConditionFilterEx.jsp?fieldKey={key}&pageLayoutID={id}&ajax=true`
 
-![The rule editor, rendered inside its host page. "Show / Show and Require / Hide this field when all / any of these rules match."](../../docs/assets/screenshots/conditional-fields/conditional-filter-editor-contract-header.jpg)
+![The rule editor, rendered inside its host page. "Show / Show and Require / Hide this field when all / any of these rules match."](../assets/screenshots/conditional-fields/conditional-filter-editor-contract-header.jpg)
 `docs/assets/screenshots/conditional-fields/conditional-filter-editor-contract-header.jpg`
 
-![The same editor opened standalone, without its host page. It does not work — and diagnosing why produced the method that unblocked three other editors.](../../docs/assets/screenshots/conditional-fields/conditional-filter-standalone-no-host.jpg)
+![The same editor opened standalone, without its host page. It does not work — and diagnosing why produced the method that unblocked three other editors.](../assets/screenshots/conditional-fields/conditional-filter-standalone-no-host.jpg)
 `docs/assets/screenshots/conditional-fields/conditional-filter-standalone-no-host.jpg`
 
 The UI over [[conditional-field]]. A **flat rule engine**: one action (`show` / `showAndRequire` /

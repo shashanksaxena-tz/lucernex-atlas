@@ -6,7 +6,7 @@ evidence: Observed
 
 `PLForm.jsp?menuPLID=43785`
 
-![The generated schedule, rendered as a list. Note it is a list and "Capital Lease Test" is a detail form — the ASC 840 test is one row per contract, the ASC 842 test produces many.](../../docs/assets/screenshots/end-user/asc842-rent-schedule.jpg)
+![The generated schedule, rendered as a list. Note it is a list and "Capital Lease Test" is a detail form — the ASC 840 test is one row per contract, the ASC 842 test produces many.](../assets/screenshots/end-user/asc842-rent-schedule.jpg)
 `docs/assets/screenshots/end-user/asc842-rent-schedule.jpg`
 
 Served by `PLForm.jsp` — one of the two files that

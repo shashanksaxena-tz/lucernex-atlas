@@ -6,7 +6,7 @@ evidence: Observed
 
 `/en/admin/LocationEdit.jsp`
 
-![Administrative maintenance of Location records — the site, not the building.](../../docs/assets/screenshots/bbw-admin/41-manage-locations.jpg)
+![Administrative maintenance of Location records — the site, not the building.](../assets/screenshots/bbw-admin/41-manage-locations.jpg)
 `docs/assets/screenshots/bbw-admin/41-manage-locations.jpg` · `af-admin/45-manage-locations.jpg`
 
 **2,141 locations** at [[tenant-bbw|BBW]].

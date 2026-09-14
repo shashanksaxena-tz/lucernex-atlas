@@ -6,10 +6,10 @@ evidence: Observed
 
 `/en/workflow/WorkFlowTemplateEdit.jsp`
 
-![The template list. 13 at BBW against 4 at American Freight — and the "v1"/"v2" suffixes are the entire versioning mechanism.](../../docs/assets/screenshots/bbw-admin/08-manage-work-flows.jpg)
+![The template list. 13 at BBW against 4 at American Freight — and the "v1"/"v2" suffixes are the entire versioning mechanism.](../assets/screenshots/bbw-admin/08-manage-work-flows.jpg)
 `docs/assets/screenshots/bbw-admin/08-manage-work-flows.jpg` · `af-admin/09-manage-work-flows.jpg`
 
-![Every template expanded to its steps. Every row in the Type column reads "Form". There is not one Task step anywhere.](../../docs/assets/screenshots/workflow/manage-workflow-expanded-all-steps.jpg)
+![Every template expanded to its steps. Every row in the Type column reads "Form". There is not one Task step anywhere.](../assets/screenshots/workflow/manage-workflow-expanded-all-steps.jpg)
 `docs/assets/screenshots/workflow/manage-workflow-expanded-all-steps.jpg`
 
 **13 templates, 62 steps** at [[tenant-bbw|BBW]]. Step lists were read out of the grid store's

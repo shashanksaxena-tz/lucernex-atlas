@@ -6,7 +6,7 @@ evidence: Observed
 
 `/en/admin/ProcessTimelineEdit.jsp`
 
-![Milestone timeline templates — also zero rows.](../../docs/assets/screenshots/bbw-admin/03-manage-milestone-timeline.jpg)
+![Milestone timeline templates — also zero rows.](../assets/screenshots/bbw-admin/03-manage-milestone-timeline.jpg)
 `docs/assets/screenshots/bbw-admin/03-manage-milestone-timeline.jpg` · `af-admin/04-manage-milestone-timeline.jpg`
 
 **`ProcessTimelineTemplate` = 0** at [[tenant-bbw|BBW]], alongside

@@ -6,7 +6,7 @@ evidence: Observed
 
 `/en/dashboard/DashboardDispatch.jsp — hamburger, top left`
 
-![The four roots, expanded. Notice there is no way to *create* anything here — this is navigation within a record that already exists.](../../docs/assets/screenshots/navigation/main-navigation-four-roots.jpg)
+![The four roots, expanded. Notice there is no way to *create* anything here — this is navigation within a record that already exists.](../assets/screenshots/navigation/main-navigation-four-roots.jpg)
 `docs/assets/screenshots/navigation/main-navigation-four-roots.jpg`
 
 Read out of the `Lx.ui.MenuTree` ExtJS component. **Four roots — Portfolio, [[Location]],

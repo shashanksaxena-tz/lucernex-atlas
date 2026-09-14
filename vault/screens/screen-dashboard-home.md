@@ -6,7 +6,7 @@ evidence: Observed
 
 `/en/dashboard/DashboardDispatch.jsp`
 
-![The help menu open over an empty dashboard canvas. The build string in the footer is what dated every capture in this corpus.](../../docs/assets/screenshots/dashboard/dashboard-home-help-menu.png)
+![The help menu open over an empty dashboard canvas. The build string in the footer is what dated every capture in this corpus.](../assets/screenshots/dashboard/dashboard-home-help-menu.png)
 `docs/assets/screenshots/dashboard/dashboard-home-help-menu.png`
 
 [[tenant-american-freight|American Freight]], build `26.08.0.39`, captured 2026-09-02.

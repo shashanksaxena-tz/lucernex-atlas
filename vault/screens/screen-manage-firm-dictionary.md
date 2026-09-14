@@ -6,7 +6,7 @@ evidence: Observed
 
 `/en/admin/Dictionary.jsp`
 
-![The screen's own note offers it "to provide new translation or to just overwrite the field labels". That second clause is a caveat on this entire corpus.](../../docs/assets/screenshots/bbw-admin/17-manage-firm-dictionary.jpg)
+![The screen's own note offers it "to provide new translation or to just overwrite the field labels". That second clause is a caveat on this entire corpus.](../assets/screenshots/bbw-admin/17-manage-firm-dictionary.jpg)
 `docs/assets/screenshots/bbw-admin/17-manage-firm-dictionary.jpg` · `af-admin/18-manage-firm-dictionary.jpg`
 
 **A firm can overwrite field labels tenant-wide** by uploading a spreadsheet, with global and

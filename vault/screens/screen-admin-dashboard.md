@@ -6,7 +6,7 @@ evidence: Observed
 
 `/en/dashboard/DashboardDispatchOld.jsp?dashboardName=admin`
 
-![The admin landing page. Notice the route — *Old*. The end-user dashboard uses a different file entirely.](../../docs/assets/screenshots/dashboard/admin-company-administration.png)
+![The admin landing page. Notice the route — *Old*. The end-user dashboard uses a different file entirely.](../assets/screenshots/dashboard/admin-company-administration.png)
 `docs/assets/screenshots/dashboard/admin-company-administration.png`
 
 **The administration surface is a separate world from the [[navigation-tree]]** — `Lx.ui.MenuTree`

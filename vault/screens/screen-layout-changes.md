@@ -6,7 +6,7 @@ evidence: Observed
 
 `/en/admin/ShowLayoutChanges.jsp`
 
-![A layout change audit — the one place the product records who altered a configuration and when.](../../docs/assets/screenshots/bbw-admin/54-layout-changes.jpg)
+![A layout change audit — the one place the product records who altered a configuration and when.](../assets/screenshots/bbw-admin/54-layout-changes.jpg)
 `docs/assets/screenshots/bbw-admin/54-layout-changes.jpg` · `af-admin/63-layout-changes.jpg`
 
 The only configuration-change audit in the product, and it covers layouts only.

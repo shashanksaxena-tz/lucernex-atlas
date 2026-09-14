@@ -6,7 +6,7 @@ evidence: Observed
 
 `/en/admin/JobLogEdit.jsp`
 
-![The report log — and note the route.](../../docs/assets/screenshots/bbw-admin/49-report-log.jpg)
+![The report log — and note the route.](../assets/screenshots/bbw-admin/49-report-log.jpg)
 `docs/assets/screenshots/bbw-admin/49-report-log.jpg` · `af-admin/55-report-log.jpg`
 
 **`Report Log` and [[screen-job-log|`Job Log`]] are the same screen** — both `JobLogEdit.jsp`. Two

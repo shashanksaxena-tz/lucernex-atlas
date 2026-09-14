@@ -6,7 +6,7 @@ evidence: Observed
 
 `/en/admin/VendorActivate.jsp`
 
-![Vendor activation — a different screen over the same table as Manage Employers.](../../docs/assets/screenshots/bbw-admin/36-manage-vendors.jpg)
+![Vendor activation — a different screen over the same table as Manage Employers.](../assets/screenshots/bbw-admin/36-manage-vendors.jpg)
 `docs/assets/screenshots/bbw-admin/36-manage-vendors.jpg` · `af-admin/37-manage-vendors.jpg`
 
 "Vendor" is a **relabelled [[Employer]]** ([[rule-PPL-R-004]]). The route name — `VendorActivate.jsp` —

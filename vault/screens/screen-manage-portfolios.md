@@ -6,7 +6,7 @@ evidence: Observed
 
 `/en/admin/ProgramEdit.jsp`
 
-![The Portfolio record — 180 fields, and far more consequential than a container ought to be.](../../docs/assets/screenshots/bbw-admin/29-manage-portfolios-capital-programs.jpg)
+![The Portfolio record — 180 fields, and far more consequential than a container ought to be.](../assets/screenshots/bbw-admin/29-manage-portfolios-capital-programs.jpg)
 `docs/assets/screenshots/bbw-admin/29-manage-portfolios-capital-programs.jpg` · `af-admin/30-manage-portfolios-capital-programs.jpg`
 
 **"Portfolio" is [[Program]]** — a 180-field [[subtype-root]] that carries **accounting policy**, not

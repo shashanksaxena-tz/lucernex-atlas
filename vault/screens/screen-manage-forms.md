@@ -6,10 +6,10 @@ evidence: Observed
 
 `/en/admin/FirmCodeEdit.jsp?includeType=Manage&TableType=2035`
 
-![The form types. Look at the route: this is the generic code-table editor with `TableType=2035`. A Form is an Issue Type.](../../docs/assets/screenshots/bbw-admin/05-manage-forms.jpg)
+![The form types. Look at the route: this is the generic code-table editor with `TableType=2035`. A Form is an Issue Type.](../assets/screenshots/bbw-admin/05-manage-forms.jpg)
 `docs/assets/screenshots/bbw-admin/05-manage-forms.jpg` · `af-admin/06-manage-forms.jpg`
 
-![Expanded to show every layout under every form type. An N-step workflow carries N+1 layouts, and this is where the 42 hidden form layouts live.](../../docs/assets/screenshots/forms/manage-forms-expanded-all-layouts.jpg)
+![Expanded to show every layout under every form type. An N-step workflow carries N+1 layouts, and this is where the 42 hidden form layouts live.](../assets/screenshots/forms/manage-forms-expanded-all-layouts.jpg)
 `docs/assets/screenshots/forms/manage-forms-expanded-all-layouts.jpg`
 
 **The route is the finding.** `Manage Forms` administers [[code-table]] `TableType = 2035`

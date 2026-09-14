@@ -6,7 +6,7 @@ evidence: Observed
 
 `PForm.jsp?menuPLID=3494&requestedProjectEntityType=Contract`
 
-![The rendered contract summary. Two status fields side by side, a layout picker at the top, eleven action buttons in the right-hand rail — and "Term Length" written out as prose.](../../docs/assets/screenshots/end-user/contract-summary-rendered.jpg)
+![The rendered contract summary. Two status fields side by side, a layout picker at the top, eleven action buttons in the right-hand rail — and "Term Length" written out as prose.](../assets/screenshots/end-user/contract-summary-rendered.jpg)
 `docs/assets/screenshots/end-user/contract-summary-rendered.jpg`
 
 Contract `86383`, layout `ASG Contract Summary` (`PageLayoutID=96289`). **One of the first captures of

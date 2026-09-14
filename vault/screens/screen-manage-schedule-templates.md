@@ -6,7 +6,7 @@ evidence: Observed
 
 `/en/admin/TaskTemplateEdit.jsp`
 
-![Task templates — and the count on this screen explains an absence elsewhere.](../../docs/assets/screenshots/bbw-admin/02-manage-schedule-templates.jpg)
+![Task templates — and the count on this screen explains an absence elsewhere.](../assets/screenshots/bbw-admin/02-manage-schedule-templates.jpg)
 `docs/assets/screenshots/bbw-admin/02-manage-schedule-templates.jpg` · `af-admin/03-manage-schedule-templates.jpg`
 
 **`TaskTemplate` = 0 at [[tenant-bbw|BBW]].**

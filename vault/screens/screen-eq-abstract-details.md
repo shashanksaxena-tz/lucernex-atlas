@@ -9,7 +9,7 @@ evidence: Observed
 > **[[caveat-one-equipment-contract]]** — one record, not the module's range. An empty section here may
 > be empty for *this contract*.
 
-![The abstract layer on an equipment lease. Co-Tenancy is absent — the only screen removed from this group.](../../docs/assets/screenshots/bbw-enduser/eq-02-abstract-details.jpg)
+![The abstract layer on an equipment lease. Co-Tenancy is absent — the only screen removed from this group.](../assets/screenshots/bbw-enduser/eq-02-abstract-details.jpg)
 `docs/assets/screenshots/bbw-enduser/eq-02-abstract-details.jpg`
 
 `Abstract Info` keeps **7 of [[Contract]]'s 8** screens. The one dropped is

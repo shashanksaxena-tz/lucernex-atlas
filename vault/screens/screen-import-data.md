@@ -6,7 +6,7 @@ evidence: Observed
 
 `/en/admin/Messenger.jsp`
 
-![The generic bulk import. Note the error-handling radio defaults to "On first error" — and there is no dry-run option anywhere on this screen.](../../docs/assets/screenshots/bbw-admin/12-import-data.jpg)
+![The generic bulk import. Note the error-handling radio defaults to "On first error" — and there is no dry-run option anywhere on this screen.](../assets/screenshots/bbw-admin/12-import-data.jpg)
 `docs/assets/screenshots/bbw-admin/12-import-data.jpg` · `af-admin/13-import-data.jpg`
 
 The UI over `POST /rest/firm` — an XML form post, one of

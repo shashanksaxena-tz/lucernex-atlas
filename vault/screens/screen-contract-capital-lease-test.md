@@ -6,7 +6,7 @@ evidence: Observed
 
 `PForm.jsp — Contract : Accounting Info : Capital Lease Test`
 
-![The legacy ASC 840 test — a detail form, one record per contract.](../../docs/assets/screenshots/bbw-enduser/ct-28-capital-lease-test.jpg)
+![The legacy ASC 840 test — a detail form, one record per contract.](../assets/screenshots/bbw-enduser/ct-28-capital-lease-test.jpg)
 `docs/assets/screenshots/bbw-enduser/ct-28-capital-lease-test.jpg`
 
 The **ASC 840** test, stored on [[Contract]] itself as `Test1Result`…`Test5aResult`/`Test5bResult` —

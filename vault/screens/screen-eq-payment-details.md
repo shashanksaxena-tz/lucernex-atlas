@@ -8,7 +8,7 @@ evidence: Observed
 
 > **[[caveat-one-equipment-contract]]**
 
-![The payment layer, reduced from twelve screens to seven. "Recurring Expenses" has become "Recurring Payments" — equipment pays rent, it does not recover expenses.](../../docs/assets/screenshots/bbw-enduser/eq-03-payment-details.jpg)
+![The payment layer, reduced from twelve screens to seven. "Recurring Expenses" has become "Recurring Payments" — equipment pays rent, it does not recover expenses.](../assets/screenshots/bbw-enduser/eq-03-payment-details.jpg)
 `docs/assets/screenshots/bbw-enduser/eq-03-payment-details.jpg`
 
 **The largest subtraction in the module.** `Payment Info` drops five of [[Contract]]'s twelve screens:

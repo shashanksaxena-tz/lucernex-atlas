@@ -6,7 +6,7 @@ evidence: Observed
 
 `/en/admin/FolderTemplateEdit.jsp`
 
-![Folder templates — and the eleven "IsValidFor" flags are the same matrix Forms use.](../../docs/assets/screenshots/bbw-admin/44-manage-folder-templates.jpg)
+![Folder templates — and the eleven "IsValidFor" flags are the same matrix Forms use.](../assets/screenshots/bbw-admin/44-manage-folder-templates.jpg)
 `docs/assets/screenshots/bbw-admin/44-manage-folder-templates.jpg` · `af-admin/48-manage-folder-templates.jpg`
 
 `FolderTemplate` is a **one-field stub**; the real metadata lives in the

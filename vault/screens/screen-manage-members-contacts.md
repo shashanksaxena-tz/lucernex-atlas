@@ -6,7 +6,7 @@ evidence: Observed
 
 `/en/admin/ContactEdit.jsp`
 
-![The member and contact directory — one of six Member Administration screens, and the module's largest evidence gap.](../../docs/assets/screenshots/bbw-admin/33-manage-members-contacts.jpg)
+![The member and contact directory — one of six Member Administration screens, and the module's largest evidence gap.](../assets/screenshots/bbw-admin/33-manage-members-contacts.jpg)
 `docs/assets/screenshots/bbw-admin/33-manage-members-contacts.jpg` · `af-admin/34-manage-members-contacts.jpg`
 
 > **[[module-people-parties]] records this as its largest evidence gap: six Member Administration

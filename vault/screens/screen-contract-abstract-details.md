@@ -6,7 +6,7 @@ evidence: Observed
 
 `PForm.jsp — Contract : Abstract Info : Abstract Details`
 
-![The same record as the Summary, and only four action buttons instead of thirteen. Action buttons are per-layout, not per-record.](../../docs/assets/screenshots/bbw-enduser/ct-05-abstract-details.jpg)
+![The same record as the Summary, and only four action buttons instead of thirteen. Action buttons are per-layout, not per-record.](../assets/screenshots/bbw-enduser/ct-05-abstract-details.jpg)
 `docs/assets/screenshots/bbw-enduser/ct-05-abstract-details.jpg`
 
 **The comparison with [[screen-contract-summary]] is the point**: same contract, **13 action buttons on

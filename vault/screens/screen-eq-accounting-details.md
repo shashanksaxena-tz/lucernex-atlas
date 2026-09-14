@@ -8,7 +8,7 @@ evidence: Observed
 
 > **[[caveat-one-equipment-contract]]**
 
-![The accounting layer on an equipment lease — and this is the group that survives almost untouched. The entire ASC 842 / IFRS 16 / straight-line engine is here.](../../docs/assets/screenshots/bbw-enduser/eq-04-accounting-details.jpg)
+![The accounting layer on an equipment lease — and this is the group that survives almost untouched. The entire ASC 842 / IFRS 16 / straight-line engine is here.](../assets/screenshots/bbw-enduser/eq-04-accounting-details.jpg)
 `docs/assets/screenshots/bbw-enduser/eq-04-accounting-details.jpg`
 
 **The most important screen in the [[equipment-contract]] module, because of what it does *not* drop.**

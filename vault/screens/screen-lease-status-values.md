@@ -6,7 +6,7 @@ evidence: Observed
 
 `/en/admin/CustomCodeTableEdit.jsp — CustomCodeTableID 7727`
 
-![The seven Lease Status values. Notice the order they render in: alphabetical. `SortOrder` is null on every row, so the real lifecycle sequence exists nowhere in the data.](../../docs/assets/screenshots/drop-downs/client-lease-status-values.jpg)
+![The seven Lease Status values. Notice the order they render in: alphabetical. `SortOrder` is null on every row, so the real lifecycle sequence exists nowhere in the data.](../assets/screenshots/drop-downs/client-lease-status-values.jpg)
 `docs/assets/screenshots/drop-downs/client-lease-status-values.jpg`
 
 `Open` · `Possession` · `Possession - Paying Rent` · `Closed` · `Closed - Active` ·

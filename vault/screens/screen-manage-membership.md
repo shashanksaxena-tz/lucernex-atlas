@@ -6,7 +6,7 @@ evidence: Observed
 
 `/en/admin/ManageOneMemberManyProjects.jsp`
 
-![Assigning one member to many projects — the route name says exactly what it does.](../../docs/assets/screenshots/bbw-admin/37-manage-membership.jpg)
+![Assigning one member to many projects — the route name says exactly what it does.](../assets/screenshots/bbw-admin/37-manage-membership.jpg)
 `docs/assets/screenshots/bbw-admin/37-manage-membership.jpg` · `af-admin/38-manage-membership.jpg`
 
 The UI over [[LinkMemberProjectEntity]] — a [[Member]] assigned to a [[ProjectEntity]] in an org-chart

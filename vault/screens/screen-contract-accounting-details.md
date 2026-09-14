@@ -6,7 +6,7 @@ evidence: Observed
 
 `PForm.jsp — Contract : Accounting Info : Accounting Details`
 
-![The accounting assumptions on a real contract — the inputs the schedule generator reads.](../../docs/assets/screenshots/bbw-enduser/ct-27-accounting-details.jpg)
+![The accounting assumptions on a real contract — the inputs the schedule generator reads.](../assets/screenshots/bbw-enduser/ct-27-accounting-details.jpg)
 `docs/assets/screenshots/bbw-enduser/ct-27-accounting-details.jpg`
 
 The `Accounting Info` group is the one that **survives almost intact** into

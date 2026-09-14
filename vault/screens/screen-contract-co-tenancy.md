@@ -6,7 +6,7 @@ evidence: Observed
 
 `PLForm.jsp — Contract : Abstract Info : Co-Tenancy`
 
-![The co-tenancy clause list. A mall clause — and therefore one of the cleanest markers of what is retail-specific in this product.](../../docs/assets/screenshots/bbw-enduser/ct-12-co-tenancy.jpg)
+![The co-tenancy clause list. A mall clause — and therefore one of the cleanest markers of what is retail-specific in this product.](../assets/screenshots/bbw-enduser/ct-12-co-tenancy.jpg)
 `docs/assets/screenshots/bbw-enduser/ct-12-co-tenancy.jpg`
 
 Rent reduction if an anchor tenant vacates. **Dropped from

@@ -6,7 +6,7 @@ evidence: Observed
 
 `/en/admin/OrganizationEdit.jsp`
 
-![The parent company / franchise group record.](../../docs/assets/screenshots/bbw-admin/43-manage-organizations.jpg)
+![The parent company / franchise group record.](../assets/screenshots/bbw-admin/43-manage-organizations.jpg)
 `docs/assets/screenshots/bbw-admin/43-manage-organizations.jpg` · `af-admin/47-manage-organizations.jpg`
 
 [[Organization]] sits above [[Employer]] — the franchise group above the individual company. 17 fields,

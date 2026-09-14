@@ -6,10 +6,10 @@ evidence: Observed
 
 `/en/admin/CustomListEdit.jsp`
 
-![The list index. Six lists, all Type "Standard", each with exactly one layout.](../../docs/assets/screenshots/custom-lists/manage-custom-lists-index.png)
+![The list index. Six lists, all Type "Standard", each with exactly one layout.](../assets/screenshots/custom-lists/manage-custom-lists-index.png)
 `docs/assets/screenshots/custom-lists/manage-custom-lists-index.png`
 
-![Editing a list's fields. This is a record-type builder, not a picklist editor — each list gets its own field namespace.](../../docs/assets/screenshots/custom-lists/manage-custom-lists-edit-fields.png)
+![Editing a list's fields. This is a record-type builder, not a picklist editor — each list gets its own field namespace.](../assets/screenshots/custom-lists/manage-custom-lists-edit-fields.png)
 `docs/assets/screenshots/custom-lists/manage-custom-lists-edit-fields.png`
 
 **Not a picklist master.** A [[custom-list|tenant-authored mini record type]] with its own fields, its

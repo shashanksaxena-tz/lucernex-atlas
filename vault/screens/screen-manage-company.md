@@ -6,7 +6,7 @@ evidence: Observed
 
 `/en/admin/FirmEdit.jsp?FirmID={id}`
 
-![The tenant record. The "Allow X?" flags in here gate 13 of the 14 menu structures — and famously fail to gate the fourteenth.](../../docs/assets/screenshots/bbw-admin/01-manage-company.jpg)
+![The tenant record. The "Allow X?" flags in here gate 13 of the 14 menu structures — and famously fail to gate the fourteenth.](../assets/screenshots/bbw-admin/01-manage-company.jpg)
 `docs/assets/screenshots/bbw-admin/01-manage-company.jpg` · `af-admin/02-manage-company.jpg`
 
 The [[Firm]] record — **71 fields** as rendered, 18 in the object census.
