@@ -305,10 +305,14 @@ def entity_notes_for(o, name, mod_id):
     # not silently lost; do not re-add them here unless the census gains them.
     # --- from the field inventory: the physical mapping, and the loader's reach
     oi = OINV.get(name)
-    cat_req_set = {fn for (en, fn), c in FIELDS.items()
-                   if en == name and c["required"]}
-    inv_req_set = {fn for (en, fn), r in INV.items()
-                   if en == name and r["required"]}
+    # Only fields present in BOTH captures can disagree about anything. Comparing
+    # the two required sets directly manufactures differences that are really
+    # just non-overlap — it turned 43 real disagreements into 213.
+    cat_here = {fn for (en, fn) in FIELDS if en == name}
+    inv_here = {fn for (en, fn) in INV if en == name}
+    joint = cat_here & inv_here
+    cat_req_set = {fn for fn in joint if FIELDS[(name, fn)]["required"]}
+    inv_req_set = {fn for fn in joint if INV[(name, fn)]["required"]}
     cat_req = len(cat_req_set)
     if oi:
         if oi["tables"]:
@@ -355,18 +359,26 @@ def entity_notes_for(o, name, mod_id):
                 "not a second source: where it agrees with the census that is one fact "
                 "stated twice, not two facts."
                 % (oi["defined"], oi["fields"])])
-        if oi["required"] or cat_req:
-            both = len(cat_req_set & inv_req_set)
+        only_cat = sorted(cat_req_set - inv_req_set)
+        only_inv = sorted(inv_req_set - cat_req_set)
+        if only_cat or only_inv:
             out.append([
-                "Required: the two captures disagree", CONF_OBS,
-                "The field inventory marks %d of this record's fields required; the Data "
-                "Fields catalogue marks %d; %d appear in both. These two ARE separate "
-                "captures — the catalogue is the Manage Data Fields screen, the inventory is "
-                "the object export — so the disagreement is real and not a reading artefact. "
-                "Estate-wide it is 606 against 637 with only 515 shared, so 213 fields are "
-                "required according to exactly one of them. A rebuild that picks one capture "
-                "and ignores the other silently drops obligations."
-                % (oi["required"], cat_req, both)])
+                "Required-ness: %d disagree of %d comparable"
+                % (len(only_cat) + len(only_inv), len(joint)), CONF_OBS,
+                "Over the %d fields both captures contain, they agree on %d. The "
+                "exceptions are %s%s. Estate-wide there are 43 such fields and every one "
+                "runs the same way — catalogue-required, inventory-not — and they are 34 "
+                "ContractID, 8 ProjectEntityID and 1 ShortName: the owner foreign key. "
+                "Parenthood is enforced by the application, not by the database."
+                % (len(joint), len(joint) - len(only_cat) - len(only_inv),
+                   ", ".join(only_cat[:6]) or "none from the catalogue side",
+                   (" (inventory-only: %s)" % ", ".join(only_inv[:4])) if only_inv else "")])
+        elif joint and (cat_req or oi["required"]):
+            out.append([
+                "Required-ness: the captures agree", CONF_OBS,
+                "Over the %d fields both the Data Fields catalogue and the field inventory "
+                "contain, the two agree on every one. %d are marked required."
+                % (len(joint), cat_req)])
         not_created = oi["status"].get("Not created yet — no data", 0)
         if not_created and not_created >= oi["fields"] * 0.5:
             loader_notes = sorted(oi["notes"], key=lambda k: -oi["notes"][k])[:2]
@@ -404,6 +416,7 @@ def entity_notes_for(o, name, mod_id):
 
 FLAG_FIRM, FLAG_REQ, FLAG_RO = 1, 2, 4
 FLAG_INV_REQ, FLAG_FUNC, FLAG_NOPG = 8, 16, 32
+FLAG_IN_CAT, FLAG_IN_INV = 64, 128
 
 out_objects = {}
 for o in objects:
@@ -423,6 +436,7 @@ for o in objects:
         label = ""
         code = ""
         if cat:
+            flags |= FLAG_IN_CAT
             if cat["scope"] == "Firm":
                 flags |= FLAG_FIRM
             if cat["required"]:
@@ -432,6 +446,7 @@ for o in objects:
             code = cat["type"]
             label = cat["label"]
         if inv:
+            flags |= FLAG_IN_INV
             if inv["required"]:
                 flags |= FLAG_INV_REQ
             if inv["functional"] == "Yes":

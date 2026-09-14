@@ -570,7 +570,9 @@ function viewField(ent,fld){
     <dt>Declared type</dt><dd class="mono">${esc(ft)}</dd>
     ${code?`<dt>Catalogue type</dt><dd class="mono">${esc(code)}</dd>`:''}
     <dt>Scope</dt><dd>${(flags&1)?'Firm &mdash; defined by this tenant':(code?'Global &mdash; shipped by the platform':'not in the Data Fields catalogue')}</dd>
-    ${(flags&10)?`<dt>Required</dt><dd>${((flags&2)&&(flags&8))?'yes &mdash; in both captures':((flags&2)?'Data Fields catalogue only &mdash; the field inventory does not':'field inventory only &mdash; the Data Fields catalogue does not')}</dd>`:''}
+    ${(flags&10)?`<dt>Required</dt><dd>${((flags&2)&&(flags&8))?'yes &mdash; in both captures'
+      :((flags&2)?('Data Fields catalogue'+((flags&128)?' &mdash; the inventory contains it and says no':' &mdash; the inventory has no such field'))
+                 :('field inventory'+((flags&64)?' &mdash; the catalogue contains it and says no':' &mdash; the catalogue has no such field')))}</dd>`:''}
     ${(flags&4)?`<dt>Read-only</dt><dd>yes &mdash; written by the engine</dd>`:''}
     ${(flags&16)?`<dt>Functional field</dt><dd>yes &mdash; business meaning, not plumbing</dd>`:''}
     ${role&&D.roleNote&&D.roleNote[role]?`<dt>Key role</dt><dd>${esc(role)}</dd>`:''}
@@ -584,8 +586,10 @@ function viewField(ent,fld){
   ${role&&D.roleNote&&D.roleNote[role]?`<p>In the schema it is ${esc(D.roleNote[role])}.</p>`:''}
   ${code&&D.typeLegend&&D.typeLegend[code]?`<p class="lead">${esc(D.typeLegend[code])}</p>`:''}
   ${(flags&10)?`<div class="find"><h5>Required &mdash; but not by the layout ${ctag('observed')}</h5>
-    <p>${((flags&2)&&(flags&8))?'Both captures mark this field required.'
-      :'Only '+((flags&2)?'the Data Fields catalogue':'the field inventory')+' marks this field required &mdash; the other capture does not. The two disagree on 213 fields estate-wide (606 against 637, 515 shared), so reading one capture and ignoring the other silently drops obligations.'}
+    <p>${((flags&2)&&(flags&8))?'Both captures that contain this field mark it required.'
+      :((flags&2)&&(flags&128))?'The Data Fields catalogue marks it required and the field inventory, which also contains it, does not. That is one of 43 such fields estate-wide, and every one is an owner foreign key &mdash; 34 <code>ContractID</code>, 8 <code>ProjectEntityID</code>, 1 <code>ShortName</code>. Parenthood is enforced by the application, not by the database.'
+      :('Marked required by '+((flags&2)?'the Data Fields catalogue':'the field inventory')
+        +'. The other capture does not contain this field at all, which is not the same as it saying the field is optional.')}
     Required-ness has no layout-level layer either way: the red asterisk a user sees in the builder
     is this flag, rendered at paint time, not a per-placement setting stored against the layout.</p></div>`:''}
   ${(flags&1)?`<div class="find"><h5>A tenant custom column ${ctag('observed')}</h5>

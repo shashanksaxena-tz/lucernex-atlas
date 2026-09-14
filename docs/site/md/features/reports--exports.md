@@ -54,7 +54,7 @@ The search filtering manual is organised as: The list chrome, observed; Per-plac
 
 *Observed · fact · source: `features/import-export/README.md`*
 
-Written up in features/import-export/README.md, features/search-filtering/README.md. 4 screen captures on disk, under docs/assets/screenshots/data-model — the screens themselves, not a description of them. 4 of them are cited by name in the documentation, which is what ties a capture to the screen it shows.
+Written up in features/import-export/README.md, features/search-filtering/README.md. 4 screen captures on disk, under docs/assets/screenshots/data-model — the screens themselves, not a description of them. 4 of them are cited by name in the documentation, which is what ties a capture to the screen it shows. Admin tools documented here, each with the capture named after it: Export Configuration, Import Best Practice Templates, Import Data, Job Log, Report Log.
 
 ![Contract schema table row: FacilityID, Type "Facility ID", UI Label "Facility"](../../assets/screenshots/data-model/object-model-contract-facilityid.jpg)
 ![Contract schema table rows: LocationID (Type "Location ID") and MasterContractID (Type "Contract ID", self-referencing)](../../assets/screenshots/data-model/object-model-contract-locationid-mastercontractid.jpg)

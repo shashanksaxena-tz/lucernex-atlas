@@ -189,7 +189,9 @@ def page(title, body, depth=0, crumb="", view=""):
     prints the one-line "what this view is for" so a reader arriving deep still
     knows where they are."""
     up = "../" * depth
-    why = sitenav.purpose(view)
+    # the overview IS the orientation, so it does not also need a line above its
+    # own title telling the reader what it is for
+    why = sitenav.purpose(view) if view != "overview" else ""
     lead = f'<p class="viewfor">{e(why)}</p>' if why else ""
     return gate.inject(brand(f"""<!doctype html>
 <html lang="en"><head><meta charset="utf-8">
@@ -217,7 +219,7 @@ def page(title, body, depth=0, crumb="", view=""):
 # Add any new generator's directory here. Do NOT add "md": this script
 # writes md/ itself, so preserving it would leave orphaned pages behind
 # whenever a node disappears.
-_OWNED_ELSEWHERE = ("research", "vault")
+_OWNED_ELSEWHERE = ("research", "vault", "md")
 _stash = os.path.join(DOCS, "_site_keep")
 if os.path.isdir(_stash):
     shutil.rmtree(_stash)
@@ -232,6 +234,14 @@ os.makedirs(SITE, exist_ok=True)
 for _d in os.listdir(_stash):
     shutil.move(os.path.join(_stash, _d), os.path.join(SITE, _d))
 shutil.rmtree(_stash, ignore_errors=True)
+# md/ is stashed across the wipe with the directories other generators own, so
+# that a crash between the wipe and the rebuild cannot destroy it. But this
+# script is md/'s author and rewrites it whole, so it is emptied here — carried
+# through the wipe, then cleared — or a page deleted upstream would linger as an
+# orphan for ever.
+_md = os.path.join(SITE, "md")
+if os.path.isdir(_md):
+    shutil.rmtree(_md)
 for d in ("", "modules", "entities", "rules", "features",
           "md", "md/modules", "md/entities", "md/rules", "md/features"):
     os.makedirs(os.path.join(SITE, d), exist_ok=True)
@@ -560,7 +570,7 @@ for m in modules:
                         for r in rules])
     write_md("modules/%s.md" % slug(m["id"]), m["title"], md)
     b.append(md_link(1, "modules/%s.md" % slug(m["id"])))
-    open(os.path.join(SITE, "modules", slug(m["id"]) + ".html"), "w", encoding="utf-8").write(page(m["title"], "".join(b), depth=1, view="features"))
+    open(os.path.join(SITE, "modules", slug(m["id"]) + ".html"), "w", encoding="utf-8").write(page(m["title"], "".join(b), depth=1, view="entities"))
 
 # ---------------------------------------------------------------- entities
 names = sorted(objects, key=lambda n: -objects[n]["n"])

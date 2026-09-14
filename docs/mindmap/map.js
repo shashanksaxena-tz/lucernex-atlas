@@ -21,7 +21,21 @@ function fromCurated(c,mod){
 /* What a single column is, said in a sentence a reader can use: the label the
    user sees, who owns the field, whether it is required, and what its catalogued
    type code means. A field node used to say "a text field on Contract". */
-const FLAG_FIRM=1,FLAG_REQ=2,FLAG_RO=4,FLAG_INV_REQ=8,FLAG_FUNC=16,FLAG_NOPG=32;
+const FLAG_FIRM=1,FLAG_REQ=2,FLAG_RO=4,FLAG_INV_REQ=8,FLAG_FUNC=16,FLAG_NOPG=32,
+      FLAG_IN_CAT=64,FLAG_IN_INV=128;
+/* Whether the OTHER capture disagrees or simply does not contain the field.
+   Saying "the other does not mark it required" when that capture has never
+   heard of the field is the error that turned 43 disagreements into 213. */
+function reqNote(flags){
+  const cat=flags&FLAG_REQ, inv=flags&FLAG_INV_REQ;
+  const inCat=flags&FLAG_IN_CAT, inInv=flags&FLAG_IN_INV;
+  if(!cat&&!inv) return '';
+  if(cat&&inv) return 'Both captures that contain this field mark it required.';
+  if(cat&&inInv) return 'The Data Fields catalogue marks it required and the field inventory, which also contains it, does not. That is one of 43 such fields estate-wide, and every one is an owner foreign key \u2014 34 ContractID, 8 ProjectEntityID, 1 ShortName. Parenthood is enforced by the application, not by the database.';
+  if(inv&&inCat) return 'The field inventory marks it required and the Data Fields catalogue, which also contains it, does not \u2014 unusual, since estate-wide that direction has zero cases.';
+  return 'Marked required by '+(cat?'the Data Fields catalogue':'the field inventory')
+    +'. The other capture does not contain this field at all, which is not the same as it saying the field is optional.';
+}
 function fieldProse(obj,col,ftype,fam,label,flags,code,def,role,pg){
   const s=[];
   /* the vendor's own definition leads: it is the only source that says what the
@@ -39,14 +53,9 @@ function fieldProse(obj,col,ftype,fam,label,flags,code,def,role,pg){
   if(code&&D.typeLegend&&D.typeLegend[code]) s.push(`Catalogued as ${code}: ${D.typeLegend[code]}`);
   if(flags&FLAG_FIRM) s.push('Firm scope \u2014 this tenant defined it, the platform did not ship it. Firm fields are physical Firm_-prefixed columns, so adding one is a schema change.');
   else if(code) s.push('Global scope \u2014 shipped by the platform for every tenant.');
-  /* the two captures disagree on 213 fields estate-wide, so which one marks a
-     field required is itself the finding \u2014 never flatten them into "required" */
-  if(flags&(FLAG_REQ|FLAG_INV_REQ)) s.push(
-    ((flags&FLAG_REQ)&&(flags&FLAG_INV_REQ))
-      ? 'Both the Data Fields catalogue and the field inventory mark it required.'
-      : 'Marked required by '+((flags&FLAG_REQ)?'the Data Fields catalogue, but NOT by the field inventory':'the field inventory, but NOT by the Data Fields catalogue')
-        +'. The two captures disagree on 213 fields estate-wide; this is one of them, so a rebuild reading only one capture gets this field wrong.');
-  if(flags&(FLAG_REQ|FLAG_INV_REQ)) s.push('Required-ness has no layout-level layer: the asterisk a user sees is this flag, rendered at paint time.');
+  const rn=reqNote(flags);
+  if(rn){ s.push(rn);
+    s.push('Required-ness has no layout-level layer either way: the asterisk a user sees is this flag, rendered at paint time.'); }
   if(flags&FLAG_RO) s.push('Read-only in the catalogue \u2014 written by the engine, not by a user.');
   if(flags&FLAG_FUNC) s.push('A functional field: it carries business meaning rather than plumbing.');
   if(pg){const bit=pg.split(':');
@@ -284,8 +293,9 @@ function selectNode(n){
     kv.push(['Scope',(n.flags&FLAG_FIRM)?'Firm \u2014 defined by this tenant':(n.code?'Global \u2014 shipped by the platform':'not catalogued')]);
     if(n.flags&(FLAG_REQ|FLAG_INV_REQ))kv.push(['Required',
       ((n.flags&FLAG_REQ)&&(n.flags&FLAG_INV_REQ))?'yes \u2014 in both captures'
-      :((n.flags&FLAG_REQ)?'catalogue only \u2014 the inventory does not'
-                          :'inventory only \u2014 the catalogue does not')]);
+      :((n.flags&FLAG_REQ)
+        ?('catalogue'+((n.flags&FLAG_IN_INV)?' \u2014 the inventory contains it and says no':' \u2014 the inventory has no such field'))
+        :('inventory'+((n.flags&FLAG_IN_CAT)?' \u2014 the catalogue contains it and says no':' \u2014 the catalogue has no such field')))]);
     if(n.flags&FLAG_RO)kv.push(['Read-only','yes']);
     if(n.role&&D.roleNote&&D.roleNote[n.role])kv.push(['Key role',n.role]);
     if(n.pg)kv.push(['Physical column',n.pg.replace(':',' \u00b7 ')]);

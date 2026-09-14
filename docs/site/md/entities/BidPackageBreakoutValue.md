@@ -27,9 +27,9 @@ Source: `data-fields/bid-package-ancillary-tables.md`
 
 **Derived.** This record carries no FirmID of its own. It hangs off ProjectEntity, and tenant isolation has to be enforced by joining to that row and filtering on its FirmID — or it is not enforced at all. 161 of the 223 record types are shaped this way.
 
-### Required: the two captures disagree
+### Required-ness: the captures agree
 
-**Observed.** The field inventory marks 3 of this record's fields required; the Data Fields catalogue marks 3; 3 appear in both. These two ARE separate captures — the catalogue is the Manage Data Fields screen, the inventory is the object export — so the disagreement is real and not a reading artefact. Estate-wide it is 606 against 637 with only 515 shared, so 213 fields are required according to exactly one of them. A rebuild that picks one capture and ignores the other silently drops obligations.
+**Observed.** Over the 5 fields both the Data Fields catalogue and the field inventory contain, the two agree on every one. 3 are marked required.
 
 ### 6 fields excluded from extraction
 

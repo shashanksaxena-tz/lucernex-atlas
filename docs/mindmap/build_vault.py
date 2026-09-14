@@ -19,6 +19,8 @@ import re
 import shutil
 
 import gate
+import sitenav
+import build_research
 from build_research import CSS, brand, render, slug
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -50,17 +52,13 @@ def page(title, body, depth=0, toc=None, sub=""):
 <link rel="stylesheet" href="{up}vault.css">
 </head><body>
 <header><b>Lx Atlas</b>
-<nav><a href="{up}../index.html">Overview</a><a href="{up}../atlas.html#/map?set=feature">Feature map</a>
-<a href="{up}../atlas.html">Interactive app</a>
-<a href="{up}../research/index.html">Research</a>
-<a href="{up}../research/screens.html">Screens</a>
-<a href="{up}index.html" class="on">Vault</a>
-<a href="{up}../questions.html">Open questions</a></nav></header>
+{sitenav.nav_html(up + "../", "vault")}</header>
 <main><p class="crumb"><a href="{up}../index.html">Atlas</a> &rsaquo;
-<a href="{up}index.html">Vault</a>{sub}</p>{nav}{body}</main></body></html>"""))
+<a href="{up}index.html">Vault</a>{sub}</p>
+<p class="viewfor">{e(sitenav.purpose("vault"))}</p>{nav}{body}</main></body></html>"""))
 
 
-VCSS = """
+VCSS = sitenav.NAV_CSS + """
 .backlinks{margin:34px 0 0;padding:16px 18px;background:var(--card,#fff);
  border:1px solid var(--line,#e5e7eb);border-radius:10px}
 .backlinks b{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.08em;
@@ -135,6 +133,8 @@ def main():
     os.makedirs(OUT, exist_ok=True)
     open(os.path.join(OUT, "vault.css"), "w", encoding="utf-8").write(CSS + VCSS)
 
+    # This module resolves its own hrefs; stop build_research adjusting them again.
+    build_research.PASSTHROUGH["on"] = True
     build_index()
     notes, missing, links = [], set(), {}
 
@@ -157,22 +157,36 @@ def main():
                         ((m.group(1), m.group(2)) for m in WIKI.finditer(md))}
             links[rel] = outbound
             body_md = dewiki(body_md, rel, missing)
-            # images in the vault are relative to vault/, which sits beside docs/
+            # Rewrite link targets for the web copy.
+            #
+            # A vault note lives at vault/<d>/note.md and renders to
+            # site/vault/<d>/note.html. Two destinations matter:
+            #
+            #   corpus markdown  docs/X.md  ->  site/research/X.html
+            #   everything else  docs/X     ->  docs/X      (site root is docs/)
+            #
+            # Compute both from the note's own depth. Using the source link's
+            # "../" prefix instead is what broke this before: the prefix is
+            # correct for the repo layout, and adding to it compounds two
+            # rewrites into six "../" where three are right.
             depth = rel.count(os.sep)
-            body_md = re.sub(r"\]\((?!https?:|#)([^)]+\.(?:jpg|jpeg|png|gif|svg))\)",
-                             lambda m: "](" + "../" * (depth + 2) + m.group(1).lstrip("./") + ")",
-                             body_md)
-            # Vault notes reference the corpus as ../docs/X.md. The number of
-            # levels to climb is the SAME on the site (vault/ and research/ are
-            # siblings under site/, exactly as vault/ and docs/ are siblings in
-            # the repo), so swap the segment and do not add a level.
-            body_md = re.sub(r"\]\(((?:\.\./)*)docs/([^)]+?)\.md\)",
-                             lambda m: f"]({m.group(1)}research/{m.group(2)}.html)",
-                             body_md)
-            # Non-markdown targets (screenshots, csv) still live at the docs
-            # root, which is one level further out than research/.
-            body_md = re.sub(r"\]\(((?:\.\./)*)docs/([^)]+?)\)",
-                             lambda m: f"]({m.group(1)}../{m.group(2)})", body_md)
+            to_site = "../" * (depth + 1)      # site/vault/<d>/ -> site/
+            to_docs = "../" * (depth + 2)      # site/vault/<d>/ -> docs/
+
+            def _docs_link(m):
+                target = m.group(2)
+                if target.endswith(".md"):
+                    return f"]({to_site}research/{target[:-3]}.html)"
+                return f"]({to_docs}{target})"
+
+            # Any number of leading ../ then docs/… — the prefix is discarded.
+            body_md = re.sub(r"\]\(((?:\.\./)*)docs/([^)]+?)\)", _docs_link, body_md)
+
+            # Images NOT routed through docs/ are relative to the vault itself
+            # and need no rewriting beyond their own depth.
+            body_md = re.sub(
+                r"\]\((?!https?:|#|/)((?:\.\./)*(?!.*/docs/)[^)]+\.(?:jpg|jpeg|png|gif|svg))\)",
+                lambda m: f"]({m.group(1)})", body_md)
             body, toc = render(body_md)
             chips = ""
             if fm:

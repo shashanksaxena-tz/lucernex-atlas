@@ -24,6 +24,7 @@ import re
 import shutil
 
 import gate
+import sitenav
 
 # --------------------------------------------------------------- branding
 # The product's name is removed from all published output. Applied at the
@@ -62,6 +63,14 @@ def inline(t):
 
     t = re.sub(r"`([^`]+)`", stash, t)
     t = e(t)
+    # Images BEFORE links — otherwise "![alt](src)" matches the link rule and
+    # renders as a stray "!" followed by an anchor. The caption is deliberate:
+    # the corpus captions every screenshot with what to notice in it.
+    t = re.sub(r"!\[([^\]]*)\]\(([^)\s]+)\)",
+               lambda m: (f'<figure><a href="{rewrite(m.group(2))}">'
+                          f'<img loading="lazy" src="{rewrite(m.group(2))}" alt="{m.group(1)}">'
+                          f'</a><figcaption>{m.group(1)}</figcaption></figure>'),
+               t)
     t = re.sub(r"\[([^\]]+)\]\(([^)\s]+)\)", lambda m: f'<a href="{rewrite(m.group(2))}">{m.group(1)}</a>', t)
     t = re.sub(r"\*\*\*(.+?)\*\*\*", r"<strong><em>\1</em></strong>", t)
     t = re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", t)
@@ -73,8 +82,19 @@ def inline(t):
 
 CUR = {"rel": ""}   # source path of the document being rendered, relative to docs/
 
+# build_vault.py resolves its own link targets before calling render(), because
+# a vault note's links are relative to vault/, not docs/. When that is true this
+# module must not adjust them a second time — doing so compounds two rewrites
+# and was the cause of image paths six levels deep where three were correct.
+PASSTHROUGH = {"on": False}
+
 
 def rewrite(href):
+    if PASSTHROUGH["on"]:
+        if href.startswith(("http", "#", "mailto:")):
+            return e(href)
+        base, anchor = href.split("#")[0], href[len(href.split("#")[0]):]
+        return e((base[:-3] + ".html" if base.endswith(".md") else base) + anchor)
     """The generated tree mirrors docs/, so markdown links only need their
     extension swapped. Everything else (json, csv, images) still lives at the
     docs root, so resolve it there and point back out of research/."""
@@ -201,7 +221,7 @@ def render(md):
 
 
 # -------------------------------------------------------------------- shell
-def page(title, body, toc=None, sub="", depth=0):
+def page(title, body, toc=None, sub="", depth=0, view="research"):
     up = "../" * depth
     nav = ""
     if toc:
@@ -217,16 +237,13 @@ def page(title, body, toc=None, sub="", depth=0):
 <link rel="stylesheet" href="{up}research.css">
 </head><body>
 <header><b>Lx Atlas</b>
-<nav><a href="{up}../index.html">Overview</a><a href="{up}../atlas.html#/map?set=feature">Feature map</a>
-<a href="{up}../atlas.html">Interactive app</a>
-<a href="{up}../entities/index.html">Record types</a><a href="{up}../rules/index.html">Rules</a>
-<a href="{up}index.html" class="on">Research</a>\n<a href="{up}screens.html">Screens</a>\n<a href="{up}../vault/index.html">Vault</a>
-<a href="{up}../questions.html">Open questions</a></nav></header>
+{sitenav.nav_html(up + "../", view)}</header>
 <main><p class="crumb"><a href="{up}../index.html">Atlas</a> &rsaquo;
-<a href="{up}index.html">Research</a>{sub}</p>{nav}{body}</main></body></html>"""))
+<a href="{up}index.html">Research</a>{sub}</p>
+<p class="viewfor">{e(sitenav.purpose(view))}</p>{nav}{body}</main></body></html>"""))
 
 
-CSS = """
+CSS = sitenav.NAV_CSS + """
 .toc{display:block;margin:0 0 28px;padding:16px 18px;background:var(--card,#fff);
  border:1px solid var(--line,#e5e7eb);border-radius:10px}
 .toc b{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.08em;
@@ -248,6 +265,10 @@ main del{color:var(--muted,#6b7280)}
 .doccard p{margin:0;font-size:13px;color:var(--muted,#6b7280);line-height:1.5}
 .doccard .meta{margin-top:10px;font-size:11px;color:var(--muted,#6b7280);
  font-family:'IBM Plex Mono',monospace}
+main figure{margin:22px 0;padding:0}
+main figure a{display:block;border:1px solid var(--line,#e5e7eb);border-radius:10px;overflow:hidden}
+main figure img{width:100%;display:block}
+main figcaption{margin-top:8px;font-size:12.5px;color:var(--muted,#6b7280);line-height:1.5}
 .shots{display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(200px,1fr))}
 .shots a{display:block;border:1px solid var(--line,#e5e7eb);border-radius:8px;overflow:hidden}
 .shots img{width:100%;display:block}
@@ -498,7 +519,7 @@ def main():
     sb.insert(2, f"<div class='stats'><div><b class='mono'>{total}</b><span>Screens</span></div>"
                  f"<div><b class='mono'>2</b><span>Tenants</span></div></div>")
     open(os.path.join(OUT, "screens.html"), "w", encoding="utf-8").write(
-        page("Screens", "".join(sb + body_areas)))
+        page("Screens", "".join(sb + body_areas), view="screens"))
     print(f"screens page: {total} images")
     print(f"research: {len(built)} pages, {sum(counts.values())} screens, {njson} data captures")
 

@@ -48,7 +48,7 @@ The security access manual is organised as: The Equipment Contract gate — thre
 
 *Observed · fact · source: `features/security-access/README.md`*
 
-Written up in features/security-access/README.md. 116 screen captures on disk, under docs/assets/screenshots/bbw-admin, docs/assets/screenshots/af-admin — the screens themselves, not a description of them. 111 of them are cited by name in the documentation, which is what ties a capture to the screen it shows. 1 are held back from being shown here: they contain a named individual, and whether those images get redacted is an open decision. They still count as evidence — the file is on disk and named in the docs — they are simply not thumbnailed.
+Written up in features/security-access/README.md. 116 screen captures on disk, under docs/assets/screenshots/bbw-admin, docs/assets/screenshots/af-admin — the screens themselves, not a description of them. 111 of them are cited by name in the documentation, which is what ties a capture to the screen it shows. Admin tools documented here, each with the capture named after it: Audit Reports, Manage Security, Manage Top Menu. 1 are held back from being shown here: they contain a named individual, and whether those images get redacted is an open decision. They still count as evidence — the file is on disk and named in the docs — they are simply not thumbnailed.
 
 ![2. Administration tools (57)](../../assets/screenshots/bbw-admin/01-manage-company.jpg)
 ![2. Administration tools (57)](../../assets/screenshots/bbw-admin/02-manage-schedule-templates.jpg)

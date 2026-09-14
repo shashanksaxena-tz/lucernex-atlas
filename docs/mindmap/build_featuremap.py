@@ -21,6 +21,7 @@ import os
 import re
 
 import corpus
+import sitenav
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 
@@ -40,6 +41,15 @@ SHOTS = corpus.screenshots()
 # Where each capture is cited or embedded across the corpus. Strict: an
 # unresolvable reference fails this build rather than being skipped quietly.
 SHOT_REFS = corpus.shot_references()
+
+# The one join that works between a named surface and a capture. Captures in
+# this corpus are named after ADMIN TOOLS and never after layouts, navigation
+# screens, workflows or form types — so 32 of the 36 adminTools entries in
+# coverage-owners.json resolve, and all 139 entries in the other four buckets
+# resolve to nothing. That is a naming convention, not missing evidence: a
+# layout with no capture named for it is normal, and its image has to come from
+# the citation index instead.
+ADMIN_SHOTS, ADMIN_SHOT_MISSES = sitenav.admin_tool_shots(corpus.shot_index())
 
 Q_BY_AREA = {}
 for _q in QUESTIONS["questions"]:
@@ -211,6 +221,12 @@ def evidence_node(slugs, shot_dirs, mod):
         cited = sum(1 for s in shots if SHOT_REFS.get(s))
         bits.append("%d of them are cited by name in the documentation, which is what "
                     "ties a capture to the screen it shows." % cited)
+    tools = sorted(n for n, (doc, _sh) in ADMIN_SHOTS.items()
+                   if any(d in doc for d in docs)) if docs else []
+    if tools:
+        bits.append("Admin tools documented here, each with the capture named after it: "
+                    + ", ".join(tools[:8])
+                    + (" and %d more" % (len(tools) - 8) if len(tools) > 8 else "") + ".")
     if held:
         bits.append("%d are held back from being shown here: they contain a named "
                     "individual, and whether those images get redacted is an open "

@@ -31,10 +31,6 @@ Source: `data-model/pg/bbw-field-inventory.csv`, `_lucernex_objects_summary.txt`
 
 **Observed.** 113 of this record's 118 inventoried fields have prose written by the vendor saying what the field is for. Open any field node to read it — this is the one reading of the corpus that explains fields rather than listing them. It is a sharper reading of the same export the object census comes from, not a second source: where it agrees with the census that is one fact stated twice, not two facts.
 
-### Required: the two captures disagree
-
-**Observed.** The field inventory marks 1 of this record's fields required; the Data Fields catalogue marks 0; 0 appear in both. These two ARE separate captures — the catalogue is the Manage Data Fields screen, the inventory is the object export — so the disagreement is real and not a reading artefact. Estate-wide it is 606 against 637 with only 515 shared, so 213 fields are required according to exactly one of them. A rebuild that picks one capture and ignores the other silently drops obligations.
-
 ### 118 fields excluded from extraction
 
 **Observed.** Observed of the loader. The inventory marks 118 of this record's fields as not extracted to PostgreSQL, so the replication target creates no column for them. They still exist in Lx; anything reading the replica rather than the product will not see them.

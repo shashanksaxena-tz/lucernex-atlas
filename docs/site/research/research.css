@@ -1,4 +1,28 @@
 
+nav.sitenav{margin-left:auto;display:flex;gap:18px;flex-wrap:wrap;align-items:baseline}
+nav.sitenav .navgrp{display:flex;gap:9px;align-items:baseline;flex-wrap:wrap}
+nav.sitenav .navgrp b{font-size:9px;letter-spacing:.1em;text-transform:uppercase;
+ color:var(--faint);font-weight:600;white-space:nowrap}
+nav.sitenav a{font-size:12.5px;color:var(--ink2);white-space:nowrap}
+nav.sitenav a:hover{color:var(--accent)}
+nav.sitenav a.on{color:var(--accent);font-weight:600}
+.viewfor{font-size:12.5px;color:var(--muted);border-left:2px solid var(--line);
+ padding:2px 0 2px 11px;margin:0 0 18px;max-width:72ch}
+.ladder{display:grid;gap:1px;background:var(--line2);border:1px solid var(--line2);
+ border-radius:var(--r);overflow:hidden;margin:0 0 26px}
+.ladder a{display:grid;grid-template-columns:150px 1fr;gap:16px;background:var(--surface);
+ padding:13px 16px;color:inherit}
+.ladder a:hover{background:var(--surface2);text-decoration:none}
+.ladder b{font-size:13.5px;font-weight:600}
+.ladder b span{display:block;font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;
+ color:var(--faint);font-weight:600;margin-top:2px}
+.ladder p{margin:0;font-size:12.5px;color:var(--muted);max-width:none}
+.seealso{display:flex;gap:9px;flex-wrap:wrap;margin:0 0 20px}
+.seealso a{font-size:12px;padding:5px 10px;border:1px solid var(--line);border-radius:var(--r);
+ background:var(--surface);color:var(--ink2)}
+.seealso a:hover{border-color:var(--accent);color:var(--ink);text-decoration:none}
+.seealso i{font-style:normal;color:var(--faint);margin-right:5px}
+
 .toc{display:block;margin:0 0 28px;padding:16px 18px;background:var(--card,#fff);
  border:1px solid var(--line,#e5e7eb);border-radius:10px}
 .toc b{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.08em;
@@ -20,6 +44,10 @@ main del{color:var(--muted,#6b7280)}
 .doccard p{margin:0;font-size:13px;color:var(--muted,#6b7280);line-height:1.5}
 .doccard .meta{margin-top:10px;font-size:11px;color:var(--muted,#6b7280);
  font-family:'IBM Plex Mono',monospace}
+main figure{margin:22px 0;padding:0}
+main figure a{display:block;border:1px solid var(--line,#e5e7eb);border-radius:10px;overflow:hidden}
+main figure img{width:100%;display:block}
+main figcaption{margin-top:8px;font-size:12.5px;color:var(--muted,#6b7280);line-height:1.5}
 .shots{display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(200px,1fr))}
 .shots a{display:block;border:1px solid var(--line,#e5e7eb);border-radius:8px;overflow:hidden}
 .shots img{width:100%;display:block}

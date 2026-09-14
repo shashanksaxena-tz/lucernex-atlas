@@ -554,16 +554,30 @@ CROSS_FACTS = [
      "corroboration of it. Treating it as a second witness is how one silence becomes two "
      "confident citations — so where the two agree, that is one fact stated twice.",
      "observed", "data-model/pg/bbw-field-inventory.csv"),
-    ("Required: two answers",
-     "The two captures of required-ness disagree on 213 fields",
-     "The Data Fields catalogue marks 637 fields required; the field inventory marks 606; "
-     "only 515 appear in both. 122 are required according to the catalogue alone and 91 "
-     "according to the inventory alone. These two genuinely are separate captures — the "
-     "catalogue is the Manage Data Fields screen, the inventory is the object export — so "
-     "the disagreement is evidence, not noise, and it echoes the column-flag versus "
-     "catalogue-flag split that already disagreed on 44 fields. A rebuild that adopts one "
-     "capture drops the other's obligations silently.",
-     "observed", "data-model/pg/bbw-field-inventory.csv"),
+    ("Required: owner FKs",
+     "Required-ness disagrees on 43 fields, and they are one coherent class",
+     "Joined on the 5,768 fields BOTH captures actually contain, the Data Fields catalogue "
+     "and the field inventory agree on 5,725 — 99.3%. The 43 that differ all run the same "
+     "way, catalogue-required and inventory-not, and they are 34 ContractID, 8 "
+     "ProjectEntityID and 1 ShortName across 41 record types: the owner foreign key, the "
+     "parent link the application demands and the database permits to be null. Parenthood "
+     "is enforced by the application, not by the schema. Three captures made three "
+     "different ways give three totals — 603 from the schema viewer, 637 from the Manage "
+     "Data Fields screen, 606 from the object export — and the same structural signature "
+     "every time. Never compare those three totals: they cover different populations. The "
+     "signature is what is corroborated, not any one number.",
+     "observed", "features/required-and-validation/README.md"),
+    ("Absence is not denial",
+     "A field missing from a capture is not that capture saying \"not required\"",
+     "Establish that both captures contain a field before claiming they disagree about it, "
+     "and state the joined denominator before stating a difference. Comparing the two "
+     "required-ness sets directly rather than the fields they share manufactures 213 "
+     "disagreements where there are 43: the other 170 are one capture never having heard of "
+     "the field. Most of those sit on 18 record types the Data Fields catalogue does not "
+     "contain at all, and the fields are plumbing — BOMapClientRecordID, FirmID, "
+     "ProjectEntityName, Inactive. This is the same failure as treating one export read "
+     "twice as two witnesses, in the opposite direction.",
+     "derived", "features/required-and-validation/README.md"),
     ("Custom lists differ",
      "The Firm_ precedent does not extend to custom lists",
      "CRL_, OpEx and LAR_ prefixes appear zero times in all 7,368 inventory rows, and "

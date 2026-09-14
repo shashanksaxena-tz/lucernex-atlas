@@ -72,7 +72,7 @@ The workflows forms manual is organised as: The 13 BBW workflow templates; Workf
 
 *Observed · fact · source: `features/workflows-forms/README.md`*
 
-Written up in features/workflows-forms/README.md. 4 screen captures on disk, under docs/assets/screenshots/workflow, docs/assets/screenshots/forms — the screens themselves, not a description of them. 4 of them are cited by name in the documentation, which is what ties a capture to the screen it shows.
+Written up in features/workflows-forms/README.md. 4 screen captures on disk, under docs/assets/screenshots/workflow, docs/assets/screenshots/forms — the screens themselves, not a description of them. 4 of them are cited by name in the documentation, which is what ties a capture to the screen it shows. Admin tools documented here, each with the capture named after it: Manage Forms, Manage Work Flows.
 
 ![Manage Work Flow expanded — every step of every workflow](../../assets/screenshots/workflow/manage-workflow-expanded-all-steps.jpg)
 ![Manage Work Flow — the same four names as Manage Forms](../../assets/screenshots/workflow/manage-workflow-index.jpg)

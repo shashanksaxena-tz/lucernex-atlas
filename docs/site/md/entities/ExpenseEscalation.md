@@ -39,9 +39,9 @@ Source: `data-fields/expense-escalation.md`
 
 **Observed.** 27 of this record's 28 inventoried fields have prose written by the vendor saying what the field is for. Open any field node to read it — this is the one reading of the corpus that explains fields rather than listing them. It is a sharper reading of the same export the object census comes from, not a second source: where it agrees with the census that is one fact stated twice, not two facts.
 
-### Required: the two captures disagree
+### Required-ness: the captures agree
 
-**Observed.** The field inventory marks 3 of this record's fields required; the Data Fields catalogue marks 3; 3 appear in both. These two ARE separate captures — the catalogue is the Manage Data Fields screen, the inventory is the object export — so the disagreement is real and not a reading artefact. Estate-wide it is 606 against 637 with only 515 shared, so 213 fields are required according to exactly one of them. A rebuild that picks one capture and ignores the other silently drops obligations.
+**Observed.** Over the 27 fields both the Data Fields catalogue and the field inventory contain, the two agree on every one. 3 are marked required.
 
 ### Replication coverage: not materialised
 

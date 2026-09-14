@@ -35,9 +35,9 @@ Source: `data-fields/landlord-invoice-item.md`
 
 **Derived.** The physical database is lxr_drp_bbw — the tenant's name is in the database name. That is one more piece of evidence for database-per-tenant and against a single shared schema, alongside the Firm_ columns.
 
-### Required: the two captures disagree
+### Required-ness: 2 disagree of 28 comparable
 
-**Observed.** The field inventory marks 3 of this record's fields required; the Data Fields catalogue marks 5; 3 appear in both. These two ARE separate captures — the catalogue is the Manage Data Fields screen, the inventory is the object export — so the disagreement is real and not a reading artefact. Estate-wide it is 606 against 637 with only 515 shared, so 213 fields are required according to exactly one of them. A rebuild that picks one capture and ignores the other silently drops obligations.
+**Observed.** Over the 28 fields both captures contain, they agree on 26. The exceptions are ContractID, ProjectEntityID. Estate-wide there are 43 such fields and every one runs the same way — catalogue-required, inventory-not — and they are 34 ContractID, 8 ProjectEntityID and 1 ShortName: the owner foreign key. Parenthood is enforced by the application, not by the database.
 
 ### Replication coverage: not materialised
 
