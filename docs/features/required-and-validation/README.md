@@ -145,6 +145,51 @@ rather than inheriting it by accident.
 The 2 reverse cases are the audit stamps `CreatedByID`/`ModifiedByID` on `ProjectEntity` — mandatory
 in the table, simply not exposed as configurable catalog leaves. Not an override; an omission.
 
+### A third capture reproduces the owner-FK finding — and shows why the totals must not be compared
+
+**Observed.** [`../../data-model/pg/bbw-field-inventory.csv`](../../data-model/pg/bbw-field-inventory.csv)
+carries its own `Required` flag per field, from the object export rather than from the schema viewer.
+Joining it against the catalog on `(Object, Field)`:
+
+| | |
+|---|---:|
+| Keys in the catalog | 6,136 |
+| Keys in the inventory | 7,358 |
+| **Jointly observable** | **5,768** |
+| Agree | **5,725** |
+| **Catalogue-Yes / inventory-No** | **43** |
+| **Inventory-Yes / catalogue-No** | **0** |
+
+**Derived, and it is a genuine strengthening of the section above.** All 43 disagreements run in **one
+direction**, and they are **34 `ContractID`, 8 `ProjectEntityID`, and 1 `ShortName`** — the owner-FK
+override set, reproduced from a third capture that was made in a different way. *Parenthood is
+enforced by the application, not by the database* is now supported by the schema viewer and by the
+object export independently.
+
+> **The trap, and it is the sharpest one in this document.** The three captures report **637**
+> (catalog), **606** (inventory) and **603** (schema-viewer sweep) required fields. Those totals look
+> close enough to read as corroboration, and comparing them is wrong — **they cover different
+> populations.** Only 5,768 of the catalog's 6,136 keys and the inventory's 7,358 exist in both.
+>
+> Subtract carelessly and you get "213 fields are required according to exactly one capture". That
+> number is arithmetically correct and describes almost nothing: **43** of it is real disagreement,
+> and **170** is one capture never having heard of the field. Of the 91 inventory-required keys the
+> catalog lacks, most sit on **18 objects the catalog does not contain at all** — `ClientListRow`,
+> `BudgetLineGroup`, `LinkIssuePart` and others — and the fields are plumbing:
+> `BOMapClientRecordID` ×12, `FirmID` ×9, `ProjectEntityName` ×9, `Inactive` ×8.
+>
+> **A field missing from a capture is not a capture saying "not required".** Any statement of the form
+> *"source A marks this required and source B does not"* must first establish that B has the field.
+> State the joined denominator before stating a difference.
+
+**Observed, and recorded rather than resolved.** The inventory marks `ProjectEntity.CreatedByID` and
+`ProjectEntity.ModifiedByID` **not** required, while the schema-viewer sweep marks them required —
+the 2 reverse cases above. Both fields are present in all three captures, so this is a real
+three-way disagreement on two audit stamps, not a population gap. It does not affect the owner-FK
+finding and is not worth chasing, but it means **no single capture should be treated as the
+authoritative required-ness source.**
+
+
 ### What is actually required, across the whole schema
 
 **Derived** from [`../../tenants/bbw-platform-tables.json`](../../tenants/bbw-platform-tables.json).

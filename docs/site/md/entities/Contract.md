@@ -57,7 +57,7 @@ Source: `data-fields/contract.md`
 
 ### Two counts of its physical tables
 
-**Observed.** The object census counts 4 physical tables for this record; the field inventory names 3 (contract_firm, contract_financial, contract_admin). The census reads the exported schema, the inventory reads one replication loader's configuration, so a table the loader does not write is invisible to the second count. Settle which you mean before quoting either.
+**Observed.** The object census counts 4 physical tables for this record; the field inventory names 3 (contract_firm, contract_financial, contract_admin). These are not two witnesses — they are the SAME export read two ways (222 of 223 objects and 7,273 fields in common), so the gap is a difference of reading, not of evidence: the census reads the exported schema, the inventory reads one replication loader's configuration, and a table the loader does not write is invisible to the second count. Settle which you mean before quoting either, and do not cite them as though they corroborate each other.
 
 ### A per-tenant database name
 
@@ -65,11 +65,11 @@ Source: `data-fields/contract.md`
 
 ### 306 fields carry a vendor definition
 
-**Observed.** 306 of this record's 477 inventoried fields have prose written by the vendor saying what the field is for. Open any field node to read it — this is the one source in the corpus that explains fields rather than listing them.
+**Observed.** 306 of this record's 477 inventoried fields have prose written by the vendor saying what the field is for. Open any field node to read it — this is the one reading of the corpus that explains fields rather than listing them. It is a sharper reading of the same export the object census comes from, not a second source: where it agrees with the census that is one fact stated twice, not two facts.
 
-### 5 fields marked required
+### Required: the two captures disagree
 
-**Observed.** The inventory marks 5 of this record's fields Required. Across the whole inventory that is 606 fields, which independently corroborates the 603 the corpus had derived from the Data Fields catalogue — two sources, arrived at separately, agreeing to within three.
+**Observed.** The field inventory marks 5 of this record's fields required; the Data Fields catalogue marks 3; 2 appear in both. These two ARE separate captures — the catalogue is the Manage Data Fields screen, the inventory is the object export — so the disagreement is real and not a reading artefact. Estate-wide it is 606 against 637 with only 515 shared, so 213 fields are required according to exactly one of them. A rebuild that picks one capture and ignores the other silently drops obligations.
 
 ### 1 field excluded from extraction
 

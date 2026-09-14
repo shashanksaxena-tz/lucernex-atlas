@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Map of open questions &middot; Lx Vault</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="../atlas.css">
+<link rel="stylesheet" href="../research/research.css">
+<link rel="stylesheet" href="vault.css">
+</head><body><style id="lxg">body{visibility:hidden}
+#lxgate{visibility:visible;position:fixed;inset:0;z-index:9999;display:flex;
+align-items:center;justify-content:center;background:#0f172a;
+font-family:'IBM Plex Sans',system-ui,sans-serif}
+#lxgate form{background:#fff;padding:30px 32px;border-radius:12px;width:310px;
+box-shadow:0 20px 60px rgba(0,0,0,.35)}
+#lxgate h2{margin:0 0 4px;font-size:19px;color:#0f172a}
+#lxgate p{margin:0 0 18px;font-size:12.5px;color:#64748b;line-height:1.5}
+#lxgate label{display:block;font-size:11px;text-transform:uppercase;
+letter-spacing:.07em;color:#64748b;margin:0 0 5px}
+#lxgate input{width:100%;box-sizing:border-box;padding:9px 11px;margin:0 0 14px;
+border:1px solid #cbd5e1;border-radius:7px;font-size:14px}
+#lxgate button{width:100%;padding:10px;border:0;border-radius:7px;
+background:#b4530a;color:#fff;font-size:14px;font-weight:600;cursor:pointer}
+#lxgate .err{color:#b91c1c;font-size:12px;margin:0 0 10px;display:none}</style>
+<div id="lxgate"><form onsubmit="return lxg(event)">
+<h2>Lx Atlas</h2>
+<p>Internal documentation. Not a security boundary &mdash; see
+<code>gate.py</code>.</p>
+<p class="err" id="lxge">Incorrect.</p>
+<label for="lxgu">User</label><input id="lxgu" autocomplete="username" autofocus>
+<label for="lxgp">Password</label><input id="lxgp" type="password"
+autocomplete="current-password">
+<button type="submit">Enter</button></form></div>
+<script>
+function lxgOpen(){var g=document.getElementById('lxgate');if(g)g.remove();
+var s=document.getElementById('lxg');if(s)s.remove();
+document.body.style.visibility='visible';}
+function lxg(ev){ev.preventDefault();
+if(document.getElementById('lxgu').value==='admin'&&
+   document.getElementById('lxgp').value==='admin'){
+ try{sessionStorage.setItem('lxg','1');}catch(e){}
+ lxgOpen();return false;}
+document.getElementById('lxge').style.display='block';return false;}
+try{if(sessionStorage.getItem('lxg')==='1')
+ document.addEventListener('DOMContentLoaded',lxgOpen);}catch(e){}
+</script>
+<header><b>Lx Atlas</b>
+<nav><a href="../index.html">Overview</a><a href="../atlas.html#/map?set=feature">Feature map</a>
+<a href="../atlas.html">Interactive app</a>
+<a href="../research/index.html">Research</a>
+<a href="../research/screens.html">Screens</a>
+<a href="index.html" class="on">Vault</a>
+<a href="../questions.html">Open questions</a></nav></header>
+<main><p class="crumb"><a href="../index.html">Atlas</a> &rsaquo;
+<a href="index.html">Vault</a> &rsaquo; Map of open questions</p><nav class="toc"><b>On this page</b><a href="#blocking-a-decision">Blocking a decision</a><a href="#needs-a-write-so-cannot-be-answered-read-only">Needs a write, so cannot be answered read-only</a><a href="#answered-but-the-answer-is-inferred">Answered, but the answer is Inferred</a><a href="#data-model">Data model</a><a href="#workflow">Workflow</a><a href="#configuration-and-product-decisions">Configuration and product decisions</a><a href="#risk">Risk</a></nav><div class="fm"><span>moc</span></div><h1 id="what-is-still-unknown">What is still unknown</h1><p>Each note states <strong>what would settle it</strong>. Open questions are output, not failure — <a href="concepts/evidence-labels.html">evidence-labels</a>.</p><h2 id="blocking-a-decision">Blocking a decision</h2><div class="wrapt"><table><thead><tr><th>Question</th><th>Blocks</th></tr></thead><tbody><tr><td><a href="open-questions/q-bbw-18-has-any-schedule-been-calculated.html">q-bbw-18-has-any-schedule-been-calculated</a></td><td><strong>The accounting engine spec.</strong> The rate table is empty in both tenants</td></tr><tr><td><a href="open-questions/q-bbw-17-ai-abstraction-in-scope.html">q-bbw-17-ai-abstraction-in-scope</a></td><td>~7 layouts, a status value, an entitlement flag and an integration</td></tr><tr><td><a href="open-questions/q-bbw-20-lease-status.html">q-bbw-20-lease-status</a></td><td>The contract schema. Is the lifecycle an ordered state machine or not?</td></tr><tr><td><a href="open-questions/q-bbw-03-task-step.html">q-bbw-03-task-step</a></td><td>Whether half the workflow step model needs building at all</td></tr></tbody></table></div><h2 id="needs-a-write-so-cannot-be-answered-read-only">Needs a write, so cannot be answered read-only</h2><p><a href="open-questions/q-bbw-03-task-step.html">q-bbw-03-task-step</a> · <a href="open-questions/q-bbw-15-import-results.html">q-bbw-15-import-results</a> · <a href="open-questions/q-bbw-11-virtual-layout-writable.html">q-bbw-11-virtual-layout-writable</a> — see <a href="methods/method-read-only-exploration.html">method-read-only-exploration</a>.</p><h2 id="answered-but-the-answer-is-inferred">Answered, but the answer is Inferred</h2><p><a href="open-questions/q-bbw-12-equipment-contract-root.html">q-bbw-12-equipment-contract-root</a> — an 11-for-11 correlation, not a reading of the rendering code. The falsifier is stated.</p><h2 id="data-model">Data model</h2><p><a href="open-questions/q-bbw-13-census-gap.html">q-bbw-13-census-gap</a> · <a href="open-questions/q-bbw-22-three-firm-field-counts.html">q-bbw-22-three-firm-field-counts</a> · <a href="open-questions/q-bbw-10-straight-line-table.html">q-bbw-10-straight-line-table</a> · <a href="open-questions/q-bbw-05-equipment-contract-type.html">q-bbw-05-equipment-contract-type</a> · <a href="open-questions/q-bbw-09-contract-templates.html">q-bbw-09-contract-templates</a> · <a href="open-questions/q-bbw-23-1647-layouts.html">q-bbw-23-1647-layouts</a></p><h2 id="workflow">Workflow</h2><p><a href="open-questions/q-bbw-06-conditional-workflow-js.html">q-bbw-06-conditional-workflow-js</a> · <a href="open-questions/q-bbw-07-workflow-kickoff-graph.html">q-bbw-07-workflow-kickoff-graph</a> · <a href="open-questions/q-bbw-08-step-8-form-mismatch.html">q-bbw-08-step-8-form-mismatch</a></p><h2 id="configuration-and-product-decisions">Configuration and product decisions</h2><p><a href="open-questions/q-bbw-01-isreadonlyrecord.html">q-bbw-01-isreadonlyrecord</a> · <a href="open-questions/q-bbw-02-capital-lease-test.html">q-bbw-02-capital-lease-test</a> · <a href="open-questions/q-bbw-24-deep-linking.html">q-bbw-24-deep-linking</a></p><h2 id="risk">Risk</h2><p><a href="open-questions/q-bbw-19-hourly-integration.html">q-bbw-19-hourly-integration</a> — an hourly inbound feed in a tenant everyone is treating as training.</p><p>← <a href="00-start-here.html">00-start-here</a> · <a href="map-of-findings.html">map-of-findings</a></p><div class="backlinks"><b>Linked from &middot; 5</b><a href="00-start-here.html">00-start-here</a><a href="README.html">README</a><a href="concepts/evidence-labels.html">evidence-labels</a><a href="map-of-findings.html">map-of-findings</a><a href="methods/method-read-only-exploration.html">method-read-only-exploration</a></div></main></body></html>

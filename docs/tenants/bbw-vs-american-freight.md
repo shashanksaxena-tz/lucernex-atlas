@@ -1369,6 +1369,18 @@ and the 44 disagreements are **byte-identical** to those found on the partial se
 `ContractID`, 8 `ProjectEntityID` and 2 `ProjectEntity` audit stamps. The caveat is lifted and the
 number published.
 
+**Corroborated by a third, independent source.** The owner-supplied
+[`bbw-field-inventory.csv`](../data-model/pg/bbw-field-inventory.csv) carries its own `Required`
+column (606 of 7,358). Joined against the Manage Data Fields catalogue on `(object, field name)`:
+**5,768 joined · 5,725 agree (99.3%) · 43 disagree — every one catalogue-Yes / inventory-No, and
+34 of them `ContractID` plus 8 `ProjectEntityID`.**
+
+Three sources, three slightly different totals (603 · 637 · 606), and **the same structural
+signature every time: the disagreements are owner foreign keys.** That is the finding — a parent
+link the application demands and the database permits to be null. The exact count varies with the
+source because each inventory covers a slightly different population; the pattern does not vary at
+all, which is what makes it trustworthy.
+
 §3's note stands: the first two are **not** one flag twice. 42 catalog-Yes/schema-No cases are all
 owner foreign keys, 2 reverse cases are audit columns, so neither is a subset. A rebuild needs both —
 `NOT NULL` cannot express *"you must pick a parent Contract when creating an Allowance"*.

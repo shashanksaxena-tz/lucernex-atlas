@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Map of features &middot; Lx Vault</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="../atlas.css">
+<link rel="stylesheet" href="../research/research.css">
+<link rel="stylesheet" href="vault.css">
+</head><body><style id="lxg">body{visibility:hidden}
+#lxgate{visibility:visible;position:fixed;inset:0;z-index:9999;display:flex;
+align-items:center;justify-content:center;background:#0f172a;
+font-family:'IBM Plex Sans',system-ui,sans-serif}
+#lxgate form{background:#fff;padding:30px 32px;border-radius:12px;width:310px;
+box-shadow:0 20px 60px rgba(0,0,0,.35)}
+#lxgate h2{margin:0 0 4px;font-size:19px;color:#0f172a}
+#lxgate p{margin:0 0 18px;font-size:12.5px;color:#64748b;line-height:1.5}
+#lxgate label{display:block;font-size:11px;text-transform:uppercase;
+letter-spacing:.07em;color:#64748b;margin:0 0 5px}
+#lxgate input{width:100%;box-sizing:border-box;padding:9px 11px;margin:0 0 14px;
+border:1px solid #cbd5e1;border-radius:7px;font-size:14px}
+#lxgate button{width:100%;padding:10px;border:0;border-radius:7px;
+background:#b4530a;color:#fff;font-size:14px;font-weight:600;cursor:pointer}
+#lxgate .err{color:#b91c1c;font-size:12px;margin:0 0 10px;display:none}</style>
+<div id="lxgate"><form onsubmit="return lxg(event)">
+<h2>Lx Atlas</h2>
+<p>Internal documentation. Not a security boundary &mdash; see
+<code>gate.py</code>.</p>
+<p class="err" id="lxge">Incorrect.</p>
+<label for="lxgu">User</label><input id="lxgu" autocomplete="username" autofocus>
+<label for="lxgp">Password</label><input id="lxgp" type="password"
+autocomplete="current-password">
+<button type="submit">Enter</button></form></div>
+<script>
+function lxgOpen(){var g=document.getElementById('lxgate');if(g)g.remove();
+var s=document.getElementById('lxg');if(s)s.remove();
+document.body.style.visibility='visible';}
+function lxg(ev){ev.preventDefault();
+if(document.getElementById('lxgu').value==='admin'&&
+   document.getElementById('lxgp').value==='admin'){
+ try{sessionStorage.setItem('lxg','1');}catch(e){}
+ lxgOpen();return false;}
+document.getElementById('lxge').style.display='block';return false;}
+try{if(sessionStorage.getItem('lxg')==='1')
+ document.addEventListener('DOMContentLoaded',lxgOpen);}catch(e){}
+</script>
+<header><b>Lx Atlas</b>
+<nav><a href="../index.html">Overview</a><a href="../atlas.html#/map?set=feature">Feature map</a>
+<a href="../atlas.html">Interactive app</a>
+<a href="../research/index.html">Research</a>
+<a href="../research/screens.html">Screens</a>
+<a href="index.html" class="on">Vault</a>
+<a href="../questions.html">Open questions</a></nav></header>
+<main><p class="crumb"><a href="../index.html">Atlas</a> &rsaquo;
+<a href="index.html">Vault</a> &rsaquo; Map of features</p><nav class="toc"><b>On this page</b><a href="#the-modules-underneath">The modules underneath</a></nav><div class="fm"><span>moc</span></div><h1 id="the-product-by-what-it-does">The product, by what it does</h1><p>Twelve feature areas — the product as a user and an administrator meet it. For the same product by what it <em>stores</em>, see <a href="map-of-entities.html">map-of-entities</a>.</p><div class="wrapt"><table><thead><tr><th>Area</th><th>The one thing to know</th></tr></thead><tbody><tr><td><a href="features/feature-page-layouts.html">feature-page-layouts</a></td><td>Every screen is a <a href="concepts/page-layout-concept.html">layout</a> — and there are 135 of them, not 93</td></tr><tr><td><a href="features/feature-required-and-validation.html">feature-required-and-validation</a></td><td>Three sources of required-ness, and <a href="findings/finding-no-layout-level-required.html">none of them is the layout</a></td></tr><tr><td><a href="features/feature-workflows-forms.html">feature-workflows-forms</a></td><td>A <a href="concepts/form-vs-page.html">Form is an Issue Type</a>, and Form↔Workflow is <strong>not</strong> 1:1</td></tr><tr><td><a href="features/feature-data-fields.html">feature-data-fields</a></td><td>One catalog feeds everything — and <a href="findings/finding-firm-fields-are-physical-columns.html">firm fields are DDL</a></td></tr><tr><td><a href="features/feature-drop-downs-code-tables.html">feature-drop-downs-code-tables</a></td><td>207 platform tables, 73 populated, and delete is a per-row boolean</td></tr><tr><td><a href="features/feature-equipment-contracts.html">feature-equipment-contracts</a></td><td><a href="entities/Contract.html">Contract</a> minus retail, accounting engine kept whole</td></tr><tr><td><a href="features/feature-security-access.html">feature-security-access</a></td><td>Four securable kinds, five levels — and <code>Default</code> means <em>inherit</em></td></tr><tr><td><a href="features/feature-import-export.html">feature-import-export</a></td><td>Four inbound paths, and <a href="findings/finding-http-200-is-not-success.html">200 is not success</a></td></tr><tr><td><a href="features/feature-search-filtering.html">feature-search-filtering</a></td><td>Three unrelated mechanisms; <code>IncludeInSearch</code> is set on <strong>9</strong> placements</td></tr><tr><td><a href="features/feature-custom-lists.html">feature-custom-lists</a></td><td>A Form without the workflow — and the storage does not add up</td></tr><tr><td><a href="features/feature-reference-data.html">feature-reference-data</a></td><td><strong>Four of five tables are empty</strong>, including <a href="entities/DiscountRate.html">the discount rates</a></td></tr><tr><td><a href="features/feature-administration.html">feature-administration</a></td><td>All 57 tools, classified. A quarter of them are the configuration engine</td></tr></tbody></table></div><h2 id="the-modules-underneath">The modules underneath</h2><p>The features are how the product presents itself. The <strong>modules</strong> are how the domain decomposes:</p><p><a href="modules/module-accounting.html">module-accounting</a> · <a href="modules/module-contracts.html">module-contracts</a> · <a href="modules/module-workflow.html">module-workflow</a> · <a href="modules/module-layouts-and-forms.html">module-layouts-and-forms</a> · <a href="modules/module-reporting.html">module-reporting</a> · <a href="modules/module-facilities-locations.html">module-facilities-locations</a> · <a href="modules/module-platform-tenancy.html">module-platform-tenancy</a> · <a href="modules/module-people-parties.html">module-people-parties</a> · <a href="modules/module-assets-equipment.html">module-assets-equipment</a> · <a href="modules/module-property-tax.html">module-property-tax</a> · <a href="modules/module-documents-folders.html">module-documents-folders</a> · <a href="modules/module-portfolio-transactions.html">module-portfolio-transactions</a> · <a href="modules/module-projects-capital.html">module-projects-capital</a></p><p><strong>Two modules have no folder of their own</strong> and are documented inside <a href="modules/module-contracts.html">module-contracts</a>: Expense Recovery (CAM) — see <a href="entities/ExpenseRecovery.html">ExpenseRecovery</a> and <a href="concepts/cam-waterfall.html">cam-waterfall</a> — and Variable Rent &amp; Sales — see <a href="entities/PercentageRent.html">PercentageRent</a> and <a href="entities/Sales.html">Sales</a>.</p><p>← <a href="00-start-here.html">00-start-here</a> · <a href="map-of-screens.html">map-of-screens</a> · <a href="map-of-rules.html">map-of-rules</a></p><div class="backlinks"><b>Linked from &middot; 6</b><a href="00-start-here.html">00-start-here</a><a href="README.html">README</a><a href="map-of-concepts.html">map-of-concepts</a><a href="map-of-entities.html">map-of-entities</a><a href="map-of-rules.html">map-of-rules</a><a href="map-of-screens.html">map-of-screens</a></div></main></body></html>

@@ -39,10 +39,13 @@ function fieldProse(obj,col,ftype,fam,label,flags,code,def,role,pg){
   if(code&&D.typeLegend&&D.typeLegend[code]) s.push(`Catalogued as ${code}: ${D.typeLegend[code]}`);
   if(flags&FLAG_FIRM) s.push('Firm scope \u2014 this tenant defined it, the platform did not ship it. Firm fields are physical Firm_-prefixed columns, so adding one is a schema change.');
   else if(code) s.push('Global scope \u2014 shipped by the platform for every tenant.');
+  /* the two captures disagree on 213 fields estate-wide, so which one marks a
+     field required is itself the finding \u2014 never flatten them into "required" */
   if(flags&(FLAG_REQ|FLAG_INV_REQ)) s.push(
     ((flags&FLAG_REQ)&&(flags&FLAG_INV_REQ))
-      ? 'Both the Data Fields catalogue and the field inventory mark it required \u2014 two sources, arrived at separately, agreeing.'
-      : 'Marked required by '+((flags&FLAG_REQ)?'the Data Fields catalogue':'the field inventory')+'.');
+      ? 'Both the Data Fields catalogue and the field inventory mark it required.'
+      : 'Marked required by '+((flags&FLAG_REQ)?'the Data Fields catalogue, but NOT by the field inventory':'the field inventory, but NOT by the Data Fields catalogue')
+        +'. The two captures disagree on 213 fields estate-wide; this is one of them, so a rebuild reading only one capture gets this field wrong.');
   if(flags&(FLAG_REQ|FLAG_INV_REQ)) s.push('Required-ness has no layout-level layer: the asterisk a user sees is this flag, rendered at paint time.');
   if(flags&FLAG_RO) s.push('Read-only in the catalogue \u2014 written by the engine, not by a user.');
   if(flags&FLAG_FUNC) s.push('A functional field: it carries business meaning rather than plumbing.');
@@ -280,8 +283,9 @@ function selectNode(n){
     if(n.code)kv.push(['Catalogue type',n.code]);
     kv.push(['Scope',(n.flags&FLAG_FIRM)?'Firm \u2014 defined by this tenant':(n.code?'Global \u2014 shipped by the platform':'not catalogued')]);
     if(n.flags&(FLAG_REQ|FLAG_INV_REQ))kv.push(['Required',
-      ((n.flags&FLAG_REQ)&&(n.flags&FLAG_INV_REQ))?'yes \u2014 catalogue and inventory agree'
-      :((n.flags&FLAG_REQ)?'yes, in the catalogue':'yes, in the field inventory')]);
+      ((n.flags&FLAG_REQ)&&(n.flags&FLAG_INV_REQ))?'yes \u2014 in both captures'
+      :((n.flags&FLAG_REQ)?'catalogue only \u2014 the inventory does not'
+                          :'inventory only \u2014 the catalogue does not')]);
     if(n.flags&FLAG_RO)kv.push(['Read-only','yes']);
     if(n.role&&D.roleNote&&D.roleNote[n.role])kv.push(['Key role',n.role]);
     if(n.pg)kv.push(['Physical column',n.pg.replace(':',' \u00b7 ')]);

@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>&quot;The contract creation wizard&quot; &middot; Lx Vault</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="../../atlas.css">
+<link rel="stylesheet" href="../../research/research.css">
+<link rel="stylesheet" href="../vault.css">
+</head><body><style id="lxg">body{visibility:hidden}
+#lxgate{visibility:visible;position:fixed;inset:0;z-index:9999;display:flex;
+align-items:center;justify-content:center;background:#0f172a;
+font-family:'IBM Plex Sans',system-ui,sans-serif}
+#lxgate form{background:#fff;padding:30px 32px;border-radius:12px;width:310px;
+box-shadow:0 20px 60px rgba(0,0,0,.35)}
+#lxgate h2{margin:0 0 4px;font-size:19px;color:#0f172a}
+#lxgate p{margin:0 0 18px;font-size:12.5px;color:#64748b;line-height:1.5}
+#lxgate label{display:block;font-size:11px;text-transform:uppercase;
+letter-spacing:.07em;color:#64748b;margin:0 0 5px}
+#lxgate input{width:100%;box-sizing:border-box;padding:9px 11px;margin:0 0 14px;
+border:1px solid #cbd5e1;border-radius:7px;font-size:14px}
+#lxgate button{width:100%;padding:10px;border:0;border-radius:7px;
+background:#b4530a;color:#fff;font-size:14px;font-weight:600;cursor:pointer}
+#lxgate .err{color:#b91c1c;font-size:12px;margin:0 0 10px;display:none}</style>
+<div id="lxgate"><form onsubmit="return lxg(event)">
+<h2>Lx Atlas</h2>
+<p>Internal documentation. Not a security boundary &mdash; see
+<code>gate.py</code>.</p>
+<p class="err" id="lxge">Incorrect.</p>
+<label for="lxgu">User</label><input id="lxgu" autocomplete="username" autofocus>
+<label for="lxgp">Password</label><input id="lxgp" type="password"
+autocomplete="current-password">
+<button type="submit">Enter</button></form></div>
+<script>
+function lxgOpen(){var g=document.getElementById('lxgate');if(g)g.remove();
+var s=document.getElementById('lxg');if(s)s.remove();
+document.body.style.visibility='visible';}
+function lxg(ev){ev.preventDefault();
+if(document.getElementById('lxgu').value==='admin'&&
+   document.getElementById('lxgp').value==='admin'){
+ try{sessionStorage.setItem('lxg','1');}catch(e){}
+ lxgOpen();return false;}
+document.getElementById('lxge').style.display='block';return false;}
+try{if(sessionStorage.getItem('lxg')==='1')
+ document.addEventListener('DOMContentLoaded',lxgOpen);}catch(e){}
+</script>
+<header><b>Lx Atlas</b>
+<nav><a href="../../index.html">Overview</a><a href="../../atlas.html#/map?set=feature">Feature map</a>
+<a href="../../atlas.html">Interactive app</a>
+<a href="../../research/index.html">Research</a>
+<a href="../../research/screens.html">Screens</a>
+<a href="../index.html" class="on">Vault</a>
+<a href="../../questions.html">Open questions</a></nav></header>
+<main><p class="crumb"><a href="../../index.html">Atlas</a> &rsaquo;
+<a href="../index.html">Vault</a> &rsaquo; &quot;The contract creation wizard&quot;</p><div class="fm"><span>screen</span><span>administration</span><span>contracts</span><span>layouts</span><span class="ev">Observed</span></div><p><code>Five SUB layouts — PLIDs 98883–98887</code></p><p><strong>The largest previously-identified gap in this corpus</strong>: contract creation appears <strong>nowhere in the <a href="../concepts/navigation-tree.html">navigation-tree</a></strong>, because the 105-screen tree is navigation <em>within</em> a record that already exists. It is built from <strong>sub-page layouts</strong>.</p><div class="wrapt"><table><thead><tr><th>Step</th><th style="text-align:right">PLID</th><th style="text-align:right">Fields</th><th>Collects</th></tr></thead><tbody><tr><td>1 — Contract Summary Setup</td><td style="text-align:right">98883</td><td style="text-align:right"><strong>35</strong></td><td>identity, parties, and <strong>every critical date</strong></td></tr><tr><td>2 — Contract Terms</td><td style="text-align:right">98884</td><td style="text-align:right">10</td><td>renewal options: count, term type, length, rentable area</td></tr><tr><td>3 — Covenants</td><td style="text-align:right">98885</td><td style="text-align:right">6</td><td><strong>clones <a href="../entities/Covenant.html">covenants</a> from a <a href="../concepts/contract-template.html">template</a></strong></td></tr><tr><td>4 — Responsibilities</td><td style="text-align:right">98886</td><td style="text-align:right">6</td><td><strong>clones <a href="../entities/Responsibility.html">responsibilities</a> from a template</strong></td></tr><tr><td>5 — Expense Setup</td><td style="text-align:right">98887</td><td style="text-align:right">22</td><td>recurring rent/expense with escalation</td></tr></tbody></table></div><p>Plus <code>ASG Facility Wizard</code> (99141, 26 fields) and <code>ASG Location Wizard</code> (99142, 23 fields).</p><p>Three things that change the rebuild picture:</p><ol><li><strong><a href="../findings/finding-wizard-writes-two-entities.html">finding-wizard-writes-two-entities</a></strong> — step 1 carries <code>Facility_OpenDate</code> and <code>Facility_CloseDate</code>.</li><li><strong>Steps 3 and 4 are template cloning, not data entry</strong> — and <strong>no <code>ContractTemplate</code> object exists</strong> (<a href="../open-questions/q-bbw-09-contract-templates.html">q-bbw-09-contract-templates</a>).</li><li><strong><a href="../findings/finding-computed-fields-render-as-prose.html">finding-computed-fields-render-as-prose</a></strong> — <code>TermLength</code> and two <code>Firm_</code> date fields render as <code>input[type=hidden]</code>.</li></ol><p>Field naming is <code>{Entity}_{Column}</code>, and firm-custom fields are <code>{Entity}_Firm_{Column}</code> — step 1 alone carries <strong>eight</strong> of them, which is a third independent confirmation of <a href="../findings/finding-firm-fields-are-physical-columns.html">finding-firm-fields-are-physical-columns</a>.</p><p><strong>Live data volumes</strong> (Derived, from select option counts): 2,191 master contracts, 2,141 locations, 2,062 facilities, 151 expense types, 166 currency types.</p><p>All screens: <a href="../map-of-screens.html">map-of-screens</a> · caveat: <a href="../concepts/caveat-viewport.html">caveat-viewport</a></p><div class="backlinks"><b>Linked from &middot; 20</b><a href="../concepts/contract-template.html">contract-template</a><a href="../concepts/firm-custom-field.html">firm-custom-field</a><a href="../concepts/navigation-tree.html">navigation-tree</a><a href="../concepts/rest-business-object.html">rest-business-object</a><a href="../entities/Contract.html">Contract</a><a href="../entities/ContractTerm.html">ContractTerm</a><a href="../entities/Covenant.html">Covenant</a><a href="../entities/ExpenseSetup.html">ExpenseSetup</a><a href="../entities/Facility.html">Facility</a><a href="../entities/Location.html">Location</a><a href="../entities/Responsibility.html">Responsibility</a><a href="../findings/finding-computed-fields-render-as-prose.html">finding-computed-fields-render-as-prose</a><a href="../findings/finding-firm-fields-are-physical-columns.html">finding-firm-fields-are-physical-columns</a><a href="../findings/finding-wizard-writes-two-entities.html">finding-wizard-writes-two-entities</a><a href="../map-of-screens.html">map-of-screens</a><a href="../open-questions/q-bbw-09-contract-templates.html">q-bbw-09-contract-templates</a><a href="../open-questions/q-bbw-15-import-results.html">q-bbw-15-import-results</a><a href="screen-manage-exchange-rates.html">screen-manage-exchange-rates</a><a href="screen-manage-facilities.html">screen-manage-facilities</a><a href="../tenants/tenant-bbw.html">tenant-bbw</a></div></main></body></html>

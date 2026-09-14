@@ -30,5 +30,7 @@ objects, 7,421 fields. Every field-level and table-level claim in this corpus re
 **AF exposes six more admin tools than BBW**, including `/lxadmin/` vendor-only entries — so admin-tool
 visibility is per-tenant or per-user-class, not fixed.
 
+See [[tenant-comparison]] for what the two settle between them.
+
 What it retains that BBW has replaced: older co-tenancy layout variants and `ASG Client Request Log`,
 plus four scratch rows (`TABLE`, `test` ×3). See [[finding-tenants-differ-by-one-feature]].

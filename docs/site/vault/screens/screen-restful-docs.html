@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>&quot;RESTful WebService Docs&quot; &middot; Lx Vault</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="../../atlas.css">
+<link rel="stylesheet" href="../../research/research.css">
+<link rel="stylesheet" href="../vault.css">
+</head><body><style id="lxg">body{visibility:hidden}
+#lxgate{visibility:visible;position:fixed;inset:0;z-index:9999;display:flex;
+align-items:center;justify-content:center;background:#0f172a;
+font-family:'IBM Plex Sans',system-ui,sans-serif}
+#lxgate form{background:#fff;padding:30px 32px;border-radius:12px;width:310px;
+box-shadow:0 20px 60px rgba(0,0,0,.35)}
+#lxgate h2{margin:0 0 4px;font-size:19px;color:#0f172a}
+#lxgate p{margin:0 0 18px;font-size:12.5px;color:#64748b;line-height:1.5}
+#lxgate label{display:block;font-size:11px;text-transform:uppercase;
+letter-spacing:.07em;color:#64748b;margin:0 0 5px}
+#lxgate input{width:100%;box-sizing:border-box;padding:9px 11px;margin:0 0 14px;
+border:1px solid #cbd5e1;border-radius:7px;font-size:14px}
+#lxgate button{width:100%;padding:10px;border:0;border-radius:7px;
+background:#b4530a;color:#fff;font-size:14px;font-weight:600;cursor:pointer}
+#lxgate .err{color:#b91c1c;font-size:12px;margin:0 0 10px;display:none}</style>
+<div id="lxgate"><form onsubmit="return lxg(event)">
+<h2>Lx Atlas</h2>
+<p>Internal documentation. Not a security boundary &mdash; see
+<code>gate.py</code>.</p>
+<p class="err" id="lxge">Incorrect.</p>
+<label for="lxgu">User</label><input id="lxgu" autocomplete="username" autofocus>
+<label for="lxgp">Password</label><input id="lxgp" type="password"
+autocomplete="current-password">
+<button type="submit">Enter</button></form></div>
+<script>
+function lxgOpen(){var g=document.getElementById('lxgate');if(g)g.remove();
+var s=document.getElementById('lxg');if(s)s.remove();
+document.body.style.visibility='visible';}
+function lxg(ev){ev.preventDefault();
+if(document.getElementById('lxgu').value==='admin'&&
+   document.getElementById('lxgp').value==='admin'){
+ try{sessionStorage.setItem('lxg','1');}catch(e){}
+ lxgOpen();return false;}
+document.getElementById('lxge').style.display='block';return false;}
+try{if(sessionStorage.getItem('lxg')==='1')
+ document.addEventListener('DOMContentLoaded',lxgOpen);}catch(e){}
+</script>
+<header><b>Lx Atlas</b>
+<nav><a href="../../index.html">Overview</a><a href="../../atlas.html#/map?set=feature">Feature map</a>
+<a href="../../atlas.html">Interactive app</a>
+<a href="../../research/index.html">Research</a>
+<a href="../../research/screens.html">Screens</a>
+<a href="../index.html" class="on">Vault</a>
+<a href="../../questions.html">Open questions</a></nav></header>
+<main><p class="crumb"><a href="../../index.html">Atlas</a> &rsaquo;
+<a href="../index.html">Vault</a> &rsaquo; &quot;RESTful WebService Docs&quot;</p><div class="fm"><span>screen</span><span>administration</span><span>api</span><span>diagnostics</span><span class="ev">Observed</span></div><p><code>/en/test/RESTful.jsp</code></p><blockquote><p><strong>One of only two of the 57 admin tools with no screenshot in this corpus — deliberately. The page renders live Basic and JWT Bearer credentials for copy.</strong> No token was read, captured or recorded at any point. See <a href="../methods/method-omitting-identities.html">method-omitting-identities</a>.</p></blockquote><p>An interactive generator embedding stock Swagger UI pointed at <strong><code>/rest/api-docs/swagger</code></strong>, which serves the complete <strong>OpenAPI 3.0.1</strong> document — <strong>141 paths, 160 operations: 104 GET, 40 POST, 7 PUT, 9 DELETE</strong>.</p><p><strong>Fetching the spec directly makes the generator unnecessary</strong>, which is how the capture was done structure-only.</p><p>This screen closed the corpus&#x27;s third-ranked open blocker: <strong><a href="../concepts/rest-business-object.html">REST is fully CRUD, and it is the write path</a></strong>. It also unlocked the 25 tables <a href="screen-view-object-model.html">the schema viewer refuses</a>.</p><p>The other tool with no screenshot is <a href="screen-delete-entities.html">screen-delete-entities</a>.</p><p>All screens: <a href="../map-of-screens.html">map-of-screens</a> · caveat: <a href="../concepts/caveat-viewport.html">caveat-viewport</a></p><div class="backlinks"><b>Linked from &middot; 2</b><a href="../map-of-screens.html">map-of-screens</a><a href="screen-delete-entities.html">screen-delete-entities</a></div></main></body></html>

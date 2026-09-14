@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>&quot;Job Log&quot; &middot; Lx Vault</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="../../atlas.css">
+<link rel="stylesheet" href="../../research/research.css">
+<link rel="stylesheet" href="../vault.css">
+</head><body><style id="lxg">body{visibility:hidden}
+#lxgate{visibility:visible;position:fixed;inset:0;z-index:9999;display:flex;
+align-items:center;justify-content:center;background:#0f172a;
+font-family:'IBM Plex Sans',system-ui,sans-serif}
+#lxgate form{background:#fff;padding:30px 32px;border-radius:12px;width:310px;
+box-shadow:0 20px 60px rgba(0,0,0,.35)}
+#lxgate h2{margin:0 0 4px;font-size:19px;color:#0f172a}
+#lxgate p{margin:0 0 18px;font-size:12.5px;color:#64748b;line-height:1.5}
+#lxgate label{display:block;font-size:11px;text-transform:uppercase;
+letter-spacing:.07em;color:#64748b;margin:0 0 5px}
+#lxgate input{width:100%;box-sizing:border-box;padding:9px 11px;margin:0 0 14px;
+border:1px solid #cbd5e1;border-radius:7px;font-size:14px}
+#lxgate button{width:100%;padding:10px;border:0;border-radius:7px;
+background:#b4530a;color:#fff;font-size:14px;font-weight:600;cursor:pointer}
+#lxgate .err{color:#b91c1c;font-size:12px;margin:0 0 10px;display:none}</style>
+<div id="lxgate"><form onsubmit="return lxg(event)">
+<h2>Lx Atlas</h2>
+<p>Internal documentation. Not a security boundary &mdash; see
+<code>gate.py</code>.</p>
+<p class="err" id="lxge">Incorrect.</p>
+<label for="lxgu">User</label><input id="lxgu" autocomplete="username" autofocus>
+<label for="lxgp">Password</label><input id="lxgp" type="password"
+autocomplete="current-password">
+<button type="submit">Enter</button></form></div>
+<script>
+function lxgOpen(){var g=document.getElementById('lxgate');if(g)g.remove();
+var s=document.getElementById('lxg');if(s)s.remove();
+document.body.style.visibility='visible';}
+function lxg(ev){ev.preventDefault();
+if(document.getElementById('lxgu').value==='admin'&&
+   document.getElementById('lxgp').value==='admin'){
+ try{sessionStorage.setItem('lxg','1');}catch(e){}
+ lxgOpen();return false;}
+document.getElementById('lxge').style.display='block';return false;}
+try{if(sessionStorage.getItem('lxg')==='1')
+ document.addEventListener('DOMContentLoaded',lxgOpen);}catch(e){}
+</script>
+<header><b>Lx Atlas</b>
+<nav><a href="../../index.html">Overview</a><a href="../../atlas.html#/map?set=feature">Feature map</a>
+<a href="../../atlas.html">Interactive app</a>
+<a href="../../research/index.html">Research</a>
+<a href="../../research/screens.html">Screens</a>
+<a href="../index.html" class="on">Vault</a>
+<a href="../../questions.html">Open questions</a></nav></header>
+<main><p class="crumb"><a href="../../index.html">Atlas</a> &rsaquo;
+<a href="../index.html">Vault</a> &rsaquo; &quot;Job Log&quot;</p><div class="fm"><span>screen</span><span>administration</span><span>import-export</span><span>diagnostics</span><span class="ev">Observed</span></div><p><code>/en/admin/JobLogEdit.jsp</code></p><p>!<a href="../../../../../../assets/screenshots/bbw-admin/15-job-log.jpg">818 entries — the first evidence anywhere in this corpus of the product actually running. The hourly rows are an external system posting transaction data.</a> <code>docs/assets/screenshots/bbw-admin/15-job-log.jpg</code> · <code>af-admin/16-job-log.jpg</code></p><p><strong>818 entries at <a href="../tenants/tenant-bbw.html">BBW</a>.</strong> Job types <code>Generate Payments</code>, <code>Data Import</code>, <code>Scheduled Report</code>; statuses <code>Complete</code> / <code>Completed</code> / <code>Finished</code>.</p><p>Two things it proves:</p><ol><li><strong><code>Generate Payments</code> is logged as a user-triggered job</strong> — corroborating <a href="../findings/finding-engine-is-button-driven.html">finding-engine-is-button-driven</a> from the other side.</li><li><strong>An hourly inbound HTTP integration is running.</strong> <code>BBW Transaction Update</code> executes every hour on the half-hour, initiated by <code>Lx Administrator</code>, each with an <code>LxHttpMsg…</code> input and an <code>LxDataImportLog_…</code> output. <strong>Nothing in the corpus recorded this</strong> — <a href="../open-questions/q-bbw-19-hourly-integration.html">q-bbw-19-hourly-integration</a>.</li></ol><p>That second point makes <a href="../findings/finding-discount-rate-table-empty.html">finding-discount-rate-table-empty</a> stranger, not easier: a tenant with live operational traffic <em>and</em> an empty rate table is harder to explain than an idle one.</p><p><strong><code>Job Log</code> and <code>Report Log</code> are the same screen</strong> — both <code>JobLogEdit.jsp</code>. See <a href="../features/feature-administration.html">feature-administration</a>.</p><p>All screens: <a href="../map-of-screens.html">map-of-screens</a> · caveat: <a href="../concepts/caveat-viewport.html">caveat-viewport</a></p><div class="backlinks"><b>Linked from &middot; 9</b><a href="../concepts/action-buttons.html">action-buttons</a><a href="../features/feature-import-export.html">feature-import-export</a><a href="../findings/finding-discount-rate-table-empty.html">finding-discount-rate-table-empty</a><a href="../findings/finding-engine-is-button-driven.html">finding-engine-is-button-driven</a><a href="../map-of-screens.html">map-of-screens</a><a href="../open-questions/q-bbw-19-hourly-integration.html">q-bbw-19-hourly-integration</a><a href="screen-contract-payment-details.html">screen-contract-payment-details</a><a href="screen-report-log.html">screen-report-log</a><a href="../tenants/tenant-bbw.html">tenant-bbw</a></div></main></body></html>

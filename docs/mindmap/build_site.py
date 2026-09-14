@@ -33,6 +33,7 @@ import shutil
 
 import corpus
 import gate
+import sitenav
 
 # --------------------------------------------------------------- branding
 # The product's name is removed from all published output. Applied at the
@@ -94,6 +95,10 @@ hue = {m["id"]: HUES[i % len(HUES)] for i, m in enumerate(modules)}
 e = html.escape
 def fmt(n): return f"{n:,}" if isinstance(n, int) else (n or "")
 def slug(s): return re.sub(r"[^A-Za-z0-9_.-]", "_", s)
+
+def fslug(name):
+    return slug(re.sub(r"[^A-Za-z0-9 ]", "", name).strip().lower().replace(" ", "-"))
+
 
 CONF = {"observed": ("obs", "Observed"), "derived": ("der", "Derived"),
         "inferred": ("inf", "Inferred")}
@@ -167,6 +172,8 @@ dt{color:var(--muted);white-space:nowrap}dd{margin:0}
 .btn{display:inline-block;font-size:12.5px;padding:7px 12px;background:var(--surface);
  color:var(--ink2);border:1px solid var(--line);border-radius:var(--r);margin:0 6px 8px 0}
 .btn:hover{border-color:var(--accent);color:var(--ink);text-decoration:none}
+"""
+CSS += sitenav.NAV_CSS + """
 .shots{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px;margin:0 0 18px}
 .shots a{display:block;border:1px solid var(--line);border-radius:var(--r);overflow:hidden;
  background:var(--surface);color:var(--muted)}
@@ -177,8 +184,13 @@ dt{color:var(--muted);white-space:nowrap}dd{margin:0}
 """
 
 
-def page(title, body, depth=0, crumb=""):
+def page(title, body, depth=0, crumb="", view=""):
+    """One page. `view` is the sitenav key, which highlights the nav entry and
+    prints the one-line "what this view is for" so a reader arriving deep still
+    knows where they are."""
     up = "../" * depth
+    why = sitenav.purpose(view)
+    lead = f'<p class="viewfor">{e(why)}</p>' if why else ""
     return gate.inject(brand(f"""<!doctype html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -188,13 +200,8 @@ def page(title, body, depth=0, crumb=""):
 <link rel="stylesheet" href="{up}atlas.css">
 </head><body>
 <header><b>Lx Atlas</b>
-<nav><a href="{up}index.html">Overview</a><a href="{up}atlas.html#/map?set=feature">Feature map</a>
-<a href="{up}atlas.html">Interactive app</a>
-<a href="{up}features/index.html">Features</a>
-<a href="{up}entities/index.html">Record types</a><a href="{up}rules/index.html">Rules</a>
-<a href="{up}research/index.html">Research</a>\n<a href="{up}research/screens.html">Screens</a>\n<a href="{up}vault/index.html">Vault</a><a href="{up}markdown.html">Markdown</a>
-<a href="{up}questions.html">Open questions</a></nav></header>
-<main>{crumb}{body}</main></body></html>"""))
+{sitenav.nav_html(up, view)}</header>
+<main>{crumb}{lead}{body}</main></body></html>"""))
 
 
 # --------------------------------------------------------------------- rebuild
@@ -292,58 +299,189 @@ def mod_card(m, up=""):
             f'</div></a>')
 
 
+
+# ------------------------------------------------------- views of one subject
+# The owner's complaint was that the views read as unrelated sites. They are not:
+# a feature, its records, its rules, its screens and its vault note are one
+# subject seen from different heights. Every page carries a band of links to the
+# same subject at the other scales.
+
+VAULT = sitenav.vault_index()
+
+# Two namespaces for "module": the graph ids the schema map uses
+# (contracts-leases, layouts-forms-reporting) and the docs folder names the
+# rules and the feature map use (contracts, layouts-and-forms). They are joined
+# through the title they share; anything that does not join stays unlinked
+# rather than pointing at a page that was never written.
+DOCS_TO_GRAPH = {}
+for _m in modules:
+    DOCS_TO_GRAPH[_m["id"]] = _m["id"]
+for _folder, _title in [(r["module"], r["moduleTitle"]) for r in R["rules"]]:
+    for _m in modules:
+        if _m["title"] == _title or _m["id"] == _folder:
+            DOCS_TO_GRAPH.setdefault(_folder, _m["id"])
+            break
+
+
+def mod_page(key):
+    """The module page for either flavour of module key, or "" if there is none."""
+    gid = DOCS_TO_GRAPH.get(key, key)
+    return "modules/%s.html" % slug(gid) if gid in mod_by_id else ""
+
+
+# area name -> module key, and module key -> the areas built on it, under BOTH
+# namespaces so a lookup from either side finds the area
+AREA_MOD, MOD_AREAS = {}, {}
+for _a in FM["root"].get("children") or []:
+    _mid = _a.get("mod") or _a.get("key")
+    AREA_MOD[_a["name"]] = _mid
+    if _mid:
+        MOD_AREAS.setdefault(_mid, []).append(_a["name"])
+        _g = DOCS_TO_GRAPH.get(_mid)
+        if _g and _g != _mid:
+            MOD_AREAS.setdefault(_g, []).append(_a["name"])
+
+
+# Every path this run will write, computed before anything is written. A
+# cross-link is only emitted if its target is in here or already on disk. That
+# is the difference between "these views are connected" and 308 new dead links:
+# module pages are keyed on the GRAPH module id (contracts-leases) while rules
+# and feature areas name the DOCS module folder (contracts), and nothing but an
+# existence check catches the mismatch reliably.
+WILL_WRITE = set()
+
+
+def will_write(*paths):
+    WILL_WRITE.update(paths)
+
+
+def resolves(href):
+    base = href.split("#")[0].split("?")[0]
+    if not base:
+        return True                      # a pure fragment on this page
+    return base in WILL_WRITE or os.path.exists(os.path.join(SITE, base))
+
+
+def seealso(depth, items):
+    """A band of links to the same subject at other scales.
+
+    Silently drops a link whose target does not exist, because several of these
+    joins are best-effort: not every module has a research folder, not every
+    record has a vault note.
+    """
+    live = [(scale, label, href) for scale, label, href in items
+            if href and resolves(href)]
+    if not live:
+        return ""
+    up = "../" * depth
+    return '<div class="seealso">' + "".join(
+        f'<a href="{up}{href}"><i>{e(scale)}</i>{e(label)}</a>'
+        for scale, label, href in live) + "</div>"
+
+
+will_write("index.html", "questions.html", "markdown.html", "atlas.html",
+           "entities/index.html", "rules/index.html", "features/index.html")
+will_write(*("modules/%s.html" % slug(m["id"]) for m in modules))
+will_write(*("md/modules/%s.md" % slug(m["id"]) for m in modules))
+will_write(*("entities/%s.html" % slug(n) for n in objects))
+will_write(*("md/entities/%s.md" % slug(n) for n in objects))
+will_write(*("rules/%s.html" % slug(r["id"]) for r in R["rules"]))
+will_write(*("md/rules/%s.md" % slug(r["id"]) for r in R["rules"]))
+will_write(*("features/%s.html" % fslug(a["name"])
+             for a in FM["root"].get("children") or []))
+will_write(*("md/features/%s.md" % fslug(a["name"])
+             for a in FM["root"].get("children") or []))
+
+
+def vlink(kind, key):
+    return sitenav.vault_link(VAULT, kind, key)
+
 # ------------------------------------------------------------------- index
 stats = [("Modules", meta["modules"]), ("Record types", meta["objects"]),
          ("Fields", fmt(meta["fields"])), ("Foreign keys", meta["edges"]),
          ("Rules", fmt(R["total"])), ("Open questions", fmt(Q["total"])),
          ("Data Fields", fmt(meta["datafields"])), ("API types", meta["gqlTypes"])]
-body = [f'<h1>Lx, as it actually runs</h1>',
-        f'<p class="sub">{e(meta["vendor"])} &middot; {e(meta["tenant"])} &middot; build {e(meta["build"])} &middot; captured {e(meta["captured"])}</p>',
-        NOTE.replace('href="atlas.html"', 'href="atlas.html"'),
-        '<p class="lead">Everything here was read out of the live application and its own schema tools. '
-        'Every claim carries an evidence label &mdash; <b>Observed</b> means somebody saw it, '
-        '<b>Inferred</b> means nobody has yet.</p>',
-        '<p><a class="btn" href="atlas.html#/map?set=feature">Open the feature map '
-        '&mdash; the product by what it does &rarr;</a> '
-        '<a class="btn" href="atlas.html#/map">Open the schema map &mdash; every record, '
-        'field and key &rarr;</a></p>',
-        '<div class="stats">' + "".join(
-            f'<div><b class="mono">{v}</b><span>{k}</span></div>' for k, v in stats) + '</div>',
-        """<h2>The running product</h2>
-<p>The pages below the fold describe the <em>schema</em>. This section describes what two live
-tenants actually do &mdash; where they differ, what the product does that the schema cannot show,
-and what that means for a rebuild. Every claim is labelled Observed, Derived or Inferred.</p>
-<div class="cards">
-<a class="card" href="research/index.html"><h3>Research &rarr;</h3>
-<p>Two tenants on build 26.09.0.113, read live: the full AF/BBW comparison, feature-by-feature
-accounts, the REST API explained, 134 screens, and a coverage tracker that says what is still
-missing.</p><div class="row"><span>17 documents</span><span>34 data captures</span></div></a>
-<a class="card" href="research/tenants/bbw-vs-american-freight.html"><h3>AF vs BBW</h3>
-<p>What one tenant has that the other does not, why a navigation root can be invisible, and how
-configuration is published between firms and then forks.</p>
-<div class="row"><span>27 sections</span></div></a>
-<a class="card" href="features/index.html"><h3>Features &rarr;</h3>
-<p>The feature map as pages: what the product does, who for, through which screens, governed by
-which rules, with the open questions and the captured screens attached to each area.</p>
-<div class="row"><span>21 areas</span></div></a>
-<a class="card" href="vault/index.html"><h3>Vault &rarr;</h3>
-<p>The same corpus as a graph: 200+ small notes, each about one thing, densely linked. Open
-<code>vault/</code> in Obsidian for the graph view, or read it here &mdash; identical files.</p>
-<div class="row"><span>graph view</span></div></a>
-<a class="card" href="research/screens.html"><h3>Screens &rarr;</h3>
-<p>179 captured screens from both tenants &mdash; every administration tool, and the only end-user
-screens ever taken. Full width, click through for full resolution.</p>
-<div class="row"><span>179 images</span></div></a>
-<a class="card" href="research/data-model/api/index.html"><h3>The REST API</h3>
-<p>One generic CRUD controller serving all 227 record types. 141 paths, 160 operations, and the
-envelope that makes HTTP&nbsp;200 an unreliable success signal.</p>
-<div class="row"><span>160 operations</span></div></a>
-</div>""",
-        '<h2>Modules</h2><div class="cards">' +
-        "".join(mod_card(m) for m in modules if m["scope"]) + '</div>',
-        '<h2>Excluded by decision</h2><div class="cards">' +
-        "".join(mod_card(m) for m in modules if not m["scope"]) + '</div>']
-open(os.path.join(SITE, "index.html"), "w", encoding="utf-8").write(page("Overview", "".join(body)))
+# The index is an orientation page, not a directory. A reader landing cold gets
+# what the product is, then a route chosen by what they want to DO — at which
+# scale they want to look — rather than by which artefact happens to exist.
+
+LADDER = [
+    ("Bird's eye", "What is this product",
+     "features/index.html",
+     "%d feature areas in product language: lease accounting, CAM recovery, approvals, "
+     "layouts, property tax. Start here if you have never seen it." % FM["meta"]["areas"]),
+    ("Helicopter", "How does a capability work",
+     "research/features/index.html",
+     "The feature manuals — every screen and route for one capability, the configuration "
+     "behind it, and what is still unresolved about it."),
+    ("Ground level", "What does a user see",
+     "research/screens.html",
+     "179 captured screens from two live tenants: every administration tool, and the only "
+     "end-user screens ever taken."),
+    ("Worm's eye", "What is underneath",
+     "entities/index.html",
+     "%d record types, %s fields with the vendor's own definition of what each is for, "
+     "%s numbered rules, and both APIs."
+     % (meta["objects"], fmt(6091), fmt(R["total"]))),
+    ("Wander", "Follow a thread",
+     "vault/index.html",
+     "The same findings as small linked notes. No hierarchy — start anywhere and follow "
+     "the links until you understand the shape."),
+    ("Explore", "Pivot and drill",
+     "atlas.html#/map?set=feature",
+     "Both maps, expandable and searchable. Click any node and the panel gives you the "
+     "full explanation, the evidence label, and a link to the underlying document."),
+]
+
+body = [
+    '<h1>Lx, as it actually runs</h1>',
+    f'<p class="sub">{e(meta["vendor"])} &middot; {e(meta["tenant"])} &middot; build '
+    f'{e(meta["build"])} &middot; captured {e(meta["captured"])}</p>',
+    '<p class="lead">Lx is the lease-accounting and contract-management system this '
+    'programme is rebuilding. It stores a property or equipment lease as a '
+    f'<b>contract</b> &mdash; {fmt(objects["Contract"]["n"])} fields across '
+    f'{objects["Contract"]["tc"]} physical tables &mdash; and hangs everything else off '
+    'it: the rent schedules an accountant signs off, the CAM reconciliation a tenant '
+    'audits, the approval workflows a request passes through, and the page layouts an '
+    'administrator assembles all of it from. Almost the entire application is rendered '
+    'from a layout registry rather than written screen by screen, which is why '
+    'configuration matters here more than code.</p>',
+    '<p class="lead">Everything on this site was read out of the running application and '
+    'its own schema tools &mdash; nothing is from a manual. Every claim carries an '
+    'evidence label: <b>Observed</b> means somebody saw it, <b>Derived</b> means it '
+    'follows from something observed, <b>Inferred</b> means nobody has confirmed it yet. '
+    'Where a fact is missing it is written down as missing, which is what the '
+    f'{fmt(Q["total"])} open questions are.</p>',
+
+    '<h2>Six ways in, by how close you want to stand</h2>',
+    '<p>These are not six sites. They are one subject at six scales &mdash; the same '
+    'contract record appears in all of them, described at the altitude you asked for.</p>',
+    '<div class="ladder">' + "".join(
+        f'<a href="{href}"><b>{e(scale)}<span>{e(q)}</span></b><p>{e(what)}</p></a>'
+        for scale, q, href, what in LADDER) + '</div>',
+
+    '<div class="stats">' + "".join(
+        f'<div><b class="mono">{v}</b><span>{k}</span></div>' for k, v in stats) + '</div>',
+
+    '<h2>The feature areas</h2>',
+    '<p>What the product does, in the language a delivery lead uses. Each one carries its '
+    'capabilities, the rules that govern it, the screens that evidence it, and the open '
+    'questions that block it.</p>',
+    '<div class="cards">' + "".join(
+        f'<a class="card {"oos" if a.get("oos") else ""}" href="features/{fslug(a["name"])}.html">'
+        f'<h3>{e(a["name"])}</h3><p>{e((a.get("detail") or "")[:180])}</p></a>'
+        for a in FM["root"].get("children") or []) + '</div>',
+
+    '<h2>Where the schema lives</h2>',
+    '<p>The same product as records and keys. A module is a cluster of record types that '
+    'belong together; open one to reach its entities, its rules and its feature area.</p>',
+    '<div class="cards">' + "".join(mod_card(m) for m in modules if m["scope"]) + '</div>',
+    '<h2>Excluded by decision</h2>',
+    '<p>Kept in the census so impact analysis through the relationship graph is never '
+    'silently wrong at the boundary, but nothing here is being built.</p>',
+    '<div class="cards">' + "".join(mod_card(m) for m in modules if not m["scope"]) + '</div>',
+]
+open(os.path.join(SITE, "index.html"), "w", encoding="utf-8").write(page("Overview", "".join(body), view="overview"))
 
 # ----------------------------------------------------------------- modules
 for m in modules:
@@ -354,8 +492,16 @@ for m in modules:
          f'<p class="sub">{"In scope for the rebuild" if m["scope"] else "Out of scope by decision"}</p>',
          f'<p class="lead">{e(m["what"])}</p>',
          (f'<p>{e(m["lead"])}</p>' if m.get("lead") else ''),
-         f'<p><a class="btn" href="../atlas.html#/map?set=feature&amp;f={e(m["id"])}">'
-         f'Open this feature in the feature map &rarr;</a></p>',
+         seealso(1, [
+             ("Feature", MOD_AREAS.get(m["id"], [None])[0] or "",
+              ("features/%s.html" % fslug(MOD_AREAS[m["id"]][0]))
+              if MOD_AREAS.get(m["id"]) else ""),
+             ("Map", "Open in the feature map",
+              "atlas.html#/map?set=feature&f=%s" % m["id"]),
+             ("Research", "Module analysis", "research/modules/%s/index.html" % m["id"]),
+             ("Notes", "Vault note", vlink("modules", m["id"])),
+             ("Markdown", "This page as markdown", "md/modules/%s.md" % slug(m["id"])),
+         ]),
          '<div class="stats">' + "".join(
              f'<div><b class="mono">{v}</b><span>{k}</span></div>' for k, v in
              [("Record types", m["oc"]), ("Fields", fmt(m["fc"])), ("Keys in", m["ei"]),
@@ -414,7 +560,7 @@ for m in modules:
                         for r in rules])
     write_md("modules/%s.md" % slug(m["id"]), m["title"], md)
     b.append(md_link(1, "modules/%s.md" % slug(m["id"])))
-    open(os.path.join(SITE, "modules", slug(m["id"]) + ".html"), "w", encoding="utf-8").write(page(m["title"], "".join(b), depth=1))
+    open(os.path.join(SITE, "modules", slug(m["id"]) + ".html"), "w", encoding="utf-8").write(page(m["title"], "".join(b), depth=1, view="features"))
 
 # ---------------------------------------------------------------- entities
 names = sorted(objects, key=lambda n: -objects[n]["n"])
@@ -433,7 +579,7 @@ open(os.path.join(SITE, "entities", "index.html"), "w", encoding="utf-8").write(
     f'<h1>All record types</h1><p class="sub">{len(names)}, largest first</p>'
     '<div class="wrapt"><table><thead><tr><th>Record type</th><th>Module</th>'
     '<th>Postgres table</th><th class="num">Fields</th><th class="num">Ref by</th></tr></thead>'
-    '<tbody>' + "".join(rows) + '</tbody></table></div>', depth=1))
+    '<tbody>' + "".join(rows) + '</tbody></table></div>', depth=1, view="entities"))
 
 for n in names:
     o = objects[n]
@@ -462,6 +608,19 @@ for n in names:
          + (f'<dt>Replication database</dt><dd class="mono">{e(o["pgdb"])}</dd>'
             if o.get("pgdb") else '')
          + '</dl>']
+
+    # the same record, at the other scales
+    b.append(seealso(1, [
+        ("Feature", MOD_AREAS.get(o["m"], [None])[0] or "",
+         ("features/%s.html" % fslug(MOD_AREAS[o["m"]][0])) if MOD_AREAS.get(o["m"]) else ""),
+        ("Module", (mm["title"] if mm else o["m"]), mod_page(o["m"])),
+        ("Fields", "Data Fields catalogue",
+         "research/data-fields/%s.html" % slug(o["ds"][0].split("/")[-1][:-3])
+         if o.get("ds") and o["ds"][0].startswith("data-fields/") else ""),
+        ("Notes", "Vault note", vlink("entities", n)),
+        ("Map", "Open in the schema map", "atlas.html#/e/%s" % n),
+        ("Markdown", "This page as markdown", "md/entities/%s.md" % slug(n)),
+    ]))
 
     # what the record IS, in the catalogue's own words, before any statistics
     if o.get("d"):
@@ -600,7 +759,7 @@ for n in names:
                         for s, cols in sorted(by_src.items(), key=lambda x: -len(x[1]))])
     rel = write_md("entities/%s.md" % slug(n), n, md)
     b.append(md_link(1, "entities/%s.md" % slug(n)))
-    open(os.path.join(SITE, "entities", slug(n) + ".html"), "w", encoding="utf-8").write(page(n, "".join(b), depth=1))
+    open(os.path.join(SITE, "entities", slug(n) + ".html"), "w", encoding="utf-8").write(page(n, "".join(b), depth=1, view="entities"))
 
 # ------------------------------------------------------------------- rules
 by_mod = {}
@@ -620,14 +779,24 @@ for mt, rs in sorted(by_mod.items(), key=lambda x: -len(x[1])):
                  f'{e((r.get("statement") or r.get("text") or "")[:190])}</div></td>'
                  f'<td>{ctag(r["conf"])}</td></tr>')
     b.append('</tbody></table></div>')
-open(os.path.join(SITE, "rules", "index.html"), "w", encoding="utf-8").write(page("Rules", "".join(b), depth=1))
+open(os.path.join(SITE, "rules", "index.html"), "w", encoding="utf-8").write(page("Rules", "".join(b), depth=1, view="rules"))
 
 for r in R["rules"]:
     b = [f'<p class="crumb"><a href="../index.html">Atlas</a> &rsaquo; '
          f'<a href="index.html">Rules</a> &rsaquo; {e(r["id"])}</p>',
          f'<h1 class="mono">{e(r["id"])}</h1>',
          f'<p class="sub">{e(r["moduleTitle"])} &middot; {e(r.get("section") or "")}</p>',
-         ctag(r["conf"])]
+         ctag(r["conf"]),
+         seealso(1, [
+             ("Module", r["moduleTitle"], mod_page(r["module"])),
+             ("Feature", MOD_AREAS.get(r["module"], [None])[0] or "",
+              ("features/%s.html" % fslug(MOD_AREAS[r["module"]][0]))
+              if MOD_AREAS.get(r["module"]) else ""),
+             ("Source", "The document that states it",
+              "research/%s.html" % r["doc"][:-3]),
+             ("Notes", "Vault note", vlink("rules", r["id"])),
+             ("Markdown", "This page as markdown", "md/rules/%s.md" % slug(r["id"])),
+         ])]
     # the rule itself, stated, before anything else on the page
     if r.get("statement"):
         b.append(f'<p class="lead">{e(r["statement"])}</p>')
@@ -688,7 +857,7 @@ for r in R["rules"]:
     md += ["---", "", f"Source: `docs/{r['doc']}`", ""]
     write_md("rules/%s.md" % slug(r["id"]), r["id"], md)
     b.append(md_link(1, "rules/%s.md" % slug(r["id"])))
-    open(os.path.join(SITE, "rules", slug(r["id"]) + ".html"), "w", encoding="utf-8").write(page(r["id"], "".join(b), depth=1))
+    open(os.path.join(SITE, "rules", slug(r["id"]) + ".html"), "w", encoding="utf-8").write(page(r["id"], "".join(b), depth=1, view="rules"))
 
 # --------------------------------------------------------------- questions
 by_area = {}
@@ -700,15 +869,11 @@ b = [f'<h1>Open questions</h1><p class="sub">{fmt(Q["total"])} things nobody has
 for area, qs in sorted(by_area.items(), key=lambda x: -len(x[1])):
     b.append(f'<h2>{e(area)} &middot; {len(qs)}</h2>')
     b += [f'<div class="item">{e(q["q"])}<div class="m">{e(q["doc"])}</div></div>' for q in qs]
-open(os.path.join(SITE, "questions.html"), "w", encoding="utf-8").write(page("Open questions", "".join(b)))
+open(os.path.join(SITE, "questions.html"), "w", encoding="utf-8").write(page("Open questions", "".join(b), view="questions"))
 
 # ---------------------------------------------------------------- features
 # The feature map's areas, each as a real page. The map shows the shape; these
 # pages are what a delivery lead reads, and what survives being printed.
-
-def fslug(name):
-    return slug(re.sub(r"[^A-Za-z0-9 ]", "", name).strip().lower().replace(" ", "-"))
-
 
 def feature_body(n, depth, md=False):
     """Render one feature node and everything beneath it, HTML or markdown."""
@@ -804,15 +969,24 @@ for a in FM["root"].get("children") or []:
          f'<h1>{e(name)}</h1>',
          (f'<p class="sub">Out of scope by decision</p>' if a.get("oos") else ''),
          f'<p class="lead">{e(a.get("detail") or "")}</p>',
-         f'<p><a class="btn" href="../atlas.html#/map?set=feature&amp;f={e(a.get("key") or "")}">'
-         f'Open this feature in the map &rarr;</a></p>']
+         seealso(1, [
+             ("Map", "Open in the feature map",
+              "atlas.html#/map?set=feature&f=%s" % (a.get("key") or "")),
+             ("Records", "The record types underneath",
+              mod_page(AREA_MOD.get(name) or "")),
+             ("Rules", "Every rule that governs it", "rules/index.html"),
+             ("Screens", "The captured screens", "research/screens.html"),
+             ("Research", "The written manual", "research/features/index.html"),
+             ("Notes", "Vault note", vlink("features", AREA_MOD.get(name) or "")),
+             ("Markdown", "This page as markdown", "md/features/%s.md" % fs),
+         ])]
     b += feature_body(a, 1)
     md = [f"# {name}", "", a.get("detail") or "", ""]
     md += feature_body(a, 1, md=True)
     write_md("features/%s.md" % fs, name, md)
     b.append(md_link(1, "features/%s.md" % fs))
     open(os.path.join(SITE, "features", fs + ".html"), "w", encoding="utf-8").write(
-        page(name, "".join(b), depth=1))
+        page(name, "".join(b), depth=1, view="features"))
 
 b = [f'<h1>Features</h1><p class="sub">{len(feature_areas_out)} areas, '
      f'{FM["meta"]["nodes"]} nodes</p>',
@@ -824,7 +998,7 @@ for fs, name, a in feature_areas_out:
              f'<div class="row"><span>{len(a.get("children") or [])} branches</span></div></a>')
 b.append('</div>')
 open(os.path.join(SITE, "features", "index.html"), "w", encoding="utf-8").write(
-    page("Features", "".join(b), depth=1))
+    page("Features", "".join(b), depth=1, view="features"))
 
 # --------------------------------------------------------------- md index
 MD_INDEX.sort()
@@ -842,7 +1016,7 @@ for kind, items in sorted(by_kind.items()):
                   f'<td class="mono" style="color:var(--muted);font-size:11px">md/{e(rel)}</td></tr>')
     mb.append('</tbody></table></div>')
 open(os.path.join(SITE, "markdown.html"), "w", encoding="utf-8").write(
-    page("Markdown pages", "".join(mb)))
+    page("Markdown pages", "".join(mb), view="markdown"))
 
 with open(os.path.join(SITE, "md", "index.md"), "w", encoding="utf-8") as fh:
     fh.write(brand("# Lx Atlas — markdown pages\n\n"

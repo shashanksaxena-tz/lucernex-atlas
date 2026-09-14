@@ -20,11 +20,13 @@ layouts.
 | **Lease Admin Request** | 2472 | **8** |
 | Lease Admin Request v1 / v2 | 2399 / 2468 | 8 / 10 |
 | Lease Date Review | 2473 | 2 |
-| Lucernex Change Request (+ v1) | 2469 / 2463 | 6 / 5 |
+| `Lucernex Change Request` (+ v1) * | 2469 / 2463 | 6 / 5 |
 | User Request | 2400 | 2 |
 | Vendor Change (Notice) | 2461 | 4 |
 | Vendor Changes (Integration) | 2418 | 5 |
 | **Total** | | **62** |
+
+\* The vendor's product name appears here because it is the **configured template name in the tenant**, reproduced as captured data. Everywhere else in this vault the product is called **Lx**.
 
 Fields read from `formSubmit=viewBO` that the corpus had never recorded: four "notify on complete"
 flags, `Auto assign initiator as ad hoc assignee`, `Default Work Flow Priority`,

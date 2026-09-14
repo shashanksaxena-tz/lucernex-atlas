@@ -541,10 +541,39 @@ CROSS_FACTS = [
     ("Fields are documented",
      "6,091 fields carry the vendor's own definition",
      "The field inventory explains what nearly every field is FOR, in the vendor's words — "
-     "not what it is called or how it is typed, which is all the other sources give. Six "
+     "not what it is called or how it is typed, which is all the other readings give. Six "
      "thousand of the 7,421 fields in the census now resolve to a definition, and every "
-     "field node in the schema map leads with it.",
+     "field node in the schema map leads with it. Read the provenance note before citing it "
+     "alongside the census: it is the same export, read more sharply — not a second witness.",
      "observed", "data-model/pg/bbw-field-inventory.csv"),
+    ("One export, two readings",
+     "The inventory and the object census are the same source",
+     "222 of 223 objects and 7,273 of roughly 7,400 fields are common to both, with the same "
+     "Firm_ names present and the same CRL_ names absent. The field inventory is a sharper "
+     "reading of the export the object census already came from, not an independent "
+     "corroboration of it. Treating it as a second witness is how one silence becomes two "
+     "confident citations — so where the two agree, that is one fact stated twice.",
+     "observed", "data-model/pg/bbw-field-inventory.csv"),
+    ("Required: two answers",
+     "The two captures of required-ness disagree on 213 fields",
+     "The Data Fields catalogue marks 637 fields required; the field inventory marks 606; "
+     "only 515 appear in both. 122 are required according to the catalogue alone and 91 "
+     "according to the inventory alone. These two genuinely are separate captures — the "
+     "catalogue is the Manage Data Fields screen, the inventory is the object export — so "
+     "the disagreement is evidence, not noise, and it echoes the column-flag versus "
+     "catalogue-flag split that already disagreed on 44 fields. A rebuild that adopts one "
+     "capture drops the other's obligations silently.",
+     "observed", "data-model/pg/bbw-field-inventory.csv"),
+    ("Custom lists differ",
+     "The Firm_ precedent does not extend to custom lists",
+     "CRL_, OpEx and LAR_ prefixes appear zero times in all 7,368 inventory rows, and "
+     "ClientListRow's 24 columns carry no prefix at all. The custom-lists analysis had "
+     "argued that custom-list values are probably real columns on the strength of the Firm_ "
+     "precedent. The inventory confirms that precedent at column level and shows "
+     "ClientListRow demonstrably not following it, so the analogy is weaker, not stronger. "
+     "Only a REST deep-serialise of one custom-list row can settle it: every offline "
+     "artefact traces back to the one export that omits these fields.",
+     "observed", "features/custom-lists/README.md"),
     ("Replica is not schema",
      "Replication coverage is not the product's schema",
      "The inventory's PG Table Status column splits 69 tables \"Created — holds data\" against "

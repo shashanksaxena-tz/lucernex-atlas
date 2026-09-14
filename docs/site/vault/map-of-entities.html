@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Map of entities &middot; Lx Vault</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="../atlas.css">
+<link rel="stylesheet" href="../research/research.css">
+<link rel="stylesheet" href="vault.css">
+</head><body><style id="lxg">body{visibility:hidden}
+#lxgate{visibility:visible;position:fixed;inset:0;z-index:9999;display:flex;
+align-items:center;justify-content:center;background:#0f172a;
+font-family:'IBM Plex Sans',system-ui,sans-serif}
+#lxgate form{background:#fff;padding:30px 32px;border-radius:12px;width:310px;
+box-shadow:0 20px 60px rgba(0,0,0,.35)}
+#lxgate h2{margin:0 0 4px;font-size:19px;color:#0f172a}
+#lxgate p{margin:0 0 18px;font-size:12.5px;color:#64748b;line-height:1.5}
+#lxgate label{display:block;font-size:11px;text-transform:uppercase;
+letter-spacing:.07em;color:#64748b;margin:0 0 5px}
+#lxgate input{width:100%;box-sizing:border-box;padding:9px 11px;margin:0 0 14px;
+border:1px solid #cbd5e1;border-radius:7px;font-size:14px}
+#lxgate button{width:100%;padding:10px;border:0;border-radius:7px;
+background:#b4530a;color:#fff;font-size:14px;font-weight:600;cursor:pointer}
+#lxgate .err{color:#b91c1c;font-size:12px;margin:0 0 10px;display:none}</style>
+<div id="lxgate"><form onsubmit="return lxg(event)">
+<h2>Lx Atlas</h2>
+<p>Internal documentation. Not a security boundary &mdash; see
+<code>gate.py</code>.</p>
+<p class="err" id="lxge">Incorrect.</p>
+<label for="lxgu">User</label><input id="lxgu" autocomplete="username" autofocus>
+<label for="lxgp">Password</label><input id="lxgp" type="password"
+autocomplete="current-password">
+<button type="submit">Enter</button></form></div>
+<script>
+function lxgOpen(){var g=document.getElementById('lxgate');if(g)g.remove();
+var s=document.getElementById('lxg');if(s)s.remove();
+document.body.style.visibility='visible';}
+function lxg(ev){ev.preventDefault();
+if(document.getElementById('lxgu').value==='admin'&&
+   document.getElementById('lxgp').value==='admin'){
+ try{sessionStorage.setItem('lxg','1');}catch(e){}
+ lxgOpen();return false;}
+document.getElementById('lxge').style.display='block';return false;}
+try{if(sessionStorage.getItem('lxg')==='1')
+ document.addEventListener('DOMContentLoaded',lxgOpen);}catch(e){}
+</script>
+<header><b>Lx Atlas</b>
+<nav><a href="../index.html">Overview</a><a href="../atlas.html#/map?set=feature">Feature map</a>
+<a href="../atlas.html">Interactive app</a>
+<a href="../research/index.html">Research</a>
+<a href="../research/screens.html">Screens</a>
+<a href="index.html" class="on">Vault</a>
+<a href="../questions.html">Open questions</a></nav></header>
+<main><p class="crumb"><a href="../index.html">Atlas</a> &rsaquo;
+<a href="index.html">Vault</a> &rsaquo; Map of entities</p><nav class="toc"><b>On this page</b><a href="#the-spine">The spine</a><a href="#contract-and-its-children">Contract and its children</a><a href="#money">Money</a><a href="#property">Property</a><a href="#assets">Assets</a><a href="#people-and-parties">People and parties</a><a href="#workflow-and-requests">Workflow and requests</a><a href="#documents-tasks-deals">Documents, tasks, deals</a><a href="#configuration-which-mostly-is-not-in-the-census">Configuration — which mostly is not in the census</a><a href="#platform">Platform</a><a href="#computed-projections-not-tables">Computed projections — not tables</a><a href="#reading-the-graph">Reading the graph</a></nav><div class="fm"><span>moc</span><span>data-model</span></div><h1 id="the-product-by-what-it-stores">The product, by what it stores</h1><p><strong>223 record types, 7,421 fields, 972 foreign keys.</strong> Notes here are named with the <strong>real object name</strong>, because those are technical identifiers and not branding.</p><p>Start with <a href="concepts/entity-spine.html">entity-spine</a> — everything below hangs off it.</p><h2 id="the-spine">The spine</h2><p><a href="entities/ProjectEntity.html">ProjectEntity</a> — the universal supertype, 107 fields, referenced by 161 objects.</p><p><strong>The nine <a href="concepts/subtype-root.html">subtype roots</a></strong>, the only things that can be a navigation root: <a href="entities/Contract.html">Contract</a> 570 · <a href="entities/Program.html">Program</a> 180 · <a href="entities/Parcel.html">Parcel</a> 154 · <a href="entities/Location.html">Location</a> 141 · <a href="entities/Facility.html">Facility</a> 133 · <a href="entities/Prototype.html">Prototype</a> 113 · <a href="entities/Project.html">Project</a> 111 · <a href="entities/PotentialProject.html">PotentialProject</a> 108 · <em>(<code>BudgetOptionTemplate</code>, a false positive)</em></p><h2 id="contract-and-its-children">Contract and its children</h2><p><a href="entities/ContractAmendment.html">ContractAmendment</a> · <a href="entities/Covenant.html">Covenant</a> · <a href="entities/ContractTerm.html">ContractTerm</a> · <a href="entities/ContractFinancialTest.html">ContractFinancialTest</a> · <a href="entities/KeyDate.html">KeyDate</a> · <a href="entities/SecurityDeposit.html">SecurityDeposit</a> · <a href="entities/Insurance.html">Insurance</a> · <a href="entities/Allowance.html">Allowance</a> · <a href="entities/CoTenancy.html">CoTenancy</a> · <a href="entities/Responsibility.html">Responsibility</a> · <a href="entities/LeaseInfo.html">LeaseInfo</a></p><h2 id="money">Money</h2><p><strong>Accounting</strong> — <a href="entities/SLSummary.html">SLSummary</a> · <a href="entities/SLPeriod.html">SLPeriod</a> · <a href="entities/AccrualTransaction.html">AccrualTransaction</a> · <a href="entities/PaymentTransaction.html">PaymentTransaction</a> · <a href="entities/PaymentReceipt.html">PaymentReceipt</a> · <a href="entities/DiscountRate.html">DiscountRate</a> · <a href="entities/EscalationIndex.html">EscalationIndex</a></p><p><strong>Expense recovery and schedules</strong> — <a href="entities/ExpenseRecovery.html">ExpenseRecovery</a> (565 fields) · <a href="entities/ExpenseSetup.html">ExpenseSetup</a> · <a href="entities/ExpenseSchedule.html">ExpenseSchedule</a> · <a href="entities/ExpenseAccrualSchedule.html">ExpenseAccrualSchedule</a> · <a href="entities/ExpenseEscalation.html">ExpenseEscalation</a></p><p><strong>Variable rent</strong> — <a href="entities/PercentageRent.html">PercentageRent</a> · <a href="entities/Sales.html">Sales</a> · <a href="entities/SalesExclusionCap.html">SalesExclusionCap</a></p><h2 id="property">Property</h2><p><a href="entities/Complex.html">Complex</a> · <a href="entities/Space.html">Space</a> · <a href="entities/DMA.html">DMA</a> · <strong>Tax</strong> — <a href="entities/PropertyTaxSummary.html">PropertyTaxSummary</a> · <a href="entities/PropertyTaxAssessment.html">PropertyTaxAssessment</a> · <a href="entities/PropertyTaxBill.html">PropertyTaxBill</a> · <a href="entities/PropertyTaxAppeal.html">PropertyTaxAppeal</a></p><h2 id="assets">Assets</h2><p><a href="entities/Asset.html">Asset</a> · <a href="entities/AssetHistory.html">AssetHistory</a></p><h2 id="people-and-parties">People and parties</h2><p><a href="entities/Member.html">Member</a> · <a href="entities/Person.html">Person</a> · <a href="entities/NonMember.html">NonMember</a> · <a href="entities/Employer.html">Employer</a> · <a href="entities/Organization.html">Organization</a> · <a href="entities/LinkMemberProjectEntity.html">LinkMemberProjectEntity</a></p><h2 id="workflow-and-requests">Workflow and requests</h2><p><a href="entities/WorkFlow.html">WorkFlow</a> · <a href="entities/WorkFlowStep.html">WorkFlowStep</a> · <a href="entities/WorkFlowStepApprover.html">WorkFlowStepApprover</a> · <a href="entities/WorkFlowTemplate.html">WorkFlowTemplate</a> · <a href="entities/WorkFlowTemplateStep.html">WorkFlowTemplateStep</a> · <a href="entities/WorkFlowTemplateStepAction.html">WorkFlowTemplateStepAction</a> · <a href="entities/Issue.html">Issue</a> · <a href="entities/CodeIssueType.html">CodeIssueType</a></p><h2 id="documents-tasks-deals">Documents, tasks, deals</h2><p><a href="entities/Document.html">Document</a> · <a href="entities/Folder.html">Folder</a> · <a href="entities/Task.html">Task</a> · <a href="entities/TaskGroup.html">TaskGroup</a> · <a href="entities/TaskItem.html">TaskItem</a> · <a href="entities/RETransaction.html">RETransaction</a> · <a href="entities/Scenario.html">Scenario</a></p><h2 id="configuration-which-mostly-is-not-in-the-census">Configuration — which mostly is not in the census</h2><p><a href="entities/PageLayout.html">PageLayout</a> · <a href="entities/PageLayoutField.html">PageLayoutField</a> · <a href="entities/PageLayoutFilter.html">PageLayoutFilter</a> · <a href="entities/ReportGroupAvailableField.html">ReportGroupAvailableField</a> · <a href="entities/CustomCodeField.html">CustomCodeField</a> · <a href="entities/CodeExpenseType.html">CodeExpenseType</a> · <a href="entities/ClientListRow.html">ClientListRow</a></p><blockquote><p><strong><a href="entities/PageLayout.html">PageLayout</a> and its family are absent from the 223-object census</strong> — the schema viewer refuses them. They were recovered over <a href="concepts/rest-business-object.html">REST</a>. See <a href="open-questions/q-bbw-13-census-gap.html">q-bbw-13-census-gap</a>.</p></blockquote><h2 id="platform">Platform</h2><p><a href="entities/Firm.html">Firm</a> · <a href="entities/StateProvinceCountry.html">StateProvinceCountry</a> · <a href="entities/Jurisdiction.html">Jurisdiction</a> · <a href="entities/Region.html">Region</a> · <a href="entities/Security.html">Security</a> · <a href="entities/UserClassSecurity.html">UserClassSecurity</a></p><h2 id="computed-projections-not-tables">Computed projections — not tables</h2><p><a href="entities/VirtualPercentageRentPeriod.html">VirtualPercentageRentPeriod</a> · <a href="entities/VirtualSalesPeriod.html">VirtualSalesPeriod</a> — see <a href="concepts/virtual-projection.html">virtual-projection</a>, and <a href="findings/finding-layouts-over-projections.html">finding-layouts-over-projections</a> for why they matter more than &quot;internal machinery&quot; suggests.</p><h2 id="reading-the-graph">Reading the graph</h2><p><a href="concepts/foreign-key-graph.html">foreign-key-graph</a> · <a href="concepts/type-system.html">type-system</a> · <a href="concepts/soft-reference.html">soft-reference</a> · <a href="findings/finding-fk-graph-undercounts.html">finding-fk-graph-undercounts</a></p><p>← <a href="00-start-here.html">00-start-here</a> · <a href="map-of-concepts.html">map-of-concepts</a> · <a href="map-of-features.html">map-of-features</a></p><div class="backlinks"><b>Linked from &middot; 5</b><a href="00-start-here.html">00-start-here</a><a href="README.html">README</a><a href="concepts/entity-spine.html">entity-spine</a><a href="map-of-concepts.html">map-of-concepts</a><a href="map-of-features.html">map-of-features</a></div></main></body></html>

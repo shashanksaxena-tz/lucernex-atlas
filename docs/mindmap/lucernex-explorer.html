@@ -570,7 +570,7 @@ function viewField(ent,fld){
     <dt>Declared type</dt><dd class="mono">${esc(ft)}</dd>
     ${code?`<dt>Catalogue type</dt><dd class="mono">${esc(code)}</dd>`:''}
     <dt>Scope</dt><dd>${(flags&1)?'Firm &mdash; defined by this tenant':(code?'Global &mdash; shipped by the platform':'not in the Data Fields catalogue')}</dd>
-    ${(flags&10)?`<dt>Required</dt><dd>${((flags&2)&&(flags&8))?'yes &mdash; catalogue and field inventory agree':((flags&2)?'yes, in the Data Fields catalogue':'yes, in the field inventory')}</dd>`:''}
+    ${(flags&10)?`<dt>Required</dt><dd>${((flags&2)&&(flags&8))?'yes &mdash; in both captures':((flags&2)?'Data Fields catalogue only &mdash; the field inventory does not':'field inventory only &mdash; the Data Fields catalogue does not')}</dd>`:''}
     ${(flags&4)?`<dt>Read-only</dt><dd>yes &mdash; written by the engine</dd>`:''}
     ${(flags&16)?`<dt>Functional field</dt><dd>yes &mdash; business meaning, not plumbing</dd>`:''}
     ${role&&D.roleNote&&D.roleNote[role]?`<dt>Key role</dt><dd>${esc(role)}</dd>`:''}
@@ -583,10 +583,11 @@ function viewField(ent,fld){
   </dl>
   ${role&&D.roleNote&&D.roleNote[role]?`<p>In the schema it is ${esc(D.roleNote[role])}.</p>`:''}
   ${code&&D.typeLegend&&D.typeLegend[code]?`<p class="lead">${esc(D.typeLegend[code])}</p>`:''}
-  ${(flags&2)?`<div class="find"><h5>Required &mdash; but not by the layout ${ctag('observed')}</h5>
-    <p>The catalogue marks this field required. Required-ness has no layout-level layer: the red
-    asterisk a user sees in the builder is this flag, rendered at paint time, not a per-placement
-    setting stored against the layout.</p></div>`:''}
+  ${(flags&10)?`<div class="find"><h5>Required &mdash; but not by the layout ${ctag('observed')}</h5>
+    <p>${((flags&2)&&(flags&8))?'Both captures mark this field required.'
+      :'Only '+((flags&2)?'the Data Fields catalogue':'the field inventory')+' marks this field required &mdash; the other capture does not. The two disagree on 213 fields estate-wide (606 against 637, 515 shared), so reading one capture and ignoring the other silently drops obligations.'}
+    Required-ness has no layout-level layer either way: the red asterisk a user sees in the builder
+    is this flag, rendered at paint time, not a per-placement setting stored against the layout.</p></div>`:''}
   ${(flags&1)?`<div class="find"><h5>A tenant custom column ${ctag('observed')}</h5>
     <p>Firm-scope fields are physical <code>Firm_</code>-prefixed columns, not rows in a value store,
     so adding one is a DDL change. That is direct evidence for database-per-tenant and against a

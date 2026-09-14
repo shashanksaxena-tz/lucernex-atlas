@@ -35,9 +35,9 @@ Source: `data-fields/cost-tracking-template.md`
 
 **Derived.** The physical database is lxr_drp_bbw — the tenant's name is in the database name. That is one more piece of evidence for database-per-tenant and against a single shared schema, alongside the Firm_ columns.
 
-### 1 field marked required
+### Required: the two captures disagree
 
-**Observed.** The inventory marks 1 of this record's fields Required. Across the whole inventory that is 606 fields, which independently corroborates the 603 the corpus had derived from the Data Fields catalogue — two sources, arrived at separately, agreeing to within three.
+**Observed.** The field inventory marks 1 of this record's fields required; the Data Fields catalogue marks 1; 1 appear in both. These two ARE separate captures — the catalogue is the Manage Data Fields screen, the inventory is the object export — so the disagreement is real and not a reading artefact. Estate-wide it is 606 against 637 with only 515 shared, so 213 fields are required according to exactly one of them. A rebuild that picks one capture and ignores the other silently drops obligations.
 
 ### Replication coverage: not materialised
 

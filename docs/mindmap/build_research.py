@@ -487,7 +487,10 @@ def main():
             body_areas.append(f"<p>{blurb}</p>")
         body_areas.append("<div class='shots'>")
         for f in files:
-            src = f"../assets/screenshots/{d}/{f}"
+            # screens.html sits at site/research/, so docs/assets is two up —
+            # the same depth index.html above already uses. One "../" short here
+            # was 358 of the site's 409 dead references.
+            src = f"../../assets/screenshots/{d}/{f}"
             nice = re.sub(r"^\d+-", "", f.rsplit(".", 1)[0]).replace("-", " ")
             body_areas.append(f'<a href="{src}"><img loading="lazy" src="{src}" alt="{e(nice)}">'
                               f'<span>{e(nice)}</span></a>')

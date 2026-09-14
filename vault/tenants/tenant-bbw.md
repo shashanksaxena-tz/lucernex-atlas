@@ -45,6 +45,8 @@ description at all.
 [[finding-no-where-used-precedent]] · [[layout-chain]] · [[finding-routes-are-not-addressable]] ·
 the conditional-fields false negative · the census gap count
 
+See [[tenant-comparison]] for what the two settle between them.
+
 ### The caveats
 
 [[caveat-one-equipment-contract]] · [[caveat-viewport]] ·

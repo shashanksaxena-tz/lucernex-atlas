@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>&quot;The six budget and bidding tools&quot; &middot; Lx Vault</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="../../atlas.css">
+<link rel="stylesheet" href="../../research/research.css">
+<link rel="stylesheet" href="../vault.css">
+</head><body><style id="lxg">body{visibility:hidden}
+#lxgate{visibility:visible;position:fixed;inset:0;z-index:9999;display:flex;
+align-items:center;justify-content:center;background:#0f172a;
+font-family:'IBM Plex Sans',system-ui,sans-serif}
+#lxgate form{background:#fff;padding:30px 32px;border-radius:12px;width:310px;
+box-shadow:0 20px 60px rgba(0,0,0,.35)}
+#lxgate h2{margin:0 0 4px;font-size:19px;color:#0f172a}
+#lxgate p{margin:0 0 18px;font-size:12.5px;color:#64748b;line-height:1.5}
+#lxgate label{display:block;font-size:11px;text-transform:uppercase;
+letter-spacing:.07em;color:#64748b;margin:0 0 5px}
+#lxgate input{width:100%;box-sizing:border-box;padding:9px 11px;margin:0 0 14px;
+border:1px solid #cbd5e1;border-radius:7px;font-size:14px}
+#lxgate button{width:100%;padding:10px;border:0;border-radius:7px;
+background:#b4530a;color:#fff;font-size:14px;font-weight:600;cursor:pointer}
+#lxgate .err{color:#b91c1c;font-size:12px;margin:0 0 10px;display:none}</style>
+<div id="lxgate"><form onsubmit="return lxg(event)">
+<h2>Lx Atlas</h2>
+<p>Internal documentation. Not a security boundary &mdash; see
+<code>gate.py</code>.</p>
+<p class="err" id="lxge">Incorrect.</p>
+<label for="lxgu">User</label><input id="lxgu" autocomplete="username" autofocus>
+<label for="lxgp">Password</label><input id="lxgp" type="password"
+autocomplete="current-password">
+<button type="submit">Enter</button></form></div>
+<script>
+function lxgOpen(){var g=document.getElementById('lxgate');if(g)g.remove();
+var s=document.getElementById('lxg');if(s)s.remove();
+document.body.style.visibility='visible';}
+function lxg(ev){ev.preventDefault();
+if(document.getElementById('lxgu').value==='admin'&&
+   document.getElementById('lxgp').value==='admin'){
+ try{sessionStorage.setItem('lxg','1');}catch(e){}
+ lxgOpen();return false;}
+document.getElementById('lxge').style.display='block';return false;}
+try{if(sessionStorage.getItem('lxg')==='1')
+ document.addEventListener('DOMContentLoaded',lxgOpen);}catch(e){}
+</script>
+<header><b>Lx Atlas</b>
+<nav><a href="../../index.html">Overview</a><a href="../../atlas.html#/map?set=feature">Feature map</a>
+<a href="../../atlas.html">Interactive app</a>
+<a href="../../research/index.html">Research</a>
+<a href="../../research/screens.html">Screens</a>
+<a href="../index.html" class="on">Vault</a>
+<a href="../../questions.html">Open questions</a></nav></header>
+<main><p class="crumb"><a href="../../index.html">Atlas</a> &rsaquo;
+<a href="../index.html">Vault</a> &rsaquo; &quot;The six budget and bidding tools&quot;</p><div class="fm"><span>screen</span><span>administration</span><span>out-of-scope</span><span class="ev">Observed</span></div><p><code>/en/budget/* · /en/admin/BidPackageTemplate.jsp</code></p><p>!<a href="../../../../../../assets/screenshots/bbw-admin/19-manage-budget-templates.jpg">Budget templates — one of six tools in an area ruled out of scope by decision.</a> <code>docs/assets/screenshots/bbw-admin/19-manage-budget-templates.jpg</code></p><p><strong>Out of scope by decision (2026-09-10).</strong> Six admin tools, and <strong>27 objects</strong> retained in the census and the <a href="../concepts/foreign-key-graph.html">foreign-key-graph</a> purely so the model stays whole.</p><div class="wrapt"><table><thead><tr><th>Tool</th><th>Route</th></tr></thead><tbody><tr><td>Manage Budget Templates</td><td><code>/en/budget/BudgetTemplateEdit.jsp</code></td></tr><tr><td>Manage Budget Views</td><td><code>/en/budget/BudgetLayoutView.jsp</code></td></tr><tr><td>Manage Budget Types</td><td><code>/en/budget/BudgetColumnTypeEdit.jsp</code></td></tr><tr><td>Manage Budget Summary Page</td><td><code>/en/budget/BudgetSummaryEdit.jsp</code></td></tr><tr><td>Manage Budget Index Variables</td><td><code>/en/budget/BudgetIndexEdit.jsp</code></td></tr><tr><td>Manage Bid Package Templates</td><td><code>/en/admin/BidPackageTemplate.jsp</code></td></tr></tbody></table></div><p><strong>The boundary is porous in one direction and not the other</strong>: only <strong>13</strong> FK columns cross from in-scope objects into Budget/Bid/Cost — nine of them the same <code>BudgetTemplateID</code> column — while <strong>71</strong> point the other way. So cutting the area loses little and keeping it costs little.</p><p>Two retired rule ids belong to this area and <strong>must not be reused</strong>: <code>RPT-R-034</code> and <code>RPT-R-035</code>.</p><p>Compare <a href="../findings/finding-punch-list-out-of-scope.html">finding-punch-list-out-of-scope</a>, which is a different out-of-scope argument — assigned to a separate product rather than deferred.</p><p>All screens: <a href="../map-of-screens.html">map-of-screens</a> · caveat: <a href="../concepts/caveat-viewport.html">caveat-viewport</a></p><div class="backlinks"><b>Linked from &middot; 1</b><a href="../map-of-screens.html">map-of-screens</a></div></main></body></html>

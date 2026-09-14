@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Map of rules &middot; Lx Vault</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="../atlas.css">
+<link rel="stylesheet" href="../research/research.css">
+<link rel="stylesheet" href="vault.css">
+</head><body><style id="lxg">body{visibility:hidden}
+#lxgate{visibility:visible;position:fixed;inset:0;z-index:9999;display:flex;
+align-items:center;justify-content:center;background:#0f172a;
+font-family:'IBM Plex Sans',system-ui,sans-serif}
+#lxgate form{background:#fff;padding:30px 32px;border-radius:12px;width:310px;
+box-shadow:0 20px 60px rgba(0,0,0,.35)}
+#lxgate h2{margin:0 0 4px;font-size:19px;color:#0f172a}
+#lxgate p{margin:0 0 18px;font-size:12.5px;color:#64748b;line-height:1.5}
+#lxgate label{display:block;font-size:11px;text-transform:uppercase;
+letter-spacing:.07em;color:#64748b;margin:0 0 5px}
+#lxgate input{width:100%;box-sizing:border-box;padding:9px 11px;margin:0 0 14px;
+border:1px solid #cbd5e1;border-radius:7px;font-size:14px}
+#lxgate button{width:100%;padding:10px;border:0;border-radius:7px;
+background:#b4530a;color:#fff;font-size:14px;font-weight:600;cursor:pointer}
+#lxgate .err{color:#b91c1c;font-size:12px;margin:0 0 10px;display:none}</style>
+<div id="lxgate"><form onsubmit="return lxg(event)">
+<h2>Lx Atlas</h2>
+<p>Internal documentation. Not a security boundary &mdash; see
+<code>gate.py</code>.</p>
+<p class="err" id="lxge">Incorrect.</p>
+<label for="lxgu">User</label><input id="lxgu" autocomplete="username" autofocus>
+<label for="lxgp">Password</label><input id="lxgp" type="password"
+autocomplete="current-password">
+<button type="submit">Enter</button></form></div>
+<script>
+function lxgOpen(){var g=document.getElementById('lxgate');if(g)g.remove();
+var s=document.getElementById('lxg');if(s)s.remove();
+document.body.style.visibility='visible';}
+function lxg(ev){ev.preventDefault();
+if(document.getElementById('lxgu').value==='admin'&&
+   document.getElementById('lxgp').value==='admin'){
+ try{sessionStorage.setItem('lxg','1');}catch(e){}
+ lxgOpen();return false;}
+document.getElementById('lxge').style.display='block';return false;}
+try{if(sessionStorage.getItem('lxg')==='1')
+ document.addEventListener('DOMContentLoaded',lxgOpen);}catch(e){}
+</script>
+<header><b>Lx Atlas</b>
+<nav><a href="../index.html">Overview</a><a href="../atlas.html#/map?set=feature">Feature map</a>
+<a href="../atlas.html">Interactive app</a>
+<a href="../research/index.html">Research</a>
+<a href="../research/screens.html">Screens</a>
+<a href="index.html" class="on">Vault</a>
+<a href="../questions.html">Open questions</a></nav></header>
+<main><p class="crumb"><a href="../index.html">Atlas</a> &rsaquo;
+<a href="index.html">Vault</a> &rsaquo; Map of rules</p><nav class="toc"><b>On this page</b><a href="#before-citing-anything">Before citing anything</a><a href="#the-ten-most-consequential">The ten most consequential</a><a href="#rules-that-describe-absences">Rules that describe absences</a></nav><div class="fm"><span>moc</span><span>rules</span></div><h1 id="the-numbered-business-rules">The numbered business rules</h1><p><strong>469 rules defined across 13 registers.</strong> They are numbered so any note can cite one. The <strong>115 most load-bearing have their own page</strong>; the rest live in the module registers, which link to <a href="../research/INDEX.html"><code>docs/modules/*/rules.md</code></a>.</p><div class="wrapt"><table><thead><tr><th>Register</th><th>Range</th><th style="text-align:right">Defined</th></tr></thead><tbody><tr><td><a href="rules/rules-contracts.html">rules-contracts</a></td><td><code>CON-R-001…161</code></td><td style="text-align:right"><strong>161</strong></td></tr><tr><td><a href="rules/rules-layouts-and-forms.html">rules-layouts-and-forms</a></td><td><code>LAY-R-001…018</code>, <code>101…202</code></td><td style="text-align:right">88</td></tr><tr><td><a href="rules/rules-workflow.html">rules-workflow</a></td><td><code>WF-R-001…062</code> + 7 suffixed</td><td style="text-align:right">69</td></tr><tr><td><a href="rules/rules-accounting.html">rules-accounting</a></td><td><code>ACC-R-001…062</code></td><td style="text-align:right">62</td></tr><tr><td><a href="rules/rules-reporting.html">rules-reporting</a></td><td><code>RPT-R-001…077</code> <em>(gaps)</em></td><td style="text-align:right">49</td></tr><tr><td><a href="rules/rules-facilities-locations.html">rules-facilities-locations</a></td><td><code>FAC-R-001…020</code></td><td style="text-align:right">20</td></tr><tr><td><a href="rules/rules-platform-tenancy.html">rules-platform-tenancy</a></td><td><code>PLT-R-001…016</code></td><td style="text-align:right">16</td></tr><tr><td><a href="rules/rules-assets-equipment.html">rules-assets-equipment</a></td><td><code>AST-R-001…016</code></td><td style="text-align:right">16</td></tr><tr><td><a href="rules/rules-portfolio-transactions.html">rules-portfolio-transactions</a></td><td><code>POR-R-001…016</code></td><td style="text-align:right">16</td></tr><tr><td><a href="rules/rules-projects-capital.html">rules-projects-capital</a></td><td><code>PRJ-R-001…014</code></td><td style="text-align:right">14</td></tr><tr><td><a href="rules/rules-people-parties.html">rules-people-parties</a></td><td><code>PPL-R-001…013</code></td><td style="text-align:right">13</td></tr><tr><td><a href="rules/rules-property-tax.html">rules-property-tax</a></td><td><code>TAX-R-001…012</code></td><td style="text-align:right">12</td></tr><tr><td><a href="rules/rules-documents-folders.html">rules-documents-folders</a></td><td><code>DOC-R-001…011</code></td><td style="text-align:right">11</td></tr></tbody></table></div><h2 id="before-citing-anything">Before citing anything</h2><ul><li><strong><code>RPT-R-034</code> and <code>RPT-R-035</code> are retired and must not be reused.</strong></li><li><strong><code>RPT-R-070</code>…<code>077</code> are ASG Edge+ requirements, not Lx observations.</strong></li><li><strong>There is no <code>LAY-R-100</code></strong> — that string is a section heading.</li><li><strong><a href="rules/rules-workflow.html">rules-workflow</a>&#x27;s own header undercounts itself</strong>: it says 67, and 69 are defined.</li><li>Three modules cite rules they do not own; do not double-count (<a href="rules/rule-LAY-R-106.html">rule-LAY-R-106</a>, <a href="rules/rule-FAC-R-014.html">rule-FAC-R-014</a>, <a href="rules/rule-ACC-R-056.html">rule-ACC-R-056</a>).</li></ul><h2 id="the-ten-most-consequential">The ten most consequential</h2><p><a href="rules/rule-ACC-R-011.html">rule-ACC-R-011</a> — classification polarity is <strong>inverted</strong> · <a href="rules/rule-ACC-R-033.html">rule-ACC-R-033</a> — a formula that <strong>does not exist</strong> · <a href="rules/rule-CON-R-058.html">rule-CON-R-058</a> — percentage-rent tiering, <strong>Inferred</strong>, the module&#x27;s own stated biggest risk · <a href="rules/rule-CON-R-131.html">rule-CON-R-131</a> — <strong>every landed column is <code>TEXT</code></strong> · <a href="rules/rule-PLT-R-001.html">rule-PLT-R-001</a> — tenant isolation is one join deep and <strong>unenforced</strong> · <a href="rules/rule-PLT-R-016.html">rule-PLT-R-016</a> — the spine is <strong>not settled</strong> · <a href="rules/rule-LAY-R-166e.html">rule-LAY-R-166e</a> — <strong>no mechanism passes values between workflow steps</strong> · <a href="rules/rule-WF-R-055.html">rule-WF-R-055</a> — the engine can write <strong>exactly one field</strong> · <a href="rules/rule-AST-R-006.html">rule-AST-R-006</a> — <code>RemainingAssetBalance</code> is <strong>magnitude-typed</strong> · <a href="rules/rule-TAX-R-011.html">rule-TAX-R-011</a> — <strong>a won appeal is reconciled nowhere</strong></p><h2 id="rules-that-describe-absences">Rules that describe absences</h2><p>Several of the most useful entries record something the product <strong>does not do</strong>, proved by exhaustive inspection rather than observed directly — which is the only way to prove a negative: <a href="rules/rule-CON-R-118.html">rule-CON-R-118</a> · <a href="rules/rule-POR-R-011.html">rule-POR-R-011</a> · <a href="rules/rule-DOC-R-010.html">rule-DOC-R-010</a> · <a href="rules/rule-DOC-R-011.html">rule-DOC-R-011</a> · <a href="rules/rule-PRJ-R-014.html">rule-PRJ-R-014</a> · <a href="rules/rule-PPL-R-013.html">rule-PPL-R-013</a> · and <a href="rules/rules-workflow.html">rules-workflow</a>&#x27;s 23-row <em>&quot;rules that do not exist&quot;</em> table.</p><p>← <a href="00-start-here.html">00-start-here</a> · <a href="map-of-features.html">map-of-features</a> · <a href="concepts/evidence-labels.html">evidence-labels</a></p><div class="backlinks"><b>Linked from &middot; 16</b><a href="00-start-here.html">00-start-here</a><a href="README.html">README</a><a href="map-of-features.html">map-of-features</a><a href="rules/rules-accounting.html">rules-accounting</a><a href="rules/rules-assets-equipment.html">rules-assets-equipment</a><a href="rules/rules-contracts.html">rules-contracts</a><a href="rules/rules-documents-folders.html">rules-documents-folders</a><a href="rules/rules-facilities-locations.html">rules-facilities-locations</a><a href="rules/rules-layouts-and-forms.html">rules-layouts-and-forms</a><a href="rules/rules-people-parties.html">rules-people-parties</a><a href="rules/rules-platform-tenancy.html">rules-platform-tenancy</a><a href="rules/rules-portfolio-transactions.html">rules-portfolio-transactions</a><a href="rules/rules-projects-capital.html">rules-projects-capital</a><a href="rules/rules-property-tax.html">rules-property-tax</a><a href="rules/rules-reporting.html">rules-reporting</a><a href="rules/rules-workflow.html">rules-workflow</a></div></main></body></html>

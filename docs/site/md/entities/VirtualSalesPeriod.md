@@ -33,7 +33,7 @@ Source: `data-fields/virtual-sales-period.md`
 
 ### 65 fields carry a vendor definition
 
-**Observed.** 65 of this record's 66 inventoried fields have prose written by the vendor saying what the field is for. Open any field node to read it — this is the one source in the corpus that explains fields rather than listing them.
+**Observed.** 65 of this record's 66 inventoried fields have prose written by the vendor saying what the field is for. Open any field node to read it — this is the one reading of the corpus that explains fields rather than listing them. It is a sharper reading of the same export the object census comes from, not a second source: where it agrees with the census that is one fact stated twice, not two facts.
 
 ### 66 fields excluded from extraction
 

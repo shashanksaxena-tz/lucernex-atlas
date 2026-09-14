@@ -69,7 +69,7 @@ standard markdown, so the same files render in Obsidian, on GitHub and in any ge
 of `Observed`, `Derived` or `Inferred`. See [[evidence-labels]]. Notes that make claims at several
 confidence levels carry the *weakest* label in frontmatter and label each claim in the body.
 
-**Screenshots.** Embedded with `![caption](relative/path.jpg)` and immediately followed by the
+**Screenshots.** Embedded with a standard markdown image, `!` + `[caption]` + `(relative/path.jpg)`, and immediately followed by the
 canonical path in `code`. The caption says what to notice, not what the picture is of.
 
 **Length.** A note that needs scrolling probably wants splitting. If you are adding to a note and it

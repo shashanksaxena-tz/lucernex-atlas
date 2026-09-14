@@ -36,6 +36,7 @@ it holds a record of that type]].
 | The product by **what it stores** | [[map-of-entities]] · [[entity-spine]] |
 | **What was learned** — the conclusions | [[map-of-findings]] |
 | **What is still unknown** | [[map-of-open-questions]] |
+| **What two tenants settle between them** | [[tenant-comparison]] |
 
 Also: [[map-of-screens]] (every captured screen, with its screenshot), [[map-of-rules]] (the numbered
 business rules), [[map-of-concepts]].
