@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Assets and equipment &middot; Lx Vault</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="../../atlas.css">
+<link rel="stylesheet" href="../../research/research.css">
+<link rel="stylesheet" href="../vault.css">
+</head><body><style id="lxg">body{visibility:hidden}
+#lxgate{visibility:visible;position:fixed;inset:0;z-index:9999;display:flex;
+align-items:center;justify-content:center;background:#0f172a;
+font-family:'IBM Plex Sans',system-ui,sans-serif}
+#lxgate form{background:#fff;padding:30px 32px;border-radius:12px;width:310px;
+box-shadow:0 20px 60px rgba(0,0,0,.35)}
+#lxgate h2{margin:0 0 4px;font-size:19px;color:#0f172a}
+#lxgate p{margin:0 0 18px;font-size:12.5px;color:#64748b;line-height:1.5}
+#lxgate label{display:block;font-size:11px;text-transform:uppercase;
+letter-spacing:.07em;color:#64748b;margin:0 0 5px}
+#lxgate input{width:100%;box-sizing:border-box;padding:9px 11px;margin:0 0 14px;
+border:1px solid #cbd5e1;border-radius:7px;font-size:14px}
+#lxgate button{width:100%;padding:10px;border:0;border-radius:7px;
+background:#b4530a;color:#fff;font-size:14px;font-weight:600;cursor:pointer}
+#lxgate .err{color:#b91c1c;font-size:12px;margin:0 0 10px;display:none}</style>
+<div id="lxgate"><form onsubmit="return lxg(event)">
+<h2>Lx Atlas</h2>
+<p>Internal documentation. Not a security boundary &mdash; see
+<code>gate.py</code>.</p>
+<p class="err" id="lxge">Incorrect.</p>
+<label for="lxgu">User</label><input id="lxgu" autocomplete="username" autofocus>
+<label for="lxgp">Password</label><input id="lxgp" type="password"
+autocomplete="current-password">
+<button type="submit">Enter</button></form></div>
+<script>
+function lxgOpen(){var g=document.getElementById('lxgate');if(g)g.remove();
+var s=document.getElementById('lxg');if(s)s.remove();
+document.body.style.visibility='visible';}
+function lxg(ev){ev.preventDefault();
+if(document.getElementById('lxgu').value==='admin'&&
+   document.getElementById('lxgp').value==='admin'){
+ try{sessionStorage.setItem('lxg','1');}catch(e){}
+ lxgOpen();return false;}
+document.getElementById('lxge').style.display='block';return false;}
+try{if(sessionStorage.getItem('lxg')==='1')
+ document.addEventListener('DOMContentLoaded',lxgOpen);}catch(e){}
+</script>
+<header><b>Lx Atlas</b>
+<nav><a href="../../index.html">Overview</a><a href="../../atlas.html#/map?set=feature">Feature map</a>
+<a href="../../atlas.html">Interactive app</a>
+<a href="../../research/index.html">Research</a>
+<a href="../../research/screens.html">Screens</a>
+<a href="../index.html" class="on">Vault</a>
+<a href="../../questions.html">Open questions</a></nav></header>
+<main><p class="crumb"><a href="../../index.html">Atlas</a> &rsaquo;
+<a href="../index.html">Vault</a> &rsaquo; Assets and equipment</p><div class="fm"><span>module</span><span>assets</span><span class="ev">Observed</span></div><p><strong>8 objects · 230 fields · rules <code>AST-R-001</code>…<code>AST-R-016</code></strong></p><p>Three unrelated concerns under one dashboard heading: the <a href="../../../entities/Asset.html">Asset</a> record, the reactive-maintenance ticket chain, and a parts catalog. <strong>605 assets</strong> in the live tenant.</p><p>Entities: <a href="../../../entities/Asset.html">Asset</a> · <a href="../../../entities/AssetHistory.html">AssetHistory</a> · <a href="../../../entities/Issue.html">Issue</a></p><p>The module&#x27;s most valuable file is <code>equipment-leases.md</code>, and its finding is <a href="../../../findings/finding-accounting-runs-per-asset.html">finding-accounting-runs-per-asset</a>: <a href="../../../entities/ContractFinancialTest.html">ContractFinancialTest</a>, <a href="../../../entities/SLSummary.html">SLSummary</a> and <a href="../../../entities/SLPeriod.html">SLPeriod</a> each carry a nullable <code>AssetID</code>, so the ASC 842 / IFRS 16 engine runs per equipment asset. <a href="../../../tenants/tenant-bbw.html">BBW</a>&#x27;s <a href="../../../concepts/equipment-contract.html">Equipment Contract</a> root is the same thing observed from the front.</p><ul><li><code>RemainingAssetBalance</code> is <strong>magnitude-typed</strong> — 0–100 is a percent, ≥100.01 is currency (<strong>rule-AST-R-006</strong>). A genuine landmine.</li><li>The maintenance loop is <strong>button-generated, never automatic</strong> (<strong>rule-AST-R-011</strong>), and <code>ServiceRequest</code>/<code>WorkOrder</code> are undeclared <a href="../../../entities/Issue.html">Issue</a> variants the FK graph misses entirely (<a href="../../../concepts/soft-reference.html">soft-reference</a>).</li><li><strong>Parts are recorded against the Issue, not the WorkOrder</strong> (<strong>rule-AST-R-014</strong>), and the catalog carries <strong>no per-location stock</strong> — one firm-wide count per part (<strong>rule-AST-R-015</strong>).</li></ul><p>Rules: <strong>rules-assets-equipment</strong> · <a href="../../docs/modules/assets-equipment/README.html"><code>modules/assets-equipment/</code></a></p><div class="backlinks"><b>Linked from &middot; 3</b><a href="../entities/Asset.html">Asset</a><a href="../entities/AssetHistory.html">AssetHistory</a><a href="../findings/finding-accounting-runs-per-asset.html">finding-accounting-runs-per-asset</a></div></main></body></html>

@@ -11,6 +11,9 @@ Source: `data-fields/virtual-template-budget-option.md`
 |  | Value |
 |---|---|
 | Fields declared | 17 |
+| Fields with a vendor definition | 0 of 17 inventoried |
+| Physical tables | `virtual_template_budget_option` |
+| Replication database | `lxr_drp_bbw` |
 | Catalogued fields | 16 (16 global, 0 firm) |
 | Physical tables | 1 |
 | Referenced by | 0 keys from 0 record types |
@@ -28,6 +31,18 @@ Source: `data-fields/virtual-template-budget-option.md`
 
 **Derived.** This record carries no FirmID of its own. It hangs off ProjectEntity, and tenant isolation has to be enforced by joining to that row and filtering on its FirmID — or it is not enforced at all. 161 of the 223 record types are shaped this way.
 
+### Lands in virtual_template_budget_option
+
+**Observed.** The field inventory names the physical destination of every column: one table in the database lxr_drp_bbw. Every field node carries its own table and column, so the mapping is per column, not per record.
+
+### A per-tenant database name
+
+**Derived.** The physical database is lxr_drp_bbw — the tenant's name is in the database name. That is one more piece of evidence for database-per-tenant and against a single shared schema, alongside the Firm_ columns.
+
+### Replication coverage: not materialised
+
+**Observed.** Observed of the loader, not of the product. The replication target lxr_drp_bbw has never created a table for this record: Table may not exist in the database yet. No data has ever been returned for this Lx object, and the loader only issues CREATE TABLE once the first row arrives. The configuration is in place, so this table and all of its columns will be created automatically as soon as data is entered in Lx. That is a statement about one loader's coverage and says nothing about whether the record exists or holds data in Lx. The tell is ProjectEntity — 107 fields, every one marked extracted, table never created, yet it is the universal supertype of a tenant holding 2,014 contracts, so it plainly is not empty. Do not read the 69-created / 150-not-created split as the size of the product's schema.
+
 ### Out of scope by decision
 
 **Observed.** Its module is excluded from the rebuild. It stays in the census so impact analysis through the relationship graph is never silently wrong at the boundary, but nothing here is being built.
@@ -38,43 +53,43 @@ Source: `data-fields/virtual-template-budget-option.md`
 
 Typed pointers to other records. Lx names each FK type after the table it points at, so the relational model is declared rather than implied.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `ProjectEntityID` |  | Entity ID | — |  | [ProjectEntity](ProjectEntity.md) |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `ProjectEntityID` |  |  | Entity ID | — |  | `virtual_template_budget_option.ProjectEntityID · TEXT` | [ProjectEntity](ProjectEntity.md) |
 
 ### Quantities (1)
 
 Counts, areas and other plain numeric measures.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `TemplateID` | Budget Template RecID | Number | Global |  |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `TemplateID` | Budget Template RecID |  | Number | Global |  | `virtual_template_budget_option.TemplateID · TEXT` |  |
 
 ### Flags (12)
 
 Booleans. In this product they usually gate engine behaviour rather than describe the record.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `IsValidForCapProgram` | Budget Template Valid for Cap Program? | Boolean | Global |  |  |
-| `IsValidForCapProject` | Budget Template Valid for Cap Project? | Boolean | Global |  |  |
-| `IsValidForContract` | Budget Template Valid for RE Contract? | Boolean | Global |  |  |
-| `IsValidForEquipContract` | Budget Template Valid for Equipment Contract? | Boolean | Global |  |  |
-| `IsValidForFacility` | Budget Template Valid for Facility? | Boolean | Global |  |  |
-| `IsValidForLocation` | Budget Template Valid for Location? | Boolean | Global |  |  |
-| `IsValidForOpenProject` | Budget Template Valid for Open Project? | Boolean | Global |  |  |
-| `IsValidForParcel` | Budget Template Valid for Parcel? | Boolean | Global |  |  |
-| `IsValidForPortfolio` | Budget Template Valid for Portfolio? | Boolean | Global |  |  |
-| `IsValidForPotentialProject` | Budget Template Valid for Potential Project? | Boolean | Global |  |  |
-| `IsValidForPrototype` | Budget Template Valid for Prototype? | Boolean | Global |  |  |
-| `LockAllBudgetGroups` | Lock All Budget Groups | Boolean | Global |  |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `IsValidForCapProgram` | Budget Template Valid for Cap Program? |  | Boolean | Global |  | `virtual_template_budget_option.IsValidForCapProgram · TEXT` |  |
+| `IsValidForCapProject` | Budget Template Valid for Cap Project? |  | Boolean | Global |  | `virtual_template_budget_option.IsValidForCapProject · TEXT` |  |
+| `IsValidForContract` | Budget Template Valid for RE Contract? |  | Boolean | Global |  | `virtual_template_budget_option.IsValidForContract · TEXT` |  |
+| `IsValidForEquipContract` | Budget Template Valid for Equipment Contract? |  | Boolean | Global |  | `virtual_template_budget_option.IsValidForEquipContract · TEXT` |  |
+| `IsValidForFacility` | Budget Template Valid for Facility? |  | Boolean | Global |  | `virtual_template_budget_option.IsValidForFacility · TEXT` |  |
+| `IsValidForLocation` | Budget Template Valid for Location? |  | Boolean | Global |  | `virtual_template_budget_option.IsValidForLocation · TEXT` |  |
+| `IsValidForOpenProject` | Budget Template Valid for Open Project? |  | Boolean | Global |  | `virtual_template_budget_option.IsValidForOpenProject · TEXT` |  |
+| `IsValidForParcel` | Budget Template Valid for Parcel? |  | Boolean | Global |  | `virtual_template_budget_option.IsValidForParcel · TEXT` |  |
+| `IsValidForPortfolio` | Budget Template Valid for Portfolio? |  | Boolean | Global |  | `virtual_template_budget_option.IsValidForPortfolio · TEXT` |  |
+| `IsValidForPotentialProject` | Budget Template Valid for Potential Project? |  | Boolean | Global |  | `virtual_template_budget_option.IsValidForPotentialProject · TEXT` |  |
+| `IsValidForPrototype` | Budget Template Valid for Prototype? |  | Boolean | Global |  | `virtual_template_budget_option.IsValidForPrototype · TEXT` |  |
+| `LockAllBudgetGroups` | Lock All Budget Groups |  | Boolean | Global |  | `virtual_template_budget_option.LockAllBudgetGroups · TEXT` |  |
 
 ### Text & notes (3)
 
 Free text. Notably, free text is never allowed to drive a conditional display rule.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `Description` | Budget Template Description | Text | Global |  |  |
-| `Notes` | Budget Template Notes | Text | Global |  |  |
-| `TemplateName` | Budget Template Name | Text | Global |  |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `Description` | Budget Template Description |  | Text | Global |  | `virtual_template_budget_option.Description · TEXT` |  |
+| `Notes` | Budget Template Notes |  | Text | Global |  | `virtual_template_budget_option.Notes · TEXT` |  |
+| `TemplateName` | Budget Template Name |  | Text | Global |  | `virtual_template_budget_option.TemplateName · TEXT` |  |

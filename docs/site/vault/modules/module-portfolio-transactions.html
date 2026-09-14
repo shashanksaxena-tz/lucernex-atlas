@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Portfolio and transactions &middot; Lx Vault</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="../../atlas.css">
+<link rel="stylesheet" href="../../research/research.css">
+<link rel="stylesheet" href="../vault.css">
+</head><body><style id="lxg">body{visibility:hidden}
+#lxgate{visibility:visible;position:fixed;inset:0;z-index:9999;display:flex;
+align-items:center;justify-content:center;background:#0f172a;
+font-family:'IBM Plex Sans',system-ui,sans-serif}
+#lxgate form{background:#fff;padding:30px 32px;border-radius:12px;width:310px;
+box-shadow:0 20px 60px rgba(0,0,0,.35)}
+#lxgate h2{margin:0 0 4px;font-size:19px;color:#0f172a}
+#lxgate p{margin:0 0 18px;font-size:12.5px;color:#64748b;line-height:1.5}
+#lxgate label{display:block;font-size:11px;text-transform:uppercase;
+letter-spacing:.07em;color:#64748b;margin:0 0 5px}
+#lxgate input{width:100%;box-sizing:border-box;padding:9px 11px;margin:0 0 14px;
+border:1px solid #cbd5e1;border-radius:7px;font-size:14px}
+#lxgate button{width:100%;padding:10px;border:0;border-radius:7px;
+background:#b4530a;color:#fff;font-size:14px;font-weight:600;cursor:pointer}
+#lxgate .err{color:#b91c1c;font-size:12px;margin:0 0 10px;display:none}</style>
+<div id="lxgate"><form onsubmit="return lxg(event)">
+<h2>Lx Atlas</h2>
+<p>Internal documentation. Not a security boundary &mdash; see
+<code>gate.py</code>.</p>
+<p class="err" id="lxge">Incorrect.</p>
+<label for="lxgu">User</label><input id="lxgu" autocomplete="username" autofocus>
+<label for="lxgp">Password</label><input id="lxgp" type="password"
+autocomplete="current-password">
+<button type="submit">Enter</button></form></div>
+<script>
+function lxgOpen(){var g=document.getElementById('lxgate');if(g)g.remove();
+var s=document.getElementById('lxg');if(s)s.remove();
+document.body.style.visibility='visible';}
+function lxg(ev){ev.preventDefault();
+if(document.getElementById('lxgu').value==='admin'&&
+   document.getElementById('lxgp').value==='admin'){
+ try{sessionStorage.setItem('lxg','1');}catch(e){}
+ lxgOpen();return false;}
+document.getElementById('lxge').style.display='block';return false;}
+try{if(sessionStorage.getItem('lxg')==='1')
+ document.addEventListener('DOMContentLoaded',lxgOpen);}catch(e){}
+</script>
+<header><b>Lx Atlas</b>
+<nav><a href="../../index.html">Overview</a><a href="../../atlas.html#/map?set=feature">Feature map</a>
+<a href="../../atlas.html">Interactive app</a>
+<a href="../../research/index.html">Research</a>
+<a href="../../research/screens.html">Screens</a>
+<a href="../index.html" class="on">Vault</a>
+<a href="../../questions.html">Open questions</a></nav></header>
+<main><p class="crumb"><a href="../../index.html">Atlas</a> &rsaquo;
+<a href="../index.html">Vault</a> &rsaquo; Portfolio and transactions</p><div class="fm"><span>module</span><span>portfolio</span><span>deal-pipeline</span><span class="ev">Observed</span></div><p><strong>11 objects · 513 fields · rules <code>POR-R-001</code>…<code>POR-R-016</code></strong></p><p>Two things bolted onto one object. <a href="../../../entities/Program.html">Program</a> — the menu&#x27;s &quot;Portfolio&quot; — is both the container at the top of the ownership hierarchy <em>and</em> the carrier of accounting policy. Beside it runs the <strong>pre-lease deal pipeline</strong>, which happens before any <a href="../../../entities/Contract.html">Contract</a> exists:</p><pre><code>PotentialProject (&quot;Site&quot;) → RETransaction → Scenario → Contract</code></pre><p>Entities: <a href="../../../entities/Program.html">Program</a> · <a href="../../../entities/PotentialProject.html">PotentialProject</a> · <a href="../../../entities/RETransaction.html">RETransaction</a> · <a href="../../../entities/Scenario.html">Scenario</a></p><ul><li><a href="../../../entities/Program.html">Program</a> is <strong>180 fields</strong> — larger than Scenario and PotentialProject combined — and resolves discount rate, thresholds, fiscal year and FX before <a href="../../../entities/Firm.html">Firm</a> (<strong>rule-POR-R-001</strong>).</li><li>Its two unique columns <code>SiteToProjectSetupLayoutID</code> and <code>ProjectToFacilitySetupLayoutID</code> <strong>name the Site → Project → Facility promotion pipeline</strong>, and only the second half has FK corroboration (<strong>rule-POR-R-012</strong>).</li><li><strong>The pipeline is not reconstructible afterwards.</strong> <a href="../../../entities/PotentialProject.html">PotentialProject</a> has zero inbound edges (<strong>rule-POR-R-011</strong>) and <code>Scenario.ContractID</code> is one-way (<strong>rule-POR-R-004</strong>).</li><li>Four overlapping pipeline code tables, <strong>no row values ever captured</strong> (<strong>rule-POR-R-005</strong>).</li></ul><p>Screens: <strong>screen-manage-portfolios</strong></p><p>Rules: <strong>rules-portfolio-transactions</strong> · <a href="../../docs/modules/portfolio-transactions/README.html"><code>modules/portfolio-transactions/</code></a></p><div class="backlinks"><b>Linked from &middot; 6</b><a href="../entities/PotentialProject.html">PotentialProject</a><a href="../entities/Program.html">Program</a><a href="../entities/Project.html">Project</a><a href="../entities/RETransaction.html">RETransaction</a><a href="../entities/Scenario.html">Scenario</a><a href="module-facilities-locations.html">module-facilities-locations</a></div></main></body></html>

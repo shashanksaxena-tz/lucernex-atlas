@@ -21,7 +21,7 @@ unobserved.
   position. See [[finding-routing-is-to-named-people]]. Their identities are deliberately excluded
   from this vault — [[method-omitting-identities]].
 - Each step binds **one layout per role** (`PageLayoutApproversID`, `PageLayoutAssigneesID`), so an
-  N-step workflow carries N+1 layouts ([[rule-LAY-R-165]], [[rule-LAY-R-010a]]).
+  N-step workflow carries N+1 layouts ([[rule-LAY-R-165]], [[rule-WF-R-010a]]).
 
 Two failure modes are in the schema: `RequireAllApprovers` **deadlocks with no recovery path** if
 approvers choose different actions ([[rule-WF-R-053]]), and only one prior approval round is retained

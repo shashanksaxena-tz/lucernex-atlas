@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Layouts are built on computed projections, not only on tables &middot; Lx Vault</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="../../atlas.css">
+<link rel="stylesheet" href="../../research/research.css">
+<link rel="stylesheet" href="../vault.css">
+</head><body><style id="lxg">body{visibility:hidden}
+#lxgate{visibility:visible;position:fixed;inset:0;z-index:9999;display:flex;
+align-items:center;justify-content:center;background:#0f172a;
+font-family:'IBM Plex Sans',system-ui,sans-serif}
+#lxgate form{background:#fff;padding:30px 32px;border-radius:12px;width:310px;
+box-shadow:0 20px 60px rgba(0,0,0,.35)}
+#lxgate h2{margin:0 0 4px;font-size:19px;color:#0f172a}
+#lxgate p{margin:0 0 18px;font-size:12.5px;color:#64748b;line-height:1.5}
+#lxgate label{display:block;font-size:11px;text-transform:uppercase;
+letter-spacing:.07em;color:#64748b;margin:0 0 5px}
+#lxgate input{width:100%;box-sizing:border-box;padding:9px 11px;margin:0 0 14px;
+border:1px solid #cbd5e1;border-radius:7px;font-size:14px}
+#lxgate button{width:100%;padding:10px;border:0;border-radius:7px;
+background:#b4530a;color:#fff;font-size:14px;font-weight:600;cursor:pointer}
+#lxgate .err{color:#b91c1c;font-size:12px;margin:0 0 10px;display:none}</style>
+<div id="lxgate"><form onsubmit="return lxg(event)">
+<h2>Lx Atlas</h2>
+<p>Internal documentation. Not a security boundary &mdash; see
+<code>gate.py</code>.</p>
+<p class="err" id="lxge">Incorrect.</p>
+<label for="lxgu">User</label><input id="lxgu" autocomplete="username" autofocus>
+<label for="lxgp">Password</label><input id="lxgp" type="password"
+autocomplete="current-password">
+<button type="submit">Enter</button></form></div>
+<script>
+function lxgOpen(){var g=document.getElementById('lxgate');if(g)g.remove();
+var s=document.getElementById('lxg');if(s)s.remove();
+document.body.style.visibility='visible';}
+function lxg(ev){ev.preventDefault();
+if(document.getElementById('lxgu').value==='admin'&&
+   document.getElementById('lxgp').value==='admin'){
+ try{sessionStorage.setItem('lxg','1');}catch(e){}
+ lxgOpen();return false;}
+document.getElementById('lxge').style.display='block';return false;}
+try{if(sessionStorage.getItem('lxg')==='1')
+ document.addEventListener('DOMContentLoaded',lxgOpen);}catch(e){}
+</script>
+<header><b>Lx Atlas</b>
+<nav><a href="../../index.html">Overview</a><a href="../../atlas.html#/map?set=feature">Feature map</a>
+<a href="../../atlas.html">Interactive app</a>
+<a href="../../research/index.html">Research</a>
+<a href="../../research/screens.html">Screens</a>
+<a href="../index.html" class="on">Vault</a>
+<a href="../../questions.html">Open questions</a></nav></header>
+<main><p class="crumb"><a href="../../index.html">Atlas</a> &rsaquo;
+<a href="../index.html">Vault</a> &rsaquo; Layouts are built on computed projections, not only on tables</p><div class="fm"><span>finding</span><span>layouts</span><span>data-model</span><span class="ev">Observed</span></div><p>Four <a href="../../../concepts/page-layout-concept.html">layouts</a> name a <a href="../../../concepts/virtual-projection.html"><code>Virtual*</code></a> object as their primary table — <strong>and two of them are top-level Summary Pages</strong>:</p><div class="wrapt"><table><thead><tr><th style="text-align:right">PLID</th><th>Layout</th><th>Mode</th><th>Primary table</th></tr></thead><tbody><tr><td style="text-align:right">98921</td><td>ASG Breakpoint Schedule</td><td><strong>SEP</strong></td><td><a href="../../../entities/VirtualPercentageRentPeriod.html">VirtualPercentageRentPeriod</a></td></tr><tr><td style="text-align:right">98934</td><td>ASG Percent Rent Schedule</td><td><strong>SEP</strong></td><td><a href="../../../entities/VirtualPercentageRentPeriod.html">VirtualPercentageRentPeriod</a></td></tr><tr><td style="text-align:right">98908</td><td>ASG Contract Payment Details - Breakpoints</td><td>LIST</td><td><a href="../../../entities/VirtualPercentageRentPeriod.html">VirtualPercentageRentPeriod</a></td></tr><tr><td style="text-align:right">98920</td><td>ASG Contract Percent Rent - Schedule</td><td>LIST</td><td><a href="../../../entities/VirtualSalesPeriod.html">VirtualSalesPeriod</a></td></tr></tbody></table></div><p>The corpus had recorded that the 13 <code>Virtual*</code> objects have <strong>no primary key and not one audit column</strong> — computed projections, internal machinery. <strong>Two of them turn out to be the primary table of user-facing screens.</strong></p><blockquote><p><strong>The layout engine must be able to target a read model or computed projection, not just an entity table.</strong></p></blockquote><p>A rebuild that only permits layouts over persisted entities <strong>cannot reproduce the percentage-rent breakpoint and sales-period schedule screens at all</strong>.</p><p>It also means those screens are <strong>inherently read-only</strong> — there is no key to write back to — which a layout engine has to <strong>model explicitly</strong> rather than discover at runtime. Whether the builder in fact renders them as display-only is <a href="../../../open-questions/q-bbw-11-virtual-layout-writable.html">q-bbw-11-virtual-layout-writable</a>.</p><h3 id="the-related-oddity">The related oddity</h3><p><code>ASG ASC 842 Schedule</code> (98859) and <code>ASG SL Summary</code> (98873) declare <strong>the same primary table</strong>, <code>Straight-Line Schedule</code>. Two screens, one underlying object, two layouts — so <a href="../../../concepts/one-engine-three-standards.html">the standard is a layout distinction here, not a data one</a>. Which of <a href="../../../entities/SLSummary.html">SLSummary</a> / <a href="../../../entities/SLPeriod.html">SLPeriod</a> / <code>CodeSLSchedule</code> that table actually is remains <a href="../../../open-questions/q-bbw-10-straight-line-table.html">q-bbw-10-straight-line-table</a>.</p><div class="backlinks"><b>Linked from &middot; 10</b><a href="../concepts/page-layout-concept.html">page-layout-concept</a><a href="../concepts/virtual-projection.html">virtual-projection</a><a href="../entities/PercentageRent.html">PercentageRent</a><a href="../entities/VirtualPercentageRentPeriod.html">VirtualPercentageRentPeriod</a><a href="../entities/VirtualSalesPeriod.html">VirtualSalesPeriod</a><a href="../features/feature-page-layouts.html">feature-page-layouts</a><a href="../modules/module-layouts-and-forms.html">module-layouts-and-forms</a><a href="../open-questions/q-bbw-10-straight-line-table.html">q-bbw-10-straight-line-table</a><a href="../open-questions/q-bbw-11-virtual-layout-writable.html">q-bbw-11-virtual-layout-writable</a><a href="../rules/rule-RPT-R-036.html">rule-RPT-R-036</a></div></main></body></html>

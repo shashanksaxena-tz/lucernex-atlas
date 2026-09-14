@@ -11,6 +11,9 @@ Source: `data-fields/percentage-rent.md`
 |  | Value |
 |---|---|
 | Fields declared | 45 |
+| Fields with a vendor definition | 37 of 47 inventoried |
+| Physical tables | `percentage_rent` |
+| Replication database | `lxr_drp_bbw` |
 | Catalogued fields | 44 (41 global, 3 firm) |
 | Physical tables | 1 |
 | Referenced by | 2 keys from 2 record types |
@@ -32,6 +35,22 @@ Source: `data-fields/percentage-rent.md`
 
 **Observed.** Of 44 catalogued fields on this record, 3 are Firm scope — defined by this tenant rather than shipped by the platform. Firm-scope definitions are RGAF rows carrying IsGlobal, FirmID and IsClientExtensionField.
 
+### Lands in percentage_rent
+
+**Observed.** The field inventory names the physical destination of every column: one table in the database lxr_drp_bbw. Every field node carries its own table and column, so the mapping is per column, not per record.
+
+### A per-tenant database name
+
+**Derived.** The physical database is lxr_drp_bbw — the tenant's name is in the database name. That is one more piece of evidence for database-per-tenant and against a single shared schema, alongside the Firm_ columns.
+
+### 37 fields carry a vendor definition
+
+**Observed.** 37 of this record's 47 inventoried fields have prose written by the vendor saying what the field is for. Open any field node to read it — this is the one source in the corpus that explains fields rather than listing them.
+
+### 1 field marked required
+
+**Observed.** The inventory marks 1 of this record's fields Required. Across the whole inventory that is 606 fields, which independently corroborates the 603 the corpus had derived from the Data Fields catalogue — two sources, arrived at separately, agreeing to within three.
+
 ## Rules that govern it
 
 | Rule | What it requires | Confidence |
@@ -44,109 +63,109 @@ Source: `data-fields/percentage-rent.md`
 
 Typed pointers to other records. Lx names each FK type after the table it points at, so the relational model is declared rather than implied.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `AmendmentID` | Amendment | Contract Amendment ID | Global |  | [ContractAmendment](ContractAmendment.md) |
-| `ContractID` | Contract | Contract ID | Global | yes | [Contract](Contract.md) |
-| `CovenantID` | Covenant | Covenant ID | Global |  | [Covenant](Covenant.md) |
-| `ProjectEntityID` |  | Entity ID | — |  | [ProjectEntity](ProjectEntity.md) |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `AmendmentID` | Amendment | Select the amendment that the record is associated with from this field. | Contract Amendment ID | Global |  | `percentage_rent.AmendmentID · TEXT` | [ContractAmendment](ContractAmendment.md) |
+| `ContractID` | Contract | The Contract ID is a unique identifier that belongs to a contract. The Contract ID of a contract can only be changed from the Contract > Details > Summary page. | Contract ID | Global | yes | `percentage_rent.ContractID · TEXT` | [Contract](Contract.md) |
+| `CovenantID` | Covenant | Select the covenant that the record is associated with from this field. | Covenant ID | Global |  | `percentage_rent.CovenantID · TEXT` | [Covenant](Covenant.md) |
+| `ProjectEntityID` |  |  | Entity ID | — |  | `percentage_rent.ProjectEntityID · TEXT` | [ProjectEntity](ProjectEntity.md) |
 
 ### Soft references (1)
 
 Columns that name another record without a typed foreign key behind them - generic handles such as Entity ID and item ID that point at whichever table the row belongs to. These are the joins a rebuild has to make explicit.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `RentYearStartMonth` | Rent Year Start Month | Dropdown | Global |  |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `RentYearStartMonth` | Rent Year Start Month | Select the start month of the rent year from this field. | Dropdown | Global |  | `percentage_rent.RentYearStartMonth · TEXT` |  |
 
 ### Coded values (drop-downs) (10)
 
 Fields bound to a master code table. Every one of these is a place where an administrator, not a developer, controls the allowed values.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `CodeBillingFrequencyID` | Billing Frequency | Dropdown (Frequency Code) | Global |  | Frequency Code |
-| `CodeCapFrequencyID` | Cap Frequency | Dropdown (Frequency Code) | Global |  | Frequency Code |
-| `CodeCurrencyTypeID` | Currency Type | Dropdown (Currency Type Code) | Global |  | Currency Type Code |
-| `CodeExpenseGroupID` | Expense Group | Dropdown (Expense Group Code) | Global |  | Expense Group Code |
-| `CodeExpenseTypeID` | Expense Type | Dropdown (Expense Type Code) | Global |  | Expense Type Code |
-| `CodePercentageRentTypeID` | Percentage Rent Type | Dropdown (Percentage Rent Type Code) | Global |  | Percentage Rent Type Code |
-| `CodeProrationMethodID` | Proration Method | Dropdown (Proration Method Code) | Global |  | Proration Method Code |
-| `CodeReportingFrequencyID` | Reporting Frequency | Dropdown (Frequency Code) | Global |  | Frequency Code |
-| `CodeSalesGroupID` | Sales Group | Dropdown (Sales Group) | Global |  | Sales Group |
-| `CodeStoreTypeID` | Store Type | Dropdown (Store Type Code) | Global |  | Store Type Code |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `CodeBillingFrequencyID` | Billing Frequency | The Payment Frequency field controls how often you can generate rent or generate payments. Select the payment frequency from this field. | Dropdown (Frequency Code) | Global |  | `percentage_rent.CodeBillingFrequencyID · TEXT` | Frequency Code |
+| `CodeCapFrequencyID` | Cap Frequency | Select the frequency that the cap should be applied from this field. For example, if you had a max cap of $100,000.00, the cap frequency could determine whether that cap is applied monthly, quarterly, or annually. If no cap frequency is specified, the cap amount is assumed to be the amount that applies for each percentage rent payment period. So, for example, if percentage rent is paid monthly and a $500 cap is specified, the system assumes that the cap is applied monthly if the frequency is not set. | Dropdown (Frequency Code) | Global |  | `percentage_rent.CodeCapFrequencyID · TEXT` | Frequency Code |
+| `CodeCurrencyTypeID` | Currency Type | The Currency Type field allows you to select a currency type to be used on a record. | Dropdown (Currency Type Code) | Global |  | `percentage_rent.CodeCurrencyTypeID · TEXT` | Currency Type Code |
+| `CodeExpenseGroupID` | Expense Group | The Expense Group field allows you to associate your record with a pre-configured expense group. Expense groups are used to categorize expense types. | Dropdown (Expense Group Code) | Global |  | `percentage_rent.CodeExpenseGroupID · TEXT` | Expense Group Code |
+| `CodeExpenseTypeID` | Expense Type | The Expense Type field allows you to associate your record with a pre-configured expense type. Expense Types are used to associate records with lease accounting schedules, AP export numbers, expense accrual accounts, percentage rent accrual accounts, and real estate tax accounts. | Dropdown (Expense Type Code) | Global |  | `percentage_rent.CodeExpenseTypeID · TEXT` | Expense Type Code |
+| `CodePercentageRentTypeID` | Percentage Rent Type | Select the percentage rent calculation method from this field. For more information about the available calculation methods, please see the Lx Online Help. | Dropdown (Percentage Rent Type Code) | Global |  | `percentage_rent.CodePercentageRentTypeID · TEXT` | Percentage Rent Type Code |
+| `CodeProrationMethodID` | Proration Method |  | Dropdown (Proration Method Code) | Global |  | `percentage_rent.CodeProrationMethodID · TEXT` | Proration Method Code |
+| `CodeReportingFrequencyID` | Reporting Frequency | Select the reporting frequency for this record. | Dropdown (Frequency Code) | Global |  | `percentage_rent.CodeReportingFrequencyID · TEXT` | Frequency Code |
+| `CodeSalesGroupID` | Sales Group | Select the sales group that this percentage rent record will be associated with from this field. | Dropdown (Sales Group) | Global |  | `percentage_rent.CodeSalesGroupID · TEXT` | Sales Group |
+| `CodeStoreTypeID` | Store Type | Select the store type from this field. | Dropdown (Store Type Code) | Global |  | `percentage_rent.CodeStoreTypeID · TEXT` | Store Type Code |
 
 ### Money (3)
 
 Currency amounts. Stored as TEXT in the physical database, which is why the rebuild must impose BigDecimal typing of its own.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `CapAmount` | Cap Amount | Currency | Global |  |  |
-| `FloorAmount` | Floor Amount | Currency | Global |  |  |
-| `OffsetAmount` | Offset Amount | Currency | Global |  |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `CapAmount` | Cap Amount | Enter the maximum payment allowed in this field. | Currency | Global |  | `percentage_rent.CapAmount · TEXT` |  |
+| `FloorAmount` | Floor Amount | Enter the minimum payment required in this field. | Currency | Global |  | `percentage_rent.FloorAmount · TEXT` |  |
+| `OffsetAmount` | Offset Amount | The percentage rent offset amount. This field does not impact any calculations. | Currency | Global |  | `percentage_rent.OffsetAmount · TEXT` |  |
 
 ### Quantities (5)
 
 Counts, areas and other plain numeric measures.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `AnnualPaymentDueDays` | Last Payment Due Offset Days | Number | Global |  |  |
-| `AnnualReportDueDays` | Annual Report Due Days | Number | Global |  |  |
-| `PercentageRentID` | Percentage Rent RecID | Number | Global |  |  |
-| `PeriodPaymentDueDays` | Period Payment Due Offset Days | Number | Global |  |  |
-| `PeriodReportDueDays` | Period Report Due Days | Number | Global |  |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `AnnualPaymentDueDays` | Last Payment Due Offset Days | Enter the annual payment due date in this field. | Number | Global |  | `percentage_rent.AnnualPaymentDueDays · TEXT` |  |
+| `AnnualReportDueDays` | Annual Report Due Days | Enter the annual reporting due date in this field. | Number | Global |  | `percentage_rent.AnnualReportDueDays · TEXT` |  |
+| `PercentageRentID` | Percentage Rent RecID | This field contains a Base Entity System Identifier for your record. It is assigned automatically by the system, and is not editable. | Number | Global |  | `percentage_rent.PercentageRentID · VARCHAR(64) NOT NULL` |  |
+| `PeriodPaymentDueDays` | Period Payment Due Offset Days | Enter the period payment due date in this field. | Number | Global |  | `percentage_rent.PeriodPaymentDueDays · TEXT` |  |
+| `PeriodReportDueDays` | Period Report Due Days | Enter the period reporting due date in this field. | Number | Global |  | `percentage_rent.PeriodReportDueDays · TEXT` |  |
 
 ### Dates & timestamps (4)
 
 Dates that drive schedules, and system timestamps.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `BeginDate` | Begin Date | Date | Global |  |  |
-| `DueDate` | Due Date | Date | Global |  |  |
-| `EndDate` | End Date | Date | Global |  |  |
-| `SalesYearEndDate` | Sales Year End Date | Date | Global |  |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `BeginDate` | Begin Date | The Begin Date field allows you to select a begin date for the record. | Date | Global |  | `percentage_rent.BeginDate · TEXT` |  |
+| `DueDate` | Due Date | Enter the due date for the rent schedule in this field. This field does not impact any calculations. | Date | Global |  | `percentage_rent.DueDate · TEXT` |  |
+| `EndDate` | End Date | The End Date field allows you to select an end date for the record. | Date | Global |  | `percentage_rent.EndDate · TEXT` |  |
+| `SalesYearEndDate` | Sales Year End Date | The end date of the sales year. | Date | Global |  | `percentage_rent.SalesYearEndDate · TEXT` |  |
 
 ### Flags (10)
 
 Booleans. In this product they usually gate engine behaviour rather than describe the record.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `AnnualizeRent` | Annualize Rent | Boolean | Global |  |  |
-| `AuditRightFlag` | Audit Right? | Boolean | Global |  |  |
-| `CumulativeFlag` | Cumulative? | Boolean | Global |  |  |
-| `ExtFinalPeriodToLeaseExpDt` | Extend Final Period to Lease Expiration Date | Boolean | Global |  |  |
-| `Firm_CertifiedSales` | Certified Sales | Boolean | Firm |  |  |
-| `IsMidMonth` | Is Mid Month? | Boolean | Global |  |  |
-| `IsPartialTerm` | Is Partial Term? | Boolean | Global |  |  |
-| `NaturalBreakpointFlag` | Natural Breakpoint? | Boolean | Global |  |  |
-| `UseCountBasedRate` | Use Count Based Rate? | Boolean | Global |  |  |
-| `UseTrailing12MonthSales` | Use Trailing #12 Month Sales? | Boolean | Global |  |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `AnnualizeRent` | Annualize Rent |  | Boolean | Global |  | `percentage_rent.AnnualizeRent · TEXT` |  |
+| `AuditRightFlag` | Audit Right? | Select this check box if your landlord has the right to audit your percentage rent. | Boolean | Global |  | `percentage_rent.AuditRightFlag · TEXT` |  |
+| `CumulativeFlag` | Cumulative? | This flag indicates whether the percentage rent is cumulative or not. This flag does not have any associated functionality. | Boolean | Global |  | `percentage_rent.CumulativeFlag · TEXT` |  |
+| `ExtFinalPeriodToLeaseExpDt` | Extend Final Period to Lease Expiration Date |  | Boolean | Global |  | `percentage_rent.ExtFinalPeriodToLeaseExpDt · TEXT` |  |
+| `Firm_CertifiedSales` | Certified Sales |  | Boolean | Firm |  | `percentage_rent.Firm_CertifiedSales · TEXT` |  |
+| `IsMidMonth` | Is Mid Month? |  | Boolean | Global |  | `percentage_rent.IsMidMonth · TEXT` |  |
+| `IsPartialTerm` | Is Partial Term? | Select this check box if the term length is greater than 12 months but less than 2 years. For example, a 15-month term. | Boolean | Global |  | `percentage_rent.IsPartialTerm · TEXT` |  |
+| `NaturalBreakpointFlag` | Natural Breakpoint? | Select the appropriate option button for one of three percentage rent breakpoint types: Natural Breakpoint, Artificial Breakpoint, or Count Based Rate. For more information about these breakpoint types, please see the Lx Online Help. | Boolean | Global |  | `percentage_rent.NaturalBreakpointFlag · TEXT` |  |
+| `UseCountBasedRate` | Use Count Based Rate? | This setting causes count-based rates to be used in calculating breakpoint rates. | Boolean | Global |  | `percentage_rent.UseCountBasedRate · TEXT` |  |
+| `UseTrailing12MonthSales` | Use Trailing #12 Month Sales? | Select this check box if you want to use a full 12 months of sales and your annual breakpoint to calculate the prorated amount due, even if the full 12 months is not within the same fiscal year. | Boolean | Global |  | `percentage_rent.UseTrailing12MonthSales · TEXT` |  |
 
 ### Text & notes (5)
 
 Free text. Notably, free text is never allowed to drive a conditional display rule.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `Description` |  | Text | Global |  |  |
-| `Firm_PercentRentDocument` | Document | Text | Firm |  |  |
-| `Firm_PercentRentPage` | Page | Text | Firm |  |  |
-| `Notes` |  | Text | Global |  |  |
-| `Section` |  | Text | Global |  |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `Description` |  | Write a description of the record. | Text | Global |  | `percentage_rent.Description · TEXT` |  |
+| `Firm_PercentRentDocument` | Document |  | Text | Firm |  | `percentage_rent.Firm_PercentRentDocument · TEXT` |  |
+| `Firm_PercentRentPage` | Page |  | Text | Firm |  | `percentage_rent.Firm_PercentRentPage · TEXT` |  |
+| `Notes` |  | Add any notes about the record. | Text | Global |  | `percentage_rent.Notes · TEXT` |  |
+| `Section` |  | Enter the section of the covenant that pertains to this record in this field. | Text | Global |  | `percentage_rent.Section · TEXT` |  |
 
 ### Audit & record keeping (3)
 
 Who created and changed the record, and the identifiers that survive migration.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `BOMapClientRecordID` | Percentage Rent ClientID | Text | Global | yes |  |
-| `ModifiedByID` | Modified By | Member ID | Global |  | [Member](Member.md) |
-| `ModifiedDate` | Modified Date | Time | Global |  |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `BOMapClientRecordID` | Percentage Rent ClientID | The ClientID field is a free form text field that can be used when importing data to uniquely look up a record for update. This record identifier can either be system-generated or defined by the user upon the initial import of record data. The ClientID has the database name "BOMapClientRecordID". | Text | Global | yes | `percentage_rent.BOMapClientRecordID · TEXT` |  |
+| `ModifiedByID` | Modified By | The Modified By field is a system-populated field which captures the name of the member who made a change to a record. | Member ID | Global |  | `percentage_rent.ModifiedByID · TEXT` | [Member](Member.md) |
+| `ModifiedDate` | Modified Date | The Modified Date field is a system-populated field which captures the date that a modification is made to a record. | Time | Global |  | `percentage_rent.ModifiedDate · TEXT` |  |
 
 ## What points here (2 keys)
 

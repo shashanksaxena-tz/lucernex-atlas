@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>A route is not an addressable URL &middot; Lx Vault</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="../../atlas.css">
+<link rel="stylesheet" href="../../research/research.css">
+<link rel="stylesheet" href="../vault.css">
+</head><body><style id="lxg">body{visibility:hidden}
+#lxgate{visibility:visible;position:fixed;inset:0;z-index:9999;display:flex;
+align-items:center;justify-content:center;background:#0f172a;
+font-family:'IBM Plex Sans',system-ui,sans-serif}
+#lxgate form{background:#fff;padding:30px 32px;border-radius:12px;width:310px;
+box-shadow:0 20px 60px rgba(0,0,0,.35)}
+#lxgate h2{margin:0 0 4px;font-size:19px;color:#0f172a}
+#lxgate p{margin:0 0 18px;font-size:12.5px;color:#64748b;line-height:1.5}
+#lxgate label{display:block;font-size:11px;text-transform:uppercase;
+letter-spacing:.07em;color:#64748b;margin:0 0 5px}
+#lxgate input{width:100%;box-sizing:border-box;padding:9px 11px;margin:0 0 14px;
+border:1px solid #cbd5e1;border-radius:7px;font-size:14px}
+#lxgate button{width:100%;padding:10px;border:0;border-radius:7px;
+background:#b4530a;color:#fff;font-size:14px;font-weight:600;cursor:pointer}
+#lxgate .err{color:#b91c1c;font-size:12px;margin:0 0 10px;display:none}</style>
+<div id="lxgate"><form onsubmit="return lxg(event)">
+<h2>Lx Atlas</h2>
+<p>Internal documentation. Not a security boundary &mdash; see
+<code>gate.py</code>.</p>
+<p class="err" id="lxge">Incorrect.</p>
+<label for="lxgu">User</label><input id="lxgu" autocomplete="username" autofocus>
+<label for="lxgp">Password</label><input id="lxgp" type="password"
+autocomplete="current-password">
+<button type="submit">Enter</button></form></div>
+<script>
+function lxgOpen(){var g=document.getElementById('lxgate');if(g)g.remove();
+var s=document.getElementById('lxg');if(s)s.remove();
+document.body.style.visibility='visible';}
+function lxg(ev){ev.preventDefault();
+if(document.getElementById('lxgu').value==='admin'&&
+   document.getElementById('lxgp').value==='admin'){
+ try{sessionStorage.setItem('lxg','1');}catch(e){}
+ lxgOpen();return false;}
+document.getElementById('lxge').style.display='block';return false;}
+try{if(sessionStorage.getItem('lxg')==='1')
+ document.addEventListener('DOMContentLoaded',lxgOpen);}catch(e){}
+</script>
+<header><b>Lx Atlas</b>
+<nav><a href="../../index.html">Overview</a><a href="../../atlas.html#/map?set=feature">Feature map</a>
+<a href="../../atlas.html">Interactive app</a>
+<a href="../../research/index.html">Research</a>
+<a href="../../research/screens.html">Screens</a>
+<a href="../index.html" class="on">Vault</a>
+<a href="../../questions.html">Open questions</a></nav></header>
+<main><p class="crumb"><a href="../../index.html">Atlas</a> &rsaquo;
+<a href="../index.html">Vault</a> &rsaquo; A route is not an addressable URL</p><div class="fm"><span>finding</span><span>navigation</span><span>method</span><span>trap</span><span class="ev">Observed</span></div><p>Sub-screens in Lx are selected by the in-app menu tree, <strong>not by URL</strong>. <code>EntityInfo.jsp</code> is the record shell, loading the active sub-screen into an inner iframe.</p><p>It is <strong>not uniform across entity types</strong>, and an earlier revision overstated it:</p><div class="wrapt"><table><thead><tr><th>Root</th><th>Addressability</th></tr></thead><tbody><tr><td><strong><a href="../../../concepts/equipment-contract.html">Equipment Contract</a></strong></td><td><strong>None.</strong> Only group heads resolve, and they render their first leaf</td></tr><tr><td><strong><a href="../../../entities/Contract.html">Contract</a></strong></td><td><strong>Partial.</strong> 14 of 46 sub-screens have real URLs; 22 silently redirect; 8 are AccessDenied; 2 bounce server-side</td></tr></tbody></table></div><p>So roughly <strong>a third of Contract&#x27;s saved links would survive</strong> a migration and <strong>none of Equipment Contract&#x27;s would</strong> — a per-entity question, not a global one (<a href="../../../open-questions/q-bbw-24-deep-linking.html">q-bbw-24-deep-linking</a>).</p><h3 id="the-methodological-half-which-is-the-more-valuable-half">The methodological half, which is the more valuable half</h3><p><strong>Classifying all 46 Contract routes by raw <code>fetch</code> reported 36 addressable. Driving the same 46 in a real browser produced 14.</strong></p><p>The 22-route gap is <strong>client-side JS redirection</strong>: the server returns a full 37–40 KB HTML document, so <code>fetch</code> sees a clean success — and then the page&#x27;s own script bounces to <code>EntityInfo.jsp</code> and renders the default Summary.</p><p><strong>A fetch-based route audit overstates deep-linkability by more than 2×.</strong></p><p>Without a post-capture URL guard, sweeping all 32 Equipment Contract nodes naively would have produced <strong>roughly 20 files with distinct, meaningful names all containing the same default Summary page</strong>, plus six Access Denied pages. They load correctly, are full-size, and look like real screens. <strong>The corruption would have been near-impossible to detect later.</strong> Every one was caught by a final-URL check.</p><p>See <a href="../../../methods/method-fetch-is-not-render.html">method-fetch-is-not-render</a> · <a href="../../../methods/method-cheap-signals.html">method-cheap-signals</a></p><div class="backlinks"><b>Linked from &middot; 6</b><a href="../concepts/navigation-tree.html">navigation-tree</a><a href="../entities/Insurance.html">Insurance</a><a href="finding-one-row-can-hide-a-module.html">finding-one-row-can-hide-a-module</a><a href="../methods/method-fetch-is-not-render.html">method-fetch-is-not-render</a><a href="../open-questions/q-bbw-24-deep-linking.html">q-bbw-24-deep-linking</a><a href="../tenants/tenant-bbw.html">tenant-bbw</a></div></main></body></html>

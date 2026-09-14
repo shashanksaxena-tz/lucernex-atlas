@@ -11,6 +11,9 @@ Source: `data-fields/virtual-prp-aggregate.md`
 |  | Value |
 |---|---|
 | Fields declared | 16 |
+| Fields with a vendor definition | 15 of 16 inventoried |
+| Physical tables | `virtual_p_r_p_aggregate` |
+| Replication database | `lxr_drp_bbw` |
 | Catalogued fields | 15 (15 global, 0 firm) |
 | Physical tables | 1 |
 | Referenced by | 0 keys from 0 record types |
@@ -28,6 +31,22 @@ Source: `data-fields/virtual-prp-aggregate.md`
 
 **Derived.** This record carries no FirmID of its own. It hangs off ProjectEntity, and tenant isolation has to be enforced by joining to that row and filtering on its FirmID — or it is not enforced at all. 161 of the 223 record types are shaped this way.
 
+### Lands in virtual_p_r_p_aggregate
+
+**Observed.** The field inventory names the physical destination of every column: one table in the database lxr_drp_bbw. Every field node carries its own table and column, so the mapping is per column, not per record.
+
+### A per-tenant database name
+
+**Derived.** The physical database is lxr_drp_bbw — the tenant's name is in the database name. That is one more piece of evidence for database-per-tenant and against a single shared schema, alongside the Firm_ columns.
+
+### 15 fields carry a vendor definition
+
+**Observed.** 15 of this record's 16 inventoried fields have prose written by the vendor saying what the field is for. Open any field node to read it — this is the one source in the corpus that explains fields rather than listing them.
+
+### Replication coverage: not materialised
+
+**Observed.** Observed of the loader, not of the product. The replication target lxr_drp_bbw has never created a table for this record: Table may not exist in the database yet. No data has ever been returned for this Lx object, and the loader only issues CREATE TABLE once the first row arrives. The configuration is in place, so this table and all of its columns will be created automatically as soon as data is entered in Lx. That is a statement about one loader's coverage and says nothing about whether the record exists or holds data in Lx. The tell is ProjectEntity — 107 fields, every one marked extracted, table never created, yet it is the universal supertype of a tenant holding 2,014 contracts, so it plainly is not empty. Do not read the 69-created / 150-not-created split as the size of the product's schema.
+
 ## Rules that govern it
 
 | Rule | What it requires | Confidence |
@@ -41,49 +60,49 @@ Source: `data-fields/virtual-prp-aggregate.md`
 
 Typed pointers to other records. Lx names each FK type after the table it points at, so the relational model is declared rather than implied.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `ContractID` | Contract | Contract ID | Global |  | [Contract](Contract.md) |
-| `ProjectEntityID` |  | Entity ID | — |  | [ProjectEntity](ProjectEntity.md) |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `ContractID` | Contract | The Contract ID is a unique identifier that belongs to a contract. The Contract ID of a contract can only be changed from the Contract > Details > Summary page. | Contract ID | Global |  | `virtual_p_r_p_aggregate.ContractID · TEXT` | [Contract](Contract.md) |
+| `ProjectEntityID` |  |  | Entity ID | — |  | `virtual_p_r_p_aggregate.ProjectEntityID · TEXT` | [ProjectEntity](ProjectEntity.md) |
 
 ### Coded values (drop-downs) (4)
 
 Fields bound to a master code table. Every one of these is a place where an administrator, not a developer, controls the allowed values.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `CodeBillingFrequencyID` | Billing Frequency | Dropdown (Frequency Code) | Global |  | Frequency Code |
-| `CodeExpenseGroupID` | Expense Group | Dropdown (Expense Group Code) | Global |  | Expense Group Code |
-| `CodeExpenseTypeID` | Expense Type | Dropdown (Expense Type Code) | Global |  | Expense Type Code |
-| `CodePercentageRentTypeID` | Percentage Rent Type | Dropdown (Percentage Rent Type Code) | Global |  | Percentage Rent Type Code |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `CodeBillingFrequencyID` | Billing Frequency | The payment frequency for the percentage rent record. The Payment Frequency field controls how often you can generate rent or generate payments. | Dropdown (Frequency Code) | Global |  | `virtual_p_r_p_aggregate.CodeBillingFrequencyID · TEXT` | Frequency Code |
+| `CodeExpenseGroupID` | Expense Group | The Expense Group field allows you to associate your record with a pre-configured expense group. Expense groups are used to categorize expense types. | Dropdown (Expense Group Code) | Global |  | `virtual_p_r_p_aggregate.CodeExpenseGroupID · TEXT` | Expense Group Code |
+| `CodeExpenseTypeID` | Expense Type | The Expense Type field allows you to associate your record with a pre-configured expense type. Expense Types are used to associate records with lease accounting schedules, AP export numbers, expense accrual accounts, percentage rent accrual accounts, and real estate tax accounts. | Dropdown (Expense Type Code) | Global |  | `virtual_p_r_p_aggregate.CodeExpenseTypeID · TEXT` | Expense Type Code |
+| `CodePercentageRentTypeID` | Percentage Rent Type | The percentage rent calculation model. | Dropdown (Percentage Rent Type Code) | Global |  | `virtual_p_r_p_aggregate.CodePercentageRentTypeID · TEXT` | Percentage Rent Type Code |
 
 ### Money (5)
 
 Currency amounts. Stored as TEXT in the physical database, which is why the rebuild must impose BigDecimal typing of its own.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `CurrentRentDue` | Current Percentage Rent | Currency | Global |  |  |
-| `CurrentRentObligation` | Current Percentage Rent Obligation | Currency | Global |  |  |
-| `CurrentRentPaid` | Current Percentage Rent Paid | Currency | Global |  |  |
-| `NetSalesRentDue` | Net Percentage Rent Due | Currency | Global |  |  |
-| `VariableRentOffsetAmount` | Current Offset Amount | Currency | Global |  |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `CurrentRentDue` | Current Percentage Rent | The total rent due for the last period before any forecasts come into play. This field is calculated as Rent Obligation - Rent Paid. | Currency | Global |  | `virtual_p_r_p_aggregate.CurrentRentDue · TEXT` |  |
+| `CurrentRentObligation` | Current Percentage Rent Obligation | The total rent obligation for the last period before any forecasts come into play. This value is used in calculating the rent due. | Currency | Global |  | `virtual_p_r_p_aggregate.CurrentRentObligation · TEXT` |  |
+| `CurrentRentPaid` | Current Percentage Rent Paid | The total rent paid for this percentage rent period. This field looks at all periods, regardless of if they are Actual or Forecast. This value is used in calculating the rent due. | Currency | Global |  | `virtual_p_r_p_aggregate.CurrentRentPaid · TEXT` |  |
+| `NetSalesRentDue` | Net Percentage Rent Due | The net sales rent due for the last period before any forecasts come into play. This value is calculated as Current Rent Due - Offset. | Currency | Global |  | `virtual_p_r_p_aggregate.NetSalesRentDue · TEXT` |  |
+| `VariableRentOffsetAmount` | Current Offset Amount | The Variable Rent Offset for the given percentage rent period. Offset caps are reflected in the returned value. | Currency | Global |  | `virtual_p_r_p_aggregate.VariableRentOffsetAmount · TEXT` |  |
 
 ### Dates & timestamps (4)
 
 Dates that drive schedules, and system timestamps.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `PeriodBeginDate` | Period Begin Date | Date | Global |  |  |
-| `PeriodEndDate` | Period End Date | Date | Global |  |  |
-| `RentYearBeginDate` | Rent Year Begin Date | Date | Global |  |  |
-| `RentYearEndDate` | Rent Year End Date | Date | Global |  |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `PeriodBeginDate` | Period Begin Date | The begin date of the period. | Date | Global |  | `virtual_p_r_p_aggregate.PeriodBeginDate · TEXT` |  |
+| `PeriodEndDate` | Period End Date | The end date of the period. | Date | Global |  | `virtual_p_r_p_aggregate.PeriodEndDate · TEXT` |  |
+| `RentYearBeginDate` | Rent Year Begin Date | The begin date of the rental year. | Date | Global |  | `virtual_p_r_p_aggregate.RentYearBeginDate · TEXT` |  |
+| `RentYearEndDate` | Rent Year End Date | The end date of the rental year. | Date | Global |  | `virtual_p_r_p_aggregate.RentYearEndDate · TEXT` |  |
 
 ### Flags (1)
 
 Booleans. In this product they usually gate engine behaviour rather than describe the record.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `RentYearHasAltRent` | Rent Year Has Alternate Rent? | Boolean | Global |  |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `RentYearHasAltRent` | Rent Year Has Alternate Rent? | Indicates whether some or all of the rent year is affected by Alt Rent. | Boolean | Global |  | `virtual_p_r_p_aggregate.RentYearHasAltRent · TEXT` |  |

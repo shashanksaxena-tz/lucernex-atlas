@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Workflows and forms &middot; Lx Vault</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="../../atlas.css">
+<link rel="stylesheet" href="../../research/research.css">
+<link rel="stylesheet" href="../vault.css">
+</head><body><style id="lxg">body{visibility:hidden}
+#lxgate{visibility:visible;position:fixed;inset:0;z-index:9999;display:flex;
+align-items:center;justify-content:center;background:#0f172a;
+font-family:'IBM Plex Sans',system-ui,sans-serif}
+#lxgate form{background:#fff;padding:30px 32px;border-radius:12px;width:310px;
+box-shadow:0 20px 60px rgba(0,0,0,.35)}
+#lxgate h2{margin:0 0 4px;font-size:19px;color:#0f172a}
+#lxgate p{margin:0 0 18px;font-size:12.5px;color:#64748b;line-height:1.5}
+#lxgate label{display:block;font-size:11px;text-transform:uppercase;
+letter-spacing:.07em;color:#64748b;margin:0 0 5px}
+#lxgate input{width:100%;box-sizing:border-box;padding:9px 11px;margin:0 0 14px;
+border:1px solid #cbd5e1;border-radius:7px;font-size:14px}
+#lxgate button{width:100%;padding:10px;border:0;border-radius:7px;
+background:#b4530a;color:#fff;font-size:14px;font-weight:600;cursor:pointer}
+#lxgate .err{color:#b91c1c;font-size:12px;margin:0 0 10px;display:none}</style>
+<div id="lxgate"><form onsubmit="return lxg(event)">
+<h2>Lx Atlas</h2>
+<p>Internal documentation. Not a security boundary &mdash; see
+<code>gate.py</code>.</p>
+<p class="err" id="lxge">Incorrect.</p>
+<label for="lxgu">User</label><input id="lxgu" autocomplete="username" autofocus>
+<label for="lxgp">Password</label><input id="lxgp" type="password"
+autocomplete="current-password">
+<button type="submit">Enter</button></form></div>
+<script>
+function lxgOpen(){var g=document.getElementById('lxgate');if(g)g.remove();
+var s=document.getElementById('lxg');if(s)s.remove();
+document.body.style.visibility='visible';}
+function lxg(ev){ev.preventDefault();
+if(document.getElementById('lxgu').value==='admin'&&
+   document.getElementById('lxgp').value==='admin'){
+ try{sessionStorage.setItem('lxg','1');}catch(e){}
+ lxgOpen();return false;}
+document.getElementById('lxge').style.display='block';return false;}
+try{if(sessionStorage.getItem('lxg')==='1')
+ document.addEventListener('DOMContentLoaded',lxgOpen);}catch(e){}
+</script>
+<header><b>Lx Atlas</b>
+<nav><a href="../../index.html">Overview</a><a href="../../atlas.html#/map?set=feature">Feature map</a>
+<a href="../../atlas.html">Interactive app</a>
+<a href="../../research/index.html">Research</a>
+<a href="../../research/screens.html">Screens</a>
+<a href="../index.html" class="on">Vault</a>
+<a href="../../questions.html">Open questions</a></nav></header>
+<main><p class="crumb"><a href="../../index.html">Atlas</a> &rsaquo;
+<a href="../index.html">Vault</a> &rsaquo; Workflows and forms</p><div class="fm"><span>feature</span><span>workflow</span><span class="ev">Observed</span></div><p>Concepts: <a href="../../../concepts/workflow-template.html">workflow-template</a> · <a href="../../../concepts/workflow-step.html">workflow-step</a> · <a href="../../../concepts/form-vs-page.html">form-vs-page</a></p><div class="wrapt"><table><thead><tr><th></th><th style="text-align:right"><a href="../../../tenants/tenant-american-freight.html">AF</a></th><th style="text-align:right"><a href="../../../tenants/tenant-bbw.html">BBW</a></th></tr></thead><tbody><tr><td>Workflow templates</td><td style="text-align:right">4</td><td style="text-align:right"><strong>13</strong></td></tr><tr><td>Steps</td><td style="text-align:right">19</td><td style="text-align:right"><strong>62</strong></td></tr><tr><td>Form types</td><td style="text-align:right">4</td><td style="text-align:right"><strong>6</strong></td></tr><tr><td><code>Task</code> steps</td><td style="text-align:right"><strong>0</strong></td><td style="text-align:right"><strong>0</strong></td></tr></tbody></table></div><p>Reading two tenants <strong>refutes what one tenant appeared to prove</strong>:</p><ul><li><strong><a href="../../../findings/finding-form-workflow-not-1-1.html">finding-form-workflow-not-1-1</a></strong> — only 4 of 13 BBW workflow names match a form; 9 match none; 2 form types have no workflow.</li><li><strong><a href="../../../findings/finding-no-task-step-anywhere.html">finding-no-task-step-anywhere</a></strong> — every one of the 62 steps is type <code>Form</code>, and BBW has <code>TaskTemplate = 0</code>.</li><li><strong><a href="../../../findings/finding-workflow-versioning-is-naming.html">finding-workflow-versioning-is-naming</a></strong> — <code>Lease Admin Request</code> base/<code>v1</code>/<code>v2</code> = 8/8/10 steps, and the current one has <strong>fewer steps than the version it replaced</strong>.</li><li><strong><a href="../../../findings/finding-routing-is-to-named-people.html">finding-routing-is-to-named-people</a></strong> — two approval levels exist (<code>Ad Hoc</code>, <code>Member</code>) and <code>Member</code> resolves to a list of individuals.</li><li>Workflows are <strong>tenant-authored</strong>, not <a href="../../../concepts/publish-and-fork.html">forked</a> — no clustered id-offset block, unlike the layouts.</li></ul><p><strong>Two JavaScript escape hatches exist and neither has been read</strong>: <code>IsEnabledLxJSCode</code> on a step action, and <code>Conditional Workflow JS</code> on a workflow (<a href="../../../open-questions/q-bbw-06-conditional-workflow-js.html">q-bbw-06-conditional-workflow-js</a>).</p><p>BBW&#x27;s two <code>Implementation Workflow</code> templates are the <strong>first direct evidence anywhere</strong> for BRD-24&#x27;s abstraction path — see <a href="../../../findings/finding-maker-checker-pairs.html">finding-maker-checker-pairs</a>.</p><p>Screens: <strong>screen-manage-work-flows</strong> · <strong>screen-manage-forms</strong></p><p><a href="../../docs/features/workflows-forms/README.html"><code>features/workflows-forms/</code></a></p><div class="backlinks"><b>Linked from &middot; 3</b><a href="../findings/finding-form-workflow-not-1-1.html">finding-form-workflow-not-1-1</a><a href="../findings/finding-workflow-versioning-is-naming.html">finding-workflow-versioning-is-naming</a><a href="../open-questions/q-bbw-07-workflow-kickoff-graph.html">q-bbw-07-workflow-kickoff-graph</a></div></main></body></html>

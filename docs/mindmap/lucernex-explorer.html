@@ -498,6 +498,9 @@ function viewEntity(name){
     <dt>Module</dt><dd><a href="#/m/${encodeURIComponent(o.m)}">${esc(m?m.title:o.m)}</a></dd>
     <dt>Referenced by</dt><dd>${fmt(ins.length)} foreign keys from ${fmt(Object.keys(byS).length)} record types</dd>
     <dt>Points at</dt><dd>${fmt(outs.length)} other records</dd>
+    ${o.inv?`<dt>Fields with a definition</dt><dd>${fmt(o.inv[1])} of ${fmt(o.inv[0])} inventoried</dd>`:''}
+    ${o.pgt&&o.pgt.length?`<dt>Physical tables</dt><dd class="mono">${o.pgt.map(esc).join(', ')}</dd>`:''}
+    ${o.pgdb?`<dt>Replication database</dt><dd class="mono">${esc(o.pgdb)}</dd>`:''}
   </dl>
   ${o.d?`<p class="lead">${esc(o.d)}</p>
     ${o.ds&&o.ds.length?`<p style="font-size:11px;color:var(--faint)">Source: ${o.ds.map(esc).join(', ')}</p>`:''}`:''}
@@ -516,15 +519,18 @@ function viewEntity(name){
       <summary><b>${fields.length}</b><span>${esc(g)}</span><em class="tag">${fields.length===1?'field':'fields'}</em></summary>
       <div class="rb">
         <p style="margin-top:4px;color:var(--muted)">${esc(D.groupBlurb[g]||'')}</p>
-        <div class="scroll"><table class="t"><thead><tr><th>Field</th><th>Declared type</th><th>Points at</th></tr></thead><tbody>
-        ${fields.map(([fn,ft,fam])=>{
+        <div class="scroll"><table class="t"><thead><tr><th>Field</th><th>Declared type</th><th>What it is for</th><th>Points at</th></tr></thead><tbody>
+        ${fields.map(f=>{const fn=f[0],ft=f[1],fam=f[2];
           let tgt='';
           if(fam==='fk'){const e=(edgesFrom[name]||[]).find(x=>x[1]===fn);
             tgt = e&&e[3]&&objOf(e[3]) ? `<a class="mono" href="#/e/${encodeURIComponent(e[3])}">${esc(e[3])}</a>`
                 : `<span style="color:var(--faint)">unresolved</span>`;}
           else if(fam==='dropdown'){const mm=/\\(([^)]+)\\)/.exec(ft); tgt=`<span style="color:var(--muted)">${esc(mm?mm[1]:'code table')}</span>`;}
-          return `<tr><td><a class="mono" href="#/f/${encodeURIComponent(name)}/${encodeURIComponent(fn)}">${esc(fn)}</a></td>
-            <td style="color:var(--muted)">${esc(ft)}</td><td>${tgt}</td></tr>`}).join('')}
+          return `<tr><td><a class="mono" href="#/f/${encodeURIComponent(name)}/${encodeURIComponent(fn)}">${esc(fn)}</a>
+              ${f[3]?`<div style="font-size:10.5px;color:var(--faint)">${esc(f[3])}</div>`:''}</td>
+            <td style="color:var(--muted)">${esc(ft)}</td>
+            <td style="font-size:11.5px;color:var(--ink2);max-width:44ch">${esc((f[6]||'').slice(0,220))}</td>
+            <td>${tgt}</td></tr>`}).join('')}
         </tbody></table></div>
       </div></details>`).join('')}
   ${Object.keys(byS).length?`<h3 class="sec">What points here &middot; ${fmt(ins.length)} keys</h3>
@@ -545,6 +551,9 @@ function viewField(ent,fld){
      whether it is required. Absent when the census knows the column but the
      Data Fields catalogue does not. */
   const label=rec[3]||'',flags=rec[4]||0,code=rec[5]||'';
+  /* the field inventory's half: the vendor's own definition of what the field is
+     FOR, its key role, and where the column lands physically */
+  const def=rec[6]||'',role=rec[7]||'',pg=rec[8]||'';
   const e=(edgesFrom[ent]||[]).find(x=>x[1]===fn);
   const cm=/\(([^)]+)\)/.exec(ft);
   return `
@@ -552,19 +561,27 @@ function viewField(ent,fld){
     <i>&rsaquo;</i><a href="#/e/${encodeURIComponent(ent)}">${esc(ent)}</a><i>&rsaquo;</i>${esc(fn)}</p>
   <h2 class="pt mono">${esc(fn)}</h2>
   <p class="psub">${label?esc(label)+' &middot; ':''}${esc(grp)}</p>
+  ${def?`<p class="lead">${esc(def)}</p>
+    <p style="font-size:11px;color:var(--faint);margin:-8px 0 14px">The vendor's own definition, from
+    <code>docs/data-model/pg/bbw-field-inventory.csv</code></p>`:''}
   <dl class="kv">
     <dt>On record type</dt><dd><a class="mono" href="#/e/${encodeURIComponent(ent)}">${esc(ent)}</a></dd>
     ${label?`<dt>Label users see</dt><dd>${esc(label)}</dd>`:''}
     <dt>Declared type</dt><dd class="mono">${esc(ft)}</dd>
     ${code?`<dt>Catalogue type</dt><dd class="mono">${esc(code)}</dd>`:''}
     <dt>Scope</dt><dd>${(flags&1)?'Firm &mdash; defined by this tenant':(code?'Global &mdash; shipped by the platform':'not in the Data Fields catalogue')}</dd>
-    ${(flags&2)?`<dt>Required</dt><dd>yes, in the catalogue</dd>`:''}
+    ${(flags&10)?`<dt>Required</dt><dd>${((flags&2)&&(flags&8))?'yes &mdash; catalogue and field inventory agree':((flags&2)?'yes, in the Data Fields catalogue':'yes, in the field inventory')}</dd>`:''}
     ${(flags&4)?`<dt>Read-only</dt><dd>yes &mdash; written by the engine</dd>`:''}
+    ${(flags&16)?`<dt>Functional field</dt><dd>yes &mdash; business meaning, not plumbing</dd>`:''}
+    ${role&&D.roleNote&&D.roleNote[role]?`<dt>Key role</dt><dd>${esc(role)}</dd>`:''}
+    ${pg?`<dt>Physical column</dt><dd class="mono">${esc(pg.replace(':',' \u00b7 '))}</dd>`
+        :((flags&32)?`<dt>Physical column</dt><dd>not extracted to the replica</dd>`:'')}
     <dt>Family</dt><dd>${fam==='fk'?'Foreign key':fam==='dropdown'?'Coded value':fam==='soft'?'Soft reference':'Scalar'}</dd>
     ${e?`<dt>Points at</dt><dd>${e[3]&&objOf(e[3])?`<a class="mono" href="#/e/${encodeURIComponent(e[3])}">${esc(e[3])}</a>`:'<span style="color:var(--faint)">unresolved</span>'}</dd>
     <dt>Match confidence</dt><dd>${esc(e[5]||'&mdash;')}</dd>`:''}
     ${fam==='dropdown'&&cm?`<dt>Code table</dt><dd>${esc(cm[1])}</dd>`:''}
   </dl>
+  ${role&&D.roleNote&&D.roleNote[role]?`<p>In the schema it is ${esc(D.roleNote[role])}.</p>`:''}
   ${code&&D.typeLegend&&D.typeLegend[code]?`<p class="lead">${esc(D.typeLegend[code])}</p>`:''}
   ${(flags&2)?`<div class="find"><h5>Required &mdash; but not by the layout ${ctag('observed')}</h5>
     <p>The catalogue marks this field required. Required-ness has no layout-level layer: the red

@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Issue &middot; Lx Vault</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="../../atlas.css">
+<link rel="stylesheet" href="../../research/research.css">
+<link rel="stylesheet" href="../vault.css">
+</head><body><style id="lxg">body{visibility:hidden}
+#lxgate{visibility:visible;position:fixed;inset:0;z-index:9999;display:flex;
+align-items:center;justify-content:center;background:#0f172a;
+font-family:'IBM Plex Sans',system-ui,sans-serif}
+#lxgate form{background:#fff;padding:30px 32px;border-radius:12px;width:310px;
+box-shadow:0 20px 60px rgba(0,0,0,.35)}
+#lxgate h2{margin:0 0 4px;font-size:19px;color:#0f172a}
+#lxgate p{margin:0 0 18px;font-size:12.5px;color:#64748b;line-height:1.5}
+#lxgate label{display:block;font-size:11px;text-transform:uppercase;
+letter-spacing:.07em;color:#64748b;margin:0 0 5px}
+#lxgate input{width:100%;box-sizing:border-box;padding:9px 11px;margin:0 0 14px;
+border:1px solid #cbd5e1;border-radius:7px;font-size:14px}
+#lxgate button{width:100%;padding:10px;border:0;border-radius:7px;
+background:#b4530a;color:#fff;font-size:14px;font-weight:600;cursor:pointer}
+#lxgate .err{color:#b91c1c;font-size:12px;margin:0 0 10px;display:none}</style>
+<div id="lxgate"><form onsubmit="return lxg(event)">
+<h2>Lx Atlas</h2>
+<p>Internal documentation. Not a security boundary &mdash; see
+<code>gate.py</code>.</p>
+<p class="err" id="lxge">Incorrect.</p>
+<label for="lxgu">User</label><input id="lxgu" autocomplete="username" autofocus>
+<label for="lxgp">Password</label><input id="lxgp" type="password"
+autocomplete="current-password">
+<button type="submit">Enter</button></form></div>
+<script>
+function lxgOpen(){var g=document.getElementById('lxgate');if(g)g.remove();
+var s=document.getElementById('lxg');if(s)s.remove();
+document.body.style.visibility='visible';}
+function lxg(ev){ev.preventDefault();
+if(document.getElementById('lxgu').value==='admin'&&
+   document.getElementById('lxgp').value==='admin'){
+ try{sessionStorage.setItem('lxg','1');}catch(e){}
+ lxgOpen();return false;}
+document.getElementById('lxge').style.display='block';return false;}
+try{if(sessionStorage.getItem('lxg')==='1')
+ document.addEventListener('DOMContentLoaded',lxgOpen);}catch(e){}
+</script>
+<header><b>Lx Atlas</b>
+<nav><a href="../../index.html">Overview</a><a href="../../atlas.html#/map?set=feature">Feature map</a>
+<a href="../../atlas.html">Interactive app</a>
+<a href="../../research/index.html">Research</a>
+<a href="../../research/screens.html">Screens</a>
+<a href="../index.html" class="on">Vault</a>
+<a href="../../questions.html">Open questions</a></nav></header>
+<main><p class="crumb"><a href="../../index.html">Atlas</a> &rsaquo;
+<a href="../index.html">Vault</a> &rsaquo; Issue</p><div class="fm"><span>entity</span><span>workflow</span><span>projects</span><span>core</span><span class="ev">Observed</span></div><p><strong><code>issue</code> · 56 fields · <a href="../../../modules/module-projects-capital.html">module-projects-capital</a></strong></p><p>The generic request/ticket record underneath a great deal of the product. A <a href="../../../concepts/form-vs-page.html">Form <em>is</em> an Issue Type</a>, so every submitted request form is an <code>Issue</code> row.</p><ul><li>Only <strong>4 of its 56 fields are tenant-admin-configurable</strong>; the other 52 are schema-only (<strong>rule-PRJ-R-004</strong>).</li><li><code>ServiceRequest</code> and <code>WorkOrder</code> are each <strong>1:1 with an underlying Issue</strong> — and the schema export types the link as untyped <code>Text</code>, so the FK graph misses it entirely (<strong>rule-AST-R-012</strong>).</li><li>Parts consumed on a job are recorded <strong>against the Issue, not the WorkOrder</strong>: <code>WorkOrder → Issue → LinkIssuePart</code> (<strong>rule-AST-R-014</strong>, <strong>rule-PRJ-R-009</strong>).</li><li><code>Issue.SearchField (Text)</code> is a denormalised search column — evidence that some search is served by precomputed text. <em>(Inferred.)</em></li><li>Out-degree 7 targets across 14 columns.</li></ul><p><code>Issue.LAR_RequestType</code> — a field on an Issue, driven by a <a href="../../../concepts/client-drop-down.html">client-drop-down</a> — is the single driver behind <strong>44 of 54</strong> <a href="../../../concepts/conditional-field.html">conditional-field</a> clauses in <a href="../../../tenants/tenant-bbw.html">BBW</a>.</p><p>See <a href="../../CodeIssueType.html">CodeIssueType</a></p><div class="backlinks"><b>Linked from &middot; 6</b><a href="../concepts/soft-reference.html">soft-reference</a><a href="Asset.html">Asset</a><a href="../findings/finding-fk-graph-undercounts.html">finding-fk-graph-undercounts</a><a href="../modules/module-assets-equipment.html">module-assets-equipment</a><a href="../modules/module-projects-capital.html">module-projects-capital</a><a href="../modules/module-workflow.html">module-workflow</a></div></main></body></html>

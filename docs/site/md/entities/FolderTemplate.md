@@ -2,7 +2,7 @@
 
 *1 fields · module: Documents, Folders & Correspondence · Postgres: `folder_template`*
 
-Not covered by the Data Fields catalogue: this record type appears in the 223-object census but has no row in the catalogue of 6,158 configurable fields, so nothing in the corpus explains it in the vendor's own words. What is known is structural — 1 declared fields, filed under Documents, Folders & Correspondence, 0 foreign keys pointing at it.
+Not covered by the Data Fields catalogue: this record type appears in the 223-object census but has no row in the catalogue of 6,158 configurable fields, so no document describes the record as a whole. What is known is structural — 1 declared fields, filed under Documents, Folders & Correspondence, 0 foreign keys pointing at it.
 
 Source: `_lucernex_objects_summary.txt`
 
@@ -11,6 +11,9 @@ Source: `_lucernex_objects_summary.txt`
 |  | Value |
 |---|---|
 | Fields declared | 1 |
+| Fields with a vendor definition | 0 of 1 inventoried |
+| Physical tables | `folder_template` |
+| Replication database | `lxr_drp_bbw` |
 | Catalogued fields | not in the catalogue |
 | Physical tables | 1 |
 | Referenced by | 0 keys from 0 record types |
@@ -24,6 +27,14 @@ Source: `_lucernex_objects_summary.txt`
 
 **Derived.** This record carries no FirmID of its own. It hangs off ProjectEntity, and tenant isolation has to be enforced by joining to that row and filtering on its FirmID — or it is not enforced at all. 161 of the 223 record types are shaped this way.
 
+### Lands in folder_template
+
+**Observed.** The field inventory names the physical destination of every column: one table in the database lxr_drp_bbw. Every field node carries its own table and column, so the mapping is per column, not per record.
+
+### A per-tenant database name
+
+**Derived.** The physical database is lxr_drp_bbw — the tenant's name is in the database name. That is one more piece of evidence for database-per-tenant and against a single shared schema, alongside the Firm_ columns.
+
 ## Rules that govern it
 
 | Rule | What it requires | Confidence |
@@ -36,6 +47,6 @@ Source: `_lucernex_objects_summary.txt`
 
 Typed pointers to other records. Lx names each FK type after the table it points at, so the relational model is declared rather than implied.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `ProjectEntityID` |  | Entity ID | — |  | [ProjectEntity](ProjectEntity.md) |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `ProjectEntityID` |  |  | Entity ID | — |  | `folder_template.ProjectEntityID · TEXT` | [ProjectEntity](ProjectEntity.md) |

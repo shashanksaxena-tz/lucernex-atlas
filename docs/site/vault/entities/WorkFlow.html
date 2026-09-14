@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>WorkFlow &middot; Lx Vault</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="../../atlas.css">
+<link rel="stylesheet" href="../../research/research.css">
+<link rel="stylesheet" href="../vault.css">
+</head><body><style id="lxg">body{visibility:hidden}
+#lxgate{visibility:visible;position:fixed;inset:0;z-index:9999;display:flex;
+align-items:center;justify-content:center;background:#0f172a;
+font-family:'IBM Plex Sans',system-ui,sans-serif}
+#lxgate form{background:#fff;padding:30px 32px;border-radius:12px;width:310px;
+box-shadow:0 20px 60px rgba(0,0,0,.35)}
+#lxgate h2{margin:0 0 4px;font-size:19px;color:#0f172a}
+#lxgate p{margin:0 0 18px;font-size:12.5px;color:#64748b;line-height:1.5}
+#lxgate label{display:block;font-size:11px;text-transform:uppercase;
+letter-spacing:.07em;color:#64748b;margin:0 0 5px}
+#lxgate input{width:100%;box-sizing:border-box;padding:9px 11px;margin:0 0 14px;
+border:1px solid #cbd5e1;border-radius:7px;font-size:14px}
+#lxgate button{width:100%;padding:10px;border:0;border-radius:7px;
+background:#b4530a;color:#fff;font-size:14px;font-weight:600;cursor:pointer}
+#lxgate .err{color:#b91c1c;font-size:12px;margin:0 0 10px;display:none}</style>
+<div id="lxgate"><form onsubmit="return lxg(event)">
+<h2>Lx Atlas</h2>
+<p>Internal documentation. Not a security boundary &mdash; see
+<code>gate.py</code>.</p>
+<p class="err" id="lxge">Incorrect.</p>
+<label for="lxgu">User</label><input id="lxgu" autocomplete="username" autofocus>
+<label for="lxgp">Password</label><input id="lxgp" type="password"
+autocomplete="current-password">
+<button type="submit">Enter</button></form></div>
+<script>
+function lxgOpen(){var g=document.getElementById('lxgate');if(g)g.remove();
+var s=document.getElementById('lxg');if(s)s.remove();
+document.body.style.visibility='visible';}
+function lxg(ev){ev.preventDefault();
+if(document.getElementById('lxgu').value==='admin'&&
+   document.getElementById('lxgp').value==='admin'){
+ try{sessionStorage.setItem('lxg','1');}catch(e){}
+ lxgOpen();return false;}
+document.getElementById('lxge').style.display='block';return false;}
+try{if(sessionStorage.getItem('lxg')==='1')
+ document.addEventListener('DOMContentLoaded',lxgOpen);}catch(e){}
+</script>
+<header><b>Lx Atlas</b>
+<nav><a href="../../index.html">Overview</a><a href="../../atlas.html#/map?set=feature">Feature map</a>
+<a href="../../atlas.html">Interactive app</a>
+<a href="../../research/index.html">Research</a>
+<a href="../../research/screens.html">Screens</a>
+<a href="../index.html" class="on">Vault</a>
+<a href="../../questions.html">Open questions</a></nav></header>
+<main><p class="crumb"><a href="../../index.html">Atlas</a> &rsaquo;
+<a href="../index.html">Vault</a> &rsaquo; WorkFlow</p><div class="fm"><span>entity</span><span>workflow</span><span class="ev">Observed</span></div><p><strong><code>work_flow</code> · 19 fields · <a href="../../../modules/module-workflow.html">module-workflow</a></strong></p><p>A running workflow instance, against a real trigger object. Stored in the <strong>same tables</strong> as its <a href="../../WorkFlowTemplate.html">template</a>, distinguished by the self-reference <code>WorkFlow.WorkFlowTemplateID</code> — see <a href="../../../concepts/workflow-template.html">workflow-template</a>.</p><p><code>WorkFlow.KickOffTaskID</code> points at <a href="../../TaskGroup.html">TaskGroup</a>, which corroborates the GraphQL <code>KickOffMethod.TASK</code> enum value (<strong>rule-PRJ-R-012</strong>).</p><p>Closing it (<code>CloseWorkFlow</code>) sets <code>IsCompleted</code>, <code>ClosedDate</code> and a terminal status, and fires three template notification flags (<a href="../../../rules/rule-WF-R-062.html">rule-WF-R-062</a>).</p><p><strong>Where workflow <em>status</em> lives is still open</strong> — <code>Work Flow Status Code</code> is <strong>not among the 207</strong> <a href="../../../concepts/code-table.html">code tables</a>. The three nearest candidates are <code>Approval Status Code</code> (<code>2081</code>), <code>Last Action Status Code</code> (<code>2082</code>) and <code>Decision Status Code</code> (<code>2025</code>).</p><div class="backlinks"><b>Linked from &middot; 2</b><a href="../modules/module-workflow.html">module-workflow</a><a href="../rules/rule-WF-R-062.html">rule-WF-R-062</a></div></main></body></html>

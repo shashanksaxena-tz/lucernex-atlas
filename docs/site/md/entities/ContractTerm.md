@@ -11,6 +11,9 @@ Source: `data-fields/contract-term.md`
 |  | Value |
 |---|---|
 | Fields declared | 26 |
+| Fields with a vendor definition | 21 of 26 inventoried |
+| Physical tables | `contract_term` |
+| Replication database | `lxr_drp_bbw` |
 | Catalogued fields | 29 (26 global, 3 firm) |
 | Physical tables | 1 |
 | Referenced by | 5 keys from 5 record types |
@@ -32,6 +35,22 @@ Source: `data-fields/contract-term.md`
 
 **Observed.** Of 29 catalogued fields on this record, 3 are Firm scope — defined by this tenant rather than shipped by the platform. Firm-scope definitions are RGAF rows carrying IsGlobal, FirmID and IsClientExtensionField.
 
+### Lands in contract_term
+
+**Observed.** The field inventory names the physical destination of every column: one table in the database lxr_drp_bbw. Every field node carries its own table and column, so the mapping is per column, not per record.
+
+### A per-tenant database name
+
+**Derived.** The physical database is lxr_drp_bbw — the tenant's name is in the database name. That is one more piece of evidence for database-per-tenant and against a single shared schema, alongside the Firm_ columns.
+
+### 21 fields carry a vendor definition
+
+**Observed.** 21 of this record's 26 inventoried fields have prose written by the vendor saying what the field is for. Open any field node to read it — this is the one source in the corpus that explains fields rather than listing them.
+
+### 1 field marked required
+
+**Observed.** The inventory marks 1 of this record's fields Required. Across the whole inventory that is 606 fields, which independently corroborates the 603 the corpus had derived from the Data Fields catalogue — two sources, arrived at separately, agreeing to within three.
+
 ## Rules that govern it
 
 | Rule | What it requires | Confidence |
@@ -47,83 +66,83 @@ Source: `data-fields/contract-term.md`
 
 Typed pointers to other records. Lx names each FK type after the table it points at, so the relational model is declared rather than implied.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `AmendmentID` | Amendment | Contract Amendment ID | Global |  | [ContractAmendment](ContractAmendment.md) |
-| `ContractID` | Contract | Contract ID | Global | yes | [Contract](Contract.md) |
-| `CovenantID` | Covenant | Covenant ID | Global |  | [Covenant](Covenant.md) |
-| `ProjectEntityID` |  | Entity ID | — |  | [ProjectEntity](ProjectEntity.md) |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `AmendmentID` | Amendment | Select the amendment that the record is associated with from this field. | Contract Amendment ID | Global |  | `contract_term.AmendmentID · TEXT` | [ContractAmendment](ContractAmendment.md) |
+| `ContractID` | Contract | The Contract ID is a unique identifier that belongs to a contract. The Contract ID of a contract can only be changed from the Contract > Details > Summary page. | Contract ID | Global | yes | `contract_term.ContractID · TEXT` | [Contract](Contract.md) |
+| `CovenantID` | Covenant | Select the covenant that the record is associated with from this field. | Covenant ID | Global |  | `contract_term.CovenantID · TEXT` | [Covenant](Covenant.md) |
+| `ProjectEntityID` |  |  | Entity ID | — |  | `contract_term.ProjectEntityID · TEXT` | [ProjectEntity](ProjectEntity.md) |
 
 ### Coded values (drop-downs) (3)
 
 Fields bound to a master code table. Every one of these is a place where an administrator, not a developer, controls the allowed values.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `CodeBuildingAreaUnitID` | Building Area Unit | Dropdown (Building Area Unit Code) | Global |  | Building Area Unit Code |
-| `CodeTermStatusID` | Term Status | Dropdown (Term Status Code) | Global |  | Term Status Code |
-| `CodeTermTypeID` | Term Type | Dropdown (Term Type Code) | Global |  | Term Type Code |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `CodeBuildingAreaUnitID` | Building Area Unit | Select the units you are using to measure your area from this field. This field should pre-populate with the area unit you selected when creating your contract. | Dropdown (Building Area Unit Code) | Global |  | `contract_term.CodeBuildingAreaUnitID · TEXT` | Building Area Unit Code |
+| `CodeTermStatusID` | Term Status | Select the term status from this field. Selecting Likely from this field will trigger the Recalc? flag to YES. | Dropdown (Term Status Code) | Global |  | `contract_term.CodeTermStatusID · TEXT` | Term Status Code |
+| `CodeTermTypeID` | Term Type | Select the term type from this field. | Dropdown (Term Type Code) | Global |  | `contract_term.CodeTermTypeID · TEXT` | Term Type Code |
 
 ### Money (1)
 
 Currency amounts. Stored as TEXT in the physical database, which is why the rebuild must impose BigDecimal typing of its own.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `AvgRentPerAreaUnit` | Average Rent Per Area Unit | Currency | Global |  |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `AvgRentPerAreaUnit` | Average Rent Per Area Unit |  | Currency | Global |  | `contract_term.AvgRentPerAreaUnit · TEXT` |  |
 
 ### Quantities (4)
 
 Counts, areas and other plain numeric measures.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `ContractTermID` | Term RecID | Number | Global |  |  |
-| `Firm_OptionRentPSF` | Option Rent PSF | Number | Firm |  |  |
-| `LengthOfTerm` | Length | Number | Global |  |  |
-| `RentableArea` | Rentable Area | Number | Global |  |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `ContractTermID` | Term RecID | This field contains a Base Entity System Identifier for your record. It is assigned automatically by the system, and is not editable. | Number | Global |  | `contract_term.ContractTermID · VARCHAR(64) NOT NULL` |  |
+| `Firm_OptionRentPSF` | Option Rent PSF |  | Number | Firm |  | `contract_term.Firm_OptionRentPSF · TEXT` |  |
+| `LengthOfTerm` | Length | This field is read-only and information-only. It displays the length of the term. | Number | Global |  | `contract_term.LengthOfTerm · TEXT` |  |
+| `RentableArea` | Rentable Area | The Rentable Area field must be populated in order for the system to calculate your rate. The system will remember your rentable area and populate this field whenever it is present on a page. If you are not going to use rentable area, do not enter 0. Leave this field blank. | Number | Global |  | `contract_term.RentableArea · TEXT` |  |
 
 ### Dates & timestamps (4)
 
 Dates that drive schedules, and system timestamps.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `BeginDate` | Coverage Period Begin Date | Date | Global |  |  |
-| `EndDate` | Coverage Period End Date | Date | Global |  |  |
-| `PaymentBeginDate` | Payment Begin Date | Date | Global |  |  |
-| `PaymentEndDate` | Payment End Date | Date | Global |  |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `BeginDate` | Coverage Period Begin Date | The Begin Date field allows you to select a begin date for the record. | Date | Global |  | `contract_term.BeginDate · TEXT` |  |
+| `EndDate` | Coverage Period End Date | The End Date field allows you to select an end date for the record. | Date | Global |  | `contract_term.EndDate · TEXT` |  |
+| `PaymentBeginDate` | Payment Begin Date | The date that payments on a contract begin. The system will not generate payments outside the payment begin / end dates. In order to have payments outside the payment begin / end date, you will have to extend your contract. | Date | Global |  | `contract_term.PaymentBeginDate · TEXT` |  |
+| `PaymentEndDate` | Payment End Date | The date that payments on a contract end. The system will not generate payments outside the payment begin / end dates. In order to have payments outside the payment begin / end date, you will have to extend your contract. | Date | Global |  | `contract_term.PaymentEndDate · TEXT` |  |
 
 ### Flags (1)
 
 Booleans. In this product they usually gate engine behaviour rather than describe the record.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `IncludeTermForAccruals` | Include Term For Accruals? | Boolean | Global |  |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `IncludeTermForAccruals` | Include Term For Accruals? | Select the Include in Accruals? check box to flag this term as needing to be included in your accrued expense savings. | Boolean | Global |  | `contract_term.IncludeTermForAccruals · TEXT` |  |
 
 ### Text & notes (6)
 
 Free text. Notably, free text is never allowed to drive a conditional display rule.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `ClientNumber` | Client Number | Text | Global |  |  |
-| `Description` |  | Text | Global |  |  |
-| `Firm_TermDocument` | Document | Text | Firm |  |  |
-| `Firm_TermPage` | Page | Text | Firm |  |  |
-| `Notes` |  | Text | Global |  |  |
-| `Section` |  | Text | Global |  |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `ClientNumber` | Client Number | The term number. Enter the term number in 2-digit format for example, the first term would be entered as 01. | Text | Global |  | `contract_term.ClientNumber · TEXT` |  |
+| `Description` |  | Write a description of the record. | Text | Global |  | `contract_term.Description · TEXT` |  |
+| `Firm_TermDocument` | Document |  | Text | Firm |  | `contract_term.Firm_TermDocument · TEXT` |  |
+| `Firm_TermPage` | Page |  | Text | Firm |  | `contract_term.Firm_TermPage · TEXT` |  |
+| `Notes` |  | Add any notes about the record. | Text | Global |  | `contract_term.Notes · TEXT` |  |
+| `Section` |  | Enter the section of the covenant that pertains to this record in this field. | Text | Global |  | `contract_term.Section · TEXT` |  |
 
 ### Audit & record keeping (3)
 
 Who created and changed the record, and the identifiers that survive migration.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `BOMapClientRecordID` | Term ClientID | Text | Global | yes |  |
-| `ModifiedByID` | Modified By | Member ID | Global |  | [Member](Member.md) |
-| `ModifiedDate` | Modified Date | Time | Global |  |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `BOMapClientRecordID` | Term ClientID | The ClientID field is a free form text field that can be used when importing data to uniquely look up a record for update. This record identifier can either be system-generated or defined by the user upon the initial import of record data. The ClientID has the database name "BOMapClientRecordID". | Text | Global | yes | `contract_term.BOMapClientRecordID · TEXT` |  |
+| `ModifiedByID` | Modified By | The Modified By field is a system-populated field which captures the name of the member who made a change to a record. | Member ID | Global |  | `contract_term.ModifiedByID · TEXT` | [Member](Member.md) |
+| `ModifiedDate` | Modified Date | The Modified Date field is a system-populated field which captures the date that a modification is made to a record. | Time | Global |  | `contract_term.ModifiedDate · TEXT` |  |
 
 ## What points here (5 keys)
 

@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The AI lease-abstraction pipeline &middot; Lx Vault</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="../../atlas.css">
+<link rel="stylesheet" href="../../research/research.css">
+<link rel="stylesheet" href="../vault.css">
+</head><body><style id="lxg">body{visibility:hidden}
+#lxgate{visibility:visible;position:fixed;inset:0;z-index:9999;display:flex;
+align-items:center;justify-content:center;background:#0f172a;
+font-family:'IBM Plex Sans',system-ui,sans-serif}
+#lxgate form{background:#fff;padding:30px 32px;border-radius:12px;width:310px;
+box-shadow:0 20px 60px rgba(0,0,0,.35)}
+#lxgate h2{margin:0 0 4px;font-size:19px;color:#0f172a}
+#lxgate p{margin:0 0 18px;font-size:12.5px;color:#64748b;line-height:1.5}
+#lxgate label{display:block;font-size:11px;text-transform:uppercase;
+letter-spacing:.07em;color:#64748b;margin:0 0 5px}
+#lxgate input{width:100%;box-sizing:border-box;padding:9px 11px;margin:0 0 14px;
+border:1px solid #cbd5e1;border-radius:7px;font-size:14px}
+#lxgate button{width:100%;padding:10px;border:0;border-radius:7px;
+background:#b4530a;color:#fff;font-size:14px;font-weight:600;cursor:pointer}
+#lxgate .err{color:#b91c1c;font-size:12px;margin:0 0 10px;display:none}</style>
+<div id="lxgate"><form onsubmit="return lxg(event)">
+<h2>Lx Atlas</h2>
+<p>Internal documentation. Not a security boundary &mdash; see
+<code>gate.py</code>.</p>
+<p class="err" id="lxge">Incorrect.</p>
+<label for="lxgu">User</label><input id="lxgu" autocomplete="username" autofocus>
+<label for="lxgp">Password</label><input id="lxgp" type="password"
+autocomplete="current-password">
+<button type="submit">Enter</button></form></div>
+<script>
+function lxgOpen(){var g=document.getElementById('lxgate');if(g)g.remove();
+var s=document.getElementById('lxg');if(s)s.remove();
+document.body.style.visibility='visible';}
+function lxg(ev){ev.preventDefault();
+if(document.getElementById('lxgu').value==='admin'&&
+   document.getElementById('lxgp').value==='admin'){
+ try{sessionStorage.setItem('lxg','1');}catch(e){}
+ lxgOpen();return false;}
+document.getElementById('lxge').style.display='block';return false;}
+try{if(sessionStorage.getItem('lxg')==='1')
+ document.addEventListener('DOMContentLoaded',lxgOpen);}catch(e){}
+</script>
+<header><b>Lx Atlas</b>
+<nav><a href="../../index.html">Overview</a><a href="../../atlas.html#/map?set=feature">Feature map</a>
+<a href="../../atlas.html">Interactive app</a>
+<a href="../../research/index.html">Research</a>
+<a href="../../research/screens.html">Screens</a>
+<a href="../index.html" class="on">Vault</a>
+<a href="../../questions.html">Open questions</a></nav></header>
+<main><p class="crumb"><a href="../../index.html">Atlas</a> &rsaquo;
+<a href="../index.html">Vault</a> &rsaquo; The AI lease-abstraction pipeline</p><div class="fm"><span>concept</span><span>integration</span><span>contracts</span><span class="ev">Observed</span></div><p>Three of the REST API&#x27;s eleven tags are a <strong>live third-party AI lease-abstraction integration</strong> — 16 operations in total, discovered only from the OpenAPI capture.</p><div class="wrapt"><table><thead><tr><th>Route</th><th>Verbs</th><th>What it does</th></tr></thead><tbody><tr><td><code>/atlas-api/import/{leaseId}</code></td><td>POST</td><td>Fetch one lease from the <strong>Atlas</strong> API and import it</td></tr><tr><td><code>/atlas-api/import/{leaseId}/async</code></td><td>POST</td><td>The same, scheduled asynchronously</td></tr><tr><td><code>/atlas-api/contracts</code></td><td>GET</td><td>List active contracts for <em>update-existing</em> import</td></tr><tr><td><code>/adapter-config/{vendorId}/{fileName}</code></td><td>GET · PUT · DELETE</td><td>The vendor&#x27;s field-mapping config</td></tr><tr><td><code>/adapter-config/firms/{firmId}/{vendorId}/{fileName}</code></td><td>GET · PUT · DELETE</td><td><strong>Per-firm override</strong> of that mapping</td></tr><tr><td><code>/adapter-config/vendors</code></td><td>GET</td><td>Registered vendor adapter ids</td></tr></tbody></table></div><p><strong>The field mapping is tenant-configurable.</strong> A vendor adapter has a default config and a firm can upload an override — so the AI-extraction-to-Lx field mapping is configuration, per tenant, not code.</p><p><strong>It ties together four observations the corpus had recorded separately with no explanation:</strong> the <code>Allow AI Lease Abstraction</code> entitlement flag on <a href="../../../entities/Firm.html">Firm</a>; BBW&#x27;s seven <code>ASG Lease Abstract - *</code> layouts that AF lacks; <code>AI Abstracted</code> as a value in four status code tables; and <code>AI Abstracted</code> becoming <strong>delete-protected</strong> in build <code>26.09</code>. They are one feature — see <a href="../../../findings/finding-tenants-differ-by-one-feature.html">finding-tenants-differ-by-one-feature</a>.</p><p>That last point <strong>retires the corpus&#x27;s claim that <code>AI Abstracted</code> is &quot;a tenant-added status&quot;</strong>. On current evidence it is vendor-shipped. <em>(Inferred — the flag change was observed across builds, not the value&#x27;s origin.)</em></p><p>Whether any of it is in scope for ASG Edge+ is <a href="../../../open-questions/q-bbw-17-ai-abstraction-in-scope.html">q-bbw-17-ai-abstraction-in-scope</a>, and nobody has been asked, because nothing in the corpus showed the pipeline existed.</p><p>Source: <a href="../../docs/tenants/bbw-vs-american-freight.html"><code>tenants/bbw-vs-american-freight.md</code> §17</a></p><div class="backlinks"><b>Linked from &middot; 13</b><a href="../entities/ContractTerm.html">ContractTerm</a><a href="../entities/Covenant.html">Covenant</a><a href="../entities/ExpenseSchedule.html">ExpenseSchedule</a><a href="../entities/ExpenseSetup.html">ExpenseSetup</a><a href="../entities/Firm.html">Firm</a><a href="../entities/KeyDate.html">KeyDate</a><a href="../entities/SecurityDeposit.html">SecurityDeposit</a><a href="../features/feature-drop-downs-code-tables.html">feature-drop-downs-code-tables</a><a href="../features/feature-import-export.html">feature-import-export</a><a href="../findings/finding-maker-checker-pairs.html">finding-maker-checker-pairs</a><a href="../findings/finding-tenants-differ-by-one-feature.html">finding-tenants-differ-by-one-feature</a><a href="../open-questions/q-bbw-17-ai-abstraction-in-scope.html">q-bbw-17-ai-abstraction-in-scope</a><a href="../tenants/tenant-bbw.html">tenant-bbw</a></div></main></body></html>

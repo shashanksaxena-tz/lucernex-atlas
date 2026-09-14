@@ -49,6 +49,7 @@ try{if(sessionStorage.getItem('lxg')==='1')
 <a href="../../../entities/index.html">Record types</a><a href="../../../rules/index.html">Rules</a>
 <a href="../../index.html" class="on">Research</a>
 <a href="../../screens.html">Screens</a>
+<a href="../../../vault/index.html">Vault</a>
 <a href="../../../questions.html">Open questions</a></nav></header>
 <main><p class="crumb"><a href="../../../index.html">Atlas</a> &rsaquo;
 <a href="../../index.html">Research</a> &rsaquo; Property Tax — data model</p><nav class="toc"><b>On this page</b><a href="#1-the-object-roster">1. The object roster</a><a href="#2-propertytaxdetail-s-catalog-description-is-wrong-and-worth">2. PropertyTaxDetail&#x27;s catalog description is wrong, and worth correcting explicitly</a><a href="#3-the-internal-fk-graph-5-edges">3. The internal FK graph — 5 edges</a><a href="#4-cross-module-edges">4. Cross-module edges</a><a href="#5-property-tax-is-a-recoverable-expense-and-the-tax-code-tab">5. Property tax is a recoverable expense — and the tax-code-table naming is easy to confuse</a><a href="#6-confidence-summary">6. Confidence summary</a><a href="#open-questions">Open questions</a></nav><h1 id="property-tax-data-model">Property Tax — data model</h1><p><strong>Stated up front.</strong> Six objects, 163 fields, all <code>entity_scoped</code>, and every one of them carries its own direct <code>ParcelID</code> — not only a pointer to its logical parent in the chain below. The six form a genuine five-level roll-up under one <code>Parcel</code>:</p><pre><code>Parcel

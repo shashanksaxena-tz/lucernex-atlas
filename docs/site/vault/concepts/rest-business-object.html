@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The generic REST controller &middot; Lx Vault</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="../../atlas.css">
+<link rel="stylesheet" href="../../research/research.css">
+<link rel="stylesheet" href="../vault.css">
+</head><body><style id="lxg">body{visibility:hidden}
+#lxgate{visibility:visible;position:fixed;inset:0;z-index:9999;display:flex;
+align-items:center;justify-content:center;background:#0f172a;
+font-family:'IBM Plex Sans',system-ui,sans-serif}
+#lxgate form{background:#fff;padding:30px 32px;border-radius:12px;width:310px;
+box-shadow:0 20px 60px rgba(0,0,0,.35)}
+#lxgate h2{margin:0 0 4px;font-size:19px;color:#0f172a}
+#lxgate p{margin:0 0 18px;font-size:12.5px;color:#64748b;line-height:1.5}
+#lxgate label{display:block;font-size:11px;text-transform:uppercase;
+letter-spacing:.07em;color:#64748b;margin:0 0 5px}
+#lxgate input{width:100%;box-sizing:border-box;padding:9px 11px;margin:0 0 14px;
+border:1px solid #cbd5e1;border-radius:7px;font-size:14px}
+#lxgate button{width:100%;padding:10px;border:0;border-radius:7px;
+background:#b4530a;color:#fff;font-size:14px;font-weight:600;cursor:pointer}
+#lxgate .err{color:#b91c1c;font-size:12px;margin:0 0 10px;display:none}</style>
+<div id="lxgate"><form onsubmit="return lxg(event)">
+<h2>Lx Atlas</h2>
+<p>Internal documentation. Not a security boundary &mdash; see
+<code>gate.py</code>.</p>
+<p class="err" id="lxge">Incorrect.</p>
+<label for="lxgu">User</label><input id="lxgu" autocomplete="username" autofocus>
+<label for="lxgp">Password</label><input id="lxgp" type="password"
+autocomplete="current-password">
+<button type="submit">Enter</button></form></div>
+<script>
+function lxgOpen(){var g=document.getElementById('lxgate');if(g)g.remove();
+var s=document.getElementById('lxg');if(s)s.remove();
+document.body.style.visibility='visible';}
+function lxg(ev){ev.preventDefault();
+if(document.getElementById('lxgu').value==='admin'&&
+   document.getElementById('lxgp').value==='admin'){
+ try{sessionStorage.setItem('lxg','1');}catch(e){}
+ lxgOpen();return false;}
+document.getElementById('lxge').style.display='block';return false;}
+try{if(sessionStorage.getItem('lxg')==='1')
+ document.addEventListener('DOMContentLoaded',lxgOpen);}catch(e){}
+</script>
+<header><b>Lx Atlas</b>
+<nav><a href="../../index.html">Overview</a><a href="../../atlas.html#/map?set=feature">Feature map</a>
+<a href="../../atlas.html">Interactive app</a>
+<a href="../../research/index.html">Research</a>
+<a href="../../research/screens.html">Screens</a>
+<a href="../index.html" class="on">Vault</a>
+<a href="../../questions.html">Open questions</a></nav></header>
+<main><p class="crumb"><a href="../../index.html">Atlas</a> &rsaquo;
+<a href="../index.html">Vault</a> &rsaquo; The generic REST controller</p><div class="fm"><span>concept</span><span>api</span><span>core</span><span class="ev">Observed</span></div><p>One controller serves <strong>all 227 record types</strong>. The full OpenAPI 3.0.1 document is served at <code>/rest/api-docs/swagger</code>: <strong>141 paths, 160 operations — 104 GET, 40 POST, 7 PUT, 9 DELETE</strong>, 11 tags, 25 schemas.</p><pre><code>POST   /rest/businessObject/{objectType}                     create  (?allowUpdate=true upserts)
+PUT    /rest/businessObject/{objectType}                     update
+POST   /rest/businessObject/{parentObjectType}/{parentID}    create child
+DELETE /rest/businessObject/{objectType}/lxid/{lxID}
+DELETE /rest/businessObject/{objectType}/clientid/{clientID}
+GET    /rest/businessObject/{objectType}/details?fiql=…&amp;fields=…&amp;$skip&amp;$top</code></pre><p><strong>REST is the write path.</strong> The corpus&#x27;s standing picture — <em>&quot;617 GraphQL queries against 3 mutations, so the write path is unknown&quot;</em> — describes GraphQL only.</p><p>The body is a recursive <code>BusinessObject</code>: <code>botype</code> required, <code>fields[]</code>, nested <code>children[]</code>, JSON or XML. <strong>A contract and its children can be written in one call</strong>, which is probably how the <strong>wizard&#x27;s multi-entity step</strong> is served.</p><p>Three things to carry:</p><ul><li><strong><a href="../../../findings/finding-http-200-is-not-success.html">finding-http-200-is-not-success</a></strong> — writes return an <code>ImportResults</code> bulk envelope.</li><li><strong>Dual identifier space.</strong> <code>/lxid/{id}</code> is the internal key; <code>/clientid/{id}</code> is <code>BOMapClientRecordID</code>, the integration key, required on 133 of 202 tables and confirmed as the upsert key.</li><li>Reads use <a href="../../fiql.html">fiql</a>, <code>fields</code> is <strong>mandatory</strong>, and the endpoint returns <strong>413</strong> when too many are requested.</li></ul><p>It is also how the <strong>25 tables the schema viewer refuses</strong> were recovered, including the whole <a href="../../../entities/PageLayout.html">PageLayout</a> family — with the caveat that the serialiser emits only <em>populated</em> columns, so column lists from this route are a <strong>lower bound, not a schema</strong>.</p><p>Auth is out of band: the spec declares <strong>no <code>securitySchemes</code></strong>; Basic or JWT Bearer supplied externally.</p><p>Source: <a href="../../docs/data-model/api/README.html"><code>data-model/api/</code></a></p><div class="backlinks"><b>Linked from &middot; 11</b><a href="fiql.html">fiql</a><a href="page-layout-concept.html">page-layout-concept</a><a href="../entities/PageLayout.html">PageLayout</a><a href="../entities/PageLayoutFilter.html">PageLayoutFilter</a><a href="../features/feature-import-export.html">feature-import-export</a><a href="../findings/finding-http-200-is-not-success.html">finding-http-200-is-not-success</a><a href="../findings/finding-punch-list-out-of-scope.html">finding-punch-list-out-of-scope</a><a href="../findings/finding-wizard-writes-two-entities.html">finding-wizard-writes-two-entities</a><a href="../modules/module-reporting.html">module-reporting</a><a href="../open-questions/q-bbw-13-census-gap.html">q-bbw-13-census-gap</a><a href="../rules/rule-RPT-R-001.html">rule-RPT-R-001</a></div></main></body></html>

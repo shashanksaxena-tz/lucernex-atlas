@@ -2,15 +2,18 @@
 
 *18 fields · module: Budgeting, Cost Tracking & Bidding — OUT OF SCOPE · Postgres: `budget_template_audit`*
 
-Not covered by the Data Fields catalogue: this record type appears in the 223-object census but has no row in the catalogue of 6,158 configurable fields, so nothing in the corpus explains it in the vendor's own words. What is known is structural — 18 declared fields, filed under Budgeting, Cost Tracking & Bidding — OUT OF SCOPE, 0 foreign keys pointing at it.
+Not covered by the Data Fields catalogue: this record type appears in the 223-object census but has no row in the catalogue of 6,158 configurable fields, so no document describes the record as a whole. What is known is structural — 18 declared fields, filed under Budgeting, Cost Tracking & Bidding — OUT OF SCOPE, 0 foreign keys pointing at it. Its fields are documented even though the record is not: 17 of its 18 inventoried fields carry a definition written by the vendor. Open the field groups below and read them — that is the best account of this record available.
 
-Source: `_lucernex_objects_summary.txt`
+Source: `data-model/pg/bbw-field-inventory.csv`, `_lucernex_objects_summary.txt`
 
 ## At a glance
 
 |  | Value |
 |---|---|
 | Fields declared | 18 |
+| Fields with a vendor definition | 17 of 18 inventoried |
+| Physical tables | `budget_template_audit` |
+| Replication database | `lxr_drp_bbw` |
 | Catalogued fields | not in the catalogue |
 | Physical tables | 1 |
 | Referenced by | 0 keys from 0 record types |
@@ -24,6 +27,26 @@ Source: `_lucernex_objects_summary.txt`
 
 **Derived.** This record carries no FirmID of its own. It hangs off ProjectEntity, and tenant isolation has to be enforced by joining to that row and filtering on its FirmID — or it is not enforced at all. 161 of the 223 record types are shaped this way.
 
+### Lands in budget_template_audit
+
+**Observed.** The field inventory names the physical destination of every column: one table in the database lxr_drp_bbw. Every field node carries its own table and column, so the mapping is per column, not per record.
+
+### A per-tenant database name
+
+**Derived.** The physical database is lxr_drp_bbw — the tenant's name is in the database name. That is one more piece of evidence for database-per-tenant and against a single shared schema, alongside the Firm_ columns.
+
+### 17 fields carry a vendor definition
+
+**Observed.** 17 of this record's 18 inventoried fields have prose written by the vendor saying what the field is for. Open any field node to read it — this is the one source in the corpus that explains fields rather than listing them.
+
+### 3 fields marked required
+
+**Observed.** The inventory marks 3 of this record's fields Required. Across the whole inventory that is 606 fields, which independently corroborates the 603 the corpus had derived from the Data Fields catalogue — two sources, arrived at separately, agreeing to within three.
+
+### Replication coverage: not materialised
+
+**Observed.** Observed of the loader, not of the product. The replication target lxr_drp_bbw has never created a table for this record: Table may not exist in the database yet. No data has ever been returned for this Lx object, and the loader only issues CREATE TABLE once the first row arrives. The configuration is in place, so this table and all of its columns will be created automatically as soon as data is entered in Lx. That is a statement about one loader's coverage and says nothing about whether the record exists or holds data in Lx. The tell is ProjectEntity — 107 fields, every one marked extracted, table never created, yet it is the universal supertype of a tenant holding 2,014 contracts, so it plainly is not empty. Do not read the 69-created / 150-not-created split as the size of the product's schema.
+
 ### Out of scope by decision
 
 **Observed.** Its module is excluded from the rebuild. It stays in the census so impact analysis through the relationship graph is never silently wrong at the boundary, but nothing here is being built.
@@ -34,65 +57,65 @@ Source: `_lucernex_objects_summary.txt`
 
 Typed pointers to other records. Lx names each FK type after the table it points at, so the relational model is declared rather than implied.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `BudgetEntityTemplateID` |  | Template ID | — |  | [EntityTemplate](EntityTemplate.md) |
-| `EntityTemplateID` |  | Template ID | — |  | [EntityTemplate](EntityTemplate.md) |
-| `FolderEntityTemplateID` |  | Template ID | — |  | [EntityTemplate](EntityTemplate.md) |
-| `ProjectEntityID` |  | Entity ID | — |  | [ProjectEntity](ProjectEntity.md) |
-| `TaskEntityTemplateID` |  | Template ID | — |  | [EntityTemplate](EntityTemplate.md) |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `BudgetEntityTemplateID` | Budget Template | The ID of the budget template that was applied to the entity. | Template ID | — |  | `budget_template_audit.BudgetEntityTemplateID · TEXT` | [EntityTemplate](EntityTemplate.md) |
+| `EntityTemplateID` | Entity Template | The ID of the template type. | Template ID | — | yes | `budget_template_audit.EntityTemplateID · TEXT` | [EntityTemplate](EntityTemplate.md) |
+| `FolderEntityTemplateID` | Folder Template | The ID of the folder template that was applied to the entity. | Template ID | — |  | `budget_template_audit.FolderEntityTemplateID · TEXT` | [EntityTemplate](EntityTemplate.md) |
+| `ProjectEntityID` |  |  | Entity ID | — |  | `budget_template_audit.ProjectEntityID · TEXT` | [ProjectEntity](ProjectEntity.md) |
+| `TaskEntityTemplateID` | Task Template | The ID of the schedule template that was applied to the entity. | Template ID | — |  | `budget_template_audit.TaskEntityTemplateID · TEXT` | [EntityTemplate](EntityTemplate.md) |
 
 ### Coded values (drop-downs) (1)
 
 Fields bound to a master code table. Every one of these is a place where an administrator, not a developer, controls the allowed values.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `CodeFolderActionIDList` |  | Dropdown (Folder Template Action Code) | — |  | Folder Template Action Code |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `CodeFolderActionIDList` | Folder Template Action List | This field is not implemented for this table. | Dropdown (Folder Template Action Code) | — |  | `budget_template_audit.CodeFolderActionIDList · TEXT` | Folder Template Action Code |
 
 ### Quantities (1)
 
 Counts, areas and other plain numeric measures.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `TemplateAuditID` |  | Number | — |  |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `TemplateAuditID` | Template Audit RecID | This field contains a Base Entity System Identifier for your record. It is assigned automatically by the system, and is not editable. | Number | — |  | `budget_template_audit.TemplateAuditID · VARCHAR(64) NOT NULL` |  |
 
 ### Dates & timestamps (3)
 
 Dates that drive schedules, and system timestamps.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `AppliedDate` |  | Time | — |  |  |
-| `ScheduleEndDate` |  | Date | — |  |  |
-| `ScheduleStartDate` |  | Date | — |  |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `AppliedDate` | Applied Date | The date when the budget template was applied to an entity. | Time | — | yes | `budget_template_audit.AppliedDate · TEXT` |  |
+| `ScheduleEndDate` | Schedule End Date | The end date of the schedule. | Date | — |  | `budget_template_audit.ScheduleEndDate · TEXT` |  |
+| `ScheduleStartDate` | Schedule Start Date | The start date of the schedule. | Date | — |  | `budget_template_audit.ScheduleStartDate · TEXT` |  |
 
 ### Flags (1)
 
 Booleans. In this product they usually gate engine behaviour rather than describe the record.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `CopyFolderStructure` |  | Boolean | — |  |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `CopyFolderStructure` | Copy Folder Structure? | If the value of this field is true, a folder template has been applied. | Boolean | — |  | `budget_template_audit.CopyFolderStructure · TEXT` |  |
 
 ### Text & notes (1)
 
 Free text. Notably, free text is never allowed to drive a conditional display rule.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `EntityTemplateTypeName` |  | Text | — |  |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `EntityTemplateTypeName` | Entity Template Type | The plain text name of the template type. | Text | — |  | `budget_template_audit.EntityTemplateTypeName · TEXT` |  |
 
 ### Audit & record keeping (6)
 
 Who created and changed the record, and the identifiers that survive migration.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `BOMapClientRecordID` |  | Text | — |  |  |
-| `CreatedByID` |  | Member ID | — |  | [Member](Member.md) |
-| `CreatedDate` |  | Time | — |  |  |
-| `ModifiedByID` |  | Member ID | — |  | [Member](Member.md) |
-| `ModifiedDate` |  | Time | — |  |  |
-| `RevNumber` |  | Number | — |  |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `BOMapClientRecordID` | Template Audit ClientID | The ClientID field is a free form text field that can be used when importing data to uniquely look up a record for update. This record identifier can either be system-generated or defined by the user upon the initial import of record data. The ClientID has the database name "BOMapClientRecordID". | Text | — | yes | `budget_template_audit.BOMapClientRecordID · TEXT` |  |
+| `CreatedByID` | Created By | The Created By field is a system-populated field which captures the name of the member making changes to a record. | Member ID | — |  | `budget_template_audit.CreatedByID · TEXT` | [Member](Member.md) |
+| `CreatedDate` | Created Date | The Created Date field is a system-populated field which captures the date that a record was created. | Time | — |  | `budget_template_audit.CreatedDate · TEXT` |  |
+| `ModifiedByID` | Modified By | The Modified By field is a system-populated field which captures the name of the member who made a change to a record. | Member ID | — |  | `budget_template_audit.ModifiedByID · TEXT` | [Member](Member.md) |
+| `ModifiedDate` | Modified Date | The Modified Date field is a system-populated field which captures the date that a modification is made to a record. | Time | — |  | `budget_template_audit.ModifiedDate · TEXT` |  |
+| `RevNumber` | Rev Number | The Rev Number field indicates how many times a record has been modified. This value of the field increases by 1 each time the record is modified. | Number | — |  | `budget_template_audit.RevNumber · TEXT` |  |

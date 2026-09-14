@@ -11,6 +11,9 @@ Source: `data-fields/audit-history-tables.md`
 |  | Value |
 |---|---|
 | Fields declared | 14 |
+| Fields with a vendor definition | 14 of 14 inventoried |
+| Physical tables | — |
+| Replication database | — |
 | Catalogued fields | 14 (14 global, 0 firm) |
 | Physical tables | 0 |
 | Referenced by | 0 keys from 0 record types |
@@ -23,6 +26,18 @@ Source: `data-fields/audit-history-tables.md`
 ### Tenant-scoped, one join deep
 
 **Derived.** This record carries no FirmID of its own. It hangs off ProjectEntity, and tenant isolation has to be enforced by joining to that row and filtering on its FirmID — or it is not enforced at all. 161 of the 223 record types are shaped this way.
+
+### 14 fields carry a vendor definition
+
+**Observed.** 14 of this record's 14 inventoried fields have prose written by the vendor saying what the field is for. Open any field node to read it — this is the one source in the corpus that explains fields rather than listing them.
+
+### 1 field marked required
+
+**Observed.** The inventory marks 1 of this record's fields Required. Across the whole inventory that is 606 fields, which independently corroborates the 603 the corpus had derived from the Data Fields catalogue — two sources, arrived at separately, agreeing to within three.
+
+### 14 fields excluded from extraction
+
+**Observed.** Observed of the loader. The inventory marks 14 of this record's fields as not extracted to PostgreSQL, so the replication target creates no column for them. They still exist in Lx; anything reading the replica rather than the product will not see them.
 
 ## Rules that govern it
 
@@ -42,47 +57,47 @@ Source: `data-fields/audit-history-tables.md`
 
 Typed pointers to other records. Lx names each FK type after the table it points at, so the relational model is declared rather than implied.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `GroupID` |  | item ID | Global |  | unresolved |
-| `ProjectEntityID` |  | Entity ID | Global |  | [ProjectEntity](ProjectEntity.md) |
-| `SubGroupID` |  | item ID | Global |  | unresolved |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `GroupID` |  | The RGAF group ID of the field being audited. | item ID | Global |  | not extracted | unresolved |
+| `ProjectEntityID` |  | The ProjectEntityID is the Base Entity System Identifier for associated tasks, folders, documents, forms, and other records. It is assigned automatically by the system, and is not editable. | Entity ID | Global |  | not extracted | [ProjectEntity](ProjectEntity.md) |
+| `SubGroupID` |  | The RGAF subgroup ID of the field being audited. | item ID | Global |  | not extracted | unresolved |
 
 ### Coded values (drop-downs) (1)
 
 Fields bound to a master code table. Every one of these is a place where an administrator, not a developer, controls the allowed values.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `CodeSQLTableID` |  | Dropdown (SQL Table Code) | Global |  | SQL Table Code |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `CodeSQLTableID` |  | The database table name of the field that was updated. | Dropdown (SQL Table Code) | Global |  | not extracted | SQL Table Code |
 
 ### Quantities (1)
 
 Counts, areas and other plain numeric measures.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `ObjectID` |  | Number | Global |  |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `ObjectID` |  | The primary key of the record of the field being audited. | Number | Global |  | not extracted |  |
 
 ### Text & notes (7)
 
 Free text. Notably, free text is never allowed to drive a conditional display rule.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `AccessorName` |  | Text | Global | yes |  |
-| `AuditAction` |  | Text | Global |  |  |
-| `EntityName` |  | Text | Global |  |  |
-| `FieldName` |  | Text | Global |  |  |
-| `NewValue` |  | Text | Global |  |  |
-| `OldValue` |  | Text | Global |  |  |
-| `ScriptName` |  | Text | Global |  |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `AccessorName` |  | An accessor name is the database column name corresponding to the record being audited. | Text | Global | yes | not extracted |  |
+| `AuditAction` |  | The action taken. There are three types of actions: Add, Update, and Delete. | Text | Global |  | not extracted |  |
+| `EntityName` |  | The entity name where the field was updated. | Text | Global |  | not extracted |  |
+| `FieldName` |  | The user-facing label of the field that was updated. | Text | Global |  | not extracted |  |
+| `NewValue` |  | The new value of the field that was updated. | Text | Global |  | not extracted |  |
+| `OldValue` |  | The old value of the field that was updated. | Text | Global |  | not extracted |  |
+| `ScriptName` |  | The RGAF accessor name of the field being audited. | Text | Global |  | not extracted |  |
 
 ### Audit & record keeping (2)
 
 Who created and changed the record, and the identifiers that survive migration.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `CreatedByID` |  | Member ID | Global |  | [Member](Member.md) |
-| `CreatedDate` |  | Time | Global |  |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `CreatedByID` |  | The Created By field is a system-populated field which captures the name of the member making changes to a record. | Member ID | Global |  | not extracted | [Member](Member.md) |
+| `CreatedDate` |  | The Created Date field is a system-populated field which captures the date that a record was created. | Time | Global |  | not extracted |  |

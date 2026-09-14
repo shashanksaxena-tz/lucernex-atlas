@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Code tables — the 207 platform drop-downs &middot; Lx Vault</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="../../atlas.css">
+<link rel="stylesheet" href="../../research/research.css">
+<link rel="stylesheet" href="../vault.css">
+</head><body><style id="lxg">body{visibility:hidden}
+#lxgate{visibility:visible;position:fixed;inset:0;z-index:9999;display:flex;
+align-items:center;justify-content:center;background:#0f172a;
+font-family:'IBM Plex Sans',system-ui,sans-serif}
+#lxgate form{background:#fff;padding:30px 32px;border-radius:12px;width:310px;
+box-shadow:0 20px 60px rgba(0,0,0,.35)}
+#lxgate h2{margin:0 0 4px;font-size:19px;color:#0f172a}
+#lxgate p{margin:0 0 18px;font-size:12.5px;color:#64748b;line-height:1.5}
+#lxgate label{display:block;font-size:11px;text-transform:uppercase;
+letter-spacing:.07em;color:#64748b;margin:0 0 5px}
+#lxgate input{width:100%;box-sizing:border-box;padding:9px 11px;margin:0 0 14px;
+border:1px solid #cbd5e1;border-radius:7px;font-size:14px}
+#lxgate button{width:100%;padding:10px;border:0;border-radius:7px;
+background:#b4530a;color:#fff;font-size:14px;font-weight:600;cursor:pointer}
+#lxgate .err{color:#b91c1c;font-size:12px;margin:0 0 10px;display:none}</style>
+<div id="lxgate"><form onsubmit="return lxg(event)">
+<h2>Lx Atlas</h2>
+<p>Internal documentation. Not a security boundary &mdash; see
+<code>gate.py</code>.</p>
+<p class="err" id="lxge">Incorrect.</p>
+<label for="lxgu">User</label><input id="lxgu" autocomplete="username" autofocus>
+<label for="lxgp">Password</label><input id="lxgp" type="password"
+autocomplete="current-password">
+<button type="submit">Enter</button></form></div>
+<script>
+function lxgOpen(){var g=document.getElementById('lxgate');if(g)g.remove();
+var s=document.getElementById('lxg');if(s)s.remove();
+document.body.style.visibility='visible';}
+function lxg(ev){ev.preventDefault();
+if(document.getElementById('lxgu').value==='admin'&&
+   document.getElementById('lxgp').value==='admin'){
+ try{sessionStorage.setItem('lxg','1');}catch(e){}
+ lxgOpen();return false;}
+document.getElementById('lxge').style.display='block';return false;}
+try{if(sessionStorage.getItem('lxg')==='1')
+ document.addEventListener('DOMContentLoaded',lxgOpen);}catch(e){}
+</script>
+<header><b>Lx Atlas</b>
+<nav><a href="../../index.html">Overview</a><a href="../../atlas.html#/map?set=feature">Feature map</a>
+<a href="../../atlas.html">Interactive app</a>
+<a href="../../research/index.html">Research</a>
+<a href="../../research/screens.html">Screens</a>
+<a href="../index.html" class="on">Vault</a>
+<a href="../../questions.html">Open questions</a></nav></header>
+<main><p class="crumb"><a href="../../index.html">Atlas</a> &rsaquo;
+<a href="../index.html">Vault</a> &rsaquo; Code tables — the 207 platform drop-downs</p><div class="fm"><span>concept</span><span>configuration</span><span>reference-data</span><span>core</span><span class="ev">Observed</span></div><p>Every platform drop-down in Lx is a set of rows in one generic editor (<code>FirmCodeEdit.jsp</code>), discriminated by a numeric <strong><code>TableType</code></strong>. There are <strong>207</strong> of them, and both tenants carry the same 207 with the same ids and names — see <a href="../../../findings/finding-platform-seeded-by-id.html">finding-platform-seeded-by-id</a>.</p><ul><li>Ids fall in two bands: <code>2000</code>–<code>2190</code> (<strong>190</strong> tables) and <code>3000</code>–<code>3016</code> (<strong>17</strong>).</li><li>The <strong>3000 band is behaviour-bearing</strong>. <code>Expense Type</code> (<code>3013</code>) is the exemplar: <code>CodeExpenseType</code> carries 31 fields including <code>CodeSLScheduleID</code>, <code>CodeASC842ScheduleID</code>, <code>CodeIFRS16ScheduleID</code> — <strong>choosing an expense type is choosing which accounting schedules the money flows into</strong>. A row is a routing decision, not a label.</li><li><strong>The band hypothesis is refuted as a general rule.</strong> Schedule-type tables <code>2161</code>–<code>2163</code> (24 fields each) and <code>Issue Type</code> <code>2035</code> (19 fields) are 2000-band yet behaviour-bearing, while <code>Sales Type</code> (<code>3012</code>) is a bare lookup. The band is probably a registration-order artefact.</li><li><code>2090</code> is absent from the sequence — inferred retired.</li><li>The value census across all 207 at <a href="../../../tenants/tenant-american-freight.html">AF</a>: <strong>73 populated, 134 empty, 1,140 values</strong>. Three tables hold 56% of them.</li></ul><p><strong>Deletability is a per-row server-supplied boolean</strong>, <code>isReadOnlyRecord</code>, read straight out of the grid renderer. There is no count, no threshold, no usage lookup — see <a href="../../../findings/finding-no-where-used-precedent.html">finding-no-where-used-precedent</a>, which retracts an earlier and load-bearing inference.</p><p>A separate registry, <a href="../../client-drop-down.html">Client Drop Downs</a>, holds the firm&#x27;s own tables. The two are different screens over different stores, not two views of one thing.</p><p>Source: <a href="../../docs/data-model/code-table-registry.html"><code>data-model/code-table-registry.md</code></a> · <a href="../../docs/features/drop-downs-code-tables/README.html"><code>features/drop-downs-code-tables/</code></a></p><div class="backlinks"><b>Linked from &middot; 21</b><a href="../00-start-here.html">00-start-here</a><a href="caveat-labels-are-tenant-local.html">caveat-labels-are-tenant-local</a><a href="client-drop-down.html">client-drop-down</a><a href="form-vs-page.html">form-vs-page</a><a href="hub-and-spoke.html">hub-and-spoke</a><a href="one-engine-three-standards.html">one-engine-three-standards</a><a href="publish-and-fork.html">publish-and-fork</a><a href="../entities/CodeExpenseType.html">CodeExpenseType</a><a href="../entities/CodeIssueType.html">CodeIssueType</a><a href="../entities/Sales.html">Sales</a><a href="../entities/WorkFlow.html">WorkFlow</a><a href="../features/feature-custom-lists.html">feature-custom-lists</a><a href="../features/feature-drop-downs-code-tables.html">feature-drop-downs-code-tables</a><a href="../findings/finding-no-where-used-precedent.html">finding-no-where-used-precedent</a><a href="../findings/finding-platform-seeded-by-id.html">finding-platform-seeded-by-id</a><a href="../findings/finding-rules-store-labels-not-ids.html">finding-rules-store-labels-not-ids</a><a href="../findings/finding-tenants-differ-by-one-feature.html">finding-tenants-differ-by-one-feature</a><a href="../open-questions/q-bbw-01-isreadonlyrecord.html">q-bbw-01-isreadonlyrecord</a><a href="../rules/rule-LAY-R-161.html">rule-LAY-R-161</a><a href="../tenants/tenant-bbw.html">tenant-bbw</a><a href="../tenants/tenant-comparison.html">tenant-comparison</a></div></main></body></html>

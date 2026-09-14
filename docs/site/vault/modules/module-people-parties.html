@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>People and parties &middot; Lx Vault</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="../../atlas.css">
+<link rel="stylesheet" href="../../research/research.css">
+<link rel="stylesheet" href="../vault.css">
+</head><body><style id="lxg">body{visibility:hidden}
+#lxgate{visibility:visible;position:fixed;inset:0;z-index:9999;display:flex;
+align-items:center;justify-content:center;background:#0f172a;
+font-family:'IBM Plex Sans',system-ui,sans-serif}
+#lxgate form{background:#fff;padding:30px 32px;border-radius:12px;width:310px;
+box-shadow:0 20px 60px rgba(0,0,0,.35)}
+#lxgate h2{margin:0 0 4px;font-size:19px;color:#0f172a}
+#lxgate p{margin:0 0 18px;font-size:12.5px;color:#64748b;line-height:1.5}
+#lxgate label{display:block;font-size:11px;text-transform:uppercase;
+letter-spacing:.07em;color:#64748b;margin:0 0 5px}
+#lxgate input{width:100%;box-sizing:border-box;padding:9px 11px;margin:0 0 14px;
+border:1px solid #cbd5e1;border-radius:7px;font-size:14px}
+#lxgate button{width:100%;padding:10px;border:0;border-radius:7px;
+background:#b4530a;color:#fff;font-size:14px;font-weight:600;cursor:pointer}
+#lxgate .err{color:#b91c1c;font-size:12px;margin:0 0 10px;display:none}</style>
+<div id="lxgate"><form onsubmit="return lxg(event)">
+<h2>Lx Atlas</h2>
+<p>Internal documentation. Not a security boundary &mdash; see
+<code>gate.py</code>.</p>
+<p class="err" id="lxge">Incorrect.</p>
+<label for="lxgu">User</label><input id="lxgu" autocomplete="username" autofocus>
+<label for="lxgp">Password</label><input id="lxgp" type="password"
+autocomplete="current-password">
+<button type="submit">Enter</button></form></div>
+<script>
+function lxgOpen(){var g=document.getElementById('lxgate');if(g)g.remove();
+var s=document.getElementById('lxg');if(s)s.remove();
+document.body.style.visibility='visible';}
+function lxg(ev){ev.preventDefault();
+if(document.getElementById('lxgu').value==='admin'&&
+   document.getElementById('lxgp').value==='admin'){
+ try{sessionStorage.setItem('lxg','1');}catch(e){}
+ lxgOpen();return false;}
+document.getElementById('lxge').style.display='block';return false;}
+try{if(sessionStorage.getItem('lxg')==='1')
+ document.addEventListener('DOMContentLoaded',lxgOpen);}catch(e){}
+</script>
+<header><b>Lx Atlas</b>
+<nav><a href="../../index.html">Overview</a><a href="../../atlas.html#/map?set=feature">Feature map</a>
+<a href="../../atlas.html">Interactive app</a>
+<a href="../../research/index.html">Research</a>
+<a href="../../research/screens.html">Screens</a>
+<a href="../index.html" class="on">Vault</a>
+<a href="../../questions.html">Open questions</a></nav></header>
+<main><p class="crumb"><a href="../../index.html">Atlas</a> &rsaquo;
+<a href="../index.html">Vault</a> &rsaquo; People and parties</p><div class="fm"><span>module</span><span>people</span><span class="ev">Derived</span></div><p><strong>10 objects · 301 fields · rules <code>PPL-R-001</code>…<code>PPL-R-013</code></strong></p><p>Everyone the system knows about — and the load-bearing finding is that <strong><a href="../../../entities/Person.html">Person</a> is a second supertype</strong>, alongside <a href="../../../entities/ProjectEntity.html">ProjectEntity</a>.</p><p>Entities: <a href="../../../entities/Member.html">Member</a> · <a href="../../../entities/Person.html">Person</a> · <a href="../../../entities/NonMember.html">NonMember</a> · <a href="../../../entities/Employer.html">Employer</a> · <a href="../../../entities/Organization.html">Organization</a></p><ul><li><a href="../../../entities/Person.html">Person</a> and <a href="../../../entities/NonMember.html">NonMember</a> are <strong>field-for-field identical</strong>; <a href="../../../entities/Member.html">Member</a> is that block plus 44 login columns, on a shared <code>PersonID</code> (<strong>rule-PPL-R-001</strong>).</li><li><strong>There is no <code>Vendor</code>, <code>Landlord</code> or <code>Tenant</code> object.</strong> All three are <a href="../../../entities/Employer.html">Employer</a> (<strong>rule-PPL-R-004</strong>).</li><li><a href="../../../entities/Member.html">Member</a> has <strong>290 inbound FKs and 240 of them are <a href="../../../concepts/audit-trail.html">audit stamps</a></strong> (<strong>rule-PPL-R-007</strong>).</li><li>A member&#x27;s routable identity is three axes — and <strong>production routing barely uses them</strong> (<a href="../../../findings/finding-routing-is-to-named-people.html">finding-routing-is-to-named-people</a>).</li><li>The eight approval-amount band columns on <a href="../../../entities/Member.html">Member</a> are read by <strong>no</strong> observed workflow field (<strong>rule-PPL-R-013</strong>).</li></ul><p><strong>The module&#x27;s largest evidence gap:</strong> six Member Administration admin routes are Observed and <strong>none of the six screens was opened</strong>.</p><p>Rules: <strong>rules-people-parties</strong> · <a href="../../docs/modules/people-parties/README.html"><code>modules/people-parties/</code></a></p><div class="backlinks"><b>Linked from &middot; 4</b><a href="../entities/Employer.html">Employer</a><a href="../entities/Member.html">Member</a><a href="../entities/NonMember.html">NonMember</a><a href="../entities/Person.html">Person</a></div></main></body></html>

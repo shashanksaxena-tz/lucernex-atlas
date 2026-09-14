@@ -21,10 +21,14 @@ function fromCurated(c,mod){
 /* What a single column is, said in a sentence a reader can use: the label the
    user sees, who owns the field, whether it is required, and what its catalogued
    type code means. A field node used to say "a text field on Contract". */
-const FLAG_FIRM=1,FLAG_REQ=2,FLAG_RO=4;
-function fieldProse(obj,col,ftype,fam,label,flags,code){
+const FLAG_FIRM=1,FLAG_REQ=2,FLAG_RO=4,FLAG_INV_REQ=8,FLAG_FUNC=16,FLAG_NOPG=32;
+function fieldProse(obj,col,ftype,fam,label,flags,code,def,role,pg){
   const s=[];
+  /* the vendor's own definition leads: it is the only source that says what the
+     field is FOR rather than what it is called */
+  if(def) s.push(def);
   if(label) s.push(`Shown to users as \u201c${label}\u201d.`);
+  if(role&&D.roleNote&&D.roleNote[role]) s.push(`In the schema it is ${D.roleNote[role]}.`);
   s.push(fam==='fk'
     ?`A typed foreign key on ${obj}, declared as ${ftype} \u2014 the type names the record it points at.`
     :fam==='dropdown'
@@ -35,8 +39,16 @@ function fieldProse(obj,col,ftype,fam,label,flags,code){
   if(code&&D.typeLegend&&D.typeLegend[code]) s.push(`Catalogued as ${code}: ${D.typeLegend[code]}`);
   if(flags&FLAG_FIRM) s.push('Firm scope \u2014 this tenant defined it, the platform did not ship it. Firm fields are physical Firm_-prefixed columns, so adding one is a schema change.');
   else if(code) s.push('Global scope \u2014 shipped by the platform for every tenant.');
-  if(flags&FLAG_REQ) s.push('The catalogue marks it required. Required-ness has no layout-level layer: the asterisk a user sees is this flag, rendered at paint time.');
+  if(flags&(FLAG_REQ|FLAG_INV_REQ)) s.push(
+    ((flags&FLAG_REQ)&&(flags&FLAG_INV_REQ))
+      ? 'Both the Data Fields catalogue and the field inventory mark it required \u2014 two sources, arrived at separately, agreeing.'
+      : 'Marked required by '+((flags&FLAG_REQ)?'the Data Fields catalogue':'the field inventory')+'.');
+  if(flags&(FLAG_REQ|FLAG_INV_REQ)) s.push('Required-ness has no layout-level layer: the asterisk a user sees is this flag, rendered at paint time.');
   if(flags&FLAG_RO) s.push('Read-only in the catalogue \u2014 written by the engine, not by a user.');
+  if(flags&FLAG_FUNC) s.push('A functional field: it carries business meaning rather than plumbing.');
+  if(pg){const bit=pg.split(':');
+    s.push('Lands in the replication target as '+bit[0]+(bit[1]?', typed '+bit[1]:'')+'.');}
+  else if(flags&FLAG_NOPG) s.push('Not extracted to PostgreSQL \u2014 the replication loader creates no column for it, so anything reading the replica rather than the product will not see this field.');
   if(ftype==='Currency'||ftype==='Percentage') s.push('Stored as TEXT in the physical database, like 6,882 of the 7,069 exported columns; a rebuild has to impose its own BigDecimal typing.');
   return s.join(' ');
 }
@@ -83,9 +95,11 @@ function childrenOf(n){
   else if(n.kind==='group'){
     k=n.fields.map(f=>{
       const fn=f[0],ft=f[1],fam=f[2],label=f[3]||'',flags=f[4]||0,code=f[5]||'';
-      return N(fn,'field',{mod:n.mod,obj:n.obj,ftype:ft,fam,label,flags,code,conf:'observed',
-        src:code?'docs/data-fields/all-fields.csv':'_lucernex_objects_summary.txt',
-        detail:fieldProse(n.obj,fn,ft,fam,label,flags,code)});});
+      const def=f[6]||'',role=f[7]||'',pg=f[8]||'';
+      return N(fn,'field',{mod:n.mod,obj:n.obj,ftype:ft,fam,label,flags,code,def,role,pg,conf:'observed',
+        src:def?'docs/data-model/pg/bbw-field-inventory.csv'
+               :(code?'docs/data-fields/all-fields.csv':'_lucernex_objects_summary.txt'),
+        detail:fieldProse(n.obj,fn,ft,fam,label,flags,code,def,role,pg)});});
   }
   else if(n.kind==='field'){
     k=[N(n.ftype,'type',{mod:n.mod,obj:n.obj,ftype:n.ftype,fam:n.fam,col:n.name,code:n.code,conf:'observed',
@@ -249,6 +263,9 @@ function selectNode(n){
     kv.push(['Fields',fmt(o.n)]);kv.push(['Postgres table',o.t||'none']);
     if(o.tc>1)kv.push(['Physical tables',fmt(o.tc)]);
     if(o.cat)kv.push(['Catalogued fields',`${fmt(o.cat[0])} (${fmt(o.cat[1])} global, ${fmt(o.cat[2])} firm)`]);
+    if(o.inv)kv.push(['Fields with a definition',`${fmt(o.inv[1])} of ${fmt(o.inv[0])}`]);
+    if(o.pgt&&o.pgt.length)kv.push(['Physical tables',o.pgt.join(', ')]);
+    if(o.pgdb)kv.push(['Replication database',o.pgdb]);
     kv.push(['Referenced by',fmt((edgesTo[n.obj]||[]).length)+' keys']);
     kv.push(['Points at',fmt((edgesFrom[n.obj]||[]).filter(e=>e[3]).length)+' records']);
     const rs=(RULES.byEntity||{})[n.obj]||[];
@@ -262,8 +279,13 @@ function selectNode(n){
     kv.push(['Declared type',n.ftype]);kv.push(['On record',n.obj]);
     if(n.code)kv.push(['Catalogue type',n.code]);
     kv.push(['Scope',(n.flags&FLAG_FIRM)?'Firm \u2014 defined by this tenant':(n.code?'Global \u2014 shipped by the platform':'not catalogued')]);
-    if(n.flags&FLAG_REQ)kv.push(['Required','yes, in the catalogue']);
+    if(n.flags&(FLAG_REQ|FLAG_INV_REQ))kv.push(['Required',
+      ((n.flags&FLAG_REQ)&&(n.flags&FLAG_INV_REQ))?'yes \u2014 catalogue and inventory agree'
+      :((n.flags&FLAG_REQ)?'yes, in the catalogue':'yes, in the field inventory')]);
     if(n.flags&FLAG_RO)kv.push(['Read-only','yes']);
+    if(n.role&&D.roleNote&&D.roleNote[n.role])kv.push(['Key role',n.role]);
+    if(n.pg)kv.push(['Physical column',n.pg.replace(':',' \u00b7 ')]);
+    else if(n.flags&FLAG_NOPG)kv.push(['Physical column','not extracted to the replica']);
   }
   if(n.kind==='module'){const m=modOf(n.mod);
     if(m&&m.lead)extra=`<p>${esc(m.lead)}</p>`;}

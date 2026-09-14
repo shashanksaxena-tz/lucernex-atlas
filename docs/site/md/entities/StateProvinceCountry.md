@@ -11,6 +11,9 @@ Source: `data-fields/small-miscellaneous-entities.md`
 |  | Value |
 |---|---|
 | Fields declared | 11 |
+| Fields with a vendor definition | 11 of 11 inventoried |
+| Physical tables | `state_province_country` |
+| Replication database | `lxr_drp_bbw` |
 | Catalogued fields | 11 (11 global, 0 firm) |
 | Physical tables | 1 |
 | Referenced by | 26 keys from 22 record types |
@@ -28,6 +31,22 @@ Source: `data-fields/small-miscellaneous-entities.md`
 
 **Observed.** 22 record types hold a foreign key into this one, so it sits at the centre of the relationship graph. Changing its key or its identity is a change to BudgetOptionTemplate, Competitor, Complex, Contract and 18 others.
 
+### Lands in state_province_country
+
+**Observed.** The field inventory names the physical destination of every column: one table in the database lxr_drp_bbw. Every field node carries its own table and column, so the mapping is per column, not per record.
+
+### A per-tenant database name
+
+**Derived.** The physical database is lxr_drp_bbw — the tenant's name is in the database name. That is one more piece of evidence for database-per-tenant and against a single shared schema, alongside the Firm_ columns.
+
+### 11 fields carry a vendor definition
+
+**Observed.** 11 of this record's 11 inventoried fields have prose written by the vendor saying what the field is for. Open any field node to read it — this is the one source in the corpus that explains fields rather than listing them.
+
+### 5 fields marked required
+
+**Observed.** The inventory marks 5 of this record's fields Required. Across the whole inventory that is 606 fields, which independently corroborates the 603 the corpus had derived from the Data Fields catalogue — two sources, arrived at separately, agreeing to within three.
+
 ## Rules that govern it
 
 | Rule | What it requires | Confidence |
@@ -40,40 +59,40 @@ Source: `data-fields/small-miscellaneous-entities.md`
 
 Percentage inputs and computed rates.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `TaxRate1` | Tax Rate 1 | Percentage | Global |  |  |
-| `TaxRate2` | Tax Rate 2 | Percentage | Global |  |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `TaxRate1` | Tax Rate 1 | The first tax rate for a given StateProvinceCountry record. | Percentage | Global |  | `state_province_country.TaxRate1 · TEXT` |  |
+| `TaxRate2` | Tax Rate 2 | The second tax rate for a given StateProvinceCountry record. | Percentage | Global |  | `state_province_country.TaxRate2 · TEXT` |  |
 
 ### Quantities (1)
 
 Counts, areas and other plain numeric measures.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `StateProvinceCountryID` | State Province Country RecID | Number | Global |  |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `StateProvinceCountryID` | State Province Country RecID | This field contains a Base Entity System Identifier for your record. It is assigned automatically by the system, and is not editable. | Number | Global |  | `state_province_country.StateProvinceCountryID · TEXT` |  |
 
 ### Text & notes (5)
 
 Free text. Notably, free text is never allowed to drive a conditional display rule.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `Country` |  | Text | Global | yes |  |
-| `ISOAlpha2Code` | ISO Alpha #2 Code | Text | Global | yes |  |
-| `ISOAlpha3Code` | ISO Alpha #3 Code | Text | Global | yes |  |
-| `StateProvince` | State Province | Text | Global | yes |  |
-| `StateProvinceCountryName` | State Province Country | Text | Global |  |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `Country` |  | This field determines the country of the StateProvinceCountry record. | Text | Global | yes | `state_province_country.Country · TEXT` |  |
+| `ISOAlpha2Code` | ISO Alpha #2 Code | The ISO Alpha 2 Code of the given StateProvinceCountry record (such as US, MX, CA). | Text | Global | yes | `state_province_country.ISOAlpha2Code · TEXT` |  |
+| `ISOAlpha3Code` | ISO Alpha #3 Code | The ISO Alpha 3 Code of the given StateProvinceCountry record (such as USA, MEX, CAN). | Text | Global | yes | `state_province_country.ISOAlpha3Code · TEXT` |  |
+| `StateProvince` | State Province | The State / Province abbreviation, such as TX for Texas. | Text | Global | yes | `state_province_country.StateProvince · TEXT` |  |
+| `StateProvinceCountryName` | State Province Country | The state/province and country, separated by a comma (such as Tx, United States). | Text | Global |  | `state_province_country.StateProvinceCountryName · TEXT` |  |
 
 ### Audit & record keeping (3)
 
 Who created and changed the record, and the identifiers that survive migration.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `BOMapClientRecordID` | State Province Country ClientID | Text | Global | yes |  |
-| `ModifiedByID` | Modified By | Member ID | Global |  | [Member](Member.md) |
-| `ModifiedDate` | Modified Date | Time | Global |  |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `BOMapClientRecordID` | State Province Country ClientID | The ClientID field is a free form text field that can be used when importing data to uniquely look up a record for update. This record identifier can either be system-generated or defined by the user upon the initial import of record data. The ClientID has the database name "BOMapClientRecordID". | Text | Global | yes | `state_province_country.BOMapClientRecordID · TEXT` |  |
+| `ModifiedByID` | Modified By | Text that has both the state/province and country, separated by a comma. (e.g. Tx, United States) | Member ID | Global |  | `state_province_country.ModifiedByID · TEXT` | [Member](Member.md) |
+| `ModifiedDate` | Modified Date | The Modified Date field is a system-populated field which captures the date that a modification is made to a record. | Time | Global |  | `state_province_country.ModifiedDate · TEXT` |  |
 
 ## What points here (26 keys)
 

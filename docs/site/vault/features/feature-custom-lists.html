@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Custom lists &middot; Lx Vault</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="../../atlas.css">
+<link rel="stylesheet" href="../../research/research.css">
+<link rel="stylesheet" href="../vault.css">
+</head><body><style id="lxg">body{visibility:hidden}
+#lxgate{visibility:visible;position:fixed;inset:0;z-index:9999;display:flex;
+align-items:center;justify-content:center;background:#0f172a;
+font-family:'IBM Plex Sans',system-ui,sans-serif}
+#lxgate form{background:#fff;padding:30px 32px;border-radius:12px;width:310px;
+box-shadow:0 20px 60px rgba(0,0,0,.35)}
+#lxgate h2{margin:0 0 4px;font-size:19px;color:#0f172a}
+#lxgate p{margin:0 0 18px;font-size:12.5px;color:#64748b;line-height:1.5}
+#lxgate label{display:block;font-size:11px;text-transform:uppercase;
+letter-spacing:.07em;color:#64748b;margin:0 0 5px}
+#lxgate input{width:100%;box-sizing:border-box;padding:9px 11px;margin:0 0 14px;
+border:1px solid #cbd5e1;border-radius:7px;font-size:14px}
+#lxgate button{width:100%;padding:10px;border:0;border-radius:7px;
+background:#b4530a;color:#fff;font-size:14px;font-weight:600;cursor:pointer}
+#lxgate .err{color:#b91c1c;font-size:12px;margin:0 0 10px;display:none}</style>
+<div id="lxgate"><form onsubmit="return lxg(event)">
+<h2>Lx Atlas</h2>
+<p>Internal documentation. Not a security boundary &mdash; see
+<code>gate.py</code>.</p>
+<p class="err" id="lxge">Incorrect.</p>
+<label for="lxgu">User</label><input id="lxgu" autocomplete="username" autofocus>
+<label for="lxgp">Password</label><input id="lxgp" type="password"
+autocomplete="current-password">
+<button type="submit">Enter</button></form></div>
+<script>
+function lxgOpen(){var g=document.getElementById('lxgate');if(g)g.remove();
+var s=document.getElementById('lxg');if(s)s.remove();
+document.body.style.visibility='visible';}
+function lxg(ev){ev.preventDefault();
+if(document.getElementById('lxgu').value==='admin'&&
+   document.getElementById('lxgp').value==='admin'){
+ try{sessionStorage.setItem('lxg','1');}catch(e){}
+ lxgOpen();return false;}
+document.getElementById('lxge').style.display='block';return false;}
+try{if(sessionStorage.getItem('lxg')==='1')
+ document.addEventListener('DOMContentLoaded',lxgOpen);}catch(e){}
+</script>
+<header><b>Lx Atlas</b>
+<nav><a href="../../index.html">Overview</a><a href="../../atlas.html#/map?set=feature">Feature map</a>
+<a href="../../atlas.html">Interactive app</a>
+<a href="../../research/index.html">Research</a>
+<a href="../../research/screens.html">Screens</a>
+<a href="../index.html" class="on">Vault</a>
+<a href="../../questions.html">Open questions</a></nav></header>
+<main><p class="crumb"><a href="../../index.html">Atlas</a> &rsaquo;
+<a href="../index.html">Vault</a> &rsaquo; Custom lists</p><div class="fm"><span>feature</span><span>configuration</span><span class="ev">Observed</span></div><p>Concept: <a href="../../../concepts/custom-list.html">custom-list</a>. Entity: <a href="../../../entities/ClientListRow.html">ClientListRow</a>.</p><p>A tenant-authored mini record type — <strong>a <a href="../../../concepts/form-vs-page.html">Form</a> without the workflow</strong>. <code>CodeIssueType.IsWorkFlow</code> is the only difference, so Manage Forms and Manage Custom Lists are two views over one <a href="../../../concepts/code-table.html">code-table</a>.</p><p>Form attachability is <strong>11 <code>IsValidFor…</code> boolean columns</strong>, one of them <code>IsValidForEquipContract</code> — a row of booleans, not a join table.</p><p>Five lists at <a href="../../../tenants/tenant-american-freight.html">AF</a>, six at <a href="../../../tenants/tenant-bbw.html">BBW</a>. <code>Client Request Log</code> binds to <a href="../../../entities/Program.html">Portfolio</a> with field prefix <code>CRL_</code> and layout <code>96279</code>; the rest bind to <a href="../../../entities/Contract.html">Contract</a>.</p><p><strong>And the storage does not add up</strong> — <a href="../../../entities/ClientListRow.html">ClientListRow</a> has 24 columns, none prefixed, and five generic <code>SubValue</code> slots <strong>all typed <code>Currency</code></strong>, against a list showing 13 leaf fields. Two readings survive and the corpus recorded it open rather than resolving it.</p><p>Screens: <strong>screen-manage-custom-lists</strong></p><p><a href="../../docs/features/custom-lists/README.html"><code>features/custom-lists/</code></a></p></main></body></html>

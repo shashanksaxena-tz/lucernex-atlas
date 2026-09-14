@@ -11,6 +11,9 @@ Source: `data-fields/work-flow.md`
 |  | Value |
 |---|---|
 | Fields declared | 19 |
+| Fields with a vendor definition | 18 of 19 inventoried |
+| Physical tables | `work_flow` |
+| Replication database | `lxr_drp_bbw` |
 | Catalogued fields | 20 (20 global, 0 firm) |
 | Physical tables | 1 |
 | Referenced by | 5 keys from 5 record types |
@@ -24,6 +27,22 @@ Source: `data-fields/work-flow.md`
 
 **Derived.** This record carries no FirmID of its own. It hangs off ProjectEntity, and tenant isolation has to be enforced by joining to that row and filtering on its FirmID — or it is not enforced at all. 161 of the 223 record types are shaped this way.
 
+### Lands in work_flow
+
+**Observed.** The field inventory names the physical destination of every column: one table in the database lxr_drp_bbw. Every field node carries its own table and column, so the mapping is per column, not per record.
+
+### A per-tenant database name
+
+**Derived.** The physical database is lxr_drp_bbw — the tenant's name is in the database name. That is one more piece of evidence for database-per-tenant and against a single shared schema, alongside the Firm_ columns.
+
+### 18 fields carry a vendor definition
+
+**Observed.** 18 of this record's 19 inventoried fields have prose written by the vendor saying what the field is for. Open any field node to read it — this is the one source in the corpus that explains fields rather than listing them.
+
+### 6 fields marked required
+
+**Observed.** The inventory marks 6 of this record's fields Required. Across the whole inventory that is 606 fields, which independently corroborates the 603 the corpus had derived from the Data Fields catalogue — two sources, arrived at separately, agreeing to within three.
+
 ## Rules that govern it
 
 | Rule | What it requires | Confidence |
@@ -36,76 +55,76 @@ Source: `data-fields/work-flow.md`
 
 Typed pointers to other records. Lx names each FK type after the table it points at, so the relational model is declared rather than implied.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `InitiatedByMemberID` | Initiated By Member | Member ID | Global |  | [Member](Member.md) |
-| `KickOffTaskID` | Kick Off Task | Task/Group ID | Global |  | [TaskGroup](TaskGroup.md) |
-| `ProjectEntityID` |  | Entity ID | — |  | [ProjectEntity](ProjectEntity.md) |
-| `WFApproverList` | WF Approver List | Work Flow Step Approver ID | Global |  | [WorkFlowStepApprover](WorkFlowStepApprover.md) |
-| `WorkFlowTemplateID` | Workflow Template | Work Flow ID | Global | yes | [WorkFlow](WorkFlow.md) |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `InitiatedByMemberID` | Initiated By Member | The member ID of the user who initiated the work flow. | Member ID | Global |  | `work_flow.InitiatedByMemberID · TEXT` | [Member](Member.md) |
+| `KickOffTaskID` | Kick Off Task | The ID of the schedule task that kicked off the work flow. | Task/Group ID | Global |  | `work_flow.KickOffTaskID · TEXT` | [TaskGroup](TaskGroup.md) |
+| `ProjectEntityID` |  |  | Entity ID | — |  | `work_flow.ProjectEntityID · TEXT` | [ProjectEntity](ProjectEntity.md) |
+| `WFApproverList` | WF Approver List | This field displays a pick list where you can select approvers assigned to the entity to approve the work flow. | Work Flow Step Approver ID | Global |  | `work_flow.WFApproverList · TEXT` | [WorkFlowStepApprover](WorkFlowStepApprover.md) |
+| `WorkFlowTemplateID` | Workflow Template | The ID of the work flow. | Work Flow ID | Global | yes | `work_flow.WorkFlowTemplateID · TEXT` | [WorkFlow](WorkFlow.md) |
 
 ### Soft references (1)
 
 Columns that name another record without a typed foreign key behind them - generic handles such as Entity ID and item ID that point at whichever table the row belongs to. These are the joins a rebuild has to make explicit.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `AdhocMemberID` | Ad Hoc Assignee | Member | Global |  |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `AdhocMemberID` | Ad Hoc Assignee | Select an ad hoc assignee from this field. | Member | Global |  | `work_flow.AdhocMemberID · TEXT` |  |
 
 ### Coded values (drop-downs) (2)
 
 Fields bound to a master code table. Every one of these is a place where an administrator, not a developer, controls the allowed values.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `CodeWorkFlowStatusID` | Status | Dropdown (Work Flow Status Code) | Global | yes | Work Flow Status Code |
-| `WorkFlowCodePriorityID` | Priority | Dropdown (Priority Code) | Global | yes | Priority Code |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `CodeWorkFlowStatusID` | Status | This field displays the status of the work flow on the Work Flows page. | Dropdown (Work Flow Status Code) | Global | yes | `work_flow.CodeWorkFlowStatusID · TEXT` | Work Flow Status Code |
+| `WorkFlowCodePriorityID` | Priority | The priority of the work flow. | Dropdown (Priority Code) | Global | yes | `work_flow.WorkFlowCodePriorityID · TEXT` | Priority Code |
 
 ### Quantities (2)
 
 Counts, areas and other plain numeric measures.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `NumberOfDaysOpen` | Number Of Days Open | Number | Global |  |  |
-| `WorkFlowID` | Work Flow RecID | Number | Global |  |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `NumberOfDaysOpen` | Number Of Days Open | This field captures how many days the work flow has been open. | Number | Global |  | `work_flow.NumberOfDaysOpen · TEXT` |  |
+| `WorkFlowID` | Work Flow RecID | This field contains a Base Entity System Identifier for your record. It is assigned automatically by the system, and is not editable. | Number | Global |  | `work_flow.WorkFlowID · VARCHAR(64) NOT NULL` |  |
 
 ### Dates & timestamps (1)
 
 Dates that drive schedules, and system timestamps.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `ClosedDate` | Closed Date | Date | Global |  |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `ClosedDate` | Closed Date | The date that the work flow was closed. | Date | Global |  | `work_flow.ClosedDate · TEXT` |  |
 
 ### Flags (2)
 
 Booleans. In this product they usually gate engine behaviour rather than describe the record.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `Inactive` | Inactive? | Boolean | Global | yes |  |
-| `IsCompleted` | Is Completed? | Boolean | Global |  |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `Inactive` | Inactive? | If true, this work flow has been deactivated on the Work Flow page. | Boolean | Global | yes | `work_flow.Inactive · TEXT` |  |
+| `IsCompleted` | Is Completed? | If true, this work flow has been completed. | Boolean | Global |  | `work_flow.IsCompleted · TEXT` |  |
 
 ### Text & notes (2)
 
 Free text. Notably, free text is never allowed to drive a conditional display rule.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `KickOffIssueID` | Kick Off Form | Text | Global |  |  |
-| `WorkFlowName` | Name | Text | Global | yes |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `KickOffIssueID` | Kick Off Form | The ID of the form that kicked off the work flow. | Text | Global |  | `work_flow.KickOffIssueID · TEXT` |  |
+| `WorkFlowName` | Name | The name of the work flow. | Text | Global | yes | `work_flow.WorkFlowName · TEXT` |  |
 
 ### Audit & record keeping (4)
 
 Who created and changed the record, and the identifiers that survive migration.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `BOMapClientRecordID` | Work Flow ClientID | Text | Global | yes |  |
-| `CreatedDate` | Created Date | Time | Global |  |  |
-| `ModifiedByID` | Modified By | Member ID | Global |  | [Member](Member.md) |
-| `ModifiedDate` | Modified Date | Time | Global |  |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `BOMapClientRecordID` | Work Flow ClientID | The ClientID field is a free form text field that can be used when importing data to uniquely look up a record for update. This record identifier can either be system-generated or defined by the user upon the initial import of record data. The ClientID has the database name "BOMapClientRecordID". | Text | Global | yes | `work_flow.BOMapClientRecordID · TEXT` |  |
+| `CreatedDate` | Created Date | The Created Date field is a system-populated field which captures the date that a record was created. | Time | Global |  | `work_flow.CreatedDate · TEXT` |  |
+| `ModifiedByID` | Modified By | The Modified By field is a system-populated field which captures the name of the member who made a change to a record. | Member ID | Global |  | `work_flow.ModifiedByID · TEXT` | [Member](Member.md) |
+| `ModifiedDate` | Modified Date | The Modified Date field is a system-populated field which captures the date that a modification is made to a record. | Time | Global |  | `work_flow.ModifiedDate · TEXT` |  |
 
 ## What points here (5 keys)
 

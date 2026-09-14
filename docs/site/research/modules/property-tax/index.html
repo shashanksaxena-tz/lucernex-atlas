@@ -49,6 +49,7 @@ try{if(sessionStorage.getItem('lxg')==='1')
 <a href="../../../entities/index.html">Record types</a><a href="../../../rules/index.html">Rules</a>
 <a href="../../index.html" class="on">Research</a>
 <a href="../../screens.html">Screens</a>
+<a href="../../../vault/index.html">Vault</a>
 <a href="../../../questions.html">Open questions</a></nav></header>
 <main><p class="crumb"><a href="../../../index.html">Atlas</a> &rsaquo;
 <a href="../../index.html">Research</a> &rsaquo; Property Tax — module overview</p><nav class="toc"><b>On this page</b><a href="#the-module-at-a-glance">The module at a glance</a><a href="#the-roll-up-and-the-one-redundancy-worth-flagging">The roll-up, and the one redundancy worth flagging</a><a href="#the-appeal-workflow">The appeal workflow</a><a href="#what-a-rebuild-must-not-get-wrong">What a rebuild must not get wrong</a><a href="#contents">Contents</a><a href="#open-questions">Open questions</a></nav><h1 id="property-tax-module-overview">Property Tax — module overview</h1><p><strong>Stated up front.</strong> Six objects, 163 fields, all <code>entity_scoped</code>, forming one coherent five-level roll-up under a single <code>Parcel</code> — never a <code>Facility</code>, never a <code>Contract</code> (<code>TAX-R-007</code>, corroborating <a href="../facilities-locations/location-vs-facility-vs-site.html"><code>../facilities-locations/location-vs-facility-vs-site.md</code></a>&#x27;s own finding that <code>Parcel</code> is the sole attachment point for this subsystem):</p><pre><code>Parcel

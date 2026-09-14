@@ -11,6 +11,9 @@ Source: `data-fields/template-audit.md`
 |  | Value |
 |---|---|
 | Fields declared | 18 |
+| Fields with a vendor definition | 17 of 18 inventoried |
+| Physical tables | `template_audit` |
+| Replication database | `lxr_drp_bbw` |
 | Catalogued fields | 17 (17 global, 0 firm) |
 | Physical tables | 1 |
 | Referenced by | 0 keys from 0 record types |
@@ -24,6 +27,22 @@ Source: `data-fields/template-audit.md`
 
 **Derived.** This record carries no FirmID of its own. It hangs off ProjectEntity, and tenant isolation has to be enforced by joining to that row and filtering on its FirmID — or it is not enforced at all. 161 of the 223 record types are shaped this way.
 
+### Lands in template_audit
+
+**Observed.** The field inventory names the physical destination of every column: one table in the database lxr_drp_bbw. Every field node carries its own table and column, so the mapping is per column, not per record.
+
+### A per-tenant database name
+
+**Derived.** The physical database is lxr_drp_bbw — the tenant's name is in the database name. That is one more piece of evidence for database-per-tenant and against a single shared schema, alongside the Firm_ columns.
+
+### 17 fields carry a vendor definition
+
+**Observed.** 17 of this record's 18 inventoried fields have prose written by the vendor saying what the field is for. Open any field node to read it — this is the one source in the corpus that explains fields rather than listing them.
+
+### 3 fields marked required
+
+**Observed.** The inventory marks 3 of this record's fields Required. Across the whole inventory that is 606 fields, which independently corroborates the 603 the corpus had derived from the Data Fields catalogue — two sources, arrived at separately, agreeing to within three.
+
 ## Rules that govern it
 
 | Rule | What it requires | Confidence |
@@ -36,65 +55,65 @@ Source: `data-fields/template-audit.md`
 
 Typed pointers to other records. Lx names each FK type after the table it points at, so the relational model is declared rather than implied.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `BudgetEntityTemplateID` | Budget Template | Template ID | Global |  | [EntityTemplate](EntityTemplate.md) |
-| `EntityTemplateID` | Entity Template | Template ID | Global | yes | [EntityTemplate](EntityTemplate.md) |
-| `FolderEntityTemplateID` | Folder Template | Template ID | Global |  | [EntityTemplate](EntityTemplate.md) |
-| `ProjectEntityID` |  | Entity ID | — |  | [ProjectEntity](ProjectEntity.md) |
-| `TaskEntityTemplateID` | Task Template | Template ID | Global |  | [EntityTemplate](EntityTemplate.md) |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `BudgetEntityTemplateID` | Budget Template | The ID of the budget template that was applied to the entity. | Template ID | Global |  | `template_audit.BudgetEntityTemplateID · TEXT` | [EntityTemplate](EntityTemplate.md) |
+| `EntityTemplateID` | Entity Template | The ID of the template type. | Template ID | Global | yes | `template_audit.EntityTemplateID · TEXT` | [EntityTemplate](EntityTemplate.md) |
+| `FolderEntityTemplateID` | Folder Template | The ID of the folder template that was applied to the entity. | Template ID | Global |  | `template_audit.FolderEntityTemplateID · TEXT` | [EntityTemplate](EntityTemplate.md) |
+| `ProjectEntityID` |  |  | Entity ID | — |  | `template_audit.ProjectEntityID · TEXT` | [ProjectEntity](ProjectEntity.md) |
+| `TaskEntityTemplateID` | Task Template | The ID of the schedule template that was applied to the entity. | Template ID | Global |  | `template_audit.TaskEntityTemplateID · TEXT` | [EntityTemplate](EntityTemplate.md) |
 
 ### Coded values (drop-downs) (1)
 
 Fields bound to a master code table. Every one of these is a place where an administrator, not a developer, controls the allowed values.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `CodeFolderActionIDList` | Folder Template Action List | Dropdown (Folder Template Action Code) | Global |  | Folder Template Action Code |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `CodeFolderActionIDList` | Folder Template Action List | This field is not implemented for this table. | Dropdown (Folder Template Action Code) | Global |  | `template_audit.CodeFolderActionIDList · TEXT` | Folder Template Action Code |
 
 ### Quantities (1)
 
 Counts, areas and other plain numeric measures.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `TemplateAuditID` | Template Audit RecID | Number | Global |  |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `TemplateAuditID` | Template Audit RecID | This field contains a Base Entity System Identifier for your record. It is assigned automatically by the system, and is not editable. | Number | Global |  | `template_audit.TemplateAuditID · VARCHAR(64) NOT NULL` |  |
 
 ### Dates & timestamps (3)
 
 Dates that drive schedules, and system timestamps.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `AppliedDate` | Applied Date | Time | Global | yes |  |
-| `ScheduleEndDate` | Schedule End Date | Date | Global |  |  |
-| `ScheduleStartDate` | Schedule Start Date | Date | Global |  |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `AppliedDate` | Applied Date | The date when the template was applied to an entity. | Time | Global | yes | `template_audit.AppliedDate · TEXT` |  |
+| `ScheduleEndDate` | Schedule End Date | The end date of the schedule. | Date | Global |  | `template_audit.ScheduleEndDate · TEXT` |  |
+| `ScheduleStartDate` | Schedule Start Date | The start date of the schedule. | Date | Global |  | `template_audit.ScheduleStartDate · TEXT` |  |
 
 ### Flags (1)
 
 Booleans. In this product they usually gate engine behaviour rather than describe the record.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `CopyFolderStructure` | Copy Folder Structure? | Boolean | Global |  |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `CopyFolderStructure` | Copy Folder Structure? | If the value of this field is true, a folder template has been applied. | Boolean | Global |  | `template_audit.CopyFolderStructure · TEXT` |  |
 
 ### Text & notes (1)
 
 Free text. Notably, free text is never allowed to drive a conditional display rule.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `EntityTemplateTypeName` | Entity Template Type | Text | Global |  |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `EntityTemplateTypeName` | Entity Template Type | The plain text name of the template type. | Text | Global |  | `template_audit.EntityTemplateTypeName · TEXT` |  |
 
 ### Audit & record keeping (6)
 
 Who created and changed the record, and the identifiers that survive migration.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `BOMapClientRecordID` | Template Audit ClientID | Text | Global | yes |  |
-| `CreatedByID` | Created By | Member ID | Global |  | [Member](Member.md) |
-| `CreatedDate` | Created Date | Time | Global |  |  |
-| `ModifiedByID` | Modified By | Member ID | Global |  | [Member](Member.md) |
-| `ModifiedDate` | Modified Date | Time | Global |  |  |
-| `RevNumber` | Rev Number | Number | Global |  |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `BOMapClientRecordID` | Template Audit ClientID | The ClientID field is a free form text field that can be used when importing data to uniquely look up a record for update. This record identifier can either be system-generated or defined by the user upon the initial import of record data. The ClientID has the database name "BOMapClientRecordID". | Text | Global | yes | `template_audit.BOMapClientRecordID · TEXT` |  |
+| `CreatedByID` | Created By | The Created By field is a system-populated field which captures the name of the member making changes to a record. | Member ID | Global |  | `template_audit.CreatedByID · TEXT` | [Member](Member.md) |
+| `CreatedDate` | Created Date | The Created Date field is a system-populated field which captures the date that a record was created. | Time | Global |  | `template_audit.CreatedDate · TEXT` |  |
+| `ModifiedByID` | Modified By | The Modified By field is a system-populated field which captures the name of the member who made a change to a record. | Member ID | Global |  | `template_audit.ModifiedByID · TEXT` | [Member](Member.md) |
+| `ModifiedDate` | Modified Date | The Modified Date field is a system-populated field which captures the date that a modification is made to a record. | Time | Global |  | `template_audit.ModifiedDate · TEXT` |  |
+| `RevNumber` | Rev Number | The Rev Number field indicates how many times a record has been modified. This value of the field increases by 1 each time the record is modified. | Number | Global |  | `template_audit.RevNumber · TEXT` |  |

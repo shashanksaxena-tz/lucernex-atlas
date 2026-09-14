@@ -11,6 +11,9 @@ Source: `data-fields/expense-escalation.md`
 |  | Value |
 |---|---|
 | Fields declared | 28 |
+| Fields with a vendor definition | 27 of 28 inventoried |
+| Physical tables | `expense_escalation` |
+| Replication database | `lxr_drp_bbw` |
 | Catalogued fields | 27 (27 global, 0 firm) |
 | Physical tables | 1 |
 | Referenced by | 0 keys from 0 record types |
@@ -23,6 +26,26 @@ Source: `data-fields/expense-escalation.md`
 ### Tenant-scoped, one join deep
 
 **Derived.** This record carries no FirmID of its own. It hangs off ProjectEntity, and tenant isolation has to be enforced by joining to that row and filtering on its FirmID — or it is not enforced at all. 161 of the 223 record types are shaped this way.
+
+### Lands in expense_escalation
+
+**Observed.** The field inventory names the physical destination of every column: one table in the database lxr_drp_bbw. Every field node carries its own table and column, so the mapping is per column, not per record.
+
+### A per-tenant database name
+
+**Derived.** The physical database is lxr_drp_bbw — the tenant's name is in the database name. That is one more piece of evidence for database-per-tenant and against a single shared schema, alongside the Firm_ columns.
+
+### 27 fields carry a vendor definition
+
+**Observed.** 27 of this record's 28 inventoried fields have prose written by the vendor saying what the field is for. Open any field node to read it — this is the one source in the corpus that explains fields rather than listing them.
+
+### 3 fields marked required
+
+**Observed.** The inventory marks 3 of this record's fields Required. Across the whole inventory that is 606 fields, which independently corroborates the 603 the corpus had derived from the Data Fields catalogue — two sources, arrived at separately, agreeing to within three.
+
+### Replication coverage: not materialised
+
+**Observed.** Observed of the loader, not of the product. The replication target lxr_drp_bbw has never created a table for this record: Table may not exist in the database yet. No data has ever been returned for this Lx object, and the loader only issues CREATE TABLE once the first row arrives. The configuration is in place, so this table and all of its columns will be created automatically as soon as data is entered in Lx. That is a statement about one loader's coverage and says nothing about whether the record exists or holds data in Lx. The tell is ProjectEntity — 107 fields, every one marked extracted, table never created, yet it is the universal supertype of a tenant holding 2,014 contracts, so it plainly is not empty. Do not read the 69-created / 150-not-created split as the size of the product's schema.
 
 ## Rules that govern it
 
@@ -38,82 +61,82 @@ Source: `data-fields/expense-escalation.md`
 
 Typed pointers to other records. Lx names each FK type after the table it points at, so the relational model is declared rather than implied.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `ContractID` | Contract | Contract ID | Global | yes | [Contract](Contract.md) |
-| `EscalationIndexID` | Escalation Index | Escalation Index ID | Global |  | [EscalationIndex](EscalationIndex.md) |
-| `ExpenseSetupID` | Expense Setup | Expense Setup ID | Global | yes | [ExpenseSetup](ExpenseSetup.md) |
-| `ProjectEntityID` |  | Entity ID | — |  | [ProjectEntity](ProjectEntity.md) |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `ContractID` | Contract | The Expense Escalation table is no longer used. | Contract ID | Global | yes | `expense_escalation.ContractID · TEXT` | [Contract](Contract.md) |
+| `EscalationIndexID` | Escalation Index | The Expense Escalation table is no longer used. | Escalation Index ID | Global |  | `expense_escalation.EscalationIndexID · TEXT` | [EscalationIndex](EscalationIndex.md) |
+| `ExpenseSetupID` | Expense Setup | The Expense Escalation table is no longer used. | Expense Setup ID | Global | yes | `expense_escalation.ExpenseSetupID · TEXT` | [ExpenseSetup](ExpenseSetup.md) |
+| `ProjectEntityID` |  |  | Entity ID | — |  | `expense_escalation.ProjectEntityID · TEXT` | [ProjectEntity](ProjectEntity.md) |
 
 ### Coded values (drop-downs) (4)
 
 Fields bound to a master code table. Every one of these is a place where an administrator, not a developer, controls the allowed values.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `CodeEscalationCategoryID` | Escalation Category | Dropdown (Escalation Category Code) | Global |  | Escalation Category Code |
-| `CodeEscalationGroupID` | Escalation Group | Dropdown (Escalation Group Code) | Global |  | Escalation Group Code |
-| `CodeEscalationTypeID` | Escalation Type | Dropdown (Escalation Type Code) | Global |  | Escalation Type Code |
-| `CodeFrequencyID` | Frequency | Dropdown (Frequency Code) | Global |  | Frequency Code |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `CodeEscalationCategoryID` | Escalation Category | The Expense Escalation table is no longer used. | Dropdown (Escalation Category Code) | Global |  | `expense_escalation.CodeEscalationCategoryID · TEXT` | Escalation Category Code |
+| `CodeEscalationGroupID` | Escalation Group | The Expense Escalation table is no longer used. | Dropdown (Escalation Group Code) | Global |  | `expense_escalation.CodeEscalationGroupID · TEXT` | Escalation Group Code |
+| `CodeEscalationTypeID` | Escalation Type | The Expense Escalation table is no longer used. | Dropdown (Escalation Type Code) | Global |  | `expense_escalation.CodeEscalationTypeID · TEXT` | Escalation Type Code |
+| `CodeFrequencyID` | Frequency | The Expense Escalation table is no longer used. | Dropdown (Frequency Code) | Global |  | `expense_escalation.CodeFrequencyID · TEXT` | Frequency Code |
 
 ### Money (4)
 
 Currency amounts. Stored as TEXT in the physical database, which is why the rebuild must impose BigDecimal typing of its own.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `BaseAmount` | Base Amount | Currency | Global |  |  |
-| `CapAmount` | Cap Amount | Currency | Global |  |  |
-| `FixedAmount` | Fixed Amount | Currency | Global |  |  |
-| `StopAmount` | Stop Amount | Currency | Global |  |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `BaseAmount` | Base Amount | The Expense Escalation table is no longer used. | Currency | Global |  | `expense_escalation.BaseAmount · TEXT` |  |
+| `CapAmount` | Cap Amount | The Expense Escalation table is no longer used. | Currency | Global |  | `expense_escalation.CapAmount · TEXT` |  |
+| `FixedAmount` | Fixed Amount | The Expense Escalation table is no longer used. | Currency | Global |  | `expense_escalation.FixedAmount · TEXT` |  |
+| `StopAmount` | Stop Amount | The Expense Escalation table is no longer used. | Currency | Global |  | `expense_escalation.StopAmount · TEXT` |  |
 
 ### Rates & percentages (6)
 
 Percentage inputs and computed rates.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `CapPercentage` | Cap Percentage | Percentage | Global |  |  |
-| `IndexBaseFactor` | Index Base Factor | Percentage | Global |  |  |
-| `LifetimeMaxPercentage` | Lifetime Max Percentage | Percentage | Global |  |  |
-| `LifetimeMinPercentage` | Lifetime Min Percentage | Percentage | Global |  |  |
-| `PeriodMaxPercentage` | Period Max Percentage | Percentage | Global |  |  |
-| `PeriodMinPercentage` | Period Min Percentage | Percentage | Global |  |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `CapPercentage` | Cap Percentage | The Expense Escalation table is no longer used. | Percentage | Global |  | `expense_escalation.CapPercentage · TEXT` |  |
+| `IndexBaseFactor` | Index Base Factor | The Expense Escalation table is no longer used. | Percentage | Global |  | `expense_escalation.IndexBaseFactor · TEXT` |  |
+| `LifetimeMaxPercentage` | Lifetime Max Percentage | The Expense Escalation table is no longer used. | Percentage | Global |  | `expense_escalation.LifetimeMaxPercentage · TEXT` |  |
+| `LifetimeMinPercentage` | Lifetime Min Percentage | The Expense Escalation table is no longer used. | Percentage | Global |  | `expense_escalation.LifetimeMinPercentage · TEXT` |  |
+| `PeriodMaxPercentage` | Period Max Percentage | The Expense Escalation table is no longer used. | Percentage | Global |  | `expense_escalation.PeriodMaxPercentage · TEXT` |  |
+| `PeriodMinPercentage` | Period Min Percentage | The Expense Escalation table is no longer used. | Percentage | Global |  | `expense_escalation.PeriodMinPercentage · TEXT` |  |
 
 ### Quantities (2)
 
 Counts, areas and other plain numeric measures.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `EscalationPeriod` | Escalation Period | Number | Global |  |  |
-| `ExpenseEscalationID` | Escalation RecID | Number | Global |  |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `EscalationPeriod` | Escalation Period | The Expense Escalation table is no longer used. | Number | Global |  | `expense_escalation.EscalationPeriod · TEXT` |  |
+| `ExpenseEscalationID` | Escalation RecID | The Expense Escalation table is no longer used. | Number | Global |  | `expense_escalation.ExpenseEscalationID · VARCHAR(64) NOT NULL` |  |
 
 ### Dates & timestamps (2)
 
 Dates that drive schedules, and system timestamps.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `BeginDate` | Begin Date | Date | Global |  |  |
-| `EndDate` | End Date | Date | Global |  |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `BeginDate` | Begin Date | The Expense Escalation table is no longer used. | Date | Global |  | `expense_escalation.BeginDate · TEXT` |  |
+| `EndDate` | End Date | The Expense Escalation table is no longer used. | Date | Global |  | `expense_escalation.EndDate · TEXT` |  |
 
 ### Text & notes (3)
 
 Free text. Notably, free text is never allowed to drive a conditional display rule.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `BaseYear` | Base Year | Text | Global |  |  |
-| `EscalationMethod` | Escalation Method | Text | Global |  |  |
-| `Notes` |  | Text | Global |  |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `BaseYear` | Base Year | The Expense Escalation table is no longer used. | Text | Global |  | `expense_escalation.BaseYear · TEXT` |  |
+| `EscalationMethod` | Escalation Method | The Expense Escalation table is no longer used. | Text | Global |  | `expense_escalation.EscalationMethod · TEXT` |  |
+| `Notes` |  | The Expense Escalation table is no longer used. | Text | Global |  | `expense_escalation.Notes · TEXT` |  |
 
 ### Audit & record keeping (3)
 
 Who created and changed the record, and the identifiers that survive migration.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `BOMapClientRecordID` | Escalation ClientID | Text | Global | yes |  |
-| `ModifiedByID` | Modified By | Member ID | Global |  | [Member](Member.md) |
-| `ModifiedDate` | Modified Date | Time | Global |  |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `BOMapClientRecordID` | Escalation ClientID | The Expense Escalation table is no longer used. | Text | Global | yes | `expense_escalation.BOMapClientRecordID · TEXT` |  |
+| `ModifiedByID` | Modified By | The Expense Escalation table is no longer used. | Member ID | Global |  | `expense_escalation.ModifiedByID · TEXT` | [Member](Member.md) |
+| `ModifiedDate` | Modified Date | The Expense Escalation table is no longer used. | Time | Global |  | `expense_escalation.ModifiedDate · TEXT` |  |

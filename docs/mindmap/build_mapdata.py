@@ -176,6 +176,10 @@ PE_SCOPE = {
 CONF_OBS, CONF_DER, CONF_INF = "observed", "derived", "inferred"
 
 
+def plural(n):
+    return "" if n == 1 else "s"
+
+
 def entity_prose(o, name, mod_id):
     """Compose the description a reader sees when they click this record type.
 
@@ -195,15 +199,24 @@ def entity_prose(o, name, mod_id):
             src.append(lead[1])
     if not parts:
         mod = modules.get(mod_id, {})
+        oi = OINV.get(name) or {}
         parts.append(
             "Not covered by the Data Fields catalogue: this record type appears in the "
             "223-object census but has no row in the catalogue of 6,158 configurable "
-            "fields, so nothing in the corpus explains it in the vendor's own words. What "
-            "is known is structural — %d declared fields, filed under %s, %d foreign keys "
-            "pointing at it."
+            "fields, so no document describes the record as a whole. What is known is "
+            "structural — %d declared fields, filed under %s, %d foreign keys pointing at it."
             % (o.get("declared_field_count", 0),
                (mod.get("title") or mod_id or "no module"),
                len(edges_to_obj.get(name, []))))
+        if oi.get("defined"):
+            # the field inventory reaches records the catalogue does not, so the
+            # node is not empty even where no prose describes the record itself
+            parts.append(
+                "Its fields are documented even though the record is not: %d of its %d "
+                "inventoried fields carry a definition written by the vendor. Open the "
+                "field groups below and read them — that is the best account of this "
+                "record available." % (oi["defined"], oi["fields"]))
+            src.append(corpus.INVENTORY)
         src.append("_lucernex_objects_summary.txt")
     return " ".join(parts), src
 
@@ -290,6 +303,76 @@ def entity_notes_for(o, name, mod_id):
     # a viewer that refuses them. Those facts are carried by the feature map's
     # "Navigation & Screens" area and by corpus.CROSS_FACTS instead, so they are
     # not silently lost; do not re-add them here unless the census gains them.
+    # --- from the field inventory: the physical mapping, and the loader's reach
+    oi = OINV.get(name)
+    if oi:
+        if oi["tables"]:
+            many = len(oi["tables"]) > 1
+            out.append([
+                "Lands in %s" % (", ".join(oi["tables"][:4])
+                                 + (" and %d more" % (len(oi["tables"]) - 4)
+                                    if len(oi["tables"]) > 4 else "")), CONF_OBS,
+                "The field inventory names the physical destination of every column: %s "
+                "in the database %s.%s Every field node carries its own table and column, "
+                "so the mapping is per column, not per record."
+                % (("%d tables" % len(oi["tables"])) if many else "one table",
+                   ", ".join(oi["db"]) or "the replication target",
+                   (" A record split across several tables is the platform working around a "
+                    "column-count ceiling, and the split is stated here rather than inferred.")
+                   if many else "")])
+        if oi["tables"] and o.get("physical_table_count", 1) != len(oi["tables"]):
+            out.append([
+                "Two counts of its physical tables", CONF_OBS,
+                "The object census counts %d physical tables for this record; the field "
+                "inventory names %d (%s). The census reads the exported schema, the inventory "
+                "reads one replication loader's configuration, so a table the loader does not "
+                "write is invisible to the second count. Settle which you mean before quoting "
+                "either." % (o.get("physical_table_count", 1), len(oi["tables"]),
+                             ", ".join(oi["tables"]))])
+        if oi["db"] == ["lxr_drp_bbw"]:
+            out.append([
+                "A per-tenant database name", CONF_DER,
+                "The physical database is lxr_drp_bbw — the tenant's name is in the database "
+                "name. That is one more piece of evidence for database-per-tenant and against "
+                "a single shared schema, alongside the Firm_ columns."])
+        if oi["defined"]:
+            out.append([
+                "%d field%s carry a vendor definition"
+                % (oi["defined"], plural(oi["defined"])), CONF_OBS,
+                "%d of this record's %d inventoried fields have prose written by the vendor "
+                "saying what the field is for. Open any field node to read it — this is the "
+                "one source in the corpus that explains fields rather than listing them."
+                % (oi["defined"], oi["fields"])])
+        if oi["required"]:
+            out.append([
+                "%d field%s marked required" % (oi["required"], plural(oi["required"])), CONF_OBS,
+                "The inventory marks %d of this record's fields Required. Across the whole "
+                "inventory that is 606 fields, which independently corroborates the 603 the "
+                "corpus had derived from the Data Fields catalogue — two sources, arrived at "
+                "separately, agreeing to within three." % oi["required"]])
+        not_created = oi["status"].get("Not created yet — no data", 0)
+        if not_created and not_created >= oi["fields"] * 0.5:
+            loader_notes = sorted(oi["notes"], key=lambda k: -oi["notes"][k])[:2]
+            out.append([
+                "Replication coverage: not materialised", CONF_OBS,
+                "Observed of the loader, not of the product. The replication target "
+                "lxr_drp_bbw has never created a table for this record: %s That is a "
+                "statement about one loader's coverage and says nothing about whether the "
+                "record exists or holds data in Lx. The tell is ProjectEntity — 107 fields, "
+                "every one marked extracted, table never created, yet it is the universal "
+                "supertype of a tenant holding 2,014 contracts, so it plainly is not empty. "
+                "Do not read the 69-created / 150-not-created split as the size of the "
+                "product's schema." % (" ".join(loader_notes) if loader_notes else
+                                       "no rows have ever arrived for it.")])
+        if oi["notExtracted"]:
+            out.append([
+                "%d field%s excluded from extraction"
+                % (oi["notExtracted"], plural(oi["notExtracted"])), CONF_OBS,
+                "Observed of the loader. The inventory marks %d of this record's fields as "
+                "not extracted to PostgreSQL, so the replication target creates no column for "
+                "them. They still exist in Lx; anything reading the replica rather than the "
+                "product will not see them." % oi["notExtracted"]])
+
     mod = modules.get(mod_id or "", {})
     if mod and not mod.get("in_scope", True):
         out.append([
@@ -368,6 +451,11 @@ for o in objects:
         "sm": o.get("secondary_modules") or [],
         "cat": ([CAT[name]["total"], CAT[name]["global"], CAT[name]["firm"]]
                 if name in CAT else None),
+        # [fields inventoried, with a definition, marked required, not extracted]
+        "inv": ([OINV[name]["fields"], OINV[name]["defined"], OINV[name]["required"],
+                 OINV[name]["notExtracted"]] if name in OINV else None),
+        "pgt": (OINV[name]["tables"] if name in OINV else []),
+        "pgdb": (", ".join(OINV[name]["db"]) if name in OINV else ""),
     }
 
 # ------------------------------------------------------------------- edge maps
@@ -460,6 +548,8 @@ bundle = {
     # 448 sTYPE_/sCODE_ codes explained once, so a field node can say what its
     # catalogued type means instead of just naming it.
     "typeLegend": LEGEND,
+    # what a field's Key Role means, explained once
+    "roleNote": {v[0]: v[1] for v in corpus.KEY_ROLE.values()},
     # Cross-cutting facts the whole map has to carry, each quoting a document.
     "facts": [{"n": n, "t": t, "conf": c, "d": d, "src": s}
               for n, t, d, c, s in corpus.CROSS_FACTS],
@@ -477,5 +567,11 @@ print(f"wrote {path}")
 print(f"  {os.path.getsize(path):,} bytes")
 print(f"  modules={len(out_modules)} objects={len(out_objects)} edges={len(out_edges)}")
 print(f"  fields={bundle['meta']['fields']:,}")
+_defined = sum(1 for gs in out_objects.values() for _g, fs in gs["g"]
+               for f in fs if len(f) > 6 and f[6])
+_mapped = sum(1 for gs in out_objects.values() for _g, fs in gs["g"]
+              for f in fs if len(f) > 8 and f[8])
+print(f"  field definitions from the inventory: {_defined:,}")
+print(f"  fields with a physical PostgreSQL mapping: {_mapped:,}")
 top = sorted(in_degree.items(), key=lambda x: -x[1])[:10]
 print("  top in-degree:", ", ".join(f"{k}({v})" for k, v in top))

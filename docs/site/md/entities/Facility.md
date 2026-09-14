@@ -11,6 +11,9 @@ Source: `data-fields/facility.md`
 |  | Value |
 |---|---|
 | Fields declared | 133 |
+| Fields with a vendor definition | 125 of 140 inventoried |
+| Physical tables | `facility` |
+| Replication database | `lxr_drp_bbw` |
 | Catalogued fields | 89 (88 global, 1 firm) |
 | Physical tables | 1 |
 | Referenced by | 7 keys from 7 record types |
@@ -36,6 +39,26 @@ Source: `data-fields/facility.md`
 
 **Observed.** Of 89 catalogued fields on this record, 1 are Firm scope — defined by this tenant rather than shipped by the platform. Firm-scope definitions are RGAF rows carrying IsGlobal, FirmID and IsClientExtensionField.
 
+### Lands in facility
+
+**Observed.** The field inventory names the physical destination of every column: one table in the database lxr_drp_bbw. Every field node carries its own table and column, so the mapping is per column, not per record.
+
+### A per-tenant database name
+
+**Derived.** The physical database is lxr_drp_bbw — the tenant's name is in the database name. That is one more piece of evidence for database-per-tenant and against a single shared schema, alongside the Firm_ columns.
+
+### 125 fields carry a vendor definition
+
+**Observed.** 125 of this record's 140 inventoried fields have prose written by the vendor saying what the field is for. Open any field node to read it — this is the one source in the corpus that explains fields rather than listing them.
+
+### 13 fields marked required
+
+**Observed.** The inventory marks 13 of this record's fields Required. Across the whole inventory that is 606 fields, which independently corroborates the 603 the corpus had derived from the Data Fields catalogue — two sources, arrived at separately, agreeing to within three.
+
+### 1 field excluded from extraction
+
+**Observed.** Observed of the loader. The inventory marks 1 of this record's fields as not extracted to PostgreSQL, so the replication target creates no column for them. They still exist in Lx; anything reading the replica rather than the product will not see them.
+
 ## Rules that govern it
 
 | Rule | What it requires | Confidence |
@@ -60,197 +83,197 @@ Source: `data-fields/facility.md`
 
 Typed pointers to other records. Lx names each FK type after the table it points at, so the relational model is declared rather than implied.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `BudgetTemplateID` |  | Template ID | — |  | [BudgetTemplate](BudgetTemplate.md) |
-| `ComplexID` |  | Complex ID | — |  | [Complex](Complex.md) |
-| `DemographicDMAID` |  | DMA ID | — |  | [DMA](DMA.md) |
-| `IStateProvinceCountryID` | State | Country, State, County ID | Global |  | [StateProvinceCountry](StateProvinceCountry.md) |
-| `JurisdictionID` | Jurisdiction | County ID | Global |  | [Jurisdiction](Jurisdiction.md) |
-| `LocationID` | Location | Location ID | Global | yes | [Location](Location.md) |
-| `ProgramID` | Portfolio | Portfolio ID | Global | yes | [Program](Program.md) |
-| `PrototypeID` | Prototype | Prototype ID | Global |  | [Prototype](Prototype.md) |
-| `RegionID` | Region | Region ID | Global | yes | [Region](Region.md) |
-| `RootRegionID` | Parent Region | Region ID | Global |  | [Region](Region.md) |
-| `SubRegionID` | Sub Region | Region ID | Global |  | [Region](Region.md) |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `BudgetTemplateID` | Budget Template ID | If there is a budget template associated with this entity, The foreign key of the budget template. | Template ID | — |  | `facility.BudgetTemplateID · TEXT` | [BudgetTemplate](BudgetTemplate.md) |
+| `ComplexID` | Complex Name | The ID of the complex associated with the location where the competitor is located. | Complex ID | — |  | `facility.ComplexID · TEXT` | [Complex](Complex.md) |
+| `DemographicDMAID` | Demographic DMA | Select your demographic market area from this field. | DMA ID | — |  | `facility.DemographicDMAID · TEXT` | [DMA](DMA.md) |
+| `IStateProvinceCountryID` | State | Select the state or province from this field. | Country, State, County ID | Global |  | `facility.IStateProvinceCountryID · TEXT` | [StateProvinceCountry](StateProvinceCountry.md) |
+| `JurisdictionID` | Jurisdiction | The county / province associated with the associated entity's address. | County ID | Global |  | `facility.JurisdictionID · TEXT` | [Jurisdiction](Jurisdiction.md) |
+| `LocationID` | Location | Select the location that your entity will be associated with from this field. | Location ID | Global | yes | `facility.LocationID · TEXT` | [Location](Location.md) |
+| `ProgramID` | Portfolio | Select the Portfolio that the entity belongs to from this field. | Portfolio ID | Global | yes | `facility.ProgramID · TEXT` | [Program](Program.md) |
+| `PrototypeID` | Prototype | Select the prototype associated with this entity from this field. | Prototype ID | Global |  | `facility.PrototypeID · TEXT` | [Prototype](Prototype.md) |
+| `RegionID` | Region | Select the region and sub-region the facility should belong to from this field. The values that appear in this field depend on the org chart of the portfolio you selected. | Region ID | Global | yes | `facility.RegionID · TEXT` | [Region](Region.md) |
+| `RootRegionID` | Parent Region | This field sets some default membership at the creation of the entity. Its values are pulled from the organization chart. | Region ID | Global |  | `facility.RootRegionID · TEXT` | [Region](Region.md) |
+| `SubRegionID` | Sub Region | This field pulls the sub-region from the facility's associated location record. | Region ID | Global |  | `facility.SubRegionID · TEXT` | [Region](Region.md) |
 
 ### Soft references (3)
 
 Columns that name another record without a typed foreign key behind them - generic handles such as Entity ID and item ID that point at whichever table the row belongs to. These are the joins a rebuild has to make explicit.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `LinkProjectEntityContactListData` |  | Contact | — |  |  |
-| `ManagerIDList` | Project Managers | Dropdown | Global |  |  |
-| `OpeningProjectPEID` | Opening Project | Entity | Global |  |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `LinkProjectEntityContactListData` | Contact List | This field returns a list of Active and Inactive entities filtered by member security. | Contact | — |  | `facility.LinkProjectEntityContactListData · TEXT` |  |
+| `ManagerIDList` | Project Managers | This is a generic field that you can add to a page layout. In View mode, this field returns a list of managers assigned to the entity by the org chart and managers assigned to the entity on an ad hoc basis. In Edit mode, this field allows you to add managers to your entity. | Dropdown | Global |  | `facility.ManagerIDList · TEXT` |  |
+| `OpeningProjectPEID` | Opening Project | This field determines the associated opening project for the facility. | Entity | Global |  | `facility.OpeningProjectPEID · TEXT` |  |
 
 ### Coded values (drop-downs) (16)
 
 Fields bound to a master code table. Every one of these is a place where an administrator, not a developer, controls the allowed values.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `CodeBuildingAreaUnitID` | Building Area Unit | Dropdown (Building Area Unit Code) | Global |  | Building Area Unit Code |
-| `CodeConstructionTypeID` | Construction Type | Dropdown (Construction Type Code) | Global |  | Construction Type Code |
-| `CodeCurrencyTypeID` |  | Dropdown (Currency Type Code) | — |  | Currency Type Code |
-| `CodeDealTypeID` | Deal Type | Dropdown (Deal Type Code) | Global |  | Deal Type Code |
-| `CodeDesc_CodeMarketAreaID` | Market Potential | Dropdown (Market Area Code) | Global |  | Market Area Code |
-| `CodeDesc_CodeProjectTypeID` | Real Estate Type | Dropdown (Project Type Code) | Global |  | Project Type Code |
-| `CodeDistributionCenterID` | Distribution Center | Dropdown (Distribution Center Code) | Global |  | Distribution Center Code |
-| `CodeFacilityCategoryID` | Facility Category | Dropdown (Facility Category Code) | Global |  | Facility Category Code |
-| `CodeFacilityGroupID` | Facility Group | Dropdown (Facility Group Code) | Global |  | Facility Group Code |
-| `CodeFacilityStatusID` | Facility Status | Dropdown (Facility Status Code) | Global |  | Facility Status Code |
-| `CodeFacilityTypeID` | Facility Type | Dropdown (Facility Type Code) | Global |  | Facility Type Code |
-| `CodeFacilityUseID` | Facility Use | Dropdown (Facility Use Code) | Global |  | Facility Use Code |
-| `CodeMarketAreaID` | Market Area | Dropdown (Market Area Code) | Global | yes | Market Area Code |
-| `CodeMarketTypeID` | Market Type | Dropdown (Market Type Code) | Global |  | Market Type Code |
-| `CodeProjectTypeID` | Project Type | Dropdown (Project Type Code) | Global |  | Project Type Code |
-| `CurrentCodeProjectPhaseID` |  | Dropdown (Project Phase Code) | — |  | Project Phase Code |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `CodeBuildingAreaUnitID` | Building Area Unit | Select the units you are using to measure your area from this field. | Dropdown (Building Area Unit Code) | Global |  | `facility.CodeBuildingAreaUnitID · TEXT` | Building Area Unit Code |
+| `CodeConstructionTypeID` | Construction Type | Select the construction type from this field. | Dropdown (Construction Type Code) | Global |  | `facility.CodeConstructionTypeID · TEXT` | Construction Type Code |
+| `CodeCurrencyTypeID` | Currency Type | The Currency Type field allows you to select a currency type to be used on a record. | Dropdown (Currency Type Code) | — |  | `facility.CodeCurrencyTypeID · TEXT` | Currency Type Code |
+| `CodeDealTypeID` | Deal Type | Select the deal type from this field. | Dropdown (Deal Type Code) | Global |  | `facility.CodeDealTypeID · TEXT` | Deal Type Code |
+| `CodeDesc_CodeMarketAreaID` | Market Potential | The description of the market of the location. | Dropdown (Market Area Code) | Global |  | `facility.CodeDesc_CodeMarketAreaID · TEXT` | Market Area Code |
+| `CodeDesc_CodeProjectTypeID` | Real Estate Type | This is a generic field. It is not implemented for facilties by default. | Dropdown (Project Type Code) | Global |  | `facility.CodeDesc_CodeProjectTypeID · TEXT` | Project Type Code |
+| `CodeDistributionCenterID` | Distribution Center | Select the distribution center from which the store is receiving product from this field. | Dropdown (Distribution Center Code) | Global |  | `facility.CodeDistributionCenterID · TEXT` | Distribution Center Code |
+| `CodeFacilityCategoryID` | Facility Category | Select the facility category from this field. Categories are the third level of organization in Lx. Categories are the children of types, and grandchildren of groups. Groups, types, and categories are used to simplify reporting. | Dropdown (Facility Category Code) | Global |  | `facility.CodeFacilityCategoryID · TEXT` | Facility Category Code |
+| `CodeFacilityGroupID` | Facility Group | Select the facility group from this field. Groups are the first level of organization in Lx. Groups are the parents of types, and grandparents of Categories. Groups, types, and categories are used to simplify reporting. | Dropdown (Facility Group Code) | Global |  | `facility.CodeFacilityGroupID · TEXT` | Facility Group Code |
+| `CodeFacilityStatusID` | Facility Status | Select the facility status from this field. | Dropdown (Facility Status Code) | Global |  | `facility.CodeFacilityStatusID · TEXT` | Facility Status Code |
+| `CodeFacilityTypeID` | Facility Type | Select the facility type from this field. Types are the second level of organization in Lx. Types are the children of groups, and parents of categories. Groups, types, and categories are used to simplify reporting. | Dropdown (Facility Type Code) | Global |  | `facility.CodeFacilityTypeID · TEXT` | Facility Type Code |
+| `CodeFacilityUseID` | Facility Use | Select the facility use from this field. | Dropdown (Facility Use Code) | Global |  | `facility.CodeFacilityUseID · TEXT` | Facility Use Code |
+| `CodeMarketAreaID` | Market Area | Select the market the facility should belong to from this field. The values that appear in this field might depend on the org chart of the portfolio you selected. | Dropdown (Market Area Code) | Global | yes | `facility.CodeMarketAreaID · TEXT` | Market Area Code |
+| `CodeMarketTypeID` | Market Type | Select the market type from this field. | Dropdown (Market Type Code) | Global |  | `facility.CodeMarketTypeID · TEXT` | Market Type Code |
+| `CodeProjectTypeID` | Project Type | This is a generic field. It is not implemented for facilties by default. | Dropdown (Project Type Code) | Global |  | `facility.CodeProjectTypeID · TEXT` | Project Type Code |
+| `CurrentCodeProjectPhaseID` | Project Phase | The project phase set by the milestone timeline. This value is driven by your entity schedule. | Dropdown (Project Phase Code) | — |  | `facility.CurrentCodeProjectPhaseID · TEXT` | Project Phase Code |
 
 ### Money (2)
 
 Currency amounts. Stored as TEXT in the physical database, which is why the rebuild must impose BigDecimal typing of its own.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `Firm_PriorMonthAccrualTotal` |  | Currency | — |  |  |
-| `LastYearsAnnualSales` | Last Years Annual Sales | Currency | Global |  |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `Firm_PriorMonthAccrualTotal` |  |  | Currency | — |  |  |  |
+| `LastYearsAnnualSales` | Last Years Annual Sales | Enter last year's annual sales in this field. | Currency | Global |  | `facility.LastYearsAnnualSales · TEXT` |  |
 
 ### Quantities (20)
 
 Counts, areas and other plain numeric measures.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `ActualRevenueWeeks` |  | Number | — |  |  |
-| `BehindScheduleDays` | Behind Schedule Days | Number | Global |  |  |
-| `DBFolderSizeMB` |  | 2-Digit Number | — |  |  |
-| `DaysUntilOpen` | Days Until Open | Number | Global |  |  |
-| `Depth` |  | Number | Global |  |  |
-| `DistributionCenterArea` | Distribution Center Area | Number | Global |  |  |
-| `EntityId` |  | Number | — |  |  |
-| `FacilityID` | Facility RecID | Number | Global |  |  |
-| `Firm_SellingSQFT` |  | Number | — |  |  |
-| `Frontage` |  | Number | Global |  |  |
-| `GrossArea` | Gross Area | Number | Global |  |  |
-| `LatitudeDegrees` |  | 5-Digit Number | — |  |  |
-| `LongitudeDegrees` |  | 5-Digit Number | — |  |  |
-| `NumberOfDocuments` |  | Number | — |  |  |
-| `OpenYear` | Open year | Number | Global |  |  |
-| `OutOfDateDays` | Out Of Date Days | Number | Global |  |  |
-| `ProjectEntityID` | Entity RecID | Number | Global | yes |  |
-| `RentableArea` | Rentable Area | Number | Global |  |  |
-| `SequenceNumber` | Sequence Number | Number | Global |  |  |
-| `UsableArea` | Usable Area | Number | Global |  |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `ActualRevenueWeeks` | Revenue Weeks | Calculates how many actual revenue weeks this entity will exist during the fiscal year. | Number | — |  | `facility.ActualRevenueWeeks · TEXT` |  |
+| `BehindScheduleDays` | Behind Schedule Days | This field displays the number of days behind schedule. | Number | Global |  | `facility.BehindScheduleDays · TEXT` |  |
+| `DBFolderSizeMB` | Storage Size (MB) | The folder size in megabytes for a given entity. | 2-Digit Number | — |  | `facility.DBFolderSizeMB · TEXT` |  |
+| `DaysUntilOpen` | Days Until Open | This field is not implemented for facilities. | Number | Global |  | `facility.DaysUntilOpen · TEXT` |  |
+| `Depth` |  | Enter the depth of the facility in this field. | Number | Global |  | `facility.Depth · TEXT` |  |
+| `DistributionCenterArea` | Distribution Center Area | Enter the size of the distribution center in this field. | Number | Global |  | `facility.DistributionCenterArea · TEXT` |  |
+| `EntityId` | Entity LxID | The Project Entity ID. | Number | — |  | `facility.EntityId · TEXT` |  |
+| `FacilityID` | Facility RecID | This field contains a Base Entity System Identifier for your record. It is assigned automatically by the system, and is not editable. | Number | Global |  | `facility.FacilityID · VARCHAR(64) NOT NULL` |  |
+| `Firm_SellingSQFT` | Selling SQFT |  | Number | — |  | `facility.Firm_SellingSQFT · TEXT` |  |
+| `Frontage` |  | Enter the physical measurements of the face of the building. | Number | Global |  | `facility.Frontage · TEXT` |  |
+| `GrossArea` | Gross Area | Enter the gross area in this field. | Number | Global |  | `facility.GrossArea · TEXT` |  |
+| `LatitudeDegrees` | Latitude | Enter the latitude of the facility in this field. To learn how to automatically calculate an entity's latitude and longitude, see the Online Help. | 5-Digit Number | — |  | `facility.LatitudeDegrees · TEXT` |  |
+| `LongitudeDegrees` | Longitude | Enter the longitude of the facility in this field. To learn how to automatically calculate an entity's latitude and longitude, see the Online Help. | 5-Digit Number | — |  | `facility.LongitudeDegrees · TEXT` |  |
+| `NumberOfDocuments` | Number of Documents | The total number of documents in all folders on the entity. | Number | — |  | `facility.NumberOfDocuments · TEXT` |  |
+| `OpenYear` | Open year | The year the facility opened. | Number | Global |  | `facility.OpenYear · TEXT` |  |
+| `OutOfDateDays` | Out Of Date Days | This field returns how many days the schedule is out of date. If the schedule hasn't been updated yet, the value of this field is 0. If the schedule has been updated, the value of the field is calculated based on the last reviewed date. | Number | Global |  | `facility.OutOfDateDays · TEXT` |  |
+| `ProjectEntityID` | Entity RecID | The ProjectEntityID is the Base Entity System Identifier for associated tasks, folders, documents, forms, and other records. It is assigned automatically by the system, and is not editable. | Number | Global | yes | `facility.ProjectEntityID · TEXT` |  |
+| `RentableArea` | Rentable Area | Enter the rentable area in this field. | Number | Global |  | `facility.RentableArea · TEXT` |  |
+| `SequenceNumber` | Sequence Number | This field generates a sequence number for the record. The next record created receives the next number in the sequence. | Number | Global |  | `facility.SequenceNumber · TEXT` |  |
+| `UsableArea` | Usable Area | Enter the usable area. | Number | Global |  | `facility.UsableArea · TEXT` |  |
 
 ### Dates & timestamps (13)
 
 Dates that drive schedules, and system timestamps.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `ActualEndDate` | Actual/Forecast Delivery Date | Date | Global |  |  |
-| `ActualStartDate` |  | Date | — |  |  |
-| `BaselineEndDate` | Baseline End date | Date | Global |  |  |
-| `BaselineStartDate` | Baseline Start Date | Date | Global |  |  |
-| `ClientScheduleLastReviewedDate` |  | Date | — |  |  |
-| `CloseDate` | Close Date | Date | Global |  |  |
-| `ConstructionDate` | Construction Date | Date | Global |  |  |
-| `ExpectedEndDate` | Original Delivery Qtr/Yr | Date | Global |  |  |
-| `OpenDate` | Open Date | Date | Global |  |  |
-| `OriginalEndDate` |  | Date | — |  |  |
-| `OriginalStartDate` |  | Date | — |  |  |
-| `RemodelDate` | Remodel Date | Date | Global |  |  |
-| `SlotEndDate` | RE Planner Open Date | Date | Global |  |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `ActualEndDate` | Actual/Forecast Delivery Date | If there is a milestone timeline, The max end date from all non-operating tasks. Otherwise, The end date for the entity utilizing the schedule. If there are no tasks defined yet, the system will return the Original End Date / Completion Year set for the entity. | Date | Global |  | `facility.ActualEndDate · TEXT` |  |
+| `ActualStartDate` | Forecast/Actual Start Date | The start date for the schedule associated with your entity. If there are no tasks defined in your schedule, The Original End Date / Completion Year set for the entity. | Date | — |  | `facility.ActualStartDate · TEXT` |  |
+| `BaselineEndDate` | Baseline End date | The baseline end date for the entity utilizing the schedules. If there is a milestone timeline the system uses the max end date from all non-operating tasks, otherwise it uses the max end date from the schedule. | Date | Global |  | `facility.BaselineEndDate · TEXT` |  |
+| `BaselineStartDate` | Baseline Start Date | Get the baseline start date for the entity utilizing the schedule if it exists. If there are no tasks defined yet, this field will return the original start date and year set for the entity. | Date | Global |  | `facility.BaselineStartDate · TEXT` |  |
+| `ClientScheduleLastReviewedDate` | Last Updated Date | This field displays the last updated date. | Date | — |  | `facility.ClientScheduleLastReviewedDate · TEXT` |  |
+| `CloseDate` | Close Date | Enter the close date in this field. | Date | Global |  | `facility.CloseDate · TEXT` |  |
+| `ConstructionDate` | Construction Date | Enter the construction date in this field. | Date | Global |  | `facility.ConstructionDate · TEXT` |  |
+| `ExpectedEndDate` | Original Delivery Qtr/Yr | The original end date is calculated using the projected / actual end date of the task associated with the latest completed milestone whose phase is not Operations. | Date | Global |  | `facility.ExpectedEndDate · TEXT` |  |
+| `OpenDate` | Open Date | Enter the open date in this field. | Date | Global |  | `facility.OpenDate · TEXT` |  |
+| `OriginalEndDate` | Baseline End Date | The baseline end date of a schedule task on the entity. | Date | — |  | `facility.OriginalEndDate · TEXT` |  |
+| `OriginalStartDate` | Baseline Start Date | The baseline start date of a schedule task on the entity. | Date | — |  | `facility.OriginalStartDate · TEXT` |  |
+| `RemodelDate` | Remodel Date | Enter the remodel date in this field. | Date | Global |  | `facility.RemodelDate · TEXT` |  |
+| `SlotEndDate` | RE Planner Open Date | The planned open date of the entity as set in the RE Planner. | Date | Global |  | `facility.SlotEndDate · TEXT` |  |
 
 ### Flags (3)
 
 Booleans. In this product they usually gate engine behaviour rather than describe the record.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `Inactive` | Is Inactive? | Boolean | Global | yes |  |
-| `IsDead` | Is Dead? | Boolean | Global | yes |  |
-| `UseLocationAddress` | Use Location Address | Boolean | Global | yes |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `Inactive` | Is Inactive? | If selected, this check box indicates the entity is inactive. | Boolean | Global | yes | `facility.Inactive · TEXT` |  |
+| `IsDead` | Is Dead? | If selected, this check box indicates the entity is dead. | Boolean | Global | yes | `facility.IsDead · TEXT` |  |
+| `UseLocationAddress` | Use Location Address | Select this check box to use the address of the location associated with this facility. | Boolean | Global | yes | `facility.UseLocationAddress · TEXT` |  |
 
 ### Text & notes (58)
 
 Free text. Notably, free text is never allowed to drive a conditional display rule.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `BaseProvider` |  | Text | — |  |  |
-| `City` |  | Text | Global |  |  |
-| `CityStateProvinceCountry` |  | Text | — |  |  |
-| `ClientEntityID` | Facility ID | Text | Global |  |  |
-| `ComparisonList` |  | Text | — |  |  |
-| `CompletedPhaseStatus` |  | Text | — |  |  |
-| `ConstructionPhaseStatus` | Construction Phase Status | Text | Global |  |  |
-| `CountryID` | Country | Text | Global |  |  |
-| `CrossStreet1` |  | Text | — |  |  |
-| `CrossStreet2` |  | Text | — |  |  |
-| `CurrentMilestone` |  | Text | — |  |  |
-| `CurrentPhaseStatus` | Project Status | Text | Global |  |  |
-| `DefinedField1` | Defined Field #1 | Text | Global |  |  |
-| `DefinedField2` | Defined Field #2 | Text | Global |  |  |
-| `DesignPhaseStatus` | Design Phase Status | Text | Global |  |  |
-| `EntityEmail` |  | Text | — |  |  |
-| `EntityPhoto` | Entity Photo | Text | Global |  |  |
-| `FacilityName` | Facility Name | Text | Global | yes |  |
-| `FinancialModel` |  | Text | — |  |  |
-| `FirmID` |  | Text | — |  |  |
-| `Firm_SalesReportLogo` |  | Text | — |  |  |
-| `Firm_SalesReportLogoMadewell` |  | Text | — |  |  |
-| `Firm_SalesReportSignature` |  | Text | — |  |  |
-| `Firm_SalesReportSignatureName` |  | Text | — |  |  |
-| `Firm_SalesReportSignatureTitle` |  | Text | — |  |  |
-| `Firm_SpaceNumber` | Space Number | Text | Firm |  |  |
-| `HTMLAddress` | Full Address | Text | Global |  |  |
-| `HoursOfOperation` | Hours Of Operation | Text | Global |  |  |
-| `IssuesAndAlerts` | Issues And Alerts | Text | Global |  |  |
-| `MapClientRecordID` |  | Text | — |  |  |
-| `MilestoneTimeline` |  | Text | — |  |  |
-| `NextMilestone` |  | Text | — |  |  |
-| `Notes` |  | Text | Global |  |  |
-| `OperatingStatus` | Operating Status | Text | Global | yes |  |
-| `OperationsPhaseStatus` | Operations Phase Status | Text | Global |  |  |
-| `Phone` |  | Text | Global |  |  |
-| `PossessionPhaseStatus` | Possession Phase Status | Text | Global |  |  |
-| `PostalCode` | Postal Code | Text | Global |  |  |
-| `PotentialProjectName` |  | Text | — |  |  |
-| `PreviousMilestone` |  | Text | — |  |  |
-| `ProgramName` |  | Text | — |  |  |
-| `ProjectDescription` | Description | Text | Global |  |  |
-| `ProjectEntityName` |  | Text | — |  |  |
-| `ProjectEntityTypeName` |  | Text | — |  |  |
-| `ProjectName` |  | Text | — |  |  |
-| `PrototypeName` |  | Text | — |  |  |
-| `RealEstatePhaseStatus` | Real Estate Phase Status | Text | Global |  |  |
-| `RelatedEntities` | Related Facility Entities | Text | Global |  |  |
-| `RelocatedFrom` |  | Text | — |  |  |
-| `RunReportAction` |  | Text | — |  |  |
-| `StreetAddress` | Street Address | Text | Global |  |  |
-| `StreetAddress1` | Street Address #1 | Text | Global |  |  |
-| `StreetAddress2` | Street Address #2 | Text | Global |  |  |
-| `StreetAddress3` | Street Address #3 | Text | Global |  |  |
-| `StreetAddress4` | Street Address #4 | Text | Global |  |  |
-| `ThirdPartyWarehouse` | Third Party Warehouse | Text | Global |  |  |
-| `TimeZone` | Time Zone | Text | Global |  |  |
-| `TradeArea` | Trade Area | Text | Global |  |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `BaseProvider` | System of Record | This field is used to fetch a record value from another Accruent software. | Text | — |  | `facility.BaseProvider · TEXT` |  |
+| `City` |  | The city associated with this record. | Text | Global |  | `facility.City · TEXT` |  |
+| `CityStateProvinceCountry` | City, State | The city and state / province. If there is no state / province, the field returns only the city. If there is no city, this field returns only the state / province. | Text | — |  | `facility.CityStateProvinceCountry · TEXT` |  |
+| `ClientEntityID` | Facility ID | Enter a unique ID for the entity in this field. Remember: when uploading information to a contract using Lx's import spreadsheet functionality, the entity ID and entity name must be replicated exactly in the spreadsheet. | Text | Global |  | `facility.ClientEntityID · TEXT` |  |
+| `ComparisonList` | Comparison List | When added to a page layout, this field allows for a comparison of entities from a page or subpage. | Text | — |  | `facility.ComparisonList · TEXT` |  |
+| `CompletedPhaseStatus` | Completed Phase Status | The milestone timeline status of the entity. This status is updated when a milestone is completed. | Text | — |  | `facility.CompletedPhaseStatus · TEXT` |  |
+| `ConstructionPhaseStatus` | Construction Phase Status | This field corresponds to the Construction phase in your Milestone Timeline. It captures the most recent status of the milestone phase. | Text | Global |  | `facility.ConstructionPhaseStatus · TEXT` |  |
+| `CountryID` | Country | Select the country from this field. | Text | Global |  | `facility.CountryID · TEXT` |  |
+| `CrossStreet1` | Cross Street #1 | Enter the first cross street in this field. | Text | — |  | `facility.CrossStreet1 · TEXT` |  |
+| `CrossStreet2` | Cross Street #2 | Enter the second cross street in this field. | Text | — |  | `facility.CrossStreet2 · TEXT` |  |
+| `CurrentMilestone` | Current Milestone | The current milestone task of your entity schedule. | Text | — |  | `facility.CurrentMilestone · TEXT` |  |
+| `CurrentPhaseStatus` | Project Status | The project status set by the milestone timeline. This value is driven by your entity schedule. | Text | Global |  | `facility.CurrentPhaseStatus · TEXT` |  |
+| `DefinedField1` | Defined Field #1 | This field is a reserved space for client fields. | Text | Global |  | `facility.DefinedField1 · TEXT` |  |
+| `DefinedField2` | Defined Field #2 | This field is a reserved space for client fields. | Text | Global |  | `facility.DefinedField2 · TEXT` |  |
+| `DesignPhaseStatus` | Design Phase Status | This field corresponds to the Design phase in your Milestone Timeline. It captures the most recent status of the milestone phase. | Text | Global |  | `facility.DesignPhaseStatus · TEXT` |  |
+| `EntityEmail` | Entity Email | The entity's email address that is created when the Email into Lx functionality is enabled. | Text | — |  | `facility.EntityEmail · TEXT` |  |
+| `EntityPhoto` | Entity Photo | This is a generic field. When you add this field to a page layout, you can use it to add a photo to the layout. | Text | Global |  | `facility.EntityPhoto · TEXT` |  |
+| `FacilityName` | Facility Name | Enter the facility name in this field. | Text | Global | yes | `facility.FacilityName · TEXT` |  |
+| `FinancialModel` | Financial Model | When added to a page layout, this field appears as a button that generates an Excel Financial Model spreadsheet. If you have questions about this functionality, contact your Accruent representative. | Text | — |  | `facility.FinancialModel · TEXT` |  |
+| `FirmID` | Firm ID | The record's Firm ID. | Text | — | yes | `facility.FirmID · TEXT` |  |
+| `Firm_SalesReportLogo` | Sales Report Logo |  | Text | — |  | `facility.Firm_SalesReportLogo · TEXT` |  |
+| `Firm_SalesReportLogoMadewell` |  |  | Text | — |  |  |  |
+| `Firm_SalesReportSignature` | Sales Report Signature |  | Text | — |  | `facility.Firm_SalesReportSignature · TEXT` |  |
+| `Firm_SalesReportSignatureName` | Sales Report Signature Name |  | Text | — |  | `facility.Firm_SalesReportSignatureName · TEXT` |  |
+| `Firm_SalesReportSignatureTitle` | Sales Report Signature Title |  | Text | — |  | `facility.Firm_SalesReportSignatureTitle · TEXT` |  |
+| `Firm_SpaceNumber` | Space Number |  | Text | Firm |  | `facility.Firm_SpaceNumber · TEXT` |  |
+| `HTMLAddress` | Full Address | The associated entity's address in HTML format. | Text | Global |  | `facility.HTMLAddress · TEXT` |  |
+| `HoursOfOperation` | Hours Of Operation | Enter the hours of operation of the facility in this field. | Text | Global |  | `facility.HoursOfOperation · TEXT` |  |
+| `IssuesAndAlerts` | Issues And Alerts | This field can be added to page layouts. In View mode, this field will display a table with form and workflow data, such as the work flow / form type, critical issue count, non-critical issue count, escalated count, and past due notification count. | Text | Global |  | `facility.IssuesAndAlerts · TEXT` |  |
+| `MapClientRecordID` | Client Unique ID | The entity Map Client Record ID. | Text | — |  | `facility.MapClientRecordID · TEXT` |  |
+| `MilestoneTimeline` | Milestone Timeline | This field generates a list of all milestones, but hides those with no values. | Text | — |  | `facility.MilestoneTimeline · TEXT` |  |
+| `NextMilestone` | Next Milestone | The upcoming milestone in the milestone timeline. | Text | — |  | `facility.NextMilestone · TEXT` |  |
+| `Notes` |  | Add any notes about the record. | Text | Global |  | `facility.Notes · TEXT` |  |
+| `OperatingStatus` | Operating Status | This field specifies that the facility is using the operating org chart. | Text | Global | yes | `facility.OperatingStatus · TEXT` |  |
+| `OperationsPhaseStatus` | Operations Phase Status | This field corresponds to the Operations phase in your Milestone Timeline. It captures the most recent status of the milestone phase. | Text | Global |  | `facility.OperationsPhaseStatus · TEXT` |  |
+| `Phone` |  | Enter the facility's phone number in this field. | Text | Global |  | `facility.Phone · TEXT` |  |
+| `PossessionPhaseStatus` | Possession Phase Status | This field corresponds to the Possession phase in your Milestone Timeline. It captures the most recent status of the milestone phase. | Text | Global |  | `facility.PossessionPhaseStatus · TEXT` |  |
+| `PostalCode` | Postal Code | Enter the postal code of the entity in this field. | Text | Global |  | `facility.PostalCode · TEXT` |  |
+| `PotentialProjectName` | Site Name | The name of the site associated with this entity. | Text | — |  | `facility.PotentialProjectName · TEXT` |  |
+| `PreviousMilestone` | Previous Milestone | The previous milestone task. | Text | — |  | `facility.PreviousMilestone · TEXT` |  |
+| `ProgramName` | Portfolio/Program Name | The name of the portfolio associated with this entity. | Text | — |  | `facility.ProgramName · TEXT` |  |
+| `ProjectDescription` | Description | Write a description of the record. | Text | Global |  | `facility.ProjectDescription · TEXT` |  |
+| `ProjectEntityName` | Name | The entity name. | Text | — | yes | `facility.ProjectEntityName · TEXT` |  |
+| `ProjectEntityTypeName` | Entity Type | The entity type. | Text | — |  | `facility.ProjectEntityTypeName · TEXT` |  |
+| `ProjectName` | Project Name | The name of the project associated with the record. | Text | — |  | `facility.ProjectName · TEXT` |  |
+| `PrototypeName` | Prototype Name | The name of the prototype associated with this entity. | Text | — |  | `facility.PrototypeName · TEXT` |  |
+| `RealEstatePhaseStatus` | Real Estate Phase Status | This field corresponds to the Real Estate phase in your Milestone Timeline. It captures the most recent status of the milestone phase. | Text | Global |  | `facility.RealEstatePhaseStatus · TEXT` |  |
+| `RelatedEntities` | Related Facility Entities | The name of entities associated with this entity. | Text | Global |  | `facility.RelatedEntities · TEXT` |  |
+| `RelocatedFrom` |  | This field is not implemented for facilities. | Text | — |  | `facility.RelocatedFrom · TEXT` |  |
+| `RunReportAction` | Run Report Action | This is a generic field. When you add this field to a page layout, it will run a report. See the Run Report Action Buttons article in the Online Help to learn more. | Text | — |  | `facility.RunReportAction · TEXT` |  |
+| `StreetAddress` | Street Address | The street address. | Text | Global |  | `facility.StreetAddress · TEXT` |  |
+| `StreetAddress1` | Street Address #1 | The first line of the street address. | Text | Global |  | `facility.StreetAddress1 · TEXT` |  |
+| `StreetAddress2` | Street Address #2 | The second line of the street address. | Text | Global |  | `facility.StreetAddress2 · TEXT` |  |
+| `StreetAddress3` | Street Address #3 | The third line of the street address. | Text | Global |  | `facility.StreetAddress3 · TEXT` |  |
+| `StreetAddress4` | Street Address #4 | The fourth line of the street address. | Text | Global |  | `facility.StreetAddress4 · TEXT` |  |
+| `ThirdPartyWarehouse` | Third Party Warehouse | Enter the name of your third-party warehouse in this field. This field is typically used when a client has purchased materials and is storing them in a warehouse. | Text | Global |  | `facility.ThirdPartyWarehouse · TEXT` |  |
+| `TimeZone` | Time Zone | Select the appropriate time zone from this field. | Text | Global |  | `facility.TimeZone · TEXT` |  |
+| `TradeArea` | Trade Area | Enter the trade area in this field. | Text | Global |  | `facility.TradeArea · TEXT` |  |
 
 ### Audit & record keeping (7)
 
 Who created and changed the record, and the identifiers that survive migration.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `BOMapClientRecordID` | Facility ClientID | Text | Global | yes |  |
-| `CreatedByID` |  | Member ID | — |  | [Member](Member.md) |
-| `CreatedDate` |  | Time | — |  |  |
-| `ModifiedByID` | Modified By | Member ID | Global |  | [Member](Member.md) |
-| `ModifiedDate` | Modified Date | Time | Global |  |  |
-| `RevNumber` |  | Number | — |  |  |
-| `UUID` | Facility UUID | Text | Global |  |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `BOMapClientRecordID` | Facility ClientID | The ClientID field is a free form text field that can be used when importing data to uniquely look up a record for update. This record identifier can either be system-generated or defined by the user upon the initial import of record data. The ClientID has the database name "BOMapClientRecordID". | Text | Global | yes | `facility.BOMapClientRecordID · TEXT` |  |
+| `CreatedByID` | Created By | The Created By field is a system-populated field which captures the name of the member making changes to a record. | Member ID | — |  | `facility.CreatedByID · TEXT` | [Member](Member.md) |
+| `CreatedDate` | Created Date | The Created Date field is a system-populated field which captures the date that a record was created. | Time | — |  | `facility.CreatedDate · TEXT` |  |
+| `ModifiedByID` | Modified By | The Modified By field is a system-populated field which captures the name of the member who made a change to a record. | Member ID | Global |  | `facility.ModifiedByID · TEXT` | [Member](Member.md) |
+| `ModifiedDate` | Modified Date | The Modified Date field is a system-populated field which captures the date that a modification is made to a record. | Time | Global |  | `facility.ModifiedDate · TEXT` |  |
+| `RevNumber` | Rev Number | The Rev Number field indicates how many times a record has been modified. This value of the field increases by 1 each time the record is modified. | Number | — |  | `facility.RevNumber · TEXT` |  |
+| `UUID` | Facility UUID | This field captures a unique identifier associated with your record. This identifier is used if you are using an integration with other Accruent products. | Text | Global |  | `facility.UUID · TEXT` |  |
 
 ## What points here (7 keys)
 

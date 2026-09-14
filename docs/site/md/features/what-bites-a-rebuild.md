@@ -62,6 +62,18 @@ EquipmentContract has no table. There is no EquipmentContract table in any inven
 
 The discount-rate table is empty in both tenants. The reference table that should supply the ASC 842 discount rate holds zero rows in both captured tenants, while the accounting engine runs. Where the rate actually comes from is unresolved, and it blocks the accounting rebuild.
 
+## Fields are documented
+
+*Observed · fact · source: `docs/data-model/pg/bbw-field-inventory.csv`*
+
+6,091 fields carry the vendor's own definition. The field inventory explains what nearly every field is FOR, in the vendor's words — not what it is called or how it is typed, which is all the other sources give. Six thousand of the 7,421 fields in the census now resolve to a definition, and every field node in the schema map leads with it.
+
+## Replica is not schema
+
+*Observed · fact · source: `docs/data-model/pg/bbw-field-inventory.csv`*
+
+Replication coverage is not the product's schema. The inventory's PG Table Status column splits 69 tables "Created — holds data" against 150 "Not created yet". That describes the coverage of one replication loader targeting one database, lxr_drp_bbw — not the size of Lx's schema. The tell is project_entity: 107 fields, every one marked extracted, table never created, yet it is the universal supertype of a tenant holding 2,014 contracts, so it cannot be empty. The loader simply does not produce it. Read that column as loader coverage, never as a statement about the product.
+
 ## Punch List is out
 
 *Observed · fact · source: `docs/data-model/object-catalog.md`*

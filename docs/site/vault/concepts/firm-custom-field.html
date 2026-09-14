@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Firm custom fields &middot; Lx Vault</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="../../atlas.css">
+<link rel="stylesheet" href="../../research/research.css">
+<link rel="stylesheet" href="../vault.css">
+</head><body><style id="lxg">body{visibility:hidden}
+#lxgate{visibility:visible;position:fixed;inset:0;z-index:9999;display:flex;
+align-items:center;justify-content:center;background:#0f172a;
+font-family:'IBM Plex Sans',system-ui,sans-serif}
+#lxgate form{background:#fff;padding:30px 32px;border-radius:12px;width:310px;
+box-shadow:0 20px 60px rgba(0,0,0,.35)}
+#lxgate h2{margin:0 0 4px;font-size:19px;color:#0f172a}
+#lxgate p{margin:0 0 18px;font-size:12.5px;color:#64748b;line-height:1.5}
+#lxgate label{display:block;font-size:11px;text-transform:uppercase;
+letter-spacing:.07em;color:#64748b;margin:0 0 5px}
+#lxgate input{width:100%;box-sizing:border-box;padding:9px 11px;margin:0 0 14px;
+border:1px solid #cbd5e1;border-radius:7px;font-size:14px}
+#lxgate button{width:100%;padding:10px;border:0;border-radius:7px;
+background:#b4530a;color:#fff;font-size:14px;font-weight:600;cursor:pointer}
+#lxgate .err{color:#b91c1c;font-size:12px;margin:0 0 10px;display:none}</style>
+<div id="lxgate"><form onsubmit="return lxg(event)">
+<h2>Lx Atlas</h2>
+<p>Internal documentation. Not a security boundary &mdash; see
+<code>gate.py</code>.</p>
+<p class="err" id="lxge">Incorrect.</p>
+<label for="lxgu">User</label><input id="lxgu" autocomplete="username" autofocus>
+<label for="lxgp">Password</label><input id="lxgp" type="password"
+autocomplete="current-password">
+<button type="submit">Enter</button></form></div>
+<script>
+function lxgOpen(){var g=document.getElementById('lxgate');if(g)g.remove();
+var s=document.getElementById('lxg');if(s)s.remove();
+document.body.style.visibility='visible';}
+function lxg(ev){ev.preventDefault();
+if(document.getElementById('lxgu').value==='admin'&&
+   document.getElementById('lxgp').value==='admin'){
+ try{sessionStorage.setItem('lxg','1');}catch(e){}
+ lxgOpen();return false;}
+document.getElementById('lxge').style.display='block';return false;}
+try{if(sessionStorage.getItem('lxg')==='1')
+ document.addEventListener('DOMContentLoaded',lxgOpen);}catch(e){}
+</script>
+<header><b>Lx Atlas</b>
+<nav><a href="../../index.html">Overview</a><a href="../../atlas.html#/map?set=feature">Feature map</a>
+<a href="../../atlas.html">Interactive app</a>
+<a href="../../research/index.html">Research</a>
+<a href="../../research/screens.html">Screens</a>
+<a href="../index.html" class="on">Vault</a>
+<a href="../../questions.html">Open questions</a></nav></header>
+<main><p class="crumb"><a href="../../index.html">Atlas</a> &rsaquo;
+<a href="../index.html">Vault</a> &rsaquo; Firm custom fields</p><div class="fm"><span>concept</span><span>tenancy</span><span>data-model</span><span>core</span><span class="ev">Observed</span></div><p>A tenant&#x27;s custom fields are <strong>not rows in a metadata table</strong>. They are ordinary physical columns, named <code>Firm_&lt;Name&gt;</code>, fully typed.</p><div class="wrapt"><table><thead><tr><th></th><th style="text-align:right"></th></tr></thead><tbody><tr><td><code>Firm_</code> columns across the schema (census)</td><td style="text-align:right"><strong>359</strong></td></tr><tr><td>Objects carrying them</td><td style="text-align:right"><strong>20</strong></td></tr><tr><td>…on <a href="../../../entities/Contract.html">Contract</a> alone</td><td style="text-align:right"><strong>258</strong> of its 570 columns</td></tr></tbody></table></div><p>Next largest: <a href="../../../entities/Location.html">Location</a> 10, <a href="../../../entities/Facility.html">Facility</a> 8, <a href="../../../entities/Covenant.html">Covenant</a> 7, <a href="../../../entities/KeyDate.html">KeyDate</a> 7, <code>AllowanceTransaction</code> 6, <a href="../../../entities/Parcel.html">Parcel</a> 6. They carry real types — 188 Text, 77 <code>Dropdown (Custom Field)</code>, 28 Date, 22 Percentage, 19 Currency, 7 Custom List.</p><p>The <strong>contract wizard</strong> places them by their literal names — <code>Contract_Firm_LeaseAnalyst</code>, <code>Contract_Firm_FixturingPeriod</code>, <code>Contract_Firm_BuildoutDuration</code> — which is direct confirmation from a third surface.</p><p><strong>The count is contested; the conclusion is not.</strong> Three sources give 359 (census), 298 (a <code>showGlobal=false</code> re-sweep) and 205 (<a href="../../data-field-catalog.html">the catalog</a>). They measure different populations and are unreconciled — <a href="../../../open-questions/q-bbw-22-three-firm-field-counts.html">q-bbw-22-three-firm-field-counts</a>. The argument does not rest on the number: whether it is 205 or 359, <strong>adding one is DDL</strong>. That is <a href="../../../findings/finding-firm-fields-are-physical-columns.html">finding-firm-fields-are-physical-columns</a>, and it is the strongest single piece of evidence for database-per-tenant in this corpus.</p><p>Most of them are one thing. <strong>147 of the 205 catalog firm leaves are on <a href="../../../entities/Contract.html">Contract</a> and most are CAM clauses</strong> — ASG&#x27;s customisation of Lx is very largely a <a href="../../cam-waterfall.html">CAM</a> abstraction.</p><p>Source: <a href="../../docs/features/data-fields/README.html"><code>features/data-fields/</code></a> · <a href="../../docs/modules/platform-tenancy/udf-registry.html"><code>modules/platform-tenancy/udf-registry.md</code></a></p><div class="backlinks"><b>Linked from &middot; 13</b><a href="cam-waterfall.html">cam-waterfall</a><a href="custom-list.html">custom-list</a><a href="../entities/Allowance.html">Allowance</a><a href="../entities/ClientListRow.html">ClientListRow</a><a href="../entities/Contract.html">Contract</a><a href="../entities/Covenant.html">Covenant</a><a href="../entities/CustomCodeField.html">CustomCodeField</a><a href="../entities/Facility.html">Facility</a><a href="../entities/KeyDate.html">KeyDate</a><a href="../entities/Location.html">Location</a><a href="../features/feature-data-fields.html">feature-data-fields</a><a href="../findings/finding-firm-fields-are-physical-columns.html">finding-firm-fields-are-physical-columns</a><a href="../open-questions/q-bbw-22-three-firm-field-counts.html">q-bbw-22-three-firm-field-counts</a></div></main></body></html>

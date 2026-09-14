@@ -11,6 +11,9 @@ Source: `data-fields/demographics-market-tables.md`
 |  | Value |
 |---|---|
 | Fields declared | 1 |
+| Fields with a vendor definition | 0 of 1 inventoried |
+| Physical tables | `region` |
+| Replication database | `lxr_drp_bbw` |
 | Catalogued fields | 8 (8 global, 0 firm) |
 | Physical tables | 1 |
 | Referenced by | 34 keys from 12 record types |
@@ -28,6 +31,14 @@ Source: `data-fields/demographics-market-tables.md`
 
 **Observed.** 12 record types hold a foreign key into this one, so it sits at the centre of the relationship graph. Changing its key or its identity is a change to BudgetOptionTemplate, Contract, DemographicReport, DevelopmentSlot and 8 others.
 
+### Lands in region
+
+**Observed.** The field inventory names the physical destination of every column: one table in the database lxr_drp_bbw. Every field node carries its own table and column, so the mapping is per column, not per record.
+
+### A per-tenant database name
+
+**Derived.** The physical database is lxr_drp_bbw — the tenant's name is in the database name. That is one more piece of evidence for database-per-tenant and against a single shared schema, alongside the Firm_ columns.
+
 ## Rules that govern it
 
 | Rule | What it requires | Confidence |
@@ -44,9 +55,9 @@ Source: `data-fields/demographics-market-tables.md`
 
 Typed pointers to other records. Lx names each FK type after the table it points at, so the relational model is declared rather than implied.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `ProjectEntityID` |  | Entity ID | — |  | [ProjectEntity](ProjectEntity.md) |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `ProjectEntityID` |  |  | Entity ID | — |  | `region.ProjectEntityID · TEXT` | [ProjectEntity](ProjectEntity.md) |
 
 ## What points here (34 keys)
 

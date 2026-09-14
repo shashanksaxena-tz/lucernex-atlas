@@ -11,6 +11,9 @@ Source: `data-fields/bid-package-ancillary-tables.md`
 |  | Value |
 |---|---|
 | Fields declared | 4 |
+| Fields with a vendor definition | — |
+| Physical tables | — |
+| Replication database | — |
 | Catalogued fields | 3 (3 global, 0 firm) |
 | Physical tables | 0 |
 | Referenced by | 0 keys from 0 record types |
@@ -34,16 +37,16 @@ Source: `data-fields/bid-package-ancillary-tables.md`
 
 Typed pointers to other records. Lx names each FK type after the table it points at, so the relational model is declared rather than implied.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `ProjectEntityID` |  | Entity ID | — |  | [ProjectEntity](ProjectEntity.md) |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `ProjectEntityID` |  |  | Entity ID | — |  |  | [ProjectEntity](ProjectEntity.md) |
 
 ### Text & notes (3)
 
 Free text. Notably, free text is never allowed to drive a conditional display rule.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `BidPackageID` | Bid Package | Text | Global | yes |  |
-| `BudgetLineItemID` | Budget Line Item | Text | Global | yes |  |
-| `Description` |  | Text | Global |  |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `BidPackageID` | Bid Package |  | Text | Global | yes |  |  |
+| `BudgetLineItemID` | Budget Line Item |  | Text | Global | yes |  |  |
+| `Description` |  |  | Text | Global |  |  |  |

@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Search and filtering &middot; Lx Vault</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="../../atlas.css">
+<link rel="stylesheet" href="../../research/research.css">
+<link rel="stylesheet" href="../vault.css">
+</head><body><style id="lxg">body{visibility:hidden}
+#lxgate{visibility:visible;position:fixed;inset:0;z-index:9999;display:flex;
+align-items:center;justify-content:center;background:#0f172a;
+font-family:'IBM Plex Sans',system-ui,sans-serif}
+#lxgate form{background:#fff;padding:30px 32px;border-radius:12px;width:310px;
+box-shadow:0 20px 60px rgba(0,0,0,.35)}
+#lxgate h2{margin:0 0 4px;font-size:19px;color:#0f172a}
+#lxgate p{margin:0 0 18px;font-size:12.5px;color:#64748b;line-height:1.5}
+#lxgate label{display:block;font-size:11px;text-transform:uppercase;
+letter-spacing:.07em;color:#64748b;margin:0 0 5px}
+#lxgate input{width:100%;box-sizing:border-box;padding:9px 11px;margin:0 0 14px;
+border:1px solid #cbd5e1;border-radius:7px;font-size:14px}
+#lxgate button{width:100%;padding:10px;border:0;border-radius:7px;
+background:#b4530a;color:#fff;font-size:14px;font-weight:600;cursor:pointer}
+#lxgate .err{color:#b91c1c;font-size:12px;margin:0 0 10px;display:none}</style>
+<div id="lxgate"><form onsubmit="return lxg(event)">
+<h2>Lx Atlas</h2>
+<p>Internal documentation. Not a security boundary &mdash; see
+<code>gate.py</code>.</p>
+<p class="err" id="lxge">Incorrect.</p>
+<label for="lxgu">User</label><input id="lxgu" autocomplete="username" autofocus>
+<label for="lxgp">Password</label><input id="lxgp" type="password"
+autocomplete="current-password">
+<button type="submit">Enter</button></form></div>
+<script>
+function lxgOpen(){var g=document.getElementById('lxgate');if(g)g.remove();
+var s=document.getElementById('lxg');if(s)s.remove();
+document.body.style.visibility='visible';}
+function lxg(ev){ev.preventDefault();
+if(document.getElementById('lxgu').value==='admin'&&
+   document.getElementById('lxgp').value==='admin'){
+ try{sessionStorage.setItem('lxg','1');}catch(e){}
+ lxgOpen();return false;}
+document.getElementById('lxge').style.display='block';return false;}
+try{if(sessionStorage.getItem('lxg')==='1')
+ document.addEventListener('DOMContentLoaded',lxgOpen);}catch(e){}
+</script>
+<header><b>Lx Atlas</b>
+<nav><a href="../../index.html">Overview</a><a href="../../atlas.html#/map?set=feature">Feature map</a>
+<a href="../../atlas.html">Interactive app</a>
+<a href="../../research/index.html">Research</a>
+<a href="../../research/screens.html">Screens</a>
+<a href="../index.html" class="on">Vault</a>
+<a href="../../questions.html">Open questions</a></nav></header>
+<main><p class="crumb"><a href="../../index.html">Atlas</a> &rsaquo;
+<a href="../index.html">Vault</a> &rsaquo; Search and filtering</p><div class="fm"><span>feature</span><span>search</span><span>api</span><span class="ev">Observed</span></div><p>The largest undocumented area, because <code>PLForm.jsp</code> serves <strong>37 of 105</strong> routed screens. Three mechanisms exist and they are <strong>not layers of one feature</strong>.</p><ol><li><strong>Per-placement</strong>, in <a href="../../../entities/PageLayoutField.html">PageLayoutField</a><code>.JSONConfigText</code>. Ten list/search keys, and the striking number is <strong><code>IncludeInSearch</code> on just 9 placements tenant-wide</strong> — so search participation is configured <strong>per field per layout</strong>, not per entity or per field. <code>ColumnWidthInList</code> 667 · <code>ShowColumnTotal</code> 146 · <code>rowsPerPage</code> 26 · <code>DisableRowEditorInList</code> 27.</li><li><strong>Layout-level run-mode filters</strong>, in <a href="../../../entities/PageLayoutFilter.html">PageLayoutFilter</a> — <strong>zero rows in BBW</strong>. Built and unused.</li><li><strong>The API</strong>: <a href="../../../concepts/fiql.html">fiql</a>, with <code>fields</code> mandatory and a <strong>413</strong> ceiling.</li></ol><p>Lists carry two narrowing controls side by side — a typed filter row <em>and</em> a separate top-right <code>Search:</code> box. Inline row editing is the default (<code>DisableRowEditorInList</code> turns it off).</p><p>Three per-placement option filters are used <strong>once each</strong>: <code>limitBy_CodeContactTypeID</code>, <code>limitBy_ExpenseTypeName</code>, <code>limitBy_CodeJobFunctionID</code>.</p><p><code>Issue.SearchField (Text)</code> is a denormalised search column, which suggests some search is served by precomputed text. <em>(Inferred.)</em></p><p><a href="../../docs/features/search-filtering/README.html"><code>features/search-filtering/</code></a></p><div class="backlinks"><b>Linked from &middot; 1</b><a href="../entities/PageLayoutFilter.html">PageLayoutFilter</a></div></main></body></html>

@@ -215,7 +215,7 @@ def page(title, body, toc=None, sub="", depth=0):
 <nav><a href="{up}../index.html">Overview</a><a href="{up}../atlas.html#/map?set=feature">Feature map</a>
 <a href="{up}../atlas.html">Interactive app</a>
 <a href="{up}../entities/index.html">Record types</a><a href="{up}../rules/index.html">Rules</a>
-<a href="{up}index.html" class="on">Research</a>\n<a href="{up}screens.html">Screens</a>
+<a href="{up}index.html" class="on">Research</a>\n<a href="{up}screens.html">Screens</a>\n<a href="{up}../vault/index.html">Vault</a>
 <a href="{up}../questions.html">Open questions</a></nav></header>
 <main><p class="crumb"><a href="{up}../index.html">Atlas</a> &rsaquo;
 <a href="{up}index.html">Research</a>{sub}</p>{nav}{body}</main></body></html>"""))

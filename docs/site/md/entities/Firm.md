@@ -11,6 +11,9 @@ Source: `data-fields/firm.md`
 |  | Value |
 |---|---|
 | Fields declared | 18 |
+| Fields with a vendor definition | 14 of 18 inventoried |
+| Physical tables | `firm` |
+| Replication database | `lxr_drp_bbw` |
 | Catalogued fields | 24 (23 global, 1 firm) |
 | Physical tables | 1 |
 | Referenced by | 0 keys from 0 record types |
@@ -32,6 +35,22 @@ Source: `data-fields/firm.md`
 
 **Observed.** Of 24 catalogued fields on this record, 1 are Firm scope — defined by this tenant rather than shipped by the platform. Firm-scope definitions are RGAF rows carrying IsGlobal, FirmID and IsClientExtensionField.
 
+### Lands in firm
+
+**Observed.** The field inventory names the physical destination of every column: one table in the database lxr_drp_bbw. Every field node carries its own table and column, so the mapping is per column, not per record.
+
+### A per-tenant database name
+
+**Derived.** The physical database is lxr_drp_bbw — the tenant's name is in the database name. That is one more piece of evidence for database-per-tenant and against a single shared schema, alongside the Firm_ columns.
+
+### 14 fields carry a vendor definition
+
+**Observed.** 14 of this record's 18 inventoried fields have prose written by the vendor saying what the field is for. Open any field node to read it — this is the one source in the corpus that explains fields rather than listing them.
+
+### 1 field marked required
+
+**Observed.** The inventory marks 1 of this record's fields Required. Across the whole inventory that is 606 fields, which independently corroborates the 603 the corpus had derived from the Data Fields catalogue — two sources, arrived at separately, agreeing to within three.
+
 ## Rules that govern it
 
 | Rule | What it requires | Confidence |
@@ -47,51 +66,51 @@ Source: `data-fields/firm.md`
 
 Typed pointers to other records. Lx names each FK type after the table it points at, so the relational model is declared rather than implied.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `CapProgramSetupPageLayoutID` | Capital Program Setup Page | item ID | Global |  | unresolved |
-| `CapProjectSetupPageLayoutID` | Capital Project Setup Page | item ID | Global |  | unresolved |
-| `ContractSetupPageLayoutID` | RE Contract Setup Page | item ID | Global |  | unresolved |
-| `EquipmentContractSetupPageLayoutID` | Equipment Contract Setup Page | item ID | Global |  | unresolved |
-| `FacilitySetupPageLayoutID` | Facility Setup Page | item ID | Global |  | unresolved |
-| `LocationSetupPageLayoutID` | Location Setup Page | item ID | Global |  | unresolved |
-| `OpenProjectSetupPageLayoutID` | Opening Project Setup Page | item ID | Global |  | unresolved |
-| `ParcelSetupPageLayoutID` | Parcel Setup Page | item ID | Global |  | unresolved |
-| `PortfolioSetupPageLayoutID` | Portfolio Setup Page | item ID | Global |  | unresolved |
-| `PrototypeSetupPageLayoutID` | Prototype Setup Page | item ID | Global |  | unresolved |
-| `SiteSetupPageLayoutID` | Site Setup Page | item ID | Global |  | unresolved |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `CapProgramSetupPageLayoutID` | Capital Program Setup Page | The page layout ID of the first page of the Capital Program Setup Wizard. | item ID | Global |  | `firm.CapProgramSetupPageLayoutID · TEXT` | unresolved |
+| `CapProjectSetupPageLayoutID` | Capital Project Setup Page | The page layout ID of the first page of the Capital Project Setup Wizard. | item ID | Global |  | `firm.CapProjectSetupPageLayoutID · TEXT` | unresolved |
+| `ContractSetupPageLayoutID` | RE Contract Setup Page | The page layout ID of the first page of the RE Contract Setup Wizard. | item ID | Global |  | `firm.ContractSetupPageLayoutID · TEXT` | unresolved |
+| `EquipmentContractSetupPageLayoutID` | Equipment Contract Setup Page | The page layout ID of the first page of the Equipment Contract Setup Wizard. | item ID | Global |  | `firm.EquipmentContractSetupPageLayoutID · TEXT` | unresolved |
+| `FacilitySetupPageLayoutID` | Facility Setup Page | The page layout ID of the first page of the Facility Setup Wizard. | item ID | Global |  | `firm.FacilitySetupPageLayoutID · TEXT` | unresolved |
+| `LocationSetupPageLayoutID` | Location Setup Page | The page layout ID of the first page of the Location Setup Wizard. | item ID | Global |  | `firm.LocationSetupPageLayoutID · TEXT` | unresolved |
+| `OpenProjectSetupPageLayoutID` | Opening Project Setup Page | The page layout ID of the first page of the Project Setup Wizard. | item ID | Global |  | `firm.OpenProjectSetupPageLayoutID · TEXT` | unresolved |
+| `ParcelSetupPageLayoutID` | Parcel Setup Page | The page layout ID of the first page of the Parcel Setup Wizard. | item ID | Global |  | `firm.ParcelSetupPageLayoutID · TEXT` | unresolved |
+| `PortfolioSetupPageLayoutID` | Portfolio Setup Page | The page layout ID of the first page of the Portfolio Setup Wizard. | item ID | Global |  | `firm.PortfolioSetupPageLayoutID · TEXT` | unresolved |
+| `PrototypeSetupPageLayoutID` | Prototype Setup Page | The page layout ID of the first page of the Prototype Setup Wizard. | item ID | Global |  | `firm.PrototypeSetupPageLayoutID · TEXT` | unresolved |
+| `SiteSetupPageLayoutID` | Site Setup Page | The page layout ID of the first page of the Site Setup Wizard. | item ID | Global |  | `firm.SiteSetupPageLayoutID · TEXT` | unresolved |
 
 ### Coded values (drop-downs) (1)
 
 Fields bound to a master code table. Every one of these is a place where an administrator, not a developer, controls the allowed values.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `CodeDefaultFolderSecurityID` | Default Folder Security | Dropdown (Security Type Code) | Global | yes | Security Type Code |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `CodeDefaultFolderSecurityID` | Default Folder Security |  | Dropdown (Security Type Code) | Global | yes | `firm.CodeDefaultFolderSecurityID · TEXT` | Security Type Code |
 
 ### Text & notes (3)
 
 Free text. Notably, free text is never allowed to drive a conditional display rule.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `Firm_HeaderLogo` | Header Logo | Text | Firm |  |  |
-| `JSONConfigText` | JSON Configuration | Text | Global |  |  |
-| `SvcChannelFirmID` | Service Channel FirmID | Text | Global |  |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `Firm_HeaderLogo` | Header Logo |  | Text | Firm |  | `firm.Firm_HeaderLogo · TEXT` |  |
+| `JSONConfigText` | JSON Configuration |  | Text | Global |  | `firm.JSONConfigText · TEXT` |  |
+| `SvcChannelFirmID` | Service Channel FirmID |  | Text | Global |  | `firm.SvcChannelFirmID · TEXT` |  |
 
 ### Audit & record keeping (2)
 
 Who created and changed the record, and the identifiers that survive migration.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `ModifiedByID` | Modified By | Member ID | Global |  | [Member](Member.md) |
-| `ModifiedDate` | Modified Date | Time | Global |  |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `ModifiedByID` | Modified By | The Modified By field is a system-populated field which captures the name of the member who made a change to a record. | Member ID | Global |  | `firm.ModifiedByID · TEXT` | [Member](Member.md) |
+| `ModifiedDate` | Modified Date | The Modified Date field is a system-populated field which captures the date that a modification is made to a record. | Time | Global |  | `firm.ModifiedDate · TEXT` |  |
 
 ### Other (1)
 
 Everything that did not fall into a named group.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `CurrentDate` | Current Date | Current Date | Global |  |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `CurrentDate` | Current Date | Calculates the current date. | Current Date | Global |  | `firm.CurrentDate · TEXT` |  |

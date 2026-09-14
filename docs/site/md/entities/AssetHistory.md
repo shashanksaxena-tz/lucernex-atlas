@@ -11,6 +11,9 @@ Source: `data-fields/audit-history-tables.md`
 |  | Value |
 |---|---|
 | Fields declared | 13 |
+| Fields with a vendor definition | 13 of 13 inventoried |
+| Physical tables | — |
+| Replication database | — |
 | Catalogued fields | 13 (13 global, 0 firm) |
 | Physical tables | 1 |
 | Referenced by | 0 keys from 0 record types |
@@ -24,6 +27,18 @@ Source: `data-fields/audit-history-tables.md`
 
 **Derived.** Owned by the firm as a whole rather than by any one business record — configuration and reference data rather than transactional rows.
 
+### 13 fields carry a vendor definition
+
+**Observed.** 13 of this record's 13 inventoried fields have prose written by the vendor saying what the field is for. Open any field node to read it — this is the one source in the corpus that explains fields rather than listing them.
+
+### 3 fields marked required
+
+**Observed.** The inventory marks 3 of this record's fields Required. Across the whole inventory that is 606 fields, which independently corroborates the 603 the corpus had derived from the Data Fields catalogue — two sources, arrived at separately, agreeing to within three.
+
+### 13 fields excluded from extraction
+
+**Observed.** Observed of the loader. The inventory marks 13 of this record's fields as not extracted to PostgreSQL, so the replication target creates no column for them. They still exist in Lx; anything reading the replica rather than the product will not see them.
+
 ## Rules that govern it
 
 | Rule | What it requires | Confidence |
@@ -36,53 +51,53 @@ Source: `data-fields/audit-history-tables.md`
 
 Typed pointers to other records. Lx names each FK type after the table it points at, so the relational model is declared rather than implied.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `AssetID` | Asset | Equipment ID | Global | yes | [Asset](Asset.md) |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `AssetID` | Asset | The asset ID of the associated equipment asset. | Equipment ID | Global | yes | not extracted | [Asset](Asset.md) |
 
 ### Soft references (2)
 
 Columns that name another record without a typed foreign key behind them - generic handles such as Entity ID and item ID that point at whichever table the row belongs to. These are the joins a rebuild has to make explicit.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `FromProjectEntityID` | From Entity | Entity | Global |  |  |
-| `ProjectEntityID` | To Entity | Entity | Global | yes |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `FromProjectEntityID` | From Entity | The entity that the asset was moved from. | Entity | Global |  | not extracted |  |
+| `ProjectEntityID` | To Entity | The ProjectEntityID is the Base Entity System Identifier for associated tasks, folders, documents, forms, and other records. It is assigned automatically by the system, and is not editable. | Entity | Global | yes | not extracted |  |
 
 ### Quantities (1)
 
 Counts, areas and other plain numeric measures.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `AssetHistoryID` | Asset History RecID | Number | Global |  |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `AssetHistoryID` | Asset History RecID | This field contains a Base Entity System Identifier for your record. It is assigned automatically by the system, and is not editable. | Number | Global |  | not extracted |  |
 
 ### Dates & timestamps (2)
 
 Dates that drive schedules, and system timestamps.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `MoveInDate` | Move In Date | Date | Global |  |  |
-| `MoveOutDate` | Move Out Date | Date | Global |  |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `MoveInDate` | Move In Date | The date that the asset was moved to the entity. | Date | Global |  | not extracted |  |
+| `MoveOutDate` | Move Out Date | The date that the asset was removed from the entity. | Date | Global |  | not extracted |  |
 
 ### Text & notes (1)
 
 Free text. Notably, free text is never allowed to drive a conditional display rule.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `Notes` |  | Text | Global |  |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `Notes` |  | Add any notes about the record. | Text | Global |  | not extracted |  |
 
 ### Audit & record keeping (6)
 
 Who created and changed the record, and the identifiers that survive migration.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `BOMapClientRecordID` | Asset History ClientID | Text | Global | yes |  |
-| `CreatedByID` | Created By | Member ID | Global |  | [Member](Member.md) |
-| `CreatedDate` | Created Date | Time | Global |  |  |
-| `ModifiedByID` | Modified By | Member ID | Global |  | [Member](Member.md) |
-| `ModifiedDate` | Modified Date | Time | Global |  |  |
-| `RevNumber` | Rev Number | Number | Global |  |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `BOMapClientRecordID` | Asset History ClientID | The ClientID field is a free form text field that can be used when importing data to uniquely look up a record for update. This record identifier can either be system-generated or defined by the user upon the initial import of record data. The ClientID has the database name "BOMapClientRecordID". | Text | Global | yes | not extracted |  |
+| `CreatedByID` | Created By | The Created By field is a system-populated field which captures the name of the member making changes to a record. | Member ID | Global |  | not extracted | [Member](Member.md) |
+| `CreatedDate` | Created Date | The Created Date field is a system-populated field which captures the date that a record was created. | Time | Global |  | not extracted |  |
+| `ModifiedByID` | Modified By | The Modified By field is a system-populated field which captures the name of the member who made a change to a record. | Member ID | Global |  | not extracted | [Member](Member.md) |
+| `ModifiedDate` | Modified Date | The Modified Date field is a system-populated field which captures the date that a modification is made to a record. | Time | Global |  | not extracted |  |
+| `RevNumber` | Rev Number | The Rev Number field indicates how many times a record has been modified. This value of the field increases by 1 each time the record is modified. | Number | Global |  | not extracted |  |

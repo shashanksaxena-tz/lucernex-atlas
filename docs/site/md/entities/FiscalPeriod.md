@@ -11,6 +11,9 @@ Source: `data-fields/fiscal-period.md`
 |  | Value |
 |---|---|
 | Fields declared | 17 |
+| Fields with a vendor definition | 16 of 17 inventoried |
+| Physical tables | `fiscal_period` |
+| Replication database | `lxr_drp_bbw` |
 | Catalogued fields | 16 (16 global, 0 firm) |
 | Physical tables | 1 |
 | Referenced by | 0 keys from 0 record types |
@@ -23,6 +26,22 @@ Source: `data-fields/fiscal-period.md`
 ### Tenant-scoped, one join deep
 
 **Derived.** This record carries no FirmID of its own. It hangs off ProjectEntity, and tenant isolation has to be enforced by joining to that row and filtering on its FirmID — or it is not enforced at all. 161 of the 223 record types are shaped this way.
+
+### Lands in fiscal_period
+
+**Observed.** The field inventory names the physical destination of every column: one table in the database lxr_drp_bbw. Every field node carries its own table and column, so the mapping is per column, not per record.
+
+### A per-tenant database name
+
+**Derived.** The physical database is lxr_drp_bbw — the tenant's name is in the database name. That is one more piece of evidence for database-per-tenant and against a single shared schema, alongside the Firm_ columns.
+
+### 16 fields carry a vendor definition
+
+**Observed.** 16 of this record's 17 inventoried fields have prose written by the vendor saying what the field is for. Open any field node to read it — this is the one source in the corpus that explains fields rather than listing them.
+
+### 6 fields marked required
+
+**Observed.** The inventory marks 6 of this record's fields Required. Across the whole inventory that is 606 fields, which independently corroborates the 603 the corpus had derived from the Data Fields catalogue — two sources, arrived at separately, agreeing to within three.
 
 ## Rules that govern it
 
@@ -38,64 +57,64 @@ Source: `data-fields/fiscal-period.md`
 
 Typed pointers to other records. Lx names each FK type after the table it points at, so the relational model is declared rather than implied.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `ProgramID` | Portfolio | Portfolio ID | Global |  | [Program](Program.md) |
-| `ProjectEntityID` |  | Entity ID | — |  | [ProjectEntity](ProjectEntity.md) |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `ProgramID` | Portfolio | Select the Portfolio that the record belongs to from this field. | Portfolio ID | Global |  | `fiscal_period.ProgramID · TEXT` | [Program](Program.md) |
+| `ProjectEntityID` |  |  | Entity ID | — |  | `fiscal_period.ProjectEntityID · TEXT` | [ProjectEntity](ProjectEntity.md) |
 
 ### Soft references (1)
 
 Columns that name another record without a typed foreign key behind them - generic handles such as Entity ID and item ID that point at whichever table the row belongs to. These are the joins a rebuild has to make explicit.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `MatchingCalendarMonth` | Matching Calendar Month | Dropdown | Global |  |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `MatchingCalendarMonth` | Matching Calendar Month | The calendar month that this fiscal period overlaps with. | Dropdown | Global |  | `fiscal_period.MatchingCalendarMonth · TEXT` |  |
 
 ### Quantities (7)
 
 Counts, areas and other plain numeric measures.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `FiscalPeriodID` | Fiscal Period RecID | Number | Global |  |  |
-| `MatchingCalendarYear` | Matching Calendar Year | Number | Global |  |  |
-| `NumberDaysInPeriod` | Days In Period | Number | Global |  |  |
-| `NumberWeeksInPeriod` | Weeks In Period | Number | Global |  |  |
-| `Period` |  | Number | Global | yes |  |
-| `Quarter` |  | Number | Global | yes |  |
-| `Year` |  | Number | Global | yes |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `FiscalPeriodID` | Fiscal Period RecID | This field contains a Base Entity System Identifier for your record. It is assigned automatically by the system, and is not editable. | Number | Global |  | `fiscal_period.FiscalPeriodID · VARCHAR(64) NOT NULL` |  |
+| `MatchingCalendarYear` | Matching Calendar Year | The calendar year that this fiscal period overlaps with. | Number | Global |  | `fiscal_period.MatchingCalendarYear · TEXT` |  |
+| `NumberDaysInPeriod` | Days In Period | Calculates how many days are in the period. | Number | Global |  | `fiscal_period.NumberDaysInPeriod · TEXT` |  |
+| `NumberWeeksInPeriod` | Weeks In Period | Calculates how many weeks are in the period. | Number | Global |  | `fiscal_period.NumberWeeksInPeriod · TEXT` |  |
+| `Period` |  | The period number. | Number | Global | yes | `fiscal_period.Period · TEXT` |  |
+| `Quarter` |  | The quarter number. | Number | Global | yes | `fiscal_period.Quarter · TEXT` |  |
+| `Year` |  | The fiscal year. | Number | Global | yes | `fiscal_period.Year · TEXT` |  |
 
 ### Dates & timestamps (2)
 
 Dates that drive schedules, and system timestamps.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `BeginDate` | Begin Date | Date | Global | yes |  |
-| `EndDate` | End Date | Date | Global | yes |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `BeginDate` | Begin Date | The Begin Date field allows you to select a begin date for the record. | Date | Global | yes | `fiscal_period.BeginDate · TEXT` |  |
+| `EndDate` | End Date | The End Date field allows you to select an end date for the record. | Date | Global | yes | `fiscal_period.EndDate · TEXT` |  |
 
 ### Flags (1)
 
 Booleans. In this product they usually gate engine behaviour rather than describe the record.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `Is4or5WeekPeriod` | Is 4 or 5 Week Period? | Boolean | Global |  |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `Is4or5WeekPeriod` | Is 4 or 5 Week Period? | This field determines how many weeks are in the fiscal period. It has two potential values: 4 weeks or 5 weeks. | Boolean | Global |  | `fiscal_period.Is4or5WeekPeriod · TEXT` |  |
 
 ### Text & notes (1)
 
 Free text. Notably, free text is never allowed to drive a conditional display rule.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `FiscalPeriodName` | Fiscal Period Name | Text | Global |  |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `FiscalPeriodName` | Fiscal Period Name | This field is not implemented. | Text | Global |  | `fiscal_period.FiscalPeriodName · TEXT` |  |
 
 ### Audit & record keeping (3)
 
 Who created and changed the record, and the identifiers that survive migration.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `BOMapClientRecordID` | Fiscal Period ClientID | Text | Global | yes |  |
-| `ModifiedByID` | Modified By | Member ID | Global |  | [Member](Member.md) |
-| `ModifiedDate` | Modified Date | Time | Global |  |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `BOMapClientRecordID` | Fiscal Period ClientID | The ClientID field is a free form text field that can be used when importing data to uniquely look up a record for update. This record identifier can either be system-generated or defined by the user upon the initial import of record data. The ClientID has the database name "BOMapClientRecordID". | Text | Global | yes | `fiscal_period.BOMapClientRecordID · TEXT` |  |
+| `ModifiedByID` | Modified By | The Modified By field is a system-populated field which captures the name of the member who made a change to a record. | Member ID | Global |  | `fiscal_period.ModifiedByID · TEXT` | [Member](Member.md) |
+| `ModifiedDate` | Modified Date | The Modified Date field is a system-populated field which captures the date that a modification is made to a record. | Time | Global |  | `fiscal_period.ModifiedDate · TEXT` |  |

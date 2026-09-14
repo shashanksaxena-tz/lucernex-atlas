@@ -11,6 +11,9 @@ Source: `data-fields/alternate-rent-schedule.md`
 |  | Value |
 |---|---|
 | Fields declared | 25 |
+| Fields with a vendor definition | 24 of 26 inventoried |
+| Physical tables | `alternate_rent_schedule` |
+| Replication database | `lxr_drp_bbw` |
 | Catalogued fields | 24 (24 global, 0 firm) |
 | Physical tables | 1 |
 | Referenced by | 2 keys from 2 record types |
@@ -23,6 +26,22 @@ Source: `data-fields/alternate-rent-schedule.md`
 ### Tenant-scoped, one join deep
 
 **Derived.** This record carries no FirmID of its own. It hangs off ProjectEntity, and tenant isolation has to be enforced by joining to that row and filtering on its FirmID — or it is not enforced at all. 161 of the 223 record types are shaped this way.
+
+### Lands in alternate_rent_schedule
+
+**Observed.** The field inventory names the physical destination of every column: one table in the database lxr_drp_bbw. Every field node carries its own table and column, so the mapping is per column, not per record.
+
+### A per-tenant database name
+
+**Derived.** The physical database is lxr_drp_bbw — the tenant's name is in the database name. That is one more piece of evidence for database-per-tenant and against a single shared schema, alongside the Firm_ columns.
+
+### 24 fields carry a vendor definition
+
+**Observed.** 24 of this record's 26 inventoried fields have prose written by the vendor saying what the field is for. Open any field node to read it — this is the one source in the corpus that explains fields rather than listing them.
+
+### 2 fields marked required
+
+**Observed.** The inventory marks 2 of this record's fields Required. Across the whole inventory that is 606 fields, which independently corroborates the 603 the corpus had derived from the Data Fields catalogue — two sources, arrived at separately, agreeing to within three.
 
 ## Rules that govern it
 
@@ -39,89 +58,89 @@ Source: `data-fields/alternate-rent-schedule.md`
 
 Typed pointers to other records. Lx names each FK type after the table it points at, so the relational model is declared rather than implied.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `ContractID` | Contract | Contract ID | Global | yes | [Contract](Contract.md) |
-| `ExpenseSetupID` | Expense Setup | Expense Setup ID | Global |  | [ExpenseSetup](ExpenseSetup.md) |
-| `ProjectEntityID` |  | Entity ID | — |  | [ProjectEntity](ProjectEntity.md) |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `ContractID` | Contract | The Contract ID is a unique identifier that belongs to a contract. The Contract ID of a contract can only be changed from the Contract > Details > Summary page. | Contract ID | Global | yes | `alternate_rent_schedule.ContractID · TEXT` | [Contract](Contract.md) |
+| `ExpenseSetupID` | Expense Setup | The ExpenseSetupID field is used to associate an alternate rent record with an expense setup record. | Expense Setup ID | Global |  | `alternate_rent_schedule.ExpenseSetupID · TEXT` | [ExpenseSetup](ExpenseSetup.md) |
+| `ProjectEntityID` |  |  | Entity ID | — |  | `alternate_rent_schedule.ProjectEntityID · TEXT` | [ProjectEntity](ProjectEntity.md) |
 
 ### Coded values (drop-downs) (2)
 
 Fields bound to a master code table. Every one of these is a place where an administrator, not a developer, controls the allowed values.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `CodeAltRentMathID` | Alt Rent Math | Dropdown (Alt Rent Math Code) | Global |  | Alt Rent Math Code |
-| `CodeSalesGroupID` | Sales Group | Dropdown (Sales Group) | Global |  | Sales Group |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `CodeAltRentMathID` | Alt Rent Math | This field is for record keeping purposes only. It has no functional impact on the generated payment. Select how your alternate rent should be calculated from this field. Once you generate alternate rent, you will need to approve or reject the appropriate payments from the Approve Payments modal window. | Dropdown (Alt Rent Math Code) | Global |  | `alternate_rent_schedule.CodeAltRentMathID · TEXT` | Alt Rent Math Code |
+| `CodeSalesGroupID` | Sales Group | In alternate rent scenarios, different sales figures can apply. Select the appropriate sales group from the Sales Group field. Any percentage rent schedules with this sales group will be affected if they fall within the time range of the alternate rent schedule. | Dropdown (Sales Group) | Global |  | `alternate_rent_schedule.CodeSalesGroupID · TEXT` | Sales Group |
 
 ### Money (3)
 
 Currency amounts. Stored as TEXT in the physical database, which is why the rebuild must impose BigDecimal typing of its own.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `CapAmount` | Monthly Max Cap(Ceiling) | Currency | Global |  |  |
-| `ExpenseReductionAmount` | Expense Reduction Amount | Currency | Global |  |  |
-| `FloorAmount` | Monthly Min Cap(Floor) | Currency | Global |  |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `CapAmount` | Monthly Max Cap(Ceiling) | Enter the maximum, or ceiling cap for alternate rent in this field. | Currency | Global |  | `alternate_rent_schedule.CapAmount · TEXT` |  |
+| `ExpenseReductionAmount` | Expense Reduction Amount | This field reduces the amount of a generated transaction by a fixed amount. Enter the fixed amount in this field. This field does not appear until the Reduce by Fixed Amount option button is selected. | Currency | Global |  | `alternate_rent_schedule.ExpenseReductionAmount · TEXT` |  |
+| `FloorAmount` | Monthly Min Cap(Floor) | Enter the minimum, or floor cap for alternate rent in this field. | Currency | Global |  | `alternate_rent_schedule.FloorAmount · TEXT` |  |
 
 ### Rates & percentages (2)
 
 Percentage inputs and computed rates.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `ExpenseReductionPercent` | Expense Reduction Percent | Percentage | Global |  |  |
-| `PercentRentRate` | Percent Rent Rate | Percentage | Global |  |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `ExpenseReductionPercent` | Expense Reduction Percent | This field reduces the amount of a generated transaction by a percentage amount. Enter the percentage amount in this field. This field does not appear until the Reduce by % Amount option button is selected. | Percentage | Global |  | `alternate_rent_schedule.ExpenseReductionPercent · TEXT` |  |
+| `PercentRentRate` | Percent Rent Rate | Enter the percent rent rate you would like to pay while your contract is in alternate rent and you are paying a percentage of gross sales in this field. | Percentage | Global |  | `alternate_rent_schedule.PercentRentRate · TEXT` |  |
 
 ### Quantities (1)
 
 Counts, areas and other plain numeric measures.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `AlternateRentScheduleID` | Alternate Rent Schedule RecID | Number | Global |  |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `AlternateRentScheduleID` | Alternate Rent Schedule RecID | This field contains a Base Entity System Identifier for your record. It is assigned automatically by the system, and is not editable. | Number | Global |  | `alternate_rent_schedule.AlternateRentScheduleID · VARCHAR(64) NOT NULL` |  |
 
 ### Dates & timestamps (2)
 
 Dates that drive schedules, and system timestamps.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `BeginDate` | Begin Date | Date | Global | yes |  |
-| `EndDate` | End Date | Date | Global |  |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `BeginDate` | Begin Date | The Begin Date field allows you to select a begin date for the record. | Date | Global | yes | `alternate_rent_schedule.BeginDate · TEXT` |  |
+| `EndDate` | End Date | The End Date field allows you to select an end date for the record. | Date | Global |  | `alternate_rent_schedule.EndDate · TEXT` |  |
 
 ### Flags (4)
 
 Booleans. In this product they usually gate engine behaviour rather than describe the record.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `PRDeductExclusions` | Deduct Exclusions? | Boolean | Global |  |  |
-| `SetExpHoldFlag` | Set payments for Recurring Expenses on Hold | Boolean | Global |  |  |
-| `SetPRHoldFlag` | Set payments for Percent Rent on Hold | Boolean | Global |  |  |
-| `SuspendSL` | Suspend SL? | Boolean | Global |  |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `PRDeductExclusions` | Deduct Exclusions? | Select this check box if you would like to continue to deduct exclusions from your percentage rent. | Boolean | Global |  | `alternate_rent_schedule.PRDeductExclusions · TEXT` |  |
+| `SetExpHoldFlag` | Set payments for Recurring Expenses on Hold | This check box sets a Hold flag on all recurring expense transactions generated while the contract is in alternate rent. | Boolean | Global |  | `alternate_rent_schedule.SetExpHoldFlag · TEXT` |  |
+| `SetPRHoldFlag` | Set payments for Percent Rent on Hold | This check box sets a Hold flag on all percentage rent transactions generated while the contract is in alternate rent. | Boolean | Global |  | `alternate_rent_schedule.SetPRHoldFlag · TEXT` |  |
+| `SuspendSL` | Suspend SL? | This field is no longer used. | Boolean | Global |  | `alternate_rent_schedule.SuspendSL · TEXT` |  |
 
 ### Text & notes (2)
 
 Free text. Notably, free text is never allowed to drive a conditional display rule.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `Description` |  | Text | Global |  |  |
-| `Notes` |  | Text | Global |  |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `Description` |  | Write a description of the record. | Text | Global |  | `alternate_rent_schedule.Description · TEXT` |  |
+| `Notes` |  | Add any notes about the record. | Text | Global |  | `alternate_rent_schedule.Notes · TEXT` |  |
 
 ### Audit & record keeping (6)
 
 Who created and changed the record, and the identifiers that survive migration.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `BOMapClientRecordID` | Alternate Rent Schedule ClientID | Text | Global | yes |  |
-| `CreatedByID` | Created By | Member ID | Global |  | [Member](Member.md) |
-| `CreatedDate` | Created Date | Time | Global |  |  |
-| `ModifiedByID` | Modified By | Member ID | Global |  | [Member](Member.md) |
-| `ModifiedDate` | Modified Date | Time | Global |  |  |
-| `RevNumber` | Rev Number | Number | Global |  |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `BOMapClientRecordID` | Alternate Rent Schedule ClientID | The ClientID field is a free form text field that can be used when importing data to uniquely look up a record for update. This record identifier can either be system-generated or defined by the user upon the initial import of record data. The ClientID has the database name "BOMapClientRecordID". | Text | Global | yes | `alternate_rent_schedule.BOMapClientRecordID · TEXT` |  |
+| `CreatedByID` | Created By | The Created By field is a system-populated field which captures the name of the member making changes to a record. | Member ID | Global |  | `alternate_rent_schedule.CreatedByID · TEXT` | [Member](Member.md) |
+| `CreatedDate` | Created Date | The Created Date field is a system-populated field which captures the date that a record was created. | Time | Global |  | `alternate_rent_schedule.CreatedDate · TEXT` |  |
+| `ModifiedByID` | Modified By | The Modified By field is a system-populated field which captures the name of the member who made a change to a record. | Member ID | Global |  | `alternate_rent_schedule.ModifiedByID · TEXT` | [Member](Member.md) |
+| `ModifiedDate` | Modified Date | The Modified Date field is a system-populated field which captures the date that a modification is made to a record. | Time | Global |  | `alternate_rent_schedule.ModifiedDate · TEXT` |  |
+| `RevNumber` | Rev Number | The Rev Number field indicates how many times a record has been modified. This value of the field increases by 1 each time the record is modified. | Number | Global |  | `alternate_rent_schedule.RevNumber · TEXT` |  |
 
 ## What points here (2 keys)
 

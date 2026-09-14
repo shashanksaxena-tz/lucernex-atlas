@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>&quot;Retraction: code-table delete protection is not a Where-Used check&quot; &middot; Lx Vault</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="../../atlas.css">
+<link rel="stylesheet" href="../../research/research.css">
+<link rel="stylesheet" href="../vault.css">
+</head><body><style id="lxg">body{visibility:hidden}
+#lxgate{visibility:visible;position:fixed;inset:0;z-index:9999;display:flex;
+align-items:center;justify-content:center;background:#0f172a;
+font-family:'IBM Plex Sans',system-ui,sans-serif}
+#lxgate form{background:#fff;padding:30px 32px;border-radius:12px;width:310px;
+box-shadow:0 20px 60px rgba(0,0,0,.35)}
+#lxgate h2{margin:0 0 4px;font-size:19px;color:#0f172a}
+#lxgate p{margin:0 0 18px;font-size:12.5px;color:#64748b;line-height:1.5}
+#lxgate label{display:block;font-size:11px;text-transform:uppercase;
+letter-spacing:.07em;color:#64748b;margin:0 0 5px}
+#lxgate input{width:100%;box-sizing:border-box;padding:9px 11px;margin:0 0 14px;
+border:1px solid #cbd5e1;border-radius:7px;font-size:14px}
+#lxgate button{width:100%;padding:10px;border:0;border-radius:7px;
+background:#b4530a;color:#fff;font-size:14px;font-weight:600;cursor:pointer}
+#lxgate .err{color:#b91c1c;font-size:12px;margin:0 0 10px;display:none}</style>
+<div id="lxgate"><form onsubmit="return lxg(event)">
+<h2>Lx Atlas</h2>
+<p>Internal documentation. Not a security boundary &mdash; see
+<code>gate.py</code>.</p>
+<p class="err" id="lxge">Incorrect.</p>
+<label for="lxgu">User</label><input id="lxgu" autocomplete="username" autofocus>
+<label for="lxgp">Password</label><input id="lxgp" type="password"
+autocomplete="current-password">
+<button type="submit">Enter</button></form></div>
+<script>
+function lxgOpen(){var g=document.getElementById('lxgate');if(g)g.remove();
+var s=document.getElementById('lxg');if(s)s.remove();
+document.body.style.visibility='visible';}
+function lxg(ev){ev.preventDefault();
+if(document.getElementById('lxgu').value==='admin'&&
+   document.getElementById('lxgp').value==='admin'){
+ try{sessionStorage.setItem('lxg','1');}catch(e){}
+ lxgOpen();return false;}
+document.getElementById('lxge').style.display='block';return false;}
+try{if(sessionStorage.getItem('lxg')==='1')
+ document.addEventListener('DOMContentLoaded',lxgOpen);}catch(e){}
+</script>
+<header><b>Lx Atlas</b>
+<nav><a href="../../index.html">Overview</a><a href="../../atlas.html#/map?set=feature">Feature map</a>
+<a href="../../atlas.html">Interactive app</a>
+<a href="../../research/index.html">Research</a>
+<a href="../../research/screens.html">Screens</a>
+<a href="../index.html" class="on">Vault</a>
+<a href="../../questions.html">Open questions</a></nav></header>
+<main><p class="crumb"><a href="../../index.html">Atlas</a> &rsaquo;
+<a href="../index.html">Vault</a> &rsaquo; &quot;Retraction: code-table delete protection is not a Where-Used check&quot;</p><div class="fm"><span>finding</span><span>retraction</span><span>configuration</span><span>asg-edgeplus</span><span class="ev">Observed</span></div><blockquote><p><strong>An earlier revision inferred that <code>delete</code> is suppressed when a <a href="../../../concepts/code-table.html">code-table</a> value is referenced — and argued that Lx therefore already performs the &quot;Where Used&quot; check ASG Edge+&#x27;s <code>D-07</code> ruled out of scope, so <code>MST-015</code> should be reopened. That inference is withdrawn. It was wrong, and the argument built on it should not be acted on.</strong></p></blockquote><p>Two pieces of evidence retired it.</p><p><strong>1. The difference was a build difference, not a tenant difference.</strong> <a href="../../../tenants/tenant-american-freight.html">American Freight</a> has since been upgraded to <code>26.09.0.113</code> — the same build <a href="../../../tenants/tenant-bbw.html">BBW</a> runs — and on that build <code>AI Abstracted</code> at AF offers edit only, exactly as at BBW. The asymmetry the inference rested on <strong>no longer exists</strong>.</p><p><strong>2. The mechanism is a per-row boolean, read directly from the renderer.</strong> The Actions column (<code>EditDeleteLink</code>) reads, verbatim:</p><pre class="lang-js"><code>var q = c.data.isReadOnlyRecord;
+if (!q) { /* edit | delete */ } else { /* edit only */ }</code></pre><p><strong>There is no count, threshold or usage lookup anywhere in the render path.</strong> <code>isReadOnlyRecord</code> is supplied per row by the server; the <code>FirmCode</code> record exposes four fields and no provenance or reference-count attribute.</p><p><strong>The decisive case:</strong> <code>TableType 3006</code> (<a href="../../../entities/KeyDate.html">Key Date Type Code</a>) contains <strong>two rows both named <code>Option</code></strong> — <code>LxBOID 3095</code> protected, <code>LxBOID 3116</code> deletable. <strong>Identical name, opposite flag.</strong> A reference count cannot produce that. Nor could it produce <code>Covenant Status Code</code> (<code>2157</code>), where <code>Active</code> is deletable while <code>AI Abstracted</code> is protected — the exact inversion of a usage-based rule.</p><p>Full scan at AF: <strong>1,140 values — 154 protected, 986 deletable</strong>; 23 tables all-protected, 38 all-deletable, 12 mixed.</p><p><strong>Best current reading (Inferred, not proven):</strong> the flag marks <strong>platform-seeded rows</strong> a firm may rename but not delete. It fits every mixed table. The discriminating test is whether the same <code>LxBOID</code> ever carries a different flag across tenants — <a href="../../../open-questions/q-bbw-01-isreadonlyrecord.html">q-bbw-01-isreadonlyrecord</a>.</p><p><strong>What ASG Edge+ should take from this:</strong> the platform does protect seeded values from deletion, and a rebuild needs that notion — which still bears on <code>D-07</code> and <code>DeactivationPolicy</code>. But it is <strong>not</strong> evidence of a Where-Used capability, and <strong><code>MST-015</code> remains unsupported by anything observed here</strong>.</p><p>See <a href="../../../methods/method-cheap-signals.html">method-cheap-signals</a> · <a href="../../../concepts/evidence-labels.html">evidence-labels</a></p><div class="backlinks"><b>Linked from &middot; 10</b><a href="../concepts/code-table.html">code-table</a><a href="../concepts/evidence-labels.html">evidence-labels</a><a href="../entities/KeyDate.html">KeyDate</a><a href="../features/feature-drop-downs-code-tables.html">feature-drop-downs-code-tables</a><a href="finding-one-row-can-hide-a-module.html">finding-one-row-can-hide-a-module</a><a href="../open-questions/q-bbw-01-isreadonlyrecord.html">q-bbw-01-isreadonlyrecord</a><a href="../rules/rule-LAY-R-134.html">rule-LAY-R-134</a><a href="../tenants/tenant-american-freight.html">tenant-american-freight</a><a href="../tenants/tenant-bbw.html">tenant-bbw</a><a href="../tenants/tenant-comparison.html">tenant-comparison</a></div></main></body></html>

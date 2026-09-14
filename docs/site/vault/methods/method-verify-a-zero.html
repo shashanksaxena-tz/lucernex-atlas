@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>&quot;Method: verify a zero three ways&quot; &middot; Lx Vault</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="../../atlas.css">
+<link rel="stylesheet" href="../../research/research.css">
+<link rel="stylesheet" href="../vault.css">
+</head><body><style id="lxg">body{visibility:hidden}
+#lxgate{visibility:visible;position:fixed;inset:0;z-index:9999;display:flex;
+align-items:center;justify-content:center;background:#0f172a;
+font-family:'IBM Plex Sans',system-ui,sans-serif}
+#lxgate form{background:#fff;padding:30px 32px;border-radius:12px;width:310px;
+box-shadow:0 20px 60px rgba(0,0,0,.35)}
+#lxgate h2{margin:0 0 4px;font-size:19px;color:#0f172a}
+#lxgate p{margin:0 0 18px;font-size:12.5px;color:#64748b;line-height:1.5}
+#lxgate label{display:block;font-size:11px;text-transform:uppercase;
+letter-spacing:.07em;color:#64748b;margin:0 0 5px}
+#lxgate input{width:100%;box-sizing:border-box;padding:9px 11px;margin:0 0 14px;
+border:1px solid #cbd5e1;border-radius:7px;font-size:14px}
+#lxgate button{width:100%;padding:10px;border:0;border-radius:7px;
+background:#b4530a;color:#fff;font-size:14px;font-weight:600;cursor:pointer}
+#lxgate .err{color:#b91c1c;font-size:12px;margin:0 0 10px;display:none}</style>
+<div id="lxgate"><form onsubmit="return lxg(event)">
+<h2>Lx Atlas</h2>
+<p>Internal documentation. Not a security boundary &mdash; see
+<code>gate.py</code>.</p>
+<p class="err" id="lxge">Incorrect.</p>
+<label for="lxgu">User</label><input id="lxgu" autocomplete="username" autofocus>
+<label for="lxgp">Password</label><input id="lxgp" type="password"
+autocomplete="current-password">
+<button type="submit">Enter</button></form></div>
+<script>
+function lxgOpen(){var g=document.getElementById('lxgate');if(g)g.remove();
+var s=document.getElementById('lxg');if(s)s.remove();
+document.body.style.visibility='visible';}
+function lxg(ev){ev.preventDefault();
+if(document.getElementById('lxgu').value==='admin'&&
+   document.getElementById('lxgp').value==='admin'){
+ try{sessionStorage.setItem('lxg','1');}catch(e){}
+ lxgOpen();return false;}
+document.getElementById('lxge').style.display='block';return false;}
+try{if(sessionStorage.getItem('lxg')==='1')
+ document.addEventListener('DOMContentLoaded',lxgOpen);}catch(e){}
+</script>
+<header><b>Lx Atlas</b>
+<nav><a href="../../index.html">Overview</a><a href="../../atlas.html#/map?set=feature">Feature map</a>
+<a href="../../atlas.html">Interactive app</a>
+<a href="../../research/index.html">Research</a>
+<a href="../../research/screens.html">Screens</a>
+<a href="../index.html" class="on">Vault</a>
+<a href="../../questions.html">Open questions</a></nav></header>
+<main><p class="crumb"><a href="../../index.html">Atlas</a> &rsaquo;
+<a href="../index.html">Vault</a> &rsaquo; &quot;Method: verify a zero three ways&quot;</p><div class="fm"><span>method</span><span>meta</span><span class="ev">Observed</span></div><p>A <strong>false zero</strong> is the obvious failure mode when an entire finding rests on one count being zero — and <a href="../../../findings/finding-root-renders-iff-record-exists.html">finding-root-renders-iff-record-exists</a> rests on <a href="../../../tenants/tenant-american-freight.html">American Freight</a> holding <strong>zero</strong> Equipment Contracts.</p><p>It was verified three independent ways:</p><ol><li><strong>The type scan</strong> — <code>GET /rest/businessObject/Contract/details?fields=ProjectEntityTypeName&amp;$top=5000</code>, counted format-agnostically because BBW answered JSON on one call and XML on another.</li><li><strong>The dedicated endpoint</strong> — <code>GET /rest/businessObject/EquipmentContract</code> returns <code>HTTP 200</code> with zero rows, against <code>HTTP 400 unknown objectType</code> for <code>Site</code>, <code>Equipment</code> and <code>OpeningProject</code>. <strong>Not-provisioned and not-populated are distinguishable</strong>, and this proves AF is the latter — which also eliminated type registration as the candidate gate.</li><li><strong>A spelling control</strong> — <code>Equipment%20Contract</code> returns <code>400 unknown objectType</code>, proving the no-space form is the right one and the zero is real rather than a typo.</li></ol><p><strong><a href="../../../concepts/fiql.html">FIQL was deliberately not used</a></strong>: a malformed or unmatched filter returns <code>{}</code>, which is exactly the shape of a correct empty result.</p><p>The general form: <strong>a zero from one method is a hypothesis. A zero from three methods, one of which distinguishes &quot;absent&quot; from &quot;unregistered&quot;, is evidence.</strong></p><p>See <a href="../../method-cheap-signals.html">method-cheap-signals</a></p><div class="backlinks"><b>Linked from &middot; 3</b><a href="../concepts/fiql.html">fiql</a><a href="../findings/finding-root-renders-iff-record-exists.html">finding-root-renders-iff-record-exists</a><a href="../open-questions/q-bbw-12-equipment-contract-root.html">q-bbw-12-equipment-contract-root</a></div></main></body></html>

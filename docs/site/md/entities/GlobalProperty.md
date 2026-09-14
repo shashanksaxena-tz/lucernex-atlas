@@ -11,6 +11,9 @@ Source: `data-fields/small-miscellaneous-entities.md`
 |  | Value |
 |---|---|
 | Fields declared | 4 |
+| Fields with a vendor definition | 4 of 4 inventoried |
+| Physical tables | `global_property` |
+| Replication database | `lxr_drp_bbw` |
 | Catalogued fields | 4 (4 global, 0 firm) |
 | Physical tables | 1 |
 | Referenced by | 1 keys from 1 record types |
@@ -24,6 +27,22 @@ Source: `data-fields/small-miscellaneous-entities.md`
 
 **Derived.** Owned by the firm as a whole rather than by any one business record — configuration and reference data rather than transactional rows.
 
+### Lands in global_property
+
+**Observed.** The field inventory names the physical destination of every column: one table in the database lxr_drp_bbw. Every field node carries its own table and column, so the mapping is per column, not per record.
+
+### A per-tenant database name
+
+**Derived.** The physical database is lxr_drp_bbw — the tenant's name is in the database name. That is one more piece of evidence for database-per-tenant and against a single shared schema, alongside the Firm_ columns.
+
+### 4 fields carry a vendor definition
+
+**Observed.** 4 of this record's 4 inventoried fields have prose written by the vendor saying what the field is for. Open any field node to read it — this is the one source in the corpus that explains fields rather than listing them.
+
+### 1 field marked required
+
+**Observed.** The inventory marks 1 of this record's fields Required. Across the whole inventory that is 606 fields, which independently corroborates the 603 the corpus had derived from the Data Fields catalogue — two sources, arrived at separately, agreeing to within three.
+
 ## Rules that govern it
 
 | Rule | What it requires | Confidence |
@@ -36,19 +55,19 @@ Source: `data-fields/small-miscellaneous-entities.md`
 
 Typed pointers to other records. Lx names each FK type after the table it points at, so the relational model is declared rather than implied.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `GlobalPropertySectionID` | Property Section | Global Property Section ID | Global |  | [GlobalProperty](GlobalProperty.md) |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `GlobalPropertySectionID` | Property Section | The ID of the global property section that the property belongs to. This field is not editable by end-users. | Global Property Section ID | Global |  | `global_property.GlobalPropertySectionID · TEXT` | [GlobalProperty](GlobalProperty.md) |
 
 ### Text & notes (3)
 
 Free text. Notably, free text is never allowed to drive a conditional display rule.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `FirmID` |  | Text | Global |  |  |
-| `PropertyKey` | Property Key | Text | Global | yes |  |
-| `PropertyValue` | Property Value | Text | Global |  |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `FirmID` |  | The record's Firm ID. | Text | Global |  | `global_property.FirmID · TEXT` |  |
+| `PropertyKey` | Property Key | This field is used to override a global property value at the firm-level. This field is only usable by Accruent Administrators. | Text | Global | yes | `global_property.PropertyKey · TEXT` |  |
+| `PropertyValue` | Property Value | This field is used to override a global property value at the firm-level. This field is only usable by Accruent Administrators. | Text | Global |  | `global_property.PropertyValue · TEXT` |  |
 
 ## What points here (1 keys)
 

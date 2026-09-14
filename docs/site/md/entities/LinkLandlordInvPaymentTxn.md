@@ -11,6 +11,9 @@ Source: `data-fields/link-relationship-tables.md`
 |  | Value |
 |---|---|
 | Fields declared | 13 |
+| Fields with a vendor definition | 0 of 13 inventoried |
+| Physical tables | `link_landlord_inv_payment_txn` |
+| Replication database | `lxr_drp_bbw` |
 | Catalogued fields | 13 (13 global, 0 firm) |
 | Physical tables | 1 |
 | Referenced by | 0 keys from 0 record types |
@@ -23,6 +26,22 @@ Source: `data-fields/link-relationship-tables.md`
 ### Tenant-scoped, one join deep
 
 **Derived.** This record carries no FirmID of its own. It hangs off ProjectEntity, and tenant isolation has to be enforced by joining to that row and filtering on its FirmID — or it is not enforced at all. 161 of the 223 record types are shaped this way.
+
+### Lands in link_landlord_inv_payment_txn
+
+**Observed.** The field inventory names the physical destination of every column: one table in the database lxr_drp_bbw. Every field node carries its own table and column, so the mapping is per column, not per record.
+
+### A per-tenant database name
+
+**Derived.** The physical database is lxr_drp_bbw — the tenant's name is in the database name. That is one more piece of evidence for database-per-tenant and against a single shared schema, alongside the Firm_ columns.
+
+### 5 fields marked required
+
+**Observed.** The inventory marks 5 of this record's fields Required. Across the whole inventory that is 606 fields, which independently corroborates the 603 the corpus had derived from the Data Fields catalogue — two sources, arrived at separately, agreeing to within three.
+
+### Replication coverage: not materialised
+
+**Observed.** Observed of the loader, not of the product. The replication target lxr_drp_bbw has never created a table for this record: Table may not exist in the database yet. No data has ever been returned for this Lx object, and the loader only issues CREATE TABLE once the first row arrives. The configuration is in place, so this table and all of its columns will be created automatically as soon as data is entered in Lx. That is a statement about one loader's coverage and says nothing about whether the record exists or holds data in Lx. The tell is ProjectEntity — 107 fields, every one marked extracted, table never created, yet it is the universal supertype of a tenant holding 2,014 contracts, so it plainly is not empty. Do not read the 69-created / 150-not-created split as the size of the product's schema.
 
 ## Rules that govern it
 
@@ -38,46 +57,46 @@ Source: `data-fields/link-relationship-tables.md`
 
 Typed pointers to other records. Lx names each FK type after the table it points at, so the relational model is declared rather than implied.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `PaymentTransactionID` | Payment Transaction | Payment Transaction ID | Global | yes | [PaymentTransaction](PaymentTransaction.md) |
-| `ProjectEntityID` | Project Entity | Entity ID | Global | yes | [ProjectEntity](ProjectEntity.md) |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `PaymentTransactionID` | Payment Transaction |  | Payment Transaction ID | Global | yes | `link_landlord_inv_payment_txn.PaymentTransactionID · TEXT` | [PaymentTransaction](PaymentTransaction.md) |
+| `ProjectEntityID` | Project Entity |  | Entity ID | Global | yes | `link_landlord_inv_payment_txn.ProjectEntityID · TEXT` | [ProjectEntity](ProjectEntity.md) |
 
 ### Money (2)
 
 Currency amounts. Stored as TEXT in the physical database, which is why the rebuild must impose BigDecimal typing of its own.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `AllocationAmount` | Allocation Amount | Currency | Global | yes |  |
-| `VarianceAmount` | Variance Amount | Currency | Global |  |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `AllocationAmount` | Allocation Amount |  | Currency | Global | yes | `link_landlord_inv_payment_txn.AllocationAmount · TEXT` |  |
+| `VarianceAmount` | Variance Amount |  | Currency | Global |  | `link_landlord_inv_payment_txn.VarianceAmount · TEXT` |  |
 
 ### Dates & timestamps (1)
 
 Dates that drive schedules, and system timestamps.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `AllocationDate` | Allocation Date | Date | Global | yes |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `AllocationDate` | Allocation Date |  | Date | Global | yes | `link_landlord_inv_payment_txn.AllocationDate · TEXT` |  |
 
 ### Text & notes (4)
 
 Free text. Notably, free text is never allowed to drive a conditional display rule.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `LandlordInvoiceItemID` | Landlord Invoice Item | Text | Global | yes |  |
-| `Notes` |  | Text | Global |  |  |
-| `ReconciliationStatus` | Reconciliation Status | Text | Global | yes |  |
-| `VarianceReason` | Variance Reason | Text | Global |  |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `LandlordInvoiceItemID` | Landlord Invoice Item |  | Text | Global | yes | `link_landlord_inv_payment_txn.LandlordInvoiceItemID · TEXT` |  |
+| `Notes` |  |  | Text | Global |  | `link_landlord_inv_payment_txn.Notes · TEXT` |  |
+| `ReconciliationStatus` | Reconciliation Status |  | Text | Global | yes | `link_landlord_inv_payment_txn.ReconciliationStatus · TEXT` |  |
+| `VarianceReason` | Variance Reason |  | Text | Global |  | `link_landlord_inv_payment_txn.VarianceReason · TEXT` |  |
 
 ### Audit & record keeping (4)
 
 Who created and changed the record, and the identifiers that survive migration.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `CreatedByID` | Created By | Member ID | Global |  | [Member](Member.md) |
-| `CreatedDate` | Created Date | Time | Global |  |  |
-| `ModifiedByID` | Modified By | Member ID | Global |  | [Member](Member.md) |
-| `ModifiedDate` | Modified Date | Time | Global |  |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `CreatedByID` | Created By |  | Member ID | Global |  | `link_landlord_inv_payment_txn.CreatedByID · TEXT` | [Member](Member.md) |
+| `CreatedDate` | Created Date |  | Time | Global |  | `link_landlord_inv_payment_txn.CreatedDate · TEXT` |  |
+| `ModifiedByID` | Modified By |  | Member ID | Global |  | `link_landlord_inv_payment_txn.ModifiedByID · TEXT` | [Member](Member.md) |
+| `ModifiedDate` | Modified Date |  | Time | Global |  | `link_landlord_inv_payment_txn.ModifiedDate · TEXT` |  |

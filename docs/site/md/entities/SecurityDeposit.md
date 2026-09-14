@@ -11,6 +11,9 @@ Source: `data-fields/security-deposit.md`
 |  | Value |
 |---|---|
 | Fields declared | 25 |
+| Fields with a vendor definition | 24 of 26 inventoried |
+| Physical tables | `security_deposit` |
+| Replication database | `lxr_drp_bbw` |
 | Catalogued fields | 25 (24 global, 1 firm) |
 | Physical tables | 1 |
 | Referenced by | 0 keys from 0 record types |
@@ -28,6 +31,22 @@ Source: `data-fields/security-deposit.md`
 
 **Observed.** Of 25 catalogued fields on this record, 1 are Firm scope — defined by this tenant rather than shipped by the platform. Firm-scope definitions are RGAF rows carrying IsGlobal, FirmID and IsClientExtensionField.
 
+### Lands in security_deposit
+
+**Observed.** The field inventory names the physical destination of every column: one table in the database lxr_drp_bbw. Every field node carries its own table and column, so the mapping is per column, not per record.
+
+### A per-tenant database name
+
+**Derived.** The physical database is lxr_drp_bbw — the tenant's name is in the database name. That is one more piece of evidence for database-per-tenant and against a single shared schema, alongside the Firm_ columns.
+
+### 24 fields carry a vendor definition
+
+**Observed.** 24 of this record's 26 inventoried fields have prose written by the vendor saying what the field is for. Open any field node to read it — this is the one source in the corpus that explains fields rather than listing them.
+
+### 1 field marked required
+
+**Observed.** The inventory marks 1 of this record's fields Required. Across the whole inventory that is 606 fields, which independently corroborates the 603 the corpus had derived from the Data Fields catalogue — two sources, arrived at separately, agreeing to within three.
+
 ## Rules that govern it
 
 | Rule | What it requires | Confidence |
@@ -40,86 +59,86 @@ Source: `data-fields/security-deposit.md`
 
 Typed pointers to other records. Lx names each FK type after the table it points at, so the relational model is declared rather than implied.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `AmendmentID` | Amendment | Contract Amendment ID | Global |  | [ContractAmendment](ContractAmendment.md) |
-| `ContractID` | Contract | Contract ID | Global | yes | [Contract](Contract.md) |
-| `CovenantID` | Covenant | Covenant ID | Global |  | [Covenant](Covenant.md) |
-| `PartyID` | Party | Employer ID | Global |  | [Employer](Employer.md) |
-| `ProjectEntityID` |  | Entity ID | — |  | [ProjectEntity](ProjectEntity.md) |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `AmendmentID` | Amendment | Select the amendment that the record is associated with from this field. | Contract Amendment ID | Global |  | `security_deposit.AmendmentID · TEXT` | [ContractAmendment](ContractAmendment.md) |
+| `ContractID` | Contract | The Contract ID is a unique identifier that belongs to a contract. The Contract ID of a contract can only be changed from the Contract > Details > Summary page. | Contract ID | Global | yes | `security_deposit.ContractID · TEXT` | [Contract](Contract.md) |
+| `CovenantID` | Covenant | Select the covenant that the record is associated with from this field. | Covenant ID | Global |  | `security_deposit.CovenantID · TEXT` | [Covenant](Covenant.md) |
+| `PartyID` | Party | Select the legal party who is associated with the security deposit from this field. | Employer ID | Global |  | `security_deposit.PartyID · TEXT` | [Employer](Employer.md) |
+| `ProjectEntityID` |  |  | Entity ID | — |  | `security_deposit.ProjectEntityID · TEXT` | [ProjectEntity](ProjectEntity.md) |
 
 ### Coded values (drop-downs) (6)
 
 Fields bound to a master code table. Every one of these is a place where an administrator, not a developer, controls the allowed values.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `CodeCurrencyTypeID` | Deposit Currency | Dropdown (Currency Type Code) | Global |  | Currency Type Code |
-| `CodeGuaranteeTypeID` | Guarantee Type | Dropdown (Guarantee Type Code) | Global |  | Guarantee Type Code |
-| `CodePayBackCurrencyTypeID` | Return Deposit Currency | Dropdown (Currency Type Code) | Global |  | Currency Type Code |
-| `CodeSecurityDepositGroupID` | Security Deposit Group | Dropdown (Security Deposit Group Code) | Global |  | Security Deposit Group Code |
-| `CodeSecurityDepositStatusID` | Security Deposit Status | Dropdown (Security Deposit Status Code) | Global |  | Security Deposit Status Code |
-| `CodeSecurityDepositTypeID` | Security Deposit Type | Dropdown (Security Deposit Type Code) | Global |  | Security Deposit Type Code |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `CodeCurrencyTypeID` | Deposit Currency | The Currency Type field allows you to select a currency type to be used on a record. | Dropdown (Currency Type Code) | Global |  | `security_deposit.CodeCurrencyTypeID · TEXT` | Currency Type Code |
+| `CodeGuaranteeTypeID` | Guarantee Type | Select how the security deposit funds are guaranteed from this field. | Dropdown (Guarantee Type Code) | Global |  | `security_deposit.CodeGuaranteeTypeID · TEXT` | Guarantee Type Code |
+| `CodePayBackCurrencyTypeID` | Return Deposit Currency | Select the currency the security deposit will be returned in from this field. | Dropdown (Currency Type Code) | Global |  | `security_deposit.CodePayBackCurrencyTypeID · TEXT` | Currency Type Code |
+| `CodeSecurityDepositGroupID` | Security Deposit Group | The security deposit group is the first level of categorization for security deposit records. Groups are the parents of types. | Dropdown (Security Deposit Group Code) | Global |  | `security_deposit.CodeSecurityDepositGroupID · TEXT` | Security Deposit Group Code |
+| `CodeSecurityDepositStatusID` | Security Deposit Status | Select the status of the security deposit from this field. | Dropdown (Security Deposit Status Code) | Global |  | `security_deposit.CodeSecurityDepositStatusID · TEXT` | Security Deposit Status Code |
+| `CodeSecurityDepositTypeID` | Security Deposit Type | The security deposit type is the second level of categorization for security deposit records. Types are the children of groups. | Dropdown (Security Deposit Type Code) | Global |  | `security_deposit.CodeSecurityDepositTypeID · TEXT` | Security Deposit Type Code |
 
 ### Money (1)
 
 Currency amounts. Stored as TEXT in the physical database, which is why the rebuild must impose BigDecimal typing of its own.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `DepositAmount` | Deposit Amount | Currency | Global |  |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `DepositAmount` | Deposit Amount | Enter the deposit total in this field. | Currency | Global |  | `security_deposit.DepositAmount · TEXT` |  |
 
 ### Rates & percentages (1)
 
 Percentage inputs and computed rates.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `InterestRate` | Interest Rate | Percentage | Global |  |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `InterestRate` | Interest Rate | Enter the interest rate for the account that is holding the security deposit in this field. | Percentage | Global |  | `security_deposit.InterestRate · TEXT` |  |
 
 ### Quantities (1)
 
 Counts, areas and other plain numeric measures.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `SecurityDepositID` | Security Deposit RecID | Number | Global |  |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `SecurityDepositID` | Security Deposit RecID | This field contains a Base Entity System Identifier for your record. It is assigned automatically by the system, and is not editable. | Number | Global |  | `security_deposit.SecurityDepositID · VARCHAR(64) NOT NULL` |  |
 
 ### Dates & timestamps (2)
 
 Dates that drive schedules, and system timestamps.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `BeginDate` | Begin Date | Date | Global |  |  |
-| `EndDate` | End Date | Date | Global |  |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `BeginDate` | Begin Date | The Begin Date field allows you to select a begin date for the record. | Date | Global |  | `security_deposit.BeginDate · TEXT` |  |
+| `EndDate` | End Date | The End Date field allows you to select an end date for the record. | Date | Global |  | `security_deposit.EndDate · TEXT` |  |
 
 ### Flags (3)
 
 Booleans. In this product they usually gate engine behaviour rather than describe the record.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `InterestBearingFlag` | Interest Bearing? | Boolean | Global |  |  |
-| `RequiredFlag` | Required? | Boolean | Global |  |  |
-| `SeparateAccountFlag` | Separate Account? | Boolean | Global |  |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `InterestBearingFlag` | Interest Bearing? | Select this check box if the account where the security deposit is being held is interest-bearing. | Boolean | Global |  | `security_deposit.InterestBearingFlag · TEXT` |  |
+| `RequiredFlag` | Required? | Select this check box if the security deposit was required. | Boolean | Global |  | `security_deposit.RequiredFlag · TEXT` |  |
+| `SeparateAccountFlag` | Separate Account? | Select this check box if the security deposit is being held in a escrow account. | Boolean | Global |  | `security_deposit.SeparateAccountFlag · TEXT` |  |
 
 ### Text & notes (3)
 
 Free text. Notably, free text is never allowed to drive a conditional display rule.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `AccountNumber` | Account Number | Text | Global |  |  |
-| `Notes` |  | Text | Global |  |  |
-| `Section` |  | Text | Global |  |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `AccountNumber` | Account Number | Enter the account number of the account where the security deposit is held in this field. | Text | Global |  | `security_deposit.AccountNumber · TEXT` |  |
+| `Notes` |  | Add any notes about the record. | Text | Global |  | `security_deposit.Notes · TEXT` |  |
+| `Section` |  | Enter the section of the covenant that pertains to this record in this field. | Text | Global |  | `security_deposit.Section · TEXT` |  |
 
 ### Audit & record keeping (3)
 
 Who created and changed the record, and the identifiers that survive migration.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `BOMapClientRecordID` | Security Deposit ClientID | Text | Global | yes |  |
-| `ModifiedByID` | Modified By | Member ID | Global |  | [Member](Member.md) |
-| `ModifiedDate` | Modified Date | Time | Global |  |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `BOMapClientRecordID` | Security Deposit ClientID | The ClientID field is a free form text field that can be used when importing data to uniquely look up a record for update. This record identifier can either be system-generated or defined by the user upon the initial import of record data. The ClientID has the database name "BOMapClientRecordID". | Text | Global | yes | `security_deposit.BOMapClientRecordID · TEXT` |  |
+| `ModifiedByID` | Modified By | The Modified By field is a system-populated field which captures the name of the member who made a change to a record. | Member ID | Global |  | `security_deposit.ModifiedByID · TEXT` | [Member](Member.md) |
+| `ModifiedDate` | Modified Date | The Modified Date field is a system-populated field which captures the date that a modification is made to a record. | Time | Global |  | `security_deposit.ModifiedDate · TEXT` |  |

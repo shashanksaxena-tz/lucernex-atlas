@@ -11,6 +11,9 @@ Source: `data-fields/link-relationship-tables.md`
 |  | Value |
 |---|---|
 | Fields declared | 12 |
+| Fields with a vendor definition | 12 of 12 inventoried |
+| Physical tables | `link_project_entity_contact` |
+| Replication database | `lxr_drp_bbw` |
 | Catalogued fields | 13 (13 global, 0 firm) |
 | Physical tables | 1 |
 | Referenced by | 0 keys from 0 record types |
@@ -23,6 +26,26 @@ Source: `data-fields/link-relationship-tables.md`
 ### Tenant-scoped, one join deep
 
 **Derived.** This record carries no FirmID of its own. It hangs off ProjectEntity, and tenant isolation has to be enforced by joining to that row and filtering on its FirmID — or it is not enforced at all. 161 of the 223 record types are shaped this way.
+
+### Lands in link_project_entity_contact
+
+**Observed.** The field inventory names the physical destination of every column: one table in the database lxr_drp_bbw. Every field node carries its own table and column, so the mapping is per column, not per record.
+
+### A per-tenant database name
+
+**Derived.** The physical database is lxr_drp_bbw — the tenant's name is in the database name. That is one more piece of evidence for database-per-tenant and against a single shared schema, alongside the Firm_ columns.
+
+### 12 fields carry a vendor definition
+
+**Observed.** 12 of this record's 12 inventoried fields have prose written by the vendor saying what the field is for. Open any field node to read it — this is the one source in the corpus that explains fields rather than listing them.
+
+### 3 fields marked required
+
+**Observed.** The inventory marks 3 of this record's fields Required. Across the whole inventory that is 606 fields, which independently corroborates the 603 the corpus had derived from the Data Fields catalogue — two sources, arrived at separately, agreeing to within three.
+
+### 1 field excluded from extraction
+
+**Observed.** Observed of the loader. The inventory marks 1 of this record's fields as not extracted to PostgreSQL, so the replication target creates no column for them. They still exist in Lx; anything reading the replica rather than the product will not see them.
 
 ## Rules that govern it
 
@@ -38,59 +61,59 @@ Source: `data-fields/link-relationship-tables.md`
 
 Typed pointers to other records. Lx names each FK type after the table it points at, so the relational model is declared rather than implied.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `EmployerID` | Employer | Employer ID | Global |  | [Employer](Employer.md) |
-| `Landlord_EmployerID` | Landlord (Employer) | Employer ID | Global |  | [Employer](Employer.md) |
-| `ProjectEntityID` | Entity | Entity ID | Global | yes | [ProjectEntity](ProjectEntity.md) |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `EmployerID` | Employer | The employer of the contact. | Employer ID | Global |  | `link_project_entity_contact.EmployerID · TEXT` | [Employer](Employer.md) |
+| `Landlord_EmployerID` | Landlord (Employer) | This field determines the landlord employer contact associated with this project. | Employer ID | Global |  | `link_project_entity_contact.Landlord_EmployerID · TEXT` | [Employer](Employer.md) |
+| `ProjectEntityID` | Entity | The ProjectEntityID is the Base Entity System Identifier for associated tasks, folders, documents, forms, and other records. It is assigned automatically by the system, and is not editable. | Entity ID | Global | yes | `link_project_entity_contact.ProjectEntityID · TEXT` | [ProjectEntity](ProjectEntity.md) |
 
 ### Soft references (2)
 
 Columns that name another record without a typed foreign key behind them - generic handles such as Entity ID and item ID that point at whichever table the row belongs to. These are the joins a rebuild has to make explicit.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `Landlord_PersonID` | Landlord (Person) | Contact | Global |  |  |
-| `PersonID` | Person | Contact | Global |  |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `Landlord_PersonID` | Landlord (Person) | This field determines the landlord contact associated with this project. | Contact | Global |  | `link_project_entity_contact.Landlord_PersonID · TEXT` |  |
+| `PersonID` | Person | The ID of the person record. | Contact | Global |  | `link_project_entity_contact.PersonID · TEXT` |  |
 
 ### Coded values (drop-downs) (1)
 
 Fields bound to a master code table. Every one of these is a place where an administrator, not a developer, controls the allowed values.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `CodeContactTypeID` | Contact Type | Dropdown (Contact Type Code) | Global | yes | Contact Type Code |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `CodeContactTypeID` | Contact Type | The contact type of the contact. | Dropdown (Contact Type Code) | Global | yes | `link_project_entity_contact.CodeContactTypeID · TEXT` | Contact Type Code |
 
 ### Quantities (1)
 
 Counts, areas and other plain numeric measures.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `Rating` |  | Number | Global |  |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `Rating` |  | The rating of the contact entered on the Edit Contacts page. | Number | Global |  | `link_project_entity_contact.Rating · TEXT` |  |
 
 ### Flags (2)
 
 Booleans. In this product they usually gate engine behaviour rather than describe the record.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `Inactive` |  | Boolean | Global | yes |  |
-| `IsPrimary` | Is Primary? | Boolean | Global | yes |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `Inactive` |  | If the value of the field is true, this contact has been marked inactive on the Edit Contacts page. | Boolean | Global | yes | not extracted |  |
+| `IsPrimary` | Is Primary? | If the value of the field is true, this contact has been marked as a primary contact on the Edit Contacts page. | Boolean | Global | yes | `link_project_entity_contact.IsPrimary · TEXT` |  |
 
 ### Text & notes (1)
 
 Free text. Notably, free text is never allowed to drive a conditional display rule.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `Notes` |  | Text | Global |  |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `Notes` |  | Add any notes about the record. | Text | Global |  | `link_project_entity_contact.Notes · TEXT` |  |
 
 ### Audit & record keeping (2)
 
 Who created and changed the record, and the identifiers that survive migration.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `ModifiedByID` | Modified By | Member ID | Global |  | [Member](Member.md) |
-| `ModifiedDate` | Modified Date | Time | Global |  |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `ModifiedByID` | Modified By | The Modified By field is a system-populated field which captures the name of the member who made a change to a record. | Member ID | Global |  | `link_project_entity_contact.ModifiedByID · TEXT` | [Member](Member.md) |
+| `ModifiedDate` | Modified Date | The Modified Date field is a system-populated field which captures the date that a modification is made to a record. | Time | Global |  | `link_project_entity_contact.ModifiedDate · TEXT` |  |

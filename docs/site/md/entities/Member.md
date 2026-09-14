@@ -11,6 +11,9 @@ Source: `data-fields/member.md`
 |  | Value |
 |---|---|
 | Fields declared | 81 |
+| Fields with a vendor definition | 79 of 81 inventoried |
+| Physical tables | `member` |
+| Replication database | `lxr_drp_bbw` |
 | Catalogued fields | 78 (78 global, 0 firm) |
 | Physical tables | 1 |
 | Referenced by | 290 keys from 162 record types |
@@ -27,6 +30,22 @@ Source: `data-fields/member.md`
 ### A hub: 290 keys point here
 
 **Observed.** 162 record types hold a foreign key into this one, so it sits at the centre of the relationship graph. Changing its key or its identity is a change to AccrualTransaction, Allowance, AllowanceTransaction, AlternateRentSchedule and 158 others.
+
+### Lands in member
+
+**Observed.** The field inventory names the physical destination of every column: one table in the database lxr_drp_bbw. Every field node carries its own table and column, so the mapping is per column, not per record.
+
+### A per-tenant database name
+
+**Derived.** The physical database is lxr_drp_bbw — the tenant's name is in the database name. That is one more piece of evidence for database-per-tenant and against a single shared schema, alongside the Firm_ columns.
+
+### 79 fields carry a vendor definition
+
+**Observed.** 79 of this record's 81 inventoried fields have prose written by the vendor saying what the field is for. Open any field node to read it — this is the one source in the corpus that explains fields rather than listing them.
+
+### 19 fields marked required
+
+**Observed.** The inventory marks 19 of this record's fields Required. Across the whole inventory that is 606 fields, which independently corroborates the 603 the corpus had derived from the Data Fields catalogue — two sources, arrived at separately, agreeing to within three.
 
 ## Rules that govern it
 
@@ -56,145 +75,145 @@ Source: `data-fields/member.md`
 
 Typed pointers to other records. Lx names each FK type after the table it points at, so the relational model is declared rather than implied.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `EmployerID` | Employer | Employer ID | Global | yes | [Employer](Employer.md) |
-| `IStateProvinceCountryID` |  | Country, State, County ID | — |  | [StateProvinceCountry](StateProvinceCountry.md) |
-| `JurisdictionID` | Jurisdiction | County ID | Global |  | [Jurisdiction](Jurisdiction.md) |
-| `StateProvinceCountryID` | State | Country, State, County ID | Global |  | [StateProvinceCountry](StateProvinceCountry.md) |
-| `SupervisorID` | Supervisor | Member ID | Global |  | [Member](Member.md) |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `EmployerID` | Employer | Select the person's employer from this field. Employers are third party companies that are involved in your lifecycle process. They can be companies you pay also known as vendors or companies that are part of projects such as architects or general contractors. | Employer ID | Global | yes | `member.EmployerID · TEXT` | [Employer](Employer.md) |
+| `IStateProvinceCountryID` | State | Select the state or province from this field. | Country, State, County ID | — |  | `member.IStateProvinceCountryID · TEXT` | [StateProvinceCountry](StateProvinceCountry.md) |
+| `JurisdictionID` | Jurisdiction | The county / province associated with the associated entity's address. | County ID | Global |  | `member.JurisdictionID · TEXT` | [Jurisdiction](Jurisdiction.md) |
+| `StateProvinceCountryID` | State | The state / province of the address associated with this record. | Country, State, County ID | Global |  | `member.StateProvinceCountryID · TEXT` | [StateProvinceCountry](StateProvinceCountry.md) |
+| `SupervisorID` | Supervisor | Select the member's supervisor from this field. | Member ID | Global |  | `member.SupervisorID · TEXT` | [Member](Member.md) |
 
 ### Coded values (drop-downs) (10)
 
 Fields bound to a master code table. Every one of these is a place where an administrator, not a developer, controls the allowed values.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `CodeAnalyticsRoleID` | Code Analytics Role | Dropdown (Analytics Role Code) | Global |  | Analytics Role Code |
-| `CodeApprovalCurrencyTypeID` | Approval Currency Type | Dropdown (Currency Type Code) | Global |  | Currency Type Code |
-| `CodeApprovalStatusID` | RE Contract Approval Level | Dropdown (Approval Status Code) | Global |  | Approval Status Code |
-| `CodeContactTypeIDList` |  | Dropdown (Contact Type Code) | — |  | Contact Type Code |
-| `CodeEquipApprovalStatusID` | Equipment Contract Approval Level | Dropdown (Approval Status Code) | Global |  | Approval Status Code |
-| `CodeJobFunctionID` | Code Job Function | Dropdown (Job Function Code) | Global | yes | Job Function Code |
-| `CodeJobTitleID` | Job Title | Dropdown (Job Title Code) | Global |  | Job Title Code |
-| `CodeJobTitleIDList` | Job Titles | Dropdown (Job Title Code) | Global | yes | Job Title Code |
-| `CodeLockOutReasonID` | Member Login Status | Dropdown (Lock Out Reason Code) | Global | yes | Lock Out Reason Code |
-| `CodeUserClassID` | User Class | Dropdown (User Class) | Global | yes | User Class |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `CodeAnalyticsRoleID` | Code Analytics Role |  | Dropdown (Analytics Role Code) | Global |  | `member.CodeAnalyticsRoleID · TEXT` | Analytics Role Code |
+| `CodeApprovalCurrencyTypeID` | Approval Currency Type | Select the member's approval currency type from this field. This field is used when determining whether a recurring amount or transaction exceeds the member's approval limits. | Dropdown (Currency Type Code) | Global |  | `member.CodeApprovalCurrencyTypeID · TEXT` | Currency Type Code |
+| `CodeApprovalStatusID` | RE Contract Approval Level | Select the approval level that this user has for RE Contracts from this field. Approval levels restrict the types of items and amounts that approvers can approve. | Dropdown (Approval Status Code) | Global |  | `member.CodeApprovalStatusID · TEXT` | Approval Status Code |
+| `CodeContactTypeIDList` | Contact Type List | Select the contact type this person should have using the multi-select field. | Dropdown (Contact Type Code) | — | yes | `member.CodeContactTypeIDList · TEXT` | Contact Type Code |
+| `CodeEquipApprovalStatusID` | Equipment Contract Approval Level | Select the approval level that this user has for Equipment Contracts from this field. Approval levels restrict the types of items and amounts that approvers can approve. | Dropdown (Approval Status Code) | Global |  | `member.CodeEquipApprovalStatusID · TEXT` | Approval Status Code |
+| `CodeJobFunctionID` | Code Job Function | Select this person's job function from this field. A job function is a broad category. Think of a job function as a person's department. This field is not functional unless you select System Administrator. | Dropdown (Job Function Code) | Global | yes | `member.CodeJobFunctionID · TEXT` | Job Function Code |
+| `CodeJobTitleID` | Job Title | Select this person's job title from this field. A job title is more specific to the person than the job function. The Job Title is used when auto-assigning things like tasks, work flow steps, and notifications. | Dropdown (Job Title Code) | Global |  | `member.CodeJobTitleID · TEXT` | Job Title Code |
+| `CodeJobTitleIDList` | Job Titles |  | Dropdown (Job Title Code) | Global | yes | `member.CodeJobTitleIDList · TEXT` | Job Title Code |
+| `CodeLockOutReasonID` | Member Login Status | This field displays the reason the user is locked out of Lx. | Dropdown (Lock Out Reason Code) | Global | yes | `member.CodeLockOutReasonID · TEXT` | Lock Out Reason Code |
+| `CodeUserClassID` | User Class | Select the member's user class from this field. | Dropdown (User Class) | Global | yes | `member.CodeUserClassID · TEXT` | User Class |
 
 ### Money (10)
 
 Currency amounts. Stored as TEXT in the physical database, which is why the rebuild must impose BigDecimal typing of its own.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `BillRate1` | Bill Rate #1 | Currency | Global |  |  |
-| `BillRate2` | Bill Rate #2 | Currency | Global |  |  |
-| `EquipPaymentApprovalMaxAmount` | Equipment Contract Payment Approval Amount (Maximum) | Currency | Global |  |  |
-| `EquipPaymentApprovalMinAmount` | Equipment Contract Payment Approval Amount (Minimum) | Currency | Global |  |  |
-| `EquipRecurringApprovalMaxAmount` | Equipment Contract Recurring Approval Amount (Maximum) | Currency | Global |  |  |
-| `EquipRecurringApprovalMinAmount` | Equipment Contract Recurring Approval Amount (Minimum) | Currency | Global |  |  |
-| `PaymentApprovalMaxAmount` | RE Contract Payment Approval Amount (Maximum) | Currency | Global |  |  |
-| `PaymentApprovalMinAmount` | RE Contract Payment Approval Amount (Minimum) | Currency | Global |  |  |
-| `RecurringApprovalMaxAmount` | RE Contract Recurring Approval Amount (Maximum) | Currency | Global |  |  |
-| `RecurringApprovalMinAmount` | RE Contract Recurring Approval Amount (Minimum) | Currency | Global |  |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `BillRate1` | Bill Rate #1 | Enter the person's primary billing rate in this field. | Currency | Global |  | `member.BillRate1 · TEXT` |  |
+| `BillRate2` | Bill Rate #2 | Enter the person's secondary billing rate in this field. | Currency | Global |  | `member.BillRate2 · TEXT` |  |
+| `EquipPaymentApprovalMaxAmount` | Equipment Contract Payment Approval Amount (Maximum) | Enter the maximum one-time payment amount this user is allowed to approve for equipment contracts in this field. | Currency | Global |  | `member.EquipPaymentApprovalMaxAmount · TEXT` |  |
+| `EquipPaymentApprovalMinAmount` | Equipment Contract Payment Approval Amount (Minimum) | Enter the minimum one-time payment amount this user is allowed to approve for equipment contracts in this field. | Currency | Global |  | `member.EquipPaymentApprovalMinAmount · TEXT` |  |
+| `EquipRecurringApprovalMaxAmount` | Equipment Contract Recurring Approval Amount (Maximum) | Enter the maximum recurring payment amount this user is allowed to approve for equipment contracts in this field. | Currency | Global |  | `member.EquipRecurringApprovalMaxAmount · TEXT` |  |
+| `EquipRecurringApprovalMinAmount` | Equipment Contract Recurring Approval Amount (Minimum) | Enter the minimum recurring payment amount this user is allowed to approve for equipment contracts in this field. | Currency | Global |  | `member.EquipRecurringApprovalMinAmount · TEXT` |  |
+| `PaymentApprovalMaxAmount` | RE Contract Payment Approval Amount (Maximum) | Enter the maximum one-time payment amount this user is allowed to approve for real estate contracts in this field. | Currency | Global |  | `member.PaymentApprovalMaxAmount · TEXT` |  |
+| `PaymentApprovalMinAmount` | RE Contract Payment Approval Amount (Minimum) | Enter the minimum one-time payment amount this user is allowed to approve for real estate contracts in this field. | Currency | Global |  | `member.PaymentApprovalMinAmount · TEXT` |  |
+| `RecurringApprovalMaxAmount` | RE Contract Recurring Approval Amount (Maximum) | Enter the maximum recurring payment amount this user is allowed to approve for real estate contracts in this field. | Currency | Global |  | `member.RecurringApprovalMaxAmount · TEXT` |  |
+| `RecurringApprovalMinAmount` | RE Contract Recurring Approval Amount (Minimum) | Enter the minimum recurring payment amount this user is allowed to approve for real estate contracts in this field. | Currency | Global |  | `member.RecurringApprovalMinAmount · TEXT` |  |
 
 ### Quantities (3)
 
 Counts, areas and other plain numeric measures.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `MemberID` | Member RecID | Number | Global |  |  |
-| `NumberPattern` | Number Pattern | Number Format | Global |  |  |
-| `PersonID` | Person RecID | Number | Global | yes |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `MemberID` | Member RecID | This field contains a Base Entity System Identifier for your record. It is assigned automatically by the system, and is not editable. | Number | Global |  | `member.MemberID · VARCHAR(64) NOT NULL` |  |
+| `NumberPattern` | Number Pattern | Select the member's number format from this field. Lx is configured to auto-detect the user's number format by default. | Number Format | Global |  | `member.NumberPattern · TEXT` |  |
+| `PersonID` | Person RecID | This field contains a Base Entity System Identifier for your record. It is assigned automatically by the system, and is not editable. | Number | Global | yes | `member.PersonID · TEXT` |  |
 
 ### Dates & timestamps (1)
 
 Dates that drive schedules, and system timestamps.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `LastLoginDate` | Last Login Date | Time | Global |  |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `LastLoginDate` | Last Login Date | The last login date for this member. | Time | Global |  | `member.LastLoginDate · TEXT` |  |
 
 ### Flags (13)
 
 Booleans. In this product they usually gate engine behaviour rather than describe the record.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `AcceptEULA` | Accept EULA? | Boolean | Global | yes |  |
-| `AlwaysSpellCheck` | Always Spell Check? | Boolean | Global | yes |  |
-| `ConvertToMember` | Convert To Member | Boolean | Global |  |  |
-| `EmployerInactive` | Employer Inactive? | Boolean | Global |  |  |
-| `Inactive` | Is Inactive? | Boolean | Global | yes |  |
-| `IsAdministrator` | Is Administrator? | Boolean | Global |  |  |
-| `IsExemptFromPWDExpiration` | Is Exempt from Password Expiration? | Boolean | Global | yes |  |
-| `IsLucernexAdministrator` | Is Lx Administrator? | Boolean | Global |  |  |
-| `IsMasterMember` | Is Master Member? | Boolean | Global |  |  |
-| `IsMasterPerson` | Is Master Person? | Boolean | Global |  |  |
-| `IsUnassignedWorkFlowApprover` | Unassigned WorkFlow Approver | Boolean | Global | yes |  |
-| `IsViewPrivateIssueAllowed` | Is View Private Issue Allowed? | Boolean | Global | yes |  |
-| `UseEmployerAddress` | Use Employer Address? | Boolean | Global | yes |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `AcceptEULA` | Accept EULA? | This flag is set to TRUE when a member has accepted the terms and conditions for Lx. | Boolean | Global | yes | `member.AcceptEULA · TEXT` |  |
+| `AlwaysSpellCheck` | Always Spell Check? | This field is currently disabled. | Boolean | Global | yes | `member.AlwaysSpellCheck · TEXT` |  |
+| `ConvertToMember` | Convert To Member | When added to a custom layout for the Add Person window, this field allows the user to convert the person to a Member. | Boolean | Global |  | `member.ConvertToMember · TEXT` |  |
+| `EmployerInactive` | Employer Inactive? | The active state of the member's employer. A member can't be active if their employer is inactive. | Boolean | Global |  | `member.EmployerInactive · TEXT` |  |
+| `Inactive` | Is Inactive? | This flag indicates whether the member is active or inactive. | Boolean | Global | yes | `member.Inactive · TEXT` |  |
+| `IsAdministrator` | Is Administrator? | If set to true, this user is a system administrator. If set to false, the user is not a system administrator. | Boolean | Global |  | `member.IsAdministrator · TEXT` |  |
+| `IsExemptFromPWDExpiration` | Is Exempt from Password Expiration? | This setting controls whether a user is exempt from password expiration. | Boolean | Global | yes | `member.IsExemptFromPWDExpiration · TEXT` |  |
+| `IsLucernexAdministrator` | Is Lx Administrator? | This setting controls whether or not a user has the Lx Administrator permission set. This security configuration is limited to Accruent employees only. | Boolean | Global |  | `member.IsLucernexAdministrator · TEXT` |  |
+| `IsMasterMember` | Is Master Member? | This field determines if the person is in a firm that is a master firm of slave firms, and is in those slave firms. | Boolean | Global |  | `member.IsMasterMember · TEXT` |  |
+| `IsMasterPerson` | Is Master Person? | This field determines if the person is in a firm that is a master firm of slave firms, and is in those slave firms. | Boolean | Global |  | `member.IsMasterPerson · TEXT` |  |
+| `IsUnassignedWorkFlowApprover` | Unassigned WorkFlow Approver | This field is a placeholder for an upcoming feature. | Boolean | Global | yes | `member.IsUnassignedWorkFlowApprover · TEXT` |  |
+| `IsViewPrivateIssueAllowed` | Is View Private Issue Allowed? | Select this check box if you want to allow the member to see private forms. | Boolean | Global | yes | `member.IsViewPrivateIssueAllowed · TEXT` |  |
+| `UseEmployerAddress` | Use Employer Address? | If you want to use the address of the employer for this member record, select this check box. | Boolean | Global | yes | `member.UseEmployerAddress · TEXT` |  |
 
 ### Text & notes (34)
 
 Free text. Notably, free text is never allowed to drive a conditional display rule.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `AnySiteLoginName` | Demographics Login | Text | Global |  |  |
-| `AnySitePassword` | Demographics Password | Text | Global |  |  |
-| `City` |  | Text | Global |  |  |
-| `ColorScheme` | Color Scheme | Text | Global |  |  |
-| `Country` |  | Text | Global |  |  |
-| `CountryID` |  | Text | — |  |  |
-| `Description` |  | Text | Global |  |  |
-| `Designations` |  | Text | Global |  |  |
-| `EMail1` | Email #1 | Text | Global |  |  |
-| `EMail2` | Email #2 | Text | Global |  |  |
-| `Fax` |  | Text | Global |  |  |
-| `FirstName` | First Name | Text | Global | yes |  |
-| `HtmlPersonAddress` | Address | Text | Global |  |  |
-| `Language` |  | Text | Global |  |  |
-| `LastName` | Last Name | Text | Global | yes |  |
-| `LoginName` | Login Name | Text | Global | yes |  |
-| `MemberNameFirstLast` | Member Name | Text | Global |  |  |
-| `MemberPhoto` | Member Photo | Text | Global |  |  |
-| `MiddleName` | Middle Name | Text | Global |  |  |
-| `MobileNumber` | Mobile Number | Text | Global |  |  |
-| `Password` |  | Text | Global | yes |  |
-| `PersonNameLastFirst` | Member Name - Last, First | Text | Global |  |  |
-| `Phone` |  | Text | Global |  |  |
-| `PhoneExtension` | Phone Extension | Text | Global |  |  |
-| `PostalCode` | Postal Code | Text | Global |  |  |
-| `StreetAddress1` | Street Address #1 | Text | Global |  |  |
-| `StreetAddress2` | Street Address #2 | Text | Global |  |  |
-| `StreetAddress3` | Street Address #3 | Text | Global |  |  |
-| `StreetAddress4` | Street Address #4 | Text | Global |  |  |
-| `Suffix` |  | Text | Global |  |  |
-| `TimeZone` | Time Zone | Text | Global |  |  |
-| `Title` |  | Text | Global |  |  |
-| `WebSite` | Web Site | Text | Global |  |  |
-| `WirelessEMail` | Wireless E Mail | Text | Global |  |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `AnySiteLoginName` | Demographics Login | Enter the member's Intalytics username in this field. | Text | Global |  | `member.AnySiteLoginName · TEXT` |  |
+| `AnySitePassword` | Demographics Password | Enter the member's Intalytics password in this field. | Text | Global |  | `member.AnySitePassword · TEXT` |  |
+| `City` |  | The city associated with this record. | Text | Global |  | `member.City · TEXT` |  |
+| `ColorScheme` | Color Scheme | This field is no longer used. | Text | Global |  | `member.ColorScheme · TEXT` |  |
+| `Country` |  | The country of the address associated with this record. | Text | Global |  | `member.Country · TEXT` |  |
+| `CountryID` | Country | Select the member's country from this field. | Text | — |  | `member.CountryID · TEXT` |  |
+| `Description` |  | Write a description of the record. | Text | Global |  | `member.Description · TEXT` |  |
+| `Designations` |  | The designation of the member from the Person table. | Text | Global |  | `member.Designations · TEXT` |  |
+| `EMail1` | Email #1 | Enter the person's primary email address. | Text | Global |  | `member.EMail1 · TEXT` |  |
+| `EMail2` | Email #2 | Enter the person's secondary email address. | Text | Global |  | `member.EMail2 · TEXT` |  |
+| `Fax` |  | Enter the person's fax number in this field. | Text | Global |  | `member.Fax · TEXT` |  |
+| `FirstName` | First Name | Enter the person's first name in this field. | Text | Global | yes | `member.FirstName · TEXT` |  |
+| `HtmlPersonAddress` | Address | The address of the member. | Text | Global |  | `member.HtmlPersonAddress · TEXT` |  |
+| `Language` |  | Select the member's language from this field. Lx is configured to auto-detect the user's language by default. | Text | Global |  | `member.Language · TEXT` |  |
+| `LastName` | Last Name | Enter the person's last name in this field. | Text | Global | yes | `member.LastName · TEXT` |  |
+| `LoginName` | Login Name | Enter the member's username in this field. | Text | Global | yes | `member.LoginName · TEXT` |  |
+| `MemberNameFirstLast` | Member Name | The member's name in this format: "First Middle, Suffix, Last, Designations" | Text | Global |  | `member.MemberNameFirstLast · TEXT` |  |
+| `MemberPhoto` | Member Photo | This field can be used to store a member's photo. | Text | Global |  | `member.MemberPhoto · TEXT` |  |
+| `MiddleName` | Middle Name | Enter the person's middle name in this field. | Text | Global |  | `member.MiddleName · TEXT` |  |
+| `MobileNumber` | Mobile Number | Enter the person's mobile phone number in this field. | Text | Global |  | `member.MobileNumber · TEXT` |  |
+| `Password` |  | Enter the member's temporary password in this field. Make sure to send the member this temporary password. | Text | Global | yes | `member.Password · TEXT` |  |
+| `PersonNameLastFirst` | Member Name - Last, First | The member's name in this format: "Last, Suffix, Designations, First Middle" | Text | Global |  | `member.PersonNameLastFirst · TEXT` |  |
+| `Phone` |  | Enter the person's phone number in this field. | Text | Global |  | `member.Phone · TEXT` |  |
+| `PhoneExtension` | Phone Extension | Enter the person's phone extenstion in this field. | Text | Global |  | `member.PhoneExtension · TEXT` |  |
+| `PostalCode` | Postal Code | Enter the person's postal code in this field. | Text | Global |  | `member.PostalCode · TEXT` |  |
+| `StreetAddress1` | Street Address #1 | The first line of the street address. | Text | Global |  | `member.StreetAddress1 · TEXT` |  |
+| `StreetAddress2` | Street Address #2 | The second line of the street address. | Text | Global |  | `member.StreetAddress2 · TEXT` |  |
+| `StreetAddress3` | Street Address #3 | The third line of the street address. | Text | Global |  | `member.StreetAddress3 · TEXT` |  |
+| `StreetAddress4` | Street Address #4 | The fourth line of the street address. | Text | Global |  | `member.StreetAddress4 · TEXT` |  |
+| `Suffix` |  | Enter the person's suffix if the person has one. | Text | Global |  | `member.Suffix · TEXT` |  |
+| `TimeZone` | Time Zone | Select the member's default time zone from this field. | Text | Global |  | `member.TimeZone · TEXT` |  |
+| `Title` |  | Enter the person's title in this field. | Text | Global |  | `member.Title · TEXT` |  |
+| `WebSite` | Web Site | Enter the person's website in this field. | Text | Global |  | `member.WebSite · TEXT` |  |
+| `WirelessEMail` | Wireless E Mail | Enter the person's wireless email in this field. | Text | Global |  | `member.WirelessEMail · TEXT` |  |
 
 ### Audit & record keeping (4)
 
 Who created and changed the record, and the identifiers that survive migration.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `BOMapClientRecordID` | Member ClientID | Text | Global | yes |  |
-| `CreatedDate` | Created Date | Time | Global |  |  |
-| `ModifiedByID` | Modified By | Member ID | Global |  | [Member](Member.md) |
-| `ModifiedDate` | Modified Date | Time | Global |  |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `BOMapClientRecordID` | Member ClientID | The ClientID field is a free form text field that can be used when importing data to uniquely look up a record for update. This record identifier can either be system-generated or defined by the user upon the initial import of record data. The ClientID has the database name "BOMapClientRecordID". | Text | Global | yes | `member.BOMapClientRecordID · TEXT` |  |
+| `CreatedDate` | Created Date | The Created Date field is a system-populated field which captures the date that a record was created. | Time | Global |  | `member.CreatedDate · TEXT` |  |
+| `ModifiedByID` | Modified By | The Modified By field is a system-populated field which captures the name of the member who made a change to a record. | Member ID | Global |  | `member.ModifiedByID · TEXT` | [Member](Member.md) |
+| `ModifiedDate` | Modified Date | The Modified Date field is a system-populated field which captures the date that a modification is made to a record. | Time | Global |  | `member.ModifiedDate · TEXT` |  |
 
 ### Other (1)
 
 Everything that did not fall into a named group.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `DatePattern` | Date Pattern | Date Format | Global |  |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `DatePattern` | Date Pattern | Select the member's date format from this field. Lx is configured to auto-detect the user's date format by default. | Date Format | Global |  | `member.DatePattern · TEXT` |  |
 
 ## What points here (290 keys)
 

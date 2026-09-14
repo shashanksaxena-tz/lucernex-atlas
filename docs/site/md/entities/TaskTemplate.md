@@ -2,7 +2,7 @@
 
 *1 fields · module: Capital Projects & Scheduling · Postgres: `task_template`*
 
-Not covered by the Data Fields catalogue: this record type appears in the 223-object census but has no row in the catalogue of 6,158 configurable fields, so nothing in the corpus explains it in the vendor's own words. What is known is structural — 1 declared fields, filed under Capital Projects & Scheduling, 1 foreign keys pointing at it.
+Not covered by the Data Fields catalogue: this record type appears in the 223-object census but has no row in the catalogue of 6,158 configurable fields, so no document describes the record as a whole. What is known is structural — 1 declared fields, filed under Capital Projects & Scheduling, 1 foreign keys pointing at it.
 
 Source: `_lucernex_objects_summary.txt`
 
@@ -11,6 +11,9 @@ Source: `_lucernex_objects_summary.txt`
 |  | Value |
 |---|---|
 | Fields declared | 1 |
+| Fields with a vendor definition | 0 of 1 inventoried |
+| Physical tables | `task_template` |
+| Replication database | `lxr_drp_bbw` |
 | Catalogued fields | not in the catalogue |
 | Physical tables | 1 |
 | Referenced by | 1 keys from 1 record types |
@@ -24,15 +27,27 @@ Source: `_lucernex_objects_summary.txt`
 
 **Derived.** This record carries no FirmID of its own. It hangs off ProjectEntity, and tenant isolation has to be enforced by joining to that row and filtering on its FirmID — or it is not enforced at all. 161 of the 223 record types are shaped this way.
 
+### Lands in task_template
+
+**Observed.** The field inventory names the physical destination of every column: one table in the database lxr_drp_bbw. Every field node carries its own table and column, so the mapping is per column, not per record.
+
+### A per-tenant database name
+
+**Derived.** The physical database is lxr_drp_bbw — the tenant's name is in the database name. That is one more piece of evidence for database-per-tenant and against a single shared schema, alongside the Firm_ columns.
+
+### Replication coverage: not materialised
+
+**Observed.** Observed of the loader, not of the product. The replication target lxr_drp_bbw has never created a table for this record: Table may not exist in the database yet. No data has ever been returned for this Lx object, and the loader only issues CREATE TABLE once the first row arrives. The configuration is in place, so this table and all of its columns will be created automatically as soon as data is entered in Lx. That is a statement about one loader's coverage and says nothing about whether the record exists or holds data in Lx. The tell is ProjectEntity — 107 fields, every one marked extracted, table never created, yet it is the universal supertype of a tenant holding 2,014 contracts, so it plainly is not empty. Do not read the 69-created / 150-not-created split as the size of the product's schema.
+
 ## Fields
 
 ### Relationships (foreign keys) (1)
 
 Typed pointers to other records. Lx names each FK type after the table it points at, so the relational model is declared rather than implied.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `ProjectEntityID` |  | Entity ID | — |  | [ProjectEntity](ProjectEntity.md) |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `ProjectEntityID` |  |  | Entity ID | — |  | `task_template.ProjectEntityID · TEXT` | [ProjectEntity](ProjectEntity.md) |
 
 ## What points here (1 keys)
 

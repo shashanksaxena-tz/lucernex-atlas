@@ -11,6 +11,9 @@ Source: `data-fields/small-miscellaneous-entities.md`
 |  | Value |
 |---|---|
 | Fields declared | 5 |
+| Fields with a vendor definition | 5 of 5 inventoried |
+| Physical tables | `report_group_data` |
+| Replication database | `lxr_drp_bbw` |
 | Catalogued fields | 5 (5 global, 0 firm) |
 | Physical tables | 1 |
 | Referenced by | 0 keys from 0 record types |
@@ -28,6 +31,22 @@ Source: `data-fields/small-miscellaneous-entities.md`
 
 **Derived.** Nothing holds a typed foreign key into this record and it declares none out. Either it is joined by a soft reference the census cannot see, or it is genuinely standalone — worth settling before anything is built on it.
 
+### Lands in report_group_data
+
+**Observed.** The field inventory names the physical destination of every column: one table in the database lxr_drp_bbw. Every field node carries its own table and column, so the mapping is per column, not per record.
+
+### A per-tenant database name
+
+**Derived.** The physical database is lxr_drp_bbw — the tenant's name is in the database name. That is one more piece of evidence for database-per-tenant and against a single shared schema, alongside the Firm_ columns.
+
+### 5 fields carry a vendor definition
+
+**Observed.** 5 of this record's 5 inventoried fields have prose written by the vendor saying what the field is for. Open any field node to read it — this is the one source in the corpus that explains fields rather than listing them.
+
+### 1 field marked required
+
+**Observed.** The inventory marks 1 of this record's fields Required. Across the whole inventory that is 606 fields, which independently corroborates the 603 the corpus had derived from the Data Fields catalogue — two sources, arrived at separately, agreeing to within three.
+
 ## Rules that govern it
 
 | Rule | What it requires | Confidence |
@@ -42,31 +61,31 @@ Source: `data-fields/small-miscellaneous-entities.md`
 
 Typed pointers to other records. Lx names each FK type after the table it points at, so the relational model is declared rather than implied.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `ParentReportGroupDataID` | Parent Group Name | item ID | Global |  | unresolved |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `ParentReportGroupDataID` | Parent Group Name | The ID of the Parent Group of the field. | item ID | Global |  | `report_group_data.ParentReportGroupDataID · TEXT` | unresolved |
 
 ### Quantities (1)
 
 Counts, areas and other plain numeric measures.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `FirmID` | RGD FirmID | Number | Global |  |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `FirmID` | RGD FirmID | The record's Firm ID. | Number | Global |  | `report_group_data.FirmID · TEXT` |  |
 
 ### Text & notes (1)
 
 Free text. Notably, free text is never allowed to drive a conditional display rule.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `ReportGroupDataName` | Report Group Name | Text | Global | yes |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `ReportGroupDataName` | Report Group Name | The ID of the Report Group associated with the field. | Text | Global | yes | `report_group_data.ReportGroupDataName · TEXT` |  |
 
 ### Audit & record keeping (2)
 
 Who created and changed the record, and the identifiers that survive migration.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `CreatedDate` | RGD Created Date | Date | Global |  |  |
-| `ModifiedDate` | RGD Modified Date | Date | Global |  |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `CreatedDate` | RGD Created Date | The Created Date field is a system-populated field which captures the date that a record was created. | Date | Global |  | `report_group_data.CreatedDate · TEXT` |  |
+| `ModifiedDate` | RGD Modified Date | The Modified Date field is a system-populated field which captures the date that a modification is made to a record. | Date | Global |  | `report_group_data.ModifiedDate · TEXT` |  |

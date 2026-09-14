@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The discount-rate table is empty in both tenants &middot; Lx Vault</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="../../atlas.css">
+<link rel="stylesheet" href="../../research/research.css">
+<link rel="stylesheet" href="../vault.css">
+</head><body><style id="lxg">body{visibility:hidden}
+#lxgate{visibility:visible;position:fixed;inset:0;z-index:9999;display:flex;
+align-items:center;justify-content:center;background:#0f172a;
+font-family:'IBM Plex Sans',system-ui,sans-serif}
+#lxgate form{background:#fff;padding:30px 32px;border-radius:12px;width:310px;
+box-shadow:0 20px 60px rgba(0,0,0,.35)}
+#lxgate h2{margin:0 0 4px;font-size:19px;color:#0f172a}
+#lxgate p{margin:0 0 18px;font-size:12.5px;color:#64748b;line-height:1.5}
+#lxgate label{display:block;font-size:11px;text-transform:uppercase;
+letter-spacing:.07em;color:#64748b;margin:0 0 5px}
+#lxgate input{width:100%;box-sizing:border-box;padding:9px 11px;margin:0 0 14px;
+border:1px solid #cbd5e1;border-radius:7px;font-size:14px}
+#lxgate button{width:100%;padding:10px;border:0;border-radius:7px;
+background:#b4530a;color:#fff;font-size:14px;font-weight:600;cursor:pointer}
+#lxgate .err{color:#b91c1c;font-size:12px;margin:0 0 10px;display:none}</style>
+<div id="lxgate"><form onsubmit="return lxg(event)">
+<h2>Lx Atlas</h2>
+<p>Internal documentation. Not a security boundary &mdash; see
+<code>gate.py</code>.</p>
+<p class="err" id="lxge">Incorrect.</p>
+<label for="lxgu">User</label><input id="lxgu" autocomplete="username" autofocus>
+<label for="lxgp">Password</label><input id="lxgp" type="password"
+autocomplete="current-password">
+<button type="submit">Enter</button></form></div>
+<script>
+function lxgOpen(){var g=document.getElementById('lxgate');if(g)g.remove();
+var s=document.getElementById('lxg');if(s)s.remove();
+document.body.style.visibility='visible';}
+function lxg(ev){ev.preventDefault();
+if(document.getElementById('lxgu').value==='admin'&&
+   document.getElementById('lxgp').value==='admin'){
+ try{sessionStorage.setItem('lxg','1');}catch(e){}
+ lxgOpen();return false;}
+document.getElementById('lxge').style.display='block';return false;}
+try{if(sessionStorage.getItem('lxg')==='1')
+ document.addEventListener('DOMContentLoaded',lxgOpen);}catch(e){}
+</script>
+<header><b>Lx Atlas</b>
+<nav><a href="../../index.html">Overview</a><a href="../../atlas.html#/map?set=feature">Feature map</a>
+<a href="../../atlas.html">Interactive app</a>
+<a href="../../research/index.html">Research</a>
+<a href="../../research/screens.html">Screens</a>
+<a href="../index.html" class="on">Vault</a>
+<a href="../../questions.html">Open questions</a></nav></header>
+<main><p class="crumb"><a href="../../index.html">Atlas</a> &rsaquo;
+<a href="../index.html">Vault</a> &rsaquo; The discount-rate table is empty in both tenants</p><div class="fm"><span>finding</span><span>accounting</span><span>blocker</span><span>core</span><span class="ev">Observed</span></div><blockquote><p><strong><code>Manage Discount Rates</code> reads &quot;No rows to display&quot; at <a href="../../../tenants/tenant-bbw.html">BBW</a> <em>and</em> at <a href="../../../tenants/tenant-american-freight.html">American Freight</a></strong>, both on build <code>26.09.0.113</code>.</p></blockquote><p>ASC 842 and IFRS 16 both require a discount rate to compute the lease liability. Both tenants run both standards plus straight-line. <strong>Two independent tenants showing an empty table retires the &quot;this one happens to be unpopulated&quot; explanation.</strong></p><p>So either the rate reaches the engine by the <strong>per-record override</strong> — <a href="../../../entities/Asset.html">Asset</a><code>.DiscountRateOverride</code> and its <a href="../../../entities/SLSummary.html">SLSummary</a> equivalent — <strong>or no schedule in either tenant has ever actually been calculated.</strong> Both readings matter:</p><ul><li>If the override is the real path, <strong>ASG Edge+ implementing the rate table alone reproduces an engine that cannot calculate.</strong></li><li>If nothing has been calculated, the ASC 842 output this corpus documents has <strong>never been exercised against real rates</strong>, and the schedules are structure without arithmetic.</li></ul><p><strong>And it is stranger than a dormant tenant would be.</strong> BBW is not idle: <strong>Job Log</strong> carries <strong>818 entries</strong>, a real XLSX import, and an <strong>hourly inbound HTTP integration</strong> posting transaction data (<a href="../../../open-questions/q-bbw-19-hourly-integration.html">q-bbw-19-hourly-integration</a>). A tenant with live operational traffic <em>and</em> an empty discount-rate table is harder to explain than an unused one — which makes the override reading more likely, and raises the question of what the hourly feed is doing if the liability cannot be discounted.</p><p><strong>This should be put to ASG before the accounting engine is specified.</strong> <a href="../../../open-questions/q-bbw-18-has-any-schedule-been-calculated.html">q-bbw-18-has-any-schedule-been-calculated</a></p><p>See <a href="../../../entities/DiscountRate.html">DiscountRate</a> for the seven lookup dimensions — including the <strong>lease-length band</strong>, which makes it an incremental-borrowing-rate <em>curve</em> rather than a scalar, and the <strong>accounting method</strong>, which means the same lease can discount differently under ASC 842 and IFRS 16.</p><p>Screens: <strong>screen-manage-discount-rates</strong></p><div class="backlinks"><b>Linked from &middot; 10</b><a href="../concepts/fiscal-period.html">fiscal-period</a><a href="../concepts/one-engine-three-standards.html">one-engine-three-standards</a><a href="../entities/Asset.html">Asset</a><a href="../entities/DiscountRate.html">DiscountRate</a><a href="../entities/SLSummary.html">SLSummary</a><a href="../features/feature-reference-data.html">feature-reference-data</a><a href="../modules/module-accounting.html">module-accounting</a><a href="../open-questions/q-bbw-18-has-any-schedule-been-calculated.html">q-bbw-18-has-any-schedule-been-calculated</a><a href="../open-questions/q-bbw-19-hourly-integration.html">q-bbw-19-hourly-integration</a><a href="../rules/rule-ACC-R-001.html">rule-ACC-R-001</a></div></main></body></html>

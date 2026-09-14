@@ -11,6 +11,9 @@ Source: `data-fields/code-expense-type.md`
 |  | Value |
 |---|---|
 | Fields declared | 31 |
+| Fields with a vendor definition | 27 of 31 inventoried |
+| Physical tables | `code_expense_type` |
+| Replication database | `lxr_drp_bbw` |
 | Catalogued fields | 29 (29 global, 0 firm) |
 | Physical tables | 1 |
 | Referenced by | 0 keys from 0 record types |
@@ -23,6 +26,22 @@ Source: `data-fields/code-expense-type.md`
 ### Firm-global reference data
 
 **Derived.** Owned by the firm as a whole rather than by any one business record — configuration and reference data rather than transactional rows.
+
+### Lands in code_expense_type
+
+**Observed.** The field inventory names the physical destination of every column: one table in the database lxr_drp_bbw. Every field node carries its own table and column, so the mapping is per column, not per record.
+
+### A per-tenant database name
+
+**Derived.** The physical database is lxr_drp_bbw — the tenant's name is in the database name. That is one more piece of evidence for database-per-tenant and against a single shared schema, alongside the Firm_ columns.
+
+### 27 fields carry a vendor definition
+
+**Observed.** 27 of this record's 31 inventoried fields have prose written by the vendor saying what the field is for. Open any field node to read it — this is the one source in the corpus that explains fields rather than listing them.
+
+### 1 field marked required
+
+**Observed.** The inventory marks 1 of this record's fields Required. Across the whole inventory that is 606 fields, which independently corroborates the 603 the corpus had derived from the Data Fields catalogue — two sources, arrived at separately, agreeing to within three.
 
 ## Rules that govern it
 
@@ -41,64 +60,64 @@ Source: `data-fields/code-expense-type.md`
 
 Fields bound to a master code table. Every one of these is a place where an administrator, not a developer, controls the allowed values.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `CodeASC842ScheduleID` | ASC 842 Schedule | Dropdown (ASC 842 Schedule Type) | Global |  | ASC 842 Schedule Type |
-| `CodeExpenseCategoryID` | Expense Category | Dropdown (Expense Category Code) | Global |  | Expense Category Code |
-| `CodeIFRS16ScheduleID` | IFRS 16 Schedule | Dropdown (IFRS 16 Schedule Type) | Global |  | IFRS 16 Schedule Type |
-| `CodeSLScheduleID` | Straight-Line Schedule | Dropdown (Straight Line Schedule Type) | Global |  | Straight Line Schedule Type |
-| `ParentCodeExpenseGroupID` | Parent Group | Dropdown (Expense Group Code) | Global | yes | Expense Group Code |
-| `ParentID` | Parent Expense Group | Dropdown (Expense Group Code) | Global |  | Expense Group Code |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `CodeASC842ScheduleID` | ASC 842 Schedule | The ASC 842 Schedule field is where you select the ASC 842 schedule you want to associate with a record. This field is functional, and changing its value on the Accounting Assumptions page, the Covenants page, or the Recurring Expenses page will set the Recalc? flag to YES. | Dropdown (ASC 842 Schedule Type) | Global |  | `code_expense_type.CodeASC842ScheduleID · TEXT` | ASC 842 Schedule Type |
+| `CodeExpenseCategoryID` | Expense Category | This setting links this expense type to a particular expense category. | Dropdown (Expense Category Code) | Global |  | `code_expense_type.CodeExpenseCategoryID · TEXT` | Expense Category Code |
+| `CodeIFRS16ScheduleID` | IFRS 16 Schedule | The IFRS 16 Schedule field is where you select the IFRS 16 schedule you want to associate with a record. This field is functional, and changing its value on the Accounting Assumptions page, the Covenants page, or the Recurring Expenses page will set the Recalc? flag to YES. | Dropdown (IFRS 16 Schedule Type) | Global |  | `code_expense_type.CodeIFRS16ScheduleID · TEXT` | IFRS 16 Schedule Type |
+| `CodeSLScheduleID` | Straight-Line Schedule | The Straight-Line Schedule field is where you select the Straight Line schedule you want to associate with a record. | Dropdown (Straight Line Schedule Type) | Global |  | `code_expense_type.CodeSLScheduleID · TEXT` | Straight Line Schedule Type |
+| `ParentCodeExpenseGroupID` | Parent Group | Select the expense group that this expense type should be associated with. Groups are parents to types. | Dropdown (Expense Group Code) | Global | yes | `code_expense_type.ParentCodeExpenseGroupID · TEXT` | Expense Group Code |
+| `ParentID` | Parent Expense Group |  | Dropdown (Expense Group Code) | Global |  | `code_expense_type.ParentID · TEXT` | Expense Group Code |
 
 ### Quantities (1)
 
 Counts, areas and other plain numeric measures.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `CodeID` | Expense Type RecID | Number | Global |  |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `CodeID` | Expense Type RecID | This field contains a Base Entity System Identifier for your record. It is assigned automatically by the system, and is not editable. | Number | Global |  | `code_expense_type.CodeID · TEXT` |  |
 
 ### Flags (1)
 
 Booleans. In this product they usually gate engine behaviour rather than describe the record.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `Inactive` |  | Boolean | — |  |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `Inactive` |  |  | Boolean | — |  | `code_expense_type.Inactive · TEXT` |  |
 
 ### Text & notes (21)
 
 Free text. Notably, free text is never allowed to drive a conditional display rule.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `APExportBaseNumber` | AP Export Base Number | Text | Global |  |  |
-| `APExportPrepaidNumber` | AP Export Prepaid Number | Text | Global |  |  |
-| `APExportTax1Number` | AP Export Tax #1 | Text | Global |  |  |
-| `APExportTax2Number` | AP Export Tax #2 | Text | Global |  |  |
-| `APExportTax3Number` | AP Export Tax #3 | Text | Global |  |  |
-| `APExportTax4Number` | AP Export Tax #4 | Text | Global |  |  |
-| `ActualLongName` |  | Text | — |  |  |
-| `ExpAccrualAcct1Number` | Expense Accrual Acct #1 | Text | Global |  |  |
-| `ExpAccrualAcct2Number` | Expense Accrual Acct #2 | Text | Global |  |  |
-| `ExpAccrualAcct3Number` | Expense Accrual Acct #3 | Text | Global |  |  |
-| `ExpAccrualAcct4Number` | Expense Accrual Acct #4 | Text | Global |  |  |
-| `LongDescription` | Description | Text | Global |  |  |
-| `PercentRentAccrualAcct1Number` | Percent Rent Accrual Acct #1 | Text | Global |  |  |
-| `PercentRentAccrualAcct2Number` | Percent Rent Accrual Acct #2 | Text | Global |  |  |
-| `PercentRentAccrualAcct3Number` | Percent Rent Accrual Acct #3 | Text | Global |  |  |
-| `PercentRentAccrualAcct4Number` | Percent Rent Accrual Acct #4 | Text | Global |  |  |
-| `RETaxAccrualAcct1Number` | RE Tax Accrual Acct #1 | Text | Global |  |  |
-| `RETaxAccrualAcct2Number` | RE Tax Accrual Acct #2 | Text | Global |  |  |
-| `RETaxAccrualAcct3Number` | RE Tax Accrual Acct #3 | Text | Global |  |  |
-| `RETaxAccrualAcct4Number` | RE Tax Accrual Acct #4 | Text | Global |  |  |
-| `ShortName` | Name | Text | Global | yes |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `APExportBaseNumber` | AP Export Base Number | Enter the account number for your expenses. | Text | Global |  | `code_expense_type.APExportBaseNumber · TEXT` |  |
+| `APExportPrepaidNumber` | AP Export Prepaid Number | Enter the account number for your prepaid expenses (if applicable). | Text | Global |  | `code_expense_type.APExportPrepaidNumber · TEXT` |  |
+| `APExportTax1Number` | AP Export Tax #1 | Enter the account number for your accounts payable export taxes. | Text | Global |  | `code_expense_type.APExportTax1Number · TEXT` |  |
+| `APExportTax2Number` | AP Export Tax #2 | Enter the account number for your accounts payable export taxes. | Text | Global |  | `code_expense_type.APExportTax2Number · TEXT` |  |
+| `APExportTax3Number` | AP Export Tax #3 | Enter the account number for your accounts payable export taxes. | Text | Global |  | `code_expense_type.APExportTax3Number · TEXT` |  |
+| `APExportTax4Number` | AP Export Tax #4 | Enter the account number for your accounts payable export taxes. | Text | Global |  | `code_expense_type.APExportTax4Number · TEXT` |  |
+| `ActualLongName` | Description |  | Text | — |  | `code_expense_type.ActualLongName · TEXT` |  |
+| `ExpAccrualAcct1Number` | Expense Accrual Acct #1 | Enter the account number for your expense accruals. | Text | Global |  | `code_expense_type.ExpAccrualAcct1Number · TEXT` |  |
+| `ExpAccrualAcct2Number` | Expense Accrual Acct #2 | Enter the account number for your expense accruals. | Text | Global |  | `code_expense_type.ExpAccrualAcct2Number · TEXT` |  |
+| `ExpAccrualAcct3Number` | Expense Accrual Acct #3 | Enter the account number for your expense accruals. | Text | Global |  | `code_expense_type.ExpAccrualAcct3Number · TEXT` |  |
+| `ExpAccrualAcct4Number` | Expense Accrual Acct #4 | Enter the account number for your expense accruals. | Text | Global |  | `code_expense_type.ExpAccrualAcct4Number · TEXT` |  |
+| `LongDescription` | Description | Write a description of the record. | Text | Global |  | `code_expense_type.LongDescription · TEXT` |  |
+| `PercentRentAccrualAcct1Number` | Percent Rent Accrual Acct #1 | Enter the account number for your percent rent accruals. | Text | Global |  | `code_expense_type.PercentRentAccrualAcct1Number · TEXT` |  |
+| `PercentRentAccrualAcct2Number` | Percent Rent Accrual Acct #2 | Enter the account number for your percent rent accruals. | Text | Global |  | `code_expense_type.PercentRentAccrualAcct2Number · TEXT` |  |
+| `PercentRentAccrualAcct3Number` | Percent Rent Accrual Acct #3 | Enter the account number for your percent rent accruals. | Text | Global |  | `code_expense_type.PercentRentAccrualAcct3Number · TEXT` |  |
+| `PercentRentAccrualAcct4Number` | Percent Rent Accrual Acct #4 | Enter the account number for your percent rent accruals. | Text | Global |  | `code_expense_type.PercentRentAccrualAcct4Number · TEXT` |  |
+| `RETaxAccrualAcct1Number` | RE Tax Accrual Acct #1 | Enter the account number for your real estate tax accruals. | Text | Global |  | `code_expense_type.RETaxAccrualAcct1Number · TEXT` |  |
+| `RETaxAccrualAcct2Number` | RE Tax Accrual Acct #2 | Enter the account number for your real estate tax accruals. | Text | Global |  | `code_expense_type.RETaxAccrualAcct2Number · TEXT` |  |
+| `RETaxAccrualAcct3Number` | RE Tax Accrual Acct #3 | Enter the account number for your real estate tax accruals. | Text | Global |  | `code_expense_type.RETaxAccrualAcct3Number · TEXT` |  |
+| `RETaxAccrualAcct4Number` | RE Tax Accrual Acct #4 | Enter the account number for your real estate tax accruals. | Text | Global |  | `code_expense_type.RETaxAccrualAcct4Number · TEXT` |  |
+| `ShortName` | Name |  | Text | Global | yes | `code_expense_type.ShortName · TEXT` |  |
 
 ### Audit & record keeping (2)
 
 Who created and changed the record, and the identifiers that survive migration.
 
-| Field | Label | Declared type | Scope | Req | Points at |
-|---|---|---|---|---|---|
-| `ModifiedByID` | Modified By | Member ID | Global |  | [Member](Member.md) |
-| `ModifiedDate` | Modified Date | Time | Global |  |  |
+| Field | Label | What it is for | Declared type | Scope | Req | Physical column | Points at |
+|---|---|---|---|---|---|---|---|
+| `ModifiedByID` | Modified By | The Modified By field is a system-populated field which captures the name of the member who made a change to a record. | Member ID | Global |  | `code_expense_type.ModifiedByID · TEXT` | [Member](Member.md) |
+| `ModifiedDate` | Modified Date | The Modified Date field is a system-populated field which captures the date that a modification is made to a record. | Time | Global |  | `code_expense_type.ModifiedDate · TEXT` |  |

@@ -73,6 +73,8 @@ for _q in Q["questions"]:
     q_by_area.setdefault(_q["area"], []).append(_q)
 
 FLAG_FIRM, FLAG_REQ, FLAG_RO = 1, 2, 4
+FLAG_INV_REQ, FLAG_FUNC, FLAG_NOPG = 8, 16, 32
+role_note = M.get("roleNote", {})
 
 edges_from, edges_to = {}, {}
 for e in edges:
@@ -185,7 +187,7 @@ def page(title, body, depth=0, crumb=""):
 <a href="{up}atlas.html">Interactive app</a>
 <a href="{up}features/index.html">Features</a>
 <a href="{up}entities/index.html">Record types</a><a href="{up}rules/index.html">Rules</a>
-<a href="{up}research/index.html">Research</a>\n<a href="{up}research/screens.html">Screens</a><a href="{up}markdown.html">Markdown</a>
+<a href="{up}research/index.html">Research</a>\n<a href="{up}research/screens.html">Screens</a>\n<a href="{up}vault/index.html">Vault</a><a href="{up}markdown.html">Markdown</a>
 <a href="{up}questions.html">Open questions</a></nav></header>
 <main>{crumb}{body}</main></body></html>"""))
 
@@ -193,17 +195,25 @@ def page(title, body, depth=0, crumb=""):
 # --------------------------------------------------------------------- rebuild
 # Preserve research/ across a rebuild: build_research.py owns it and runs after
 # this script. Wiping SITE wholesale would delete it on every atlas rebuild.
-_keep = os.path.join(SITE, "research")
-_tmp = os.path.join(DOCS, "_research_keep")
-if os.path.isdir(_keep):
-    if os.path.isdir(_tmp):
-        shutil.rmtree(_tmp)
-    shutil.move(_keep, _tmp)
+# Preserve the sub-sites this script does not own. build_research.py and
+# build_vault.py write into site/ too and run after this one; wiping SITE
+# wholesale deletes their output, which is easy to miss because the next
+# rebuild of *those* scripts silently restores it. Keep this list in sync.
+_OWNED_ELSEWHERE = ("research", "vault", "md")
+_stash = os.path.join(DOCS, "_site_keep")
+if os.path.isdir(_stash):
+    shutil.rmtree(_stash)
+os.makedirs(_stash, exist_ok=True)
+for _d in _OWNED_ELSEWHERE:
+    _src = os.path.join(SITE, _d)
+    if os.path.isdir(_src):
+        shutil.move(_src, os.path.join(_stash, _d))
 if os.path.isdir(SITE):
     shutil.rmtree(SITE)
 os.makedirs(SITE, exist_ok=True)
-if os.path.isdir(_tmp):
-    shutil.move(_tmp, _keep)
+for _d in os.listdir(_stash):
+    shutil.move(os.path.join(_stash, _d), os.path.join(SITE, _d))
+shutil.rmtree(_stash, ignore_errors=True)
 for d in ("", "modules", "entities", "rules", "features",
           "md", "md/modules", "md/entities", "md/rules", "md/features"):
     os.makedirs(os.path.join(SITE, d), exist_ok=True)
@@ -305,6 +315,10 @@ configuration is published between firms and then forks.</p>
 <p>The feature map as pages: what the product does, who for, through which screens, governed by
 which rules, with the open questions and the captured screens attached to each area.</p>
 <div class="row"><span>21 areas</span></div></a>
+<a class="card" href="vault/index.html"><h3>Vault &rarr;</h3>
+<p>The same corpus as a graph: 200+ small notes, each about one thing, densely linked. Open
+<code>vault/</code> in Obsidian for the graph view, or read it here &mdash; identical files.</p>
+<div class="row"><span>graph view</span></div></a>
 <a class="card" href="research/screens.html"><h3>Screens &rarr;</h3>
 <p>179 captured screens from both tenants &mdash; every administration tool, and the only end-user
 screens ever taken. Full width, click through for full resolution.</p>
@@ -430,6 +444,12 @@ for n in names:
          f'<dt>Points at</dt><dd>{fmt(len(outs))} other records</dd>'
          + (f'<dt>Catalogued fields</dt><dd>{fmt(o["cat"][0])} '
             f'({fmt(o["cat"][1])} global, {fmt(o["cat"][2])} firm)</dd>' if o.get("cat") else '')
+         + (f'<dt>Fields with a definition</dt><dd>{fmt(o["inv"][1])} of '
+            f'{fmt(o["inv"][0])} inventoried</dd>' if o.get("inv") else '')
+         + (f'<dt>Physical tables</dt><dd class="mono">{e(", ".join(o["pgt"]))}</dd>'
+            if o.get("pgt") else '')
+         + (f'<dt>Replication database</dt><dd class="mono">{e(o["pgdb"])}</dd>'
+            if o.get("pgdb") else '')
          + '</dl>']
 
     # what the record IS, in the catalogue's own words, before any statistics
@@ -460,12 +480,15 @@ for n in names:
         if group_blurb.get(g):
             b.append(f'<p class="gb">{e(group_blurb[g])}</p>')
         b.append('<div class="wrapt"><table><thead><tr><th>Field</th><th>Label</th>'
-                 '<th>Declared type</th><th>Scope</th><th>Req</th>'
-                 '<th>Points at</th></tr></thead><tbody>')
+                 '<th>What it is for</th><th>Declared type</th><th>Scope</th><th>Req</th>'
+                 '<th>Physical column</th><th>Points at</th></tr></thead><tbody>')
         for f in fields:
             fn, ft, fam = f[0], f[1], f[2]
             label, flags, code = (f[3] if len(f) > 3 else ""), (f[4] if len(f) > 4 else 0), \
                                  (f[5] if len(f) > 5 else "")
+            fdef = f[6] if len(f) > 6 else ""
+            frole = f[7] if len(f) > 7 else ""
+            fpg = f[8] if len(f) > 8 else ""
             tgt = ""
             if fam == "fk":
                 ed = next((x for x in edges_from.get(n, []) if x[1] == fn), None)
@@ -476,12 +499,18 @@ for n in names:
             elif fam == "dropdown":
                 cm = re.search(r"\(([^)]+)\)", ft)
                 tgt = f'<span style="color:var(--muted)">{e(cm.group(1) if cm else "code table")}</span>'
-            b.append(f'<tr id="f-{slug(fn)}"><td class="mono">{e(fn)}</td>'
-                     f'<td style="font-size:11.5px">{e(label)}</td>'
+            b.append(f'<tr id="f-{slug(fn)}"><td class="mono">{e(fn)}'
+                     + (f'<div style="font-size:10px;color:var(--faint)">{e(frole)}</div>'
+                        if frole else '')
+                     + f'</td><td style="font-size:11.5px">{e(label)}</td>'
+                     f'<td style="font-size:11.5px;color:var(--ink2);max-width:46ch">{e(fdef)}</td>'
                      f'<td style="color:var(--muted)" title="{e(type_legend.get(code, ""))}">{e(ft)}</td>'
                      f'<td style="font-size:11px;color:var(--muted)">{e(scope_of(flags, code))}</td>'
-                     f'<td style="font-size:11px">{"yes" if flags & FLAG_REQ else ""}</td>'
-                     f'<td>{tgt}</td></tr>')
+                     f'<td style="font-size:11px">{"yes" if flags & (FLAG_REQ | FLAG_INV_REQ) else ""}</td>'
+                     f'<td class="mono" style="font-size:10.5px;color:var(--muted)">'
+                     + (e(fpg.replace(":", " · ")) if fpg
+                        else ('not extracted' if flags & FLAG_NOPG else ''))
+                     + f'</td><td>{tgt}</td></tr>')
         b.append('</tbody></table></div></div>')
     if by_src:
         b.append(f'<h2>What points here &middot; {fmt(len(ins))} keys</h2><div class="wrapt"><table>'
@@ -504,6 +533,10 @@ for n in names:
     md += ["## At a glance", ""]
     md += md_table(["", "Value"], [
         ["Fields declared", fmt(o["n"])],
+        ["Fields with a vendor definition",
+         (f"{fmt(o['inv'][1])} of {fmt(o['inv'][0])} inventoried") if o.get("inv") else "—"],
+        ["Physical tables", ", ".join("`%s`" % t for t in o.get("pgt") or []) or "—"],
+        ["Replication database", ("`%s`" % o["pgdb"]) if o.get("pgdb") else "—"],
         ["Catalogued fields", (f"{fmt(o['cat'][0])} ({fmt(o['cat'][1])} global, "
                                f"{fmt(o['cat'][2])} firm)") if o.get("cat") else "not in the catalogue"],
         ["Physical tables", fmt(o["tc"])],
@@ -533,6 +566,8 @@ for n in names:
             label = f[3] if len(f) > 3 else ""
             flags = f[4] if len(f) > 4 else 0
             code = f[5] if len(f) > 5 else ""
+            fdef = f[6] if len(f) > 6 else ""
+            fpg = f[8] if len(f) > 8 else ""
             tgt = ""
             if fam == "fk":
                 ed = next((x for x in edges_from.get(n, []) if x[1] == fn), None)
@@ -541,9 +576,12 @@ for n in names:
             elif fam == "dropdown":
                 cm = re.search(r"\(([^)]+)\)", ft)
                 tgt = cm.group(1) if cm else "code table"
-            rows.append([f"`{fn}`", label, ft, scope_of(flags, code),
-                         "yes" if flags & FLAG_REQ else "", tgt])
-        md += md_table(["Field", "Label", "Declared type", "Scope", "Req", "Points at"], rows)
+            rows.append([f"`{fn}`", label, fdef, ft, scope_of(flags, code),
+                         "yes" if flags & (FLAG_REQ | FLAG_INV_REQ) else "",
+                         ("`%s`" % fpg.replace(":", " · ")) if fpg
+                         else ("not extracted" if flags & FLAG_NOPG else ""), tgt])
+        md += md_table(["Field", "Label", "What it is for", "Declared type", "Scope",
+                        "Req", "Physical column", "Points at"], rows)
     if by_src:
         md += [f"## What points here ({fmt(len(ins))} keys)", ""]
         md += md_table(["Record type", "Via column"],

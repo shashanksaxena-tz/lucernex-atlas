@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The data field catalog &middot; Lx Vault</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="../../atlas.css">
+<link rel="stylesheet" href="../../research/research.css">
+<link rel="stylesheet" href="../vault.css">
+</head><body><style id="lxg">body{visibility:hidden}
+#lxgate{visibility:visible;position:fixed;inset:0;z-index:9999;display:flex;
+align-items:center;justify-content:center;background:#0f172a;
+font-family:'IBM Plex Sans',system-ui,sans-serif}
+#lxgate form{background:#fff;padding:30px 32px;border-radius:12px;width:310px;
+box-shadow:0 20px 60px rgba(0,0,0,.35)}
+#lxgate h2{margin:0 0 4px;font-size:19px;color:#0f172a}
+#lxgate p{margin:0 0 18px;font-size:12.5px;color:#64748b;line-height:1.5}
+#lxgate label{display:block;font-size:11px;text-transform:uppercase;
+letter-spacing:.07em;color:#64748b;margin:0 0 5px}
+#lxgate input{width:100%;box-sizing:border-box;padding:9px 11px;margin:0 0 14px;
+border:1px solid #cbd5e1;border-radius:7px;font-size:14px}
+#lxgate button{width:100%;padding:10px;border:0;border-radius:7px;
+background:#b4530a;color:#fff;font-size:14px;font-weight:600;cursor:pointer}
+#lxgate .err{color:#b91c1c;font-size:12px;margin:0 0 10px;display:none}</style>
+<div id="lxgate"><form onsubmit="return lxg(event)">
+<h2>Lx Atlas</h2>
+<p>Internal documentation. Not a security boundary &mdash; see
+<code>gate.py</code>.</p>
+<p class="err" id="lxge">Incorrect.</p>
+<label for="lxgu">User</label><input id="lxgu" autocomplete="username" autofocus>
+<label for="lxgp">Password</label><input id="lxgp" type="password"
+autocomplete="current-password">
+<button type="submit">Enter</button></form></div>
+<script>
+function lxgOpen(){var g=document.getElementById('lxgate');if(g)g.remove();
+var s=document.getElementById('lxg');if(s)s.remove();
+document.body.style.visibility='visible';}
+function lxg(ev){ev.preventDefault();
+if(document.getElementById('lxgu').value==='admin'&&
+   document.getElementById('lxgp').value==='admin'){
+ try{sessionStorage.setItem('lxg','1');}catch(e){}
+ lxgOpen();return false;}
+document.getElementById('lxge').style.display='block';return false;}
+try{if(sessionStorage.getItem('lxg')==='1')
+ document.addEventListener('DOMContentLoaded',lxgOpen);}catch(e){}
+</script>
+<header><b>Lx Atlas</b>
+<nav><a href="../../index.html">Overview</a><a href="../../atlas.html#/map?set=feature">Feature map</a>
+<a href="../../atlas.html">Interactive app</a>
+<a href="../../research/index.html">Research</a>
+<a href="../../research/screens.html">Screens</a>
+<a href="../index.html" class="on">Vault</a>
+<a href="../../questions.html">Open questions</a></nav></header>
+<main><p class="crumb"><a href="../../index.html">Atlas</a> &rsaquo;
+<a href="../index.html">Vault</a> &rsaquo; The data field catalog</p><div class="fm"><span>concept</span><span>configuration</span><span>core</span><span class="ev">Observed</span></div><p>One catalog feeds every configuration surface in the product. The layout builder&#x27;s <em>Available Fields</em> palette, the report column picker and the form field picker are all the same tree.</p><ul><li><strong>6,158 leaves across 214 entities.</strong> <code>Global</code> scope 5,953, <code>Firm</code> scope <strong>205</strong>. 637 leaves marked <code>Required</code>; <strong>0</strong> marked <code>ReadOnly</code>; 448 distinct field-type codes.</li><li>The definitions are rows in <a href="../../../entities/ReportGroupAvailableField.html">ReportGroupAvailableField</a> (27 columns), keyed by <code>IsGlobal</code> + <code>FirmID</code> + <code>IsClientExtensionField</code>, plus <code>IsRequired</code>, <code>IsReadOnly</code>, <code>IsFunctional</code>.</li><li>The vendor&#x27;s own FK type is named <strong><code>Report/Form Field ID</code></strong> — the schema says in its own words that report fields and form fields are one catalog (<a href="../../../rules/rule-RPT-R-010.html">rule-RPT-R-010</a>).</li><li><code>ReadOnly = No</code> on all 6,158 leaves is <strong>not an error</strong>. Read-only is <code>View</code> in <a href="../../security-ladder.html">Field Security</a>, which measures a different question.</li></ul><p><strong>Manage Data Fields is read-only to a firm in both tenants.</strong> That looked like a product decision until <a href="../../../findings/finding-firm-fields-are-physical-columns.html">finding-firm-fields-are-physical-columns</a> explained it: you cannot self-service a DDL change.</p><p><strong>Three inventories disagree and none is the physical schema</strong> — census 223 objects / 7,421 fields, picker 227 tables / 6,487 fields, catalog 214 entities / 6,158 leaves, union 254 tables. Never quote one as authoritative; see <a href="../../docs/data-model/reading-the-census.html"><code>reading-the-census.md</code></a> and <a href="../../../open-questions/q-bbw-22-three-firm-field-counts.html">q-bbw-22-three-firm-field-counts</a>.</p><p>Source: <a href="../../docs/features/data-fields/README.html"><code>features/data-fields/</code></a> · <a href="../../docs/admin/005-manage-data-fields.html"><code>admin/005-manage-data-fields.md</code></a></p><div class="backlinks"><b>Linked from &middot; 15</b><a href="../00-start-here.html">00-start-here</a><a href="entity-scoped-vs-firm-global.html">entity-scoped-vs-firm-global</a><a href="firm-custom-field.html">firm-custom-field</a><a href="security-ladder.html">security-ladder</a><a href="../entities/Allowance.html">Allowance</a><a href="../entities/PotentialProject.html">PotentialProject</a><a href="../entities/Prototype.html">Prototype</a><a href="../entities/ReportGroupAvailableField.html">ReportGroupAvailableField</a><a href="../features/feature-data-fields.html">feature-data-fields</a><a href="../features/feature-security-access.html">feature-security-access</a><a href="../findings/finding-firm-fields-are-physical-columns.html">finding-firm-fields-are-physical-columns</a><a href="../modules/module-layouts-and-forms.html">module-layouts-and-forms</a><a href="../modules/module-reporting.html">module-reporting</a><a href="../open-questions/q-bbw-22-three-firm-field-counts.html">q-bbw-22-three-firm-field-counts</a><a href="../rules/rule-RPT-R-010.html">rule-RPT-R-010</a></div></main></body></html>

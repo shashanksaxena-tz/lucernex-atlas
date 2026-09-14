@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Contracts &middot; Lx Vault</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="../../atlas.css">
+<link rel="stylesheet" href="../../research/research.css">
+<link rel="stylesheet" href="../vault.css">
+</head><body><style id="lxg">body{visibility:hidden}
+#lxgate{visibility:visible;position:fixed;inset:0;z-index:9999;display:flex;
+align-items:center;justify-content:center;background:#0f172a;
+font-family:'IBM Plex Sans',system-ui,sans-serif}
+#lxgate form{background:#fff;padding:30px 32px;border-radius:12px;width:310px;
+box-shadow:0 20px 60px rgba(0,0,0,.35)}
+#lxgate h2{margin:0 0 4px;font-size:19px;color:#0f172a}
+#lxgate p{margin:0 0 18px;font-size:12.5px;color:#64748b;line-height:1.5}
+#lxgate label{display:block;font-size:11px;text-transform:uppercase;
+letter-spacing:.07em;color:#64748b;margin:0 0 5px}
+#lxgate input{width:100%;box-sizing:border-box;padding:9px 11px;margin:0 0 14px;
+border:1px solid #cbd5e1;border-radius:7px;font-size:14px}
+#lxgate button{width:100%;padding:10px;border:0;border-radius:7px;
+background:#b4530a;color:#fff;font-size:14px;font-weight:600;cursor:pointer}
+#lxgate .err{color:#b91c1c;font-size:12px;margin:0 0 10px;display:none}</style>
+<div id="lxgate"><form onsubmit="return lxg(event)">
+<h2>Lx Atlas</h2>
+<p>Internal documentation. Not a security boundary &mdash; see
+<code>gate.py</code>.</p>
+<p class="err" id="lxge">Incorrect.</p>
+<label for="lxgu">User</label><input id="lxgu" autocomplete="username" autofocus>
+<label for="lxgp">Password</label><input id="lxgp" type="password"
+autocomplete="current-password">
+<button type="submit">Enter</button></form></div>
+<script>
+function lxgOpen(){var g=document.getElementById('lxgate');if(g)g.remove();
+var s=document.getElementById('lxg');if(s)s.remove();
+document.body.style.visibility='visible';}
+function lxg(ev){ev.preventDefault();
+if(document.getElementById('lxgu').value==='admin'&&
+   document.getElementById('lxgp').value==='admin'){
+ try{sessionStorage.setItem('lxg','1');}catch(e){}
+ lxgOpen();return false;}
+document.getElementById('lxge').style.display='block';return false;}
+try{if(sessionStorage.getItem('lxg')==='1')
+ document.addEventListener('DOMContentLoaded',lxgOpen);}catch(e){}
+</script>
+<header><b>Lx Atlas</b>
+<nav><a href="../../index.html">Overview</a><a href="../../atlas.html#/map?set=feature">Feature map</a>
+<a href="../../atlas.html">Interactive app</a>
+<a href="../../research/index.html">Research</a>
+<a href="../../research/screens.html">Screens</a>
+<a href="../index.html" class="on">Vault</a>
+<a href="../../questions.html">Open questions</a></nav></header>
+<main><p class="crumb"><a href="../../index.html">Atlas</a> &rsaquo;
+<a href="../index.html">Vault</a> &rsaquo; Contracts</p><div class="fm"><span>module</span><span>contracts</span><span>core</span><span class="ev">Observed</span></div><p><strong>55 objects · rules <code>CON-R-001</code>…<code>CON-R-161</code></strong> — the largest rule set in the corpus.</p><p>Read <a href="../../../concepts/setup-schedule-transaction.html">setup-schedule-transaction</a> first. It is the module&#x27;s own stated centrepiece: not five financial subsystems but <strong>one pattern applied five times</strong>, plus one outlier — and the outlier is <a href="../../../concepts/cam-waterfall.html">CAM</a>.</p><p>Entities: <a href="../../../entities/Contract.html">Contract</a> · <a href="../../../entities/ContractAmendment.html">ContractAmendment</a> · <a href="../../../entities/Covenant.html">Covenant</a> · <a href="../../../entities/ContractTerm.html">ContractTerm</a> · <a href="../../../entities/KeyDate.html">KeyDate</a> · <a href="../../../entities/SecurityDeposit.html">SecurityDeposit</a> · <a href="../../../entities/Insurance.html">Insurance</a> · <a href="../../../entities/Allowance.html">Allowance</a> · <a href="../../../entities/CoTenancy.html">CoTenancy</a> · <a href="../../../entities/Responsibility.html">Responsibility</a> · <a href="../../../entities/LeaseInfo.html">LeaseInfo</a> · <a href="../../../entities/ExpenseRecovery.html">ExpenseRecovery</a> · <a href="../../../entities/PercentageRent.html">PercentageRent</a> · <a href="../../../entities/Sales.html">Sales</a> · <a href="../../../entities/SalesExclusionCap.html">SalesExclusionCap</a></p><p>Two modules with no folder of their own live here: <strong>Expense Recovery (CAM)</strong> and <strong>Variable Rent (Percentage / Use-Based) &amp; Sales</strong>.</p><p>What it settles:</p><ul><li><a href="../../../concepts/contract-lifecycle.html">contract-lifecycle</a> — the platform field has three values and the real lifecycle is a <a href="../../../concepts/client-drop-down.html">client-drop-down</a>.</li><li>The <a href="../../../concepts/cam-waterfall.html">cam-waterfall</a> is recoverable <strong>exactly</strong> from the product&#x27;s own labels, in six steps.</li><li><strong>All 1,194 landed Postgres columns are <code>TEXT</code></strong> except 31 <code>VARCHAR(64)</code> keys — everything must be parsed on ingest (<a href="../../../rules/rule-CON-R-131.html">rule-CON-R-131</a>). That is a direct hazard against ASG Edge+&#x27;s Constitution §4.4 <code>BigDecimal</code> rule.</li><li><strong>Five independent date axes must coexist</strong>: posting, effective, due, coverage, settlement (<a href="../../../rules/rule-CON-R-103.html">rule-CON-R-103</a>).</li></ul><p>The module&#x27;s highest-risk rule is <a href="../../../rules/rule-CON-R-058.html">rule-CON-R-058</a> — percentage-rent tiering, <strong>Inferred</strong>.</p><p>Rules: <strong>rules-contracts</strong> · <a href="../../docs/modules/contracts/README.html"><code>modules/contracts/</code></a></p><div class="backlinks"><b>Linked from &middot; 21</b><a href="../entities/Allowance.html">Allowance</a><a href="../entities/CoTenancy.html">CoTenancy</a><a href="../entities/Contract.html">Contract</a><a href="../entities/ContractAmendment.html">ContractAmendment</a><a href="../entities/ContractTerm.html">ContractTerm</a><a href="../entities/Covenant.html">Covenant</a><a href="../entities/Insurance.html">Insurance</a><a href="../entities/KeyDate.html">KeyDate</a><a href="../entities/LeaseInfo.html">LeaseInfo</a><a href="../entities/Responsibility.html">Responsibility</a><a href="../entities/SecurityDeposit.html">SecurityDeposit</a><a href="../rules/rule-CON-R-001.html">rule-CON-R-001</a><a href="../rules/rule-CON-R-010.html">rule-CON-R-010</a><a href="../rules/rule-CON-R-019.html">rule-CON-R-019</a><a href="../rules/rule-CON-R-026.html">rule-CON-R-026</a><a href="../rules/rule-CON-R-058.html">rule-CON-R-058</a><a href="../rules/rule-CON-R-080.html">rule-CON-R-080</a><a href="../rules/rule-CON-R-094.html">rule-CON-R-094</a><a href="../rules/rule-CON-R-103.html">rule-CON-R-103</a><a href="../rules/rule-CON-R-118.html">rule-CON-R-118</a><a href="../rules/rule-CON-R-131.html">rule-CON-R-131</a></div></main></body></html>
